@@ -1,0 +1,983 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>9.2. 摊销分析 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/ds/amortized';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="9.3. 红黑树" href="rb.html" />
+    <link rel="prev" title="9.1. 哈希表" href="hash_tables.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">9. 数据结构</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/ds/amortized.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/ds/amortized.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/ds/amortized.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>摊销分析</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">9.2.1. 哈希表的摊销分析</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">9.2.2. 批处理队列的摊销分析</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">9.2.3. 银行家和物理学家</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">9.2.4. 摊销分析和持久性</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">9.2. </span>摊销分析<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/1fPx0hcXlRg" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>我们对哈希表操作效率的分析得出的结论是 <code class="docutils literal notranslate"><span class="pre">find</span></code>
+以预期的恒定时间运行，其中需要修饰符“expected”
+表达性能是平均的并且取决于哈希函数的事实
+满足某些性质。</p>
+<p>我们还得出结论，<code class="docutils literal notranslate"><span class="pre">insert</span></code> 通常会在预期的恒定时间内运行，但是
+在最坏的情况下，由于需要重新散列，因此需要线性时间
+整个桌子。这违背了哈希表的目标，即
+提供恒定时间性能，或者至少尽可能接近它。</p>
+<p>事实证明，还有另一种看待这一分析的方式，使我们能够
+得出结论 <code class="docutils literal notranslate"><span class="pre">insert</span></code> 确实具有“摊销”预期恒定时间
+性能—即，用于原谅偶尔的最坏情况线性
+性能。我们必须立即承认这种技术只是一种改变
+从角度来看。我们不会改变底层算法。
+<code class="docutils literal notranslate"><span class="pre">insert</span></code> 算法仍将具有最坏情况的线性性能。这是事实。</p>
+<p>但我们现在要改变的观点是认识到，如果它非常
+<code class="docutils literal notranslate"><span class="pre">insert</span></code> 很少需要线性时间，那么也许我们可以“分散”它
+成本高于所有其他对 <code class="docutils literal notranslate"><span class="pre">insert</span></code> 的调用。这是一个创造性的会计技巧！</p>
+<p>**寿司与拉面。**让我们用一个现实世界的例子来娱乐自己
+时刻。假设你有 20 美元可用于一周的午餐。你喜欢
+吃寿司，但你不可能每天都吃寿司。所以你吃的是
+如下：</p>
+<ul class="simple">
+<li><p>周一：1 美元拉面</p></li>
+<li><p>周二：1 美元拉面</p></li>
+<li><p>周三：1 美元拉面</p></li>
+<li><p>周四：1 美元拉面</p></li>
+<li><p>周五：寿司 16 美元</p></li>
+</ul>
+<p>大多数时候，你的午餐很便宜。在极少数情况下，它很昂贵。所以
+你可以通过以下两种方式之一来查看它：</p>
+<ul class="simple">
+<li><p>我最坏情况下的午餐费用是 16 美元。</p></li>
+<li><p>我的平均午餐费用是 4 美元。</p></li>
+</ul>
+<p>两者都是正确的说法，但也许后者更有助于理解
+你的消费习惯。</p>
+<p><strong>回到哈希表。</strong> 哈希表也是如此。尽管 <code class="docutils literal notranslate"><span class="pre">insert</span></code> 是
+偶尔会贵，但很少贵，以至于平均成本
+操作实际上是常数时间！但是，我们需要做更复杂的数学计算
+（或者比我们的午餐预算更复杂）实际证明
+确实如此。</p>
+<section id="id2">
+<h2><span class="section-number">9.2.1. </span>哈希表的摊销分析<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/GwnYcPmn8PQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>“摊销”是一个财务术语。其含义之一是还清债务
+随着时间的推移。在算法分析中，我们用它来指代支付成本
+通过抬高廉价运营的成本来实现昂贵的运营。在
+结果，我们通过添加一些来预先支付后续昂贵操作的成本
+早期廉价运营的额外成本。</p>
+<p>序列的<em>摊销复杂性</em>或<em>摊销运行时间</em>
+每个操作的成本为 <span class="math notranslate nohighlight">\(T_1, T_2, \ldots, T_n\)</span>，只是平均成本
+每个操作的：</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{T_1 + T_2 + \dotsb + T_n}{n}.
+\]</div>
+<p>因此，即使一项操作特别昂贵，我们也可以将其平均化
+超过一堆廉价的操作。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/eKzgddLniSw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>将这个想法应用到哈希表中，让我们分析一下插入时会发生什么
+操作会导致昂贵的调整大小。假设加载时表调整大小
+因子达到 2。（这比 OCaml 的 <code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code> 更主动，它调整大小
+当负载因子 <em>超过</em> 2 时。我们做出哪个选择并不重要，
+但是 resize-on-reaching 会稍微简化我们的分析。）</p>
+<p>假设该表有 8 个绑定和 8 个存储桶。然后再制作 8 个刀片。
+前 7 个是（预期的）恒定时间，但第 8 个插入是线性时间：
+将负载因子增加到 2，导致调整大小，从而导致所有的重新散列
+16 绑定到一个新表中。这一系列操作的总成本是
+因此：向旧表插入 8 次的成本加上分配的成本
+一个新的 16 元素表，加上新表中 16 次插入的成本。
+也就是说，总成本为40。
+因此序列中每个操作的平均成本为 40/8 = 5 次插入。</p>
+<p>换句话说，如果我们假设每个插入的成本是正常值的五倍
+价格，序列中的最终操作将由
+我们为早期的插入物支付了额外的费用。所有这些都是恒定时间的，
+因为常数的五倍仍然是常数。</p>
+<p>从上面的例子进行概括，我们假设桶的数量
+当前在哈希表中的是 <span class="math notranslate nohighlight">\(2^n\)</span>，并且负载因子当前为 1。
+因此，当前表中有 <span class="math notranslate nohighlight">\(2^n\)</span> 绑定。下一个：</p>
+<ul class="simple">
+<li><p>发生一系列 <span class="math notranslate nohighlight">\(2^n - 1\)</span> 插入。现在有 <span class="math notranslate nohighlight">\(2^n + 2^n - 1\)</span> 绑定
+在表中。</p></li>
+<li><p>又发生一次插入。这使得绑定数量达到 <span class="math notranslate nohighlight">\(2^n + 2^n\)</span>，
+这是 <span class="math notranslate nohighlight">\(2^{n+1}\)</span>。但是桶的数量是<span class="math notranslate nohighlight">\(2^n\)</span>，所以负载因子
+刚刚达到 2。需要调整大小。</p></li>
+<li><p>发生调整大小。为新表分配内存需要花费 <span class="math notranslate nohighlight">\(2^{n+1}\)</span> 。
+这使得桶的数量增加了一倍。所有 <span class="math notranslate nohighlight">\(2^{n+1}\)</span> 绑定
+必须重新插入到大小为 <span class="math notranslate nohighlight">\(2^{n+1}\)</span> 的新表中。负载
+因子又回到 1。</p></li>
+</ul>
+<p>所以总共我们做了 <span class="math notranslate nohighlight">\(2^n + 2^{n+1}\)</span> 插入，其中包括 <span class="math notranslate nohighlight">\(2^n\)</span> 插入
+调整大小后绑定和 <span class="math notranslate nohighlight">\(2^{n+1}\)</span> 重新插入。我们还承担了
+在内存中分配大小为 <span class="math notranslate nohighlight">\(2^{n+1}\)</span> 的新表的成本，该成本为 <span class="math notranslate nohighlight">\(2^{n+1}\)</span>。</p>
+<p>经过一系列 <span class="math notranslate nohighlight">\(2^n\)</span> 插入操作，那就是
+平均成本为 <span class="math notranslate nohighlight">\(\frac{2^n + 2^{n+1} + 2^{n+1}}{2^n}\)</span>，等于 5。
+因此，如果我们假设每个插入物的成本是正常价格的五倍，
+序列中的每个操作都摊销（和预期）恒定时间。</p>
+<p>**加倍与恒定大小增加。**请注意，至关重要的是
+数组大小增加一倍（或至少呈几何倍数）。一个严重的错误是
+以固定增量 — 来增加数组，例如，100 个桶
+时间。然后，随着绑定数量的持续增长，我们就会遇到真正的麻烦：</p>
+<ul class="simple">
+<li><p>从 100 个桶和 100 个绑定开始。  负载系数为1。</p></li>
+<li><p><strong>第 1 轮。</strong> 插入 100 个绑定。现在有 200 个绑定器和 100 个桶。
+负载系数为2。</p></li>
+<li><p>将存储桶数量增加 100 并重新散列。还有 200 个插入。
+负载系数回到 1。</p></li>
+<li><p>到目前为止，每个刀片的平均成本仅为实际刀片成本的 3 倍
+（100+200 个插入/插入 100 个绑定）。到目前为止，一切都很好。</p></li>
+<li><p><strong>第 2 轮。</strong> 插入 200 个以上的绑定。现在有 400 个绑定和 200 个
+桶。负载系数为2。</p></li>
+<li><p>将存储桶的数量增加<strong>100</strong>并重新散列。那还有400多
+插入。现在有 400 个绑定器和 300 个桶。负载系数为
+400/300 = 4/3，而不是 1。</p></li>
+<li><p>现在每次插入的平均成本为 (100+200+200+400) / 300 = 3。
+还是可以的。</p></li>
+<li><p><strong>第 3 轮。</strong> 插入 200 个以上的绑定。现在有 600 个绑定和 300 个
+桶。负载系数为2。</p></li>
+<li><p>将存储桶的数量增加<strong>100</strong>并重新散列。那还有600多
+插入。现在有 600 个绑定器和 400 个桶。负载系数为
+3/2，而不是 1。</p></li>
+<li><p>现在每个插入的平均成本为 (100+200+200+400+200+600) / 500 = 3.4。
+它正在上升。</p></li>
+<li><p><strong>第 4 轮。</strong> 插入 200 个以上的绑定。现在有 800 个绑定和 400 个
+桶。负载系数为2。</p></li>
+<li><p>将存储桶的数量增加<strong>100</strong>并重新散列。那还有800多
+插入。现在有800个绑定器和500个桶。负载系数为
+8/5，而不是 1。</p></li>
+<li><p>现在每个插入的平均成本为 (100+200+200+400+200+600+200+800) / 700
+= 3.9。它会持续上升，而不是保持不变。</p></li>
+</ul>
+<p>经过 <span class="math notranslate nohighlight">\(k\)</span> 轮后，我们有 <span class="math notranslate nohighlight">\(200k\)</span> 绑定和 <span class="math notranslate nohighlight">\(100(k+1)\)</span> 存储桶。我们已经打电话了
+<code class="docutils literal notranslate"><span class="pre">insert</span></code> 插入 <span class="math notranslate nohighlight">\(100+200(k-1)\)</span> 绑定，但所有的重新哈希导致我们
+执行 <span class="math notranslate nohighlight">\(100+200(k-1)+\sum_{i=1}^{k} 200i\)</span> 实际插入。最后一项是
+真正的问题。它是二次方的：</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=1}^{k} 200i \quad = \quad 200 \sum_{i=1}^k i = \quad 200 \frac{k(k+1)}{2} \quad = \quad 100 (k^2 + k) .
+\]</div>
+<p>因此，通过对 <code class="docutils literal notranslate"><span class="pre">insert</span></code> 的一系列 <span class="math notranslate nohighlight">\(n\)</span> 调用，我们执行 <span class="math notranslate nohighlight">\(O(n^2)\)</span> 实际插入。那
+使得 <code class="docutils literal notranslate"><span class="pre">insert</span></code> 的摊余成本为 <span class="math notranslate nohighlight">\(O(n)\)</span>，这是线性的！不是恒定的。</p>
+<p>这就是为什么在每次重新哈希时将数组大小加倍如此重要。
+这就是为我们提供摊余恒定时间性能的原因。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">9.2.2. </span>批处理队列的摊销分析<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/7OV9iKT0Huw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>具有两个列表的 <a class="reference internal" href="../modules/functional_data_structures.html"><span class="doc std std-doc">batched queues</span></a> 的实现在某种程度上更
+比仅使用一个列表的实现更高效，因为它设法
+实现恒定时间<code class="docutils literal notranslate"><span class="pre">enqueue</span></code>操作。但是，这是在权衡
+进行 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 操作有时会花费超过常量的时间：每当
+发件箱变空，收件箱必须反转，这需要
+额外的线性时间操作。</p>
+<p>正如我们当时观察到的那样，这种逆转相对罕见。只有当
+发件箱已耗尽。摊销分析为我们提供了一种解释这一点的方法。我们
+实际上可以表明 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 操作是摊销常数时间的。</p>
+<p>为了让分析一开始简单，我们假设队列以
+恰好有一个元素 <code class="docutils literal notranslate"><span class="pre">1</span></code> 已经入队，我们执行三个 <code class="docutils literal notranslate"><span class="pre">enqueue</span></code>
+<code class="docutils literal notranslate"><span class="pre">2</span></code>、<code class="docutils literal notranslate"><span class="pre">3</span></code> 的操作，然后是 <code class="docutils literal notranslate"><span class="pre">4</span></code>，最后是一个 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code>。单人
+初始元素最终会出现在发件箱中。所有三个 <code class="docutils literal notranslate"><span class="pre">enqueue</span></code> 操作都会
+将一个元素添加到收件箱中。所以就在 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 之前，队列看起来
+像：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">];</span> <span class="n">i</span> <span class="o">=</span> <span class="o">[</span><span class="mi">4</span><span class="o">;</span> <span class="mi">3</span><span class="o">;</span> <span class="mi">2</span><span class="o">]}</span>
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 之后：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="o">[</span><span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">;</span> <span class="mi">4</span><span class="o">];</span> <span class="n">i</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span>
+</pre></div>
+</div>
+<p>它需要</p>
+<ul class="simple">
+<li><p>3 个cons 操作来执行 3 个队列，以及</p></li>
+<li><p>另外 3 个cons 操作是通过反转列表来完成出队。</p></li>
+</ul>
+<p>总共需要 6 个 cons 操作来执行 4 个 <code class="docutils literal notranslate"><span class="pre">enqueue</span></code> 和 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code>
+操作。因此，每个队列的平均成本为 1.5 个 cons 操作
+操作。还有其他模式匹配操作和记录
+构造，但这些都只花费恒定的时间，所以我们将忽略它们。</p>
+<p>更复杂的情况怎么样，有 <code class="docutils literal notranslate"><span class="pre">enqueues</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">dequeues</span></code> 相互穿插？尝试取平均值
+系列将很难分析。但是，受到我们对哈希分析的启发
+表，假设我们假设每个 <code class="docutils literal notranslate"><span class="pre">enqueue</span></code> 的成本是实际成本的两倍
+成本，以cons 操作来衡量？然后当一个元素入队时，
+我们可以“预付”当该元素被使用时将产生的后续成本
+cons 到反向列表中。</p>
+<p><code class="docutils literal notranslate"><span class="pre">enqueue</span></code> 操作仍然是恒定时间，因为即使我们现在
+假设它的成本是 2 而不是 1，那么 2 仍然是一个常数。
+并且 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 操作是摊销常数时间：</p>
+<ul class="simple">
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 不需要反转收件箱，它实际上只是不变
+工作，以及</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 确实需要反转带有 <span class="math notranslate nohighlight">\(n\)</span> 元素的收件箱，它已经
+从 <span class="math notranslate nohighlight">\(n\)</span> 的每个队列中“保存”了 <span class="math notranslate nohighlight">\(n\)</span> 工作单元
+元素。</p></li>
+</ul>
+<p>因此，如果我们假设每个队列的成本是正常价格的两倍，则每个操作
+在序列中摊销常数时间。这只是记账技巧吗？
+绝对地。但它也揭示了更深层次的事实：平均而言，我们得到的
+恒定时间性能，即使某些操作可能很少有
+最坏情况下的线性时间性能。</p>
+</section>
+<section id="id4">
+<h2><span class="section-number">9.2.3. </span>银行家和物理学家<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/-846PptyO7Q" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>从概念上讲，摊销分析可以通过三种方式来理解：</p>
+<ol class="arabic simple">
+<li><p>取一系列操作的平均成本。这就是我们所做的
+到目前为止。</p></li>
+<li><p>在数据结构的每个单独元素中保留一个“银行帐户”。一些
+操作存款信用，其他人提取信用。目标是为了账户
+总数永远不会为负数。任何操作的摊余成本是
+实际成本加上任何存入的积分，减去任何花费的积分。所以如果一个
+操作实际上花费 <span class="math notranslate nohighlight">\(n\)</span> 但花费 <span class="math notranslate nohighlight">\(n-1\)</span> 积分，然后摊销
+成本仅为<span class="math notranslate nohighlight">\(1\)</span>。这称为摊销分析的“银行家方法”。</p></li>
+<li><p>将整个数据结构视为具有一定量的“势能”
+储存起来。有些操作会增加能量，有些则会减少能量。能量
+永远不应该是负数。任何运营的摊余成本是其实际成本
+成本，加上势能的变化。因此，如果手术实际成本
+<span class="math notranslate nohighlight">\(n\)</span>，操作前势能为<span class="math notranslate nohighlight">\(n\)</span>，操作后
+操作势能为 <span class="math notranslate nohighlight">\(0\)</span>，则摊余成本为 <span class="math notranslate nohighlight">\(n + (0 -
+n)\)</span>, which is just <span class="math notranslate nohighlight">\(0\)</span>。这称为摊销的“物理学家方法”
+分析。</p></li>
+</ol>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/ICT_TfQUa8w" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>银行家和物理学家的方法在许多情况下更容易使用
+而不是一系列操作的复杂分析。让我们回顾一下我们的
+到目前为止的例子来说明它们的用法：</p>
+<ul class="simple">
+<li><p><strong>银行家的方法，哈希表：</strong> 该表一开始是空的。当一个绑定
+添加到表中，在其帐户中保存 1 个积分。当重新散列变成
+必要时，每一次绑定保证有1积分。使用该信用
+支付重新哈希的费用。现在所有绑定的积分均为 0。从现在开始，当一个
+绑定已添加到表中，在其帐户中保存 1 个积分，在
+任何一个具有 0 积分的绑定帐户。当时的
+下一次重新散列变得必要，绑定的数量增加了一倍。但自从
+我们在每次插入时节省了 2 个积分，每个绑定现在都有 1 个积分
+再次帐户。这样我们就可以支付重新哈希的费用。账目永远不会出现负数
+因为他们总是有 0 或 1 学分。</p></li>
+<li><p>**银行家的方法，批量队列：**当一个元素被添加到队列中时，
+在其帐户中保存 1 个积分。当必须反转收件箱时，请使用
+每个元素中的积分可用于支付发件箱中的 cons。由于元素
+每个元素在收件箱输入并最多转换一次到发件箱
+将有 0 或 1 学分。所以账目永远不会变成负数。</p></li>
+<li><p><strong>物理学家的方法，哈希表：</strong> 首先，定义
+该表是要插入的绑定数量。因此，该能量将
+永远不要消极。每次插入都会使能量增加 1 个单位。当
+插入 <span class="math notranslate nohighlight">\(n\)</span> 绑定后需要第一次重新哈希，势能为
+<span class="math notranslate nohighlight">\(n\)</span>。重新哈希时，潜力会回到 <span class="math notranslate nohighlight">\(0\)</span>。所以实际成本是
+<span class="math notranslate nohighlight">\(n\)</span>，但电势变化为 <span class="math notranslate nohighlight">\(n\)</span>，这使得摊余成本为 <span class="math notranslate nohighlight">\(0\)</span>，
+或常数。从现在开始，将势能定义为数字的两倍
+自上次重新哈希以来插入的绑定数。再说一次，能量永远不会
+消极的。每次插入都会使能量增加 2 个单位。当下一次重演时
+插入 <span class="math notranslate nohighlight">\(n\)</span> 绑定后需要，会有 <span class="math notranslate nohighlight">\(2n\)</span> 绑定需要
+被重新讨论。同样，摊余成本将是恒定的，因为实际
+<span class="math notranslate nohighlight">\(2n\)</span> 重新插入的成本由 <span class="math notranslate nohighlight">\(2n\)</span> 电势变化抵消。</p></li>
+<li><p>**物理学家的方法，批量队列：**定义势能
+队列的长度为收件箱的长度。因此它永远不会是负数。当
+<code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 必须反转长度为 <span class="math notranslate nohighlight">\(n\)</span> 的收件箱，实际成本为
+<span class="math notranslate nohighlight">\(n\)</span> 但 <span class="math notranslate nohighlight">\(n\)</span> 的潜力也发生了变化，这抵消了成本并使其
+常数。</p></li>
+</ul>
+<p>这两种方法的分析能力是等效的：</p>
+<ul class="simple">
+<li><p>要将银行家的分析转换为物理学家的分析，只需将势变为
+个人帐户中所有贷方的总和。</p></li>
+<li><p>要将物理学家的分析转换为银行家的分析，只需指定一个
+数据结构的杰出元素是唯一一个永远存在的元素
+持有任何积分，并在每次操作中存入或提取找零
+潜力进入该元素的帐户。</p></li>
+</ul>
+<p>因此，选择使用哪个实际上取决于哪个更容易
+正在分析的数据结构，或者哪个更容易让你头脑清醒
+周围。你可能会发现其中一种或另一种方法更容易理解
+上面的数据结构，你的朋友可能有不同的看法。</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">9.2.4. </span>摊销分析和持久性<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>当使用数据结构时，摊销分析就不再是一种技术
+坚持不懈。例如，假设我们有一个批处理队列 <code class="docutils literal notranslate"><span class="pre">q</span></code> ，我们已经将
+插入了 <span class="math notranslate nohighlight">\(n+1\)</span> 元素。一个元素将位于发件箱中，另一个元素为 <span class="math notranslate nohighlight">\(n\)</span>
+将在收件箱中。现在我们执行以下操作：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">q1</span> <span class="o">=</span> <span class="n">dequeue</span> <span class="n">q</span>
+<span class="o">#</span> <span class="k">let</span> <span class="n">q2</span> <span class="o">=</span> <span class="n">dequeue</span> <span class="n">q</span>
+<span class="o">...</span>
+<span class="o">#</span> <span class="k">let</span> <span class="n">qn</span> <span class="o">=</span> <span class="n">dequeue</span> <span class="n">q</span>
+</pre></div>
+</div>
+<p>其中每一项 <span class="math notranslate nohighlight">\(n\)</span> <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 操作都需要 <span class="math notranslate nohighlight">\(O(n)\)</span> 的实际成本
+反转收件箱。所以整个系列的实际成本为<span class="math notranslate nohighlight">\(O(n^2)\)</span>。但是
+摊销分析技术仅适用于第一个 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code>。之后，
+所有账户都是空的（银行家方法），或者潜力为零
+（物理学家的），这意味着剩余的操作不能用它们来支付
+昂贵的清单逆转。因此，该系列的总成本为 <span class="math notranslate nohighlight">\(O(n^2 -
+n)\)</span>, which is <span class="math notranslate nohighlight">\(O(n^2)\)</span>。</p>
+<p>持久性的问题在于它违反了内置的假设
+摊销分析表明积分（或能量单位）仅花费一次。每个
+数据结构的持久副本会尝试自行使用它们，而不是
+了解所有其他副本。</p>
+<p>有更先进的摊销分析技术可以解释
+坚持。这些技术基于积累<em>债务</em>的想法
+是后来还清的，而不是积累储蓄然后花掉的。
+债务最终成为一种分析技术的原因可以总结为：
+尽管我们的银行永远不会（从财务上来说）允许我们花钱
+两次，他们会同意我们多次偿还债务。咨询
+冈崎的<em>纯函数式数据结构</em>了解更多信息。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters/ds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="hash_tables.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">9.1. </span>哈希表</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="rb.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">9.3. </span>红黑树</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">9.2.1. 哈希表的摊销分析</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">9.2.2. 批处理队列的摊销分析</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">9.2.3. 银行家和物理学家</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">9.2.4. 摊销分析和持久性</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

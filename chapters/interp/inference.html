@@ -1,0 +1,1679 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>10.6. 类型推断 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/interp/inference';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="10.7. 总结" href="summary.html" />
+    <link rel="prev" title="10.5. 类型检查" href="typecheck.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">10. 解释器</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/interp/inference.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/interp/inference.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/interp/inference.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>类型推断</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ocaml">10.6.1. OCaml 类型重建</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.6.2. 基于约束的类型推断</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">10.6.3. 解决约束</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">10.6.4. 整理类型推断</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let">10.6.5. Let 多态</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">10.6.6. 多态性和可变性</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">10.6. </span>类型推断<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<p>OCaml 和 Java 是“静态类型”语言，这意味着每个绑定都有一个
+在<em>编译时</em>—也就是程序执行之前—确定的类型。
+类型检查器是一个编译时过程，用于接受或拒绝程序。相比之下，JavaScript 和 Ruby 则
+动态类型语言；绑定的类型未提前确定
+确定。诸如将 42 绑定到 <code class="docutils literal notranslate"><span class="pre">x</span></code> 然后将 <code class="docutils literal notranslate"><span class="pre">x</span></code> 视为字符串的计算
+因此要么导致运行时错误，要么导致运行时转换
+类型。</p>
+<p>与 Java 不同，OCaml 是“隐式类型”，这意味着程序员很少需要
+写下绑定的类型。这通常很方便，尤其是在
+高阶函数。 （尽管有些人不同意这是否使
+代码更容易还是更难阅读。）但隐式类型绝不会改变这个事实：
+OCaml 是静态类型的。相反，类型检查器必须更多
+复杂，因为它必须推断出如果程序员把所有类型注释都写出来，
+那些注释会是什么。原则上，类型推断和
+类型检查可以是单独的过程（推断器可以找出
+类型，然后检查器可以确定程序是否类型正确），但是
+在实践中，它们通常被合并到一个名为 <em>type 的单个过程中
+重建</em>。</p>
+<section id="ocaml">
+<h2><span class="section-number">10.6.1. </span>OCaml 类型重建<a class="headerlink" href="#ocaml" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/_yDo9Q9EOHY" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>在非常高的层面上，OCaml 的类型重建算法的工作原理如下：</p>
+<ul class="simple">
+<li><p>按顺序确定定义的类型，使用前面定义的类型来推断后面定义的类型。
+（这就是为什么你不能在 OCaml 程序中先使用一个名称，再绑定它。）</p></li>
+<li><p>对于每个 <code class="docutils literal notranslate"><span class="pre">let</span></code> 定义，分析定义以确定<em>约束</em>
+关于它的类型。例如，如果推理器看到 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">+</span> <span class="pre">1</span></code>，则得出结论：
+<code class="docutils literal notranslate"><span class="pre">x</span></code> 必须具有类型 <code class="docutils literal notranslate"><span class="pre">int</span></code>。它会从函数应用、模式匹配等地方收集类似约束。
+可以把这些约束看作一个系统，
+就像代数中可能有的方程一样。</p></li>
+<li><p>使用该方程组来求解所定义的名称的类型。</p></li>
+</ul>
+<p>OCaml 类型重建算法尝试永远不会拒绝以下程序：
+如果程序员写下了类型，就可以进行类型检查。它还尝试
+永远不要接受不可能进行类型检查的程序。还有一些比较隐晦的
+语言的某些部分有时可能需要类型注释，或者在
+最不方便时（请参阅<em>现实世界 OCaml</em> 第 22 章“类型推断”，了解
+示例）。但对于你编写的大多数代码来说，类型注释确实完全是
+可选的。</p>
+<p>因为继续写“类型重建算法”会很冗长
+OCaml 和其他函数式语言使用”，我们将该算法称为 HM。那
+整个编程语言文献中都使用这个名称，因为
+算法由 Roger <u>H</u>indley 和 Robin 独立发明
+<u>M</u>ilner.</p>
+<p>HM 已经被很多人多次重新发现。Curry 非正式地使用了它
+20 世纪 50 年代（甚至可能是 1930 年代）。他于1967年正式写成（发表
+1969）。 Hindley于1969年独立发现它；莫里斯，1968 年；和米尔纳
+1978 年。在逻辑领域，类似的想法可能可以追溯到 Tarski
+在20世纪20年代。在评论这段历史时，欣德利写道：</p>
+<blockquote>
+<div><p>这个不断重新发现的故事一定有其寓意；也许有人
+沿着这条线应该已经学会了阅读。或者别人学写作。</p>
+</div></blockquote>
+<p>虽然我们还没有看到 HM 算法，但你可能不会感到惊讶
+要知道它通常非常有效—你可能从来没有必要这样做
+等待顶层打印推断出的程序类型。在实践中，
+它以近似线性的时间运行。但理论上来说，有一些很奇怪的地方
+可能导致其运行时间爆炸的程序。 （从技术上来说，它是
+指数时间。）为了好玩，尝试在 utop 中键入以下代码：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="bp">true</span><span class="o">;;</span>
+<span class="o">#</span> <span class="k">let</span> <span class="n">f0</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;;</span>
+<span class="o">#</span> <span class="k">let</span> <span class="n">f</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="k">if</span> <span class="n">b</span> <span class="k">then</span> <span class="n">f0</span> <span class="k">else</span> <span class="k">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="n">y</span><span class="o">;;</span>
+<span class="o">#</span> <span class="k">let</span> <span class="n">f</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="k">if</span> <span class="n">b</span> <span class="k">then</span> <span class="n">f</span> <span class="k">else</span> <span class="k">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="n">y</span><span class="o">;;</span>
+<span class="o">#</span> <span class="k">let</span> <span class="n">f</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="k">if</span> <span class="n">b</span> <span class="k">then</span> <span class="n">f</span> <span class="k">else</span> <span class="k">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="n">y</span><span class="o">;;</span>
+<span class="c">(* keep repeating that last line *)</span>
+</pre></div>
+</div>
+<p>你会看到类型变得越来越长，最终（大约 20
+重复等）类型推断将导致显着的延迟。</p>
+</section>
+<section id="id2">
+<h2><span class="section-number">10.6.2. </span>基于约束的类型推断<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>让我们从这个小东西开始构建 HM 类型推断算法
+语言：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= x | i | b | e1 bop e2
+    | if e1 then e2 else e3
+    | fun x -&gt; e
+    | e1 e2
+
+bop ::= + | * | &lt;=
+
+t ::= int | bool | t1 -&gt; t2
+</pre></div>
+</div>
+<p>该语言是 SimPL，加上 lambda 演算，减去 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式。它
+结果 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式增加了一层额外的复杂性，所以我们来
+稍后再回复他们。</p>
+<p>由于这种语言中的匿名函数没有类型注释，因此我们有
+推断参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的类型。例如，</p>
+<ul class="simple">
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">1</span></code> 中，参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 必须具有类型 <code class="docutils literal notranslate"><span class="pre">int</span></code> 因此该函数具有
+输入 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">if</span> <span class="pre">x</span> <span class="pre">then</span> <span class="pre">1</span> <span class="pre">else</span> <span class="pre">0</span></code> 中，参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 必须具有类型 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 因此
+函数的类型为 <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。</p></li>
+<li><p>函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">if</span> <span class="pre">x</span> <span class="pre">then</span> <span class="pre">x</span> <span class="pre">else</span> <span class="pre">0</span></code> 是不可输入的，因为它会
+要求 <code class="docutils literal notranslate"><span class="pre">x</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">bool</span></code>，这是不允许的。</p></li>
+</ul>
+<p><strong>语法简化。</strong> 我们可以将 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">bop</span> <span class="pre">e2</span></code> 视为语法糖
+<code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">bop</span> <span class="pre">)</span> <span class="pre">e1</span> <span class="pre">e2</span></code>。也就是说，我们将中缀二元运算符视为前缀函数
+应用程序。让我们为 <em>names</em> 引入一个新的语法类 <code class="docutils literal notranslate"><span class="pre">n</span></code> ，它
+概括标识符和运算符。这会将语法更改为：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= n | i | b
+    | if e1 then e2 else e3
+    | fun x -&gt; e
+    | e1 e2
+
+n ::= x | bop
+
+bop ::= ( + ) | ( * ) | ( &lt;= )
+
+t ::= int | bool | t1 -&gt; t2
+</pre></div>
+</div>
+<p>我们已经知道这些内置运算符的类型：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>( + ) : int -&gt; int -&gt; int
+( * ) : int -&gt; int -&gt; int
+( &lt;= ) : int -&gt; int -&gt; bool
+</pre></div>
+</div>
+<p>这些类型已给出；我们不必推断它们。它们是最初的一部分
+静态环境。在 OCaml 中，这些运算符名称稍后可能会被隐藏
+具有不同类型的值，但在这里我们不必担心，因为
+我们还没有 <code class="docutils literal notranslate"><span class="pre">let</span></code>。</p>
+<p><em>你</em>如何在心里推断出 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">x</span></code> 的类型，或者更确切地说，
+<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span> <span class="pre">1</span> <span class="pre">x</span></code>？现在它是自动的，但我们可以将其分解为
+件：</p>
+<ul class="simple">
+<li><p>从 <code class="docutils literal notranslate"><span class="pre">x</span></code> 开始，具有一些未知类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>。</p></li>
+<li><p>请注意，已知 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code> 的类型为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">(int</span> <span class="pre">-&gt;</span> <span class="pre">int)</span></code>。</p></li>
+<li><p>因此它的第一个参数必须具有类型 <code class="docutils literal notranslate"><span class="pre">int</span></code>。  <code class="docutils literal notranslate"><span class="pre">1</span></code> 就是这样做的。</p></li>
+<li><p>它的第二个参数也必须具有 <code class="docutils literal notranslate"><span class="pre">int</span></code> 类型。所以<code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">int</span></code>。那是一个
+<code class="docutils literal notranslate"><span class="pre">t</span></code> 上的_约束_。</p></li>
+<li><p>最后，函数体还必须具有类型 <code class="docutils literal notranslate"><span class="pre">int</span></code>，因为这是
+返回类型为 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code>。</p></li>
+<li><p>因此，整个函数的类型必须是<code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。</p></li>
+<li><p>由于 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">int</span></code>，该类型为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。</p></li>
+</ul>
+<p>类型推断算法遵循生成未知类型的相同思想，
+收集它们的约束，并使用约束来求解类型
+的表达式。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/hrl9Q68dIfQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>我们引入一个新的四元关系<code class="docutils literal notranslate"><span class="pre">env</span> <span class="pre">|-</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">-|</span> <span class="pre">C</span></code>，它应该是
+如下所示：“在环境 <code class="docutils literal notranslate"><span class="pre">env</span></code> 中，表达式 <code class="docutils literal notranslate"><span class="pre">e</span></code> 被推断为具有类型
+<code class="docutils literal notranslate"><span class="pre">t</span></code> 并生成约束集 <code class="docutils literal notranslate"><span class="pre">C</span></code>。”约束是以下形式的方程
+<code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">=</span> <span class="pre">t2</span></code> 对于任何类型 <code class="docutils literal notranslate"><span class="pre">t1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">t2</span></code>。</p>
+<p>如果我们将关系视为类型推断函数，则冒号中的
+中间将输入与输出分开。输入是 <code class="docutils literal notranslate"><span class="pre">env</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e</span></code>：我们
+想知道环境 <code class="docutils literal notranslate"><span class="pre">env</span></code> 中 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的类型是什么。该函数返回
+作为输出类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 和约束 <code class="docutils literal notranslate"><span class="pre">C</span></code>。</p>
+<p>关系中间的 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code> 大约是你在
+toplevel：你输入一个表达式，它会告诉你类型。但围绕那是
+你不可见的环境和约束集 <code class="docutils literal notranslate"><span class="pre">env</span> <span class="pre">|-</span> <span class="pre">...</span> <span class="pre">-|</span> <span class="pre">C</span></code>。
+因此，外部的十字转门显示了类型推断的部分，即
+顶层没有。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/NkAt9eApGSw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>推理最简单的部分是常数：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- i : int -| {}
+
+env |- b : bool -| {}
+</pre></div>
+</div>
+<p>已知任何整型常量 <code class="docutils literal notranslate"><span class="pre">i</span></code>，例如 <code class="docutils literal notranslate"><span class="pre">42</span></code>，都具有类型 <code class="docutils literal notranslate"><span class="pre">int</span></code>，并且
+没有产生约束。  对于布尔常量也是如此。</p>
+<p>推断名称的类型需要在环境中查找：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- n : env(n) -| {}
+</pre></div>
+</div>
+<p>不产生约束。</p>
+<p>如果名称未绑定在环境中，则无法键入表达式。
+这是一个未绑定名称错误。</p>
+<p>其余规则的核心与我们看到的类型检查规则相同
+以前，但它们每个都会生成一个_类型变量_，并且可能还生成一些
+该类型变量的约束。</p>
+<p><strong>如果。</strong></p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/0EHUTbWnYWw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>以下是 <code class="docutils literal notranslate"><span class="pre">if</span></code> 表达式的规则：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- if e1 then e2 else e3 : &#39;t -| C1, C2, C3, t1 = bool, &#39;t = t2, &#39;t = t3
+  if fresh &#39;t
+  and env |- e1 : t1 -| C1
+  and env |- e2 : t2 -| C2
+  and env |- e3 : t3 -| C3
+</pre></div>
+</div>
+<p>为了推断 <code class="docutils literal notranslate"><span class="pre">if</span></code> 的类型，我们推断每个的类型 <code class="docutils literal notranslate"><span class="pre">t1</span></code>、<code class="docutils literal notranslate"><span class="pre">t2</span></code> 和 <code class="docutils literal notranslate"><span class="pre">t3</span></code>
+它的子表达式，以及它们的任何约束。我们无法控制
+这些类型可能是什么；这取决于程序员写的内容。但我们确实
+知道守卫的类型必须是<code class="docutils literal notranslate"><span class="pre">bool</span></code>。所以我们生成一个约束
+<code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">=</span> <span class="pre">bool</span></code>。</p>
+<p>此外，我们知道两个分支必须具有相同的类型 — 但是，我们
+事先不知道那种类型可能是什么。所以，我们发明了一个 <em>fresh</em> 类型
+变量 <code class="docutils literal notranslate"><span class="pre">'t</span></code> 代表该类型。如果类型变量从未出现过，则它是新鲜的
+在类型推断期间在其他地方使用。因此，选择一个新的类型变量
+只是意味着选择一个不可能与任何其他名称混淆的新名称
+程序中的名字。我们返回 <code class="docutils literal notranslate"><span class="pre">'t</span></code> 作为 <code class="docutils literal notranslate"><span class="pre">if</span></code> 的类型，并记录两个
+约束 <code class="docutils literal notranslate"><span class="pre">'t</span> <span class="pre">=</span> <span class="pre">t2</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'t</span> <span class="pre">=</span> <span class="pre">t3</span></code> 表示两个分支都必须具有该约束
+类型。</p>
+<p>因此，我们需要将类型变量添加到类型语法中：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>t ::= &#39;x | int | bool | t1 -&gt; t2
+</pre></div>
+</div>
+<p>一些示例类型变量包括 <code class="docutils literal notranslate"><span class="pre">'a</span></code>、<code class="docutils literal notranslate"><span class="pre">'foobar</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'t</span></code>。最后，<code class="docutils literal notranslate"><span class="pre">t</span></code>
+是一个标识符，而不是元变量。</p>
+<p>这是一个例子：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- if true then 1 else 0 : &#39;t -| bool = bool, &#39;t = int
+  {} |- true : bool -| {}
+  {} |- 1 : int -| {}
+  {} |- 0 : int -| {}
+</pre></div>
+</div>
+<p>生成的完整约束集是
+<code class="docutils literal notranslate"><span class="pre">{},</span> <span class="pre">{},</span> <span class="pre">{},</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">bool,</span> <span class="pre">'t</span> <span class="pre">=</span> <span class="pre">int,</span> <span class="pre">'t</span> <span class="pre">=</span> <span class="pre">int</span></code>，但这当然简化为
+只是<code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">=</span> <span class="pre">bool,</span> <span class="pre">'t</span> <span class="pre">=</span> <span class="pre">int</span></code>。从该约束集我们可以看到类型
+<code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">true</span> <span class="pre">then</span> <span class="pre">1</span> <span class="pre">else</span> <span class="pre">0</span></code> 必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p>
+<p><strong>匿名函数。</strong></p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/y2Y2aRnxncE" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">x</span></code> 上没有类型注释，因此必须推断其类型：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- fun x -&gt; e : &#39;t1 -&gt; t2 -| C
+  if fresh &#39;t1
+  and env, x : &#39;t1 |- e : t2 -| C
+</pre></div>
+</div>
+<p>我们引入一个新的类型变量 <code class="docutils literal notranslate"><span class="pre">'t1</span></code> 来代表 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的类型，并推断
+<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">:</span> <span class="pre">'t1</span></code> 环境下主体 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的类型。无论 <code class="docutils literal notranslate"><span class="pre">x</span></code> 在哪里
+在 <code class="docutils literal notranslate"><span class="pre">e</span></code> 中使用，可能会导致生成涉及 <code class="docutils literal notranslate"><span class="pre">'t1</span></code> 的约束。那些
+约束将成为 <code class="docutils literal notranslate"><span class="pre">C</span></code> 的一部分。</p>
+<p>这是一个我们可以立即看到 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">:</span> <span class="pre">bool</span></code> 的函数，但是让我们开始工作
+通过推论：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- fun x -&gt; if x then 1 else 0 : &#39;t1 -&gt; &#39;t -| &#39;t1 = bool, &#39;t = int
+  {}, x : &#39;t1 |- if x then 1 else 0 : &#39;t -| &#39;t1 = bool, &#39;t = int
+    {}, x : &#39;t1 |- x : &#39;t1 -| {}
+    {}, x : &#39;t1 |- 1 : int -| {}
+    {}, x : &#39;t1 |- 0 : int -| {}
+</pre></div>
+</div>
+<p>函数的推断类型为 <code class="docutils literal notranslate"><span class="pre">'t1</span> <span class="pre">-&gt;</span> <span class="pre">'t</span></code>，约束为 <code class="docutils literal notranslate"><span class="pre">'t1</span> <span class="pre">=</span> <span class="pre">bool</span></code>
+和 <code class="docutils literal notranslate"><span class="pre">'t</span> <span class="pre">=</span> <span class="pre">int</span></code>。简化一下，该函数的类型是 <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。</p>
+<p><strong>函数应用。</strong></p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/2HRcvmQBWIM" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>必须推断整个应用程序的类型，因为我们还不知道
+有关任一子表达式类型的任何信息：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- e1 e2 : &#39;t -| C1, C2, t1 = t2 -&gt; &#39;t
+  if fresh &#39;t
+  and env |- e1 : t1 -| C1
+  and env |- e2 : t2 -| C2
+</pre></div>
+</div>
+<p>我们为应用程序的类型引入了一个新的类型变量 <code class="docutils literal notranslate"><span class="pre">'t</span></code>
+表达。我们使用推理来确定子表达式的类型和
+他们碰巧产生的任何限制。我们添加一个新约束，
+<code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">=</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">'t</span></code>，表示左侧<code class="docutils literal notranslate"><span class="pre">e1</span></code>的类型必须
+是一个函数，它接受 <code class="docutils literal notranslate"><span class="pre">t2</span></code> 类型的参数并返回类型的值
+<code class="docutils literal notranslate"><span class="pre">'t</span></code>。</p>
+<p>令 <code class="docutils literal notranslate"><span class="pre">I</span></code> 为绑定布尔运算符的_初始环境_。让我们
+推断 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code> 的部分应用的类型：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- ( + ) 1 : &#39;t -| int -&gt; int -&gt; int = int -&gt; &#39;t
+  I |- ( + ) : int -&gt; int -&gt; int -| {}
+  I |- 1 : int -| {}
+</pre></div>
+</div>
+<p>从由此产生的约束中，我们看到</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>int -&gt; int -&gt; int
+=
+int -&gt; &#39;t
+</pre></div>
+</div>
+<p>从每个函数类型的左侧剥离 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span></code> ，
+我们只剩下</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>int -&gt; int
+=
+&#39;t
+</pre></div>
+</div>
+<p>因此，<code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span> <span class="pre">1</span></code> 的类型是 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">10.6.3. </span>解决约束<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/o1wT8FC9hpE" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>解决一组约束意味着什么？由于约束是方程
+就类型而言，这很像求解代数方程组。我们想要
+求解这些方程中出现的变量的值。由
+将这些值替换为变量，我们应该得到如下方程
+两侧相同。例如，在代数中我们可能有：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>5x + 2y =  9
+ x -  y = -1
+</pre></div>
+</div>
+<p>求解该系统，我们会得到 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">2</span></code>。  如果我们替换
+<code class="docutils literal notranslate"><span class="pre">1</span></code> 对于 <code class="docutils literal notranslate"><span class="pre">x</span></code> 和 <code class="docutils literal notranslate"><span class="pre">2</span></code> 对于 <code class="docutils literal notranslate"><span class="pre">y</span></code>，我们得到：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>5(1) + 2(2) =  9
+  1  -   2  = -1
+</pre></div>
+</div>
+<p>这减少到</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> 9 =  9
+-1 = -1
+</pre></div>
+</div>
+<p>在编程语言术语中（尽管可能不是高中代数），
+我们说替换 <code class="docutils literal notranslate"><span class="pre">{1</span> <span class="pre">/</span> <span class="pre">x}</span></code> 和 <code class="docutils literal notranslate"><span class="pre">{2</span> <span class="pre">/</span> <span class="pre">y}</span></code> 一起<em>统一</em>该集合
+方程组，因为它们使每个方程“联合”，使得它的左侧是
+与其右侧相同。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/cNqPY5MSutM" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>求解类型方程组是类似的。正如我们找到的数字一样
+替换上面的变量，我们现在想要找到类型来替换类型
+变量，从而统一方程组。</p>
+<p>很像我们之前在替换模型求值时定义的替换，
+我们将把“把类型变量 <code class="docutils literal notranslate"><span class="pre">'x</span></code> 映射到类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>”的<em>类型替换</em>写作 <code class="docutils literal notranslate"><span class="pre">{t</span> <span class="pre">/</span> <span class="pre">'x}</span></code>。
+例如，<code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">{t2/'x}</span></code> 表示类型 <code class="docutils literal notranslate"><span class="pre">t1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">t2</span></code>
+替换 <code class="docutils literal notranslate"><span class="pre">'x</span></code>。</p>
+<p>我们可以如下定义类型的替换：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>int {t / &#39;x} = int
+bool {t / &#39;x} = bool
+&#39;x {t / &#39;x} = t
+&#39;y {t / &#39;x} = &#39;y
+(t1 -&gt; t2) {t / &#39;x} =  (t1 {t / &#39;x} ) -&gt; (t2 {t / &#39;x} )
+</pre></div>
+</div>
+<p>给定两个替换 <code class="docutils literal notranslate"><span class="pre">S1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">S2</span></code>，我们写 <code class="docutils literal notranslate"><span class="pre">S1;</span> <span class="pre">S2</span></code> 来表示
+替换是它们的<em>顺序组合</em>，定义为
+如下：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>t (S1; S2) = (t S1) S2
+</pre></div>
+</div>
+<p>顺序很重要。例如，<code class="docutils literal notranslate"><span class="pre">'x</span> <span class="pre">({('y</span> <span class="pre">-&gt;</span> <span class="pre">'y)</span> <span class="pre">/</span> <span class="pre">'x};</span> <span class="pre">{bool</span> <span class="pre">/</span> <span class="pre">'y})</span> </code> 是
+<code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code>，而不是 <code class="docutils literal notranslate"><span class="pre">'y</span> <span class="pre">-&gt;</span> <span class="pre">'y</span></code>。我们可以建立越来越大的替代品
+这边。</p>
+<p>替换 <code class="docutils literal notranslate"><span class="pre">S</span></code> 可以应用于约束 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">t'</span></code>。结果
+<code class="docutils literal notranslate"><span class="pre">(t</span> <span class="pre">=</span> <span class="pre">t')</span> <span class="pre">S</span></code> 定义为 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">S</span> <span class="pre">=</span> <span class="pre">t'</span> <span class="pre">S</span></code>。所以我们只需将替换应用于
+约束的两侧。</p>
+<p>最后，可以将替换应用于一组 <code class="docutils literal notranslate"><span class="pre">C</span></code> 约束；结果
+<code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">S</span></code> 是将 <code class="docutils literal notranslate"><span class="pre">S</span></code> 应用于每个单独约束的结果
+<code class="docutils literal notranslate"><span class="pre">C</span></code>。</p>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">t_1</span> <span class="pre">S</span></code> 产生相同的结果，则替换<em>统一</em>约束 <code class="docutils literal notranslate"><span class="pre">t_1</span> <span class="pre">=</span> <span class="pre">t_2</span></code>
+输入 <code class="docutils literal notranslate"><span class="pre">t_2</span> <span class="pre">S</span></code>。例如，替换 <code class="docutils literal notranslate"><span class="pre">S</span> <span class="pre">=</span> <span class="pre">{int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">/</span> <span class="pre">'y};</span> <span class="pre">{int</span> <span class="pre">/</span> <span class="pre">'x}</span></code>
+统一约束 <code class="docutils literal notranslate"><span class="pre">'x</span> <span class="pre">-&gt;</span> <span class="pre">('x</span> <span class="pre">-&gt;</span> <span class="pre">int)</span> <span class="pre">=</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">'y</span></code>，因为</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(&#39;x -&gt; (&#39;x -&gt; int)) S
+=
+int -&gt; (int -&gt; int)
+</pre></div>
+</div>
+<p>和</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(int -&gt; &#39;y) S
+=
+int -&gt; (int -&gt; int)
+</pre></div>
+</div>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">S</span></code> 统一了每个约束，则替换 <code class="docutils literal notranslate"><span class="pre">S</span></code> 统一一组 <code class="docutils literal notranslate"><span class="pre">C</span></code> 约束
+<code class="docutils literal notranslate"><span class="pre">C</span></code> 中的约束。</p>
+<p>最后，我们可以准确地说解决一组约束意味着什么：我们
+必须找到统一该集合的替换。也就是说，我们需要找到一个
+从类型变量到类型的映射序列，使得该序列导致
+约束中的每个方程设置为“统一”，这意味着它的左侧
+和右侧变得相同。</p>
+<p>为了找到统一约束集 <code class="docutils literal notranslate"><span class="pre">C</span></code> 的替换，我们使用一种算法
+<code class="docutils literal notranslate"><span class="pre">unify</span></code>，定义如下：</p>
+<ul class="simple">
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">C</span></code> 是空集，则 <code class="docutils literal notranslate"><span class="pre">unify(C)</span></code> 是空替换。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">C</span></code> 包含至少一个约束 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">=</span> <span class="pre">t2</span></code> 以及可能的其他一些约束
+约束 <code class="docutils literal notranslate"><span class="pre">C'</span></code>，则 <code class="docutils literal notranslate"><span class="pre">unify(C)</span></code> 定义如下：</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">t1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">t2</span></code> 都是相同的简单类型 — 即，两者相同
+类型变量 <code class="docutils literal notranslate"><span class="pre">'x</span></code>，或两者 <code class="docutils literal notranslate"><span class="pre">int</span></code> 或两者 <code class="docutils literal notranslate"><span class="pre">bool</span></code>— 然后返回
+<code class="docutils literal notranslate"><span class="pre">unify(C')</span></code>。 <em>在这种情况下，约束不包含任何有用的内容
+信息，所以我们将其丢弃并继续。</em></p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">t1</span></code> 是类型变量 <code class="docutils literal notranslate"><span class="pre">'x</span></code> 并且 <code class="docutils literal notranslate"><span class="pre">'x</span></code> 没有出现在 <code class="docutils literal notranslate"><span class="pre">t2</span></code> 中，那么让
+<code class="docutils literal notranslate"><span class="pre">S</span> <span class="pre">=</span> <span class="pre">{t2</span> <span class="pre">/</span> <span class="pre">'x}</span></code>，并返回<code class="docutils literal notranslate"><span class="pre">S;</span> <span class="pre">unify(C'</span> <span class="pre">S)</span></code>。 <em>在这种情况下，我们是
+从方程组中消除变量 <code class="docutils literal notranslate"><span class="pre">'x</span></code> ，就像
+求解代数方程中的高斯消元法。</em></p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">t2</span></code> 是类型变量 <code class="docutils literal notranslate"><span class="pre">'x</span></code> 并且 <code class="docutils literal notranslate"><span class="pre">'x</span></code> 没有出现在 <code class="docutils literal notranslate"><span class="pre">t1</span></code> 中，那么让
+<code class="docutils literal notranslate"><span class="pre">S</span> <span class="pre">=</span> <span class="pre">{t1</span> <span class="pre">/</span> <span class="pre">'x}</span></code>，并返回<code class="docutils literal notranslate"><span class="pre">S;</span> <span class="pre">unify(C'</span> <span class="pre">S)</span></code>。 <em>这是一个消除
+就像之前的案例一样。</em></p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">=</span> <span class="pre">i1</span> <span class="pre">-&gt;</span> <span class="pre">o1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">t2</span> <span class="pre">=</span> <span class="pre">i2</span> <span class="pre">-&gt;</span> <span class="pre">o2</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">i1</span></code>、<code class="docutils literal notranslate"><span class="pre">i2</span></code>、<code class="docutils literal notranslate"><span class="pre">o1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">o2</span></code>
+是类型，然后是 <code class="docutils literal notranslate"><span class="pre">unify(i1</span> <span class="pre">=</span> <span class="pre">i2,</span> <span class="pre">o1</span> <span class="pre">=</span> <span class="pre">o2,</span> <span class="pre">C')</span></code>。 <em>在这种情况下，我们打破了一个
+将约束分解为两个较小的约束并将这些约束相加
+返回以进一步统一。</em></p></li>
+<li><p>否则，失败。没有可能的统一者。</p></li>
+</ul>
+<!--
+- 如果 `t = t0 * t1` 和 `t' = t'0 * t'1`，
+      然后让 `C''` 成为 `C'` 与约束的并集
+      `t0 = t'0` 和 `t1 = t'1`，并返回 `unify(C'')`。
+
+- 如果 `t = (t0, ..., tn) tc` 和 `t' = (t'0, ..., t'n) tc` 对于某些
+      类型构造函数 `tc`,
+      然后让 `C''` 成为 `C'` 与约束的并集
+      `ti = t'i`，并返回`unify(C'')`。
+-->
+<p>在第二个和第三个子情况中，检查 <code class="docutils literal notranslate"><span class="pre">'x</span></code> 不应出现在
+type 确保算法实际上消除了变量。否则，
+该算法最终可能会重新引入变量而不是消除
+它。</p>
+<p>可以证明统一算法总是终止，并且
+当且仅当统一符实际存在时它才会产生结果—也就是说，
+当且仅当约束集有解。此外，该解决方案
+算法产生的是<em>最通用的统一器</em>，从某种意义上说，如果
+<code class="docutils literal notranslate"><span class="pre">S</span> <span class="pre">=</span> <span class="pre">unify(C)</span></code>和<code class="docutils literal notranslate"><span class="pre">S'</span></code>又统一了<code class="docutils literal notranslate"><span class="pre">C</span></code>，那么一定存在一些<code class="docutils literal notranslate"><span class="pre">S''</span></code>这样的
+那个<code class="docutils literal notranslate"><span class="pre">S'</span> <span class="pre">=</span> <span class="pre">S;</span> <span class="pre">S''</span></code>。这样的 <code class="docutils literal notranslate"><span class="pre">S'</span></code> 不如 <code class="docutils literal notranslate"><span class="pre">S</span></code> 通用，因为它包含
+<code class="docutils literal notranslate"><span class="pre">S''</span></code> 的额外替换。</p>
+</section>
+<section id="id4">
+<h2><span class="section-number">10.6.4. </span>整理类型推断<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>让我们回顾一下到目前为止我们所做的事情。我们从这种语言开始：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= n | i | b
+    | if e1 then e2 else e3
+    | fun x -&gt; e
+    | e1 e2
+
+n ::= x | bop
+
+bop ::= ( + ) | ( * ) | ( &lt;= )
+
+t ::= int | bool | t1 -&gt; t2
+</pre></div>
+</div>
+<p>然后我们引入了一种用于推断表达式类型的算法。那种类型
+随之而来的是一系列限制。该算法表达为
+关系 <code class="docutils literal notranslate"><span class="pre">env</span> <span class="pre">|-</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">-|</span> <span class="pre">C</span></code>。</p>
+<p>接下来，我们介绍了求解约束集的统一算法。那
+算法生成替换序列 <code class="docutils literal notranslate"><span class="pre">S</span></code> 作为输出，否则会失败。如果它
+失败，则 <code class="docutils literal notranslate"><span class="pre">e</span></code> 不可输入。</p>
+<p>为了完成类型推断并重建 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的类型，我们只需计算 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">S</span></code> 即可。
+也就是说，我们将解决方案应用于由 生成的类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的约束
+约束的产生。</p>
+<p>让 <code class="docutils literal notranslate"><span class="pre">p</span></code> 成为这种类型。即 <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">=</span> <span class="pre">t</span> <span class="pre">S</span></code>。可以证明 <code class="docutils literal notranslate"><span class="pre">p</span></code> 是
+表达式的 <em>principal</em> 类型，这意味着如果 <code class="docutils literal notranslate"><span class="pre">e</span></code> 也具有 <code class="docutils literal notranslate"><span class="pre">t</span></code> 类型
+任何其他 <code class="docutils literal notranslate"><span class="pre">t</span></code>，则存在替换 <code class="docutils literal notranslate"><span class="pre">S</span></code> 使得 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">p</span> <span class="pre">S</span></code>。</p>
+<p>例如，恒等函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span></code> 的主体类型将是
+<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code>。但你也可以为该函数提供不太有用的类型
+<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。我们所说的是 HM 将产生 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code>，而不是
+<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。所以从某种意义上来说，HM实际上推断出了最“宽松”的类型，那就是
+可以用于表达式。</p>
+<p><strong>一个有效的示例。</strong> 让我们推断以下表达式的类型：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">fun</span> <span class="n">f</span> <span class="o">-&gt;</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="o">((</span> <span class="o">+</span> <span class="o">)</span> <span class="n">x</span> <span class="mi">1</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>代码不多，但是会涉及很多！</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/trmq3wYcUxU" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>我们从初始环境 <code class="docutils literal notranslate"><span class="pre">I</span></code> 开始，它映射 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code>
+至 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+</pre></div>
+</div>
+<p>现在我们保留 <code class="docutils literal notranslate"><span class="pre">:</span> <span class="pre">t</span> <span class="pre">-|</span> <span class="pre">C</span></code>，因为这是约束的输出
+一代。我们还没有弄清楚输出！既然我们有一个函数，我们
+使用函数规则进行推理，引入新类型
+参数的变量：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)  &lt;-- Here
+</pre></div>
+</div>
+<p>我们再次有了一个函数，因此有了一个新的类型变量：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)  &lt;-- Here
+</pre></div>
+</div>
+<p>现在我们有了一个应用程序表达式。在处理它之前，我们需要
+下降到它的子表达式。第一个很容易。这只是一个变量。所以
+终于可以完成对环境变量类型的判断了，
+和一个空的约束集。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
+      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}  &lt;-- Here
+</pre></div>
+</div>
+<p>接下来是第二个子表达式。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
+      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
+      I, f : &#39;a, x : &#39;b |- ( + ) x 1  &lt;-- Here
+</pre></div>
+</div>
+<p>这是另一个应用程序，因此我们需要处理它的子表达式。召回
+<code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span> <span class="pre">x</span> <span class="pre">1</span></code> 被解析为 <code class="docutils literal notranslate"><span class="pre">((</span> <span class="pre">+</span> <span class="pre">)</span> <span class="pre">x)</span> <span class="pre">1</span></code>。所以第一个子表达式是
+处理起来很复杂。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
+      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
+      I, f : &#39;a, x : &#39;b |- ( + ) x 1
+        I, f : &#39;a, x : &#39;b |- ( + ) x  &lt;-- Here
+</pre></div>
+</div>
+<p>又一个应用程序。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
+      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
+      I, f : &#39;a, x : &#39;b |- ( + ) x 1
+        I, f : &#39;a, x : &#39;b |- ( + ) x
+          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}  &lt;-- Here
+</pre></div>
+</div>
+<p>这个很简单，因为我们只需在中查找名称 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code>
+环境。接下来也很简单，因为我们只需查找 <code class="docutils literal notranslate"><span class="pre">x</span></code> 即可。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
+      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
+      I, f : &#39;a, x : &#39;b |- ( + ) x 1
+        I, f : &#39;a, x : &#39;b |- ( + ) x
+          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}  &lt;-- Here
+</pre></div>
+</div>
+<p>最后，我们准备好解析函数应用程序了！我们推出一个新鲜的
+输入变量并添加约束。约束是推断类型
+左侧子表达式的 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 必须等于推断的类型
+右侧子表达式的 <code class="docutils literal notranslate"><span class="pre">'b</span></code> 箭头指向新类型变量 <code class="docutils literal notranslate"><span class="pre">'c</span></code>，即
+是，<code class="docutils literal notranslate"><span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">'c</span></code>。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
+      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
+      I, f : &#39;a, x : &#39;b |- ( + ) x 1
+        I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c  &lt;-- Here
+          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
+</pre></div>
+</div>
+<p>现在我们已经准备好将参数传递给该函数了。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
+      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
+      I, f : &#39;a, x : &#39;b |- ( + ) x 1
+        I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
+        I, f : &#39;a, x : &#39;b |- 1 : int -| {}  &lt;-- Here
+</pre></div>
+</div>
+<p>我们再次可以使用新类型变量来解析函数应用程序
+和约束。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
+      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
+      I, f : &#39;a, x : &#39;b |- ( + ) x 1 : &#39;d -| &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c  &lt;-- Here
+        I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
+        I, f : &#39;a, x : &#39;b |- 1 : int -| {}
+</pre></div>
+</div>
+<p>再一次，一个函数应用程序，一个新的类型变量和一个新的
+约束。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1) : &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c   &lt;-- Here
+      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
+      I, f : &#39;a, x : &#39;b |- ( + ) x 1 : &#39;d -| &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+        I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
+        I, f : &#39;a, x : &#39;b |- 1 : int -| {}
+</pre></div>
+</div>
+<p>现在我们终于完成了一个匿名函数。  其推断类型
+是其参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的新类型变量 <code class="docutils literal notranslate"><span class="pre">'b</span></code>，箭头为推断的
+输入其主体的 <code class="docutils literal notranslate"><span class="pre">e</span></code> 。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1) : &#39;b -&gt; &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c   &lt;-- Here
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1) : &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
+      I, f : &#39;a, x : &#39;b |- ( + ) x 1 : &#39;d -| &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+        I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
+        I, f : &#39;a, x : &#39;b |- 1 : int -| {}
+</pre></div>
+</div>
+<p>现在可以用同样的方式完成最后一个匿名函数：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1) : &#39;a -&gt; &#39;b -&gt; &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c  &lt;-- Here
+  I, f : &#39;a |- fun x -&gt; f (( + ) x 1) : &#39;b -&gt; &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+    I, f : &#39;a, x : &#39;b |- f (( + ) x 1) : &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+       I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
+       I, f : &#39;a, x : &#39;b |- ( + ) x 1 : &#39;d -| &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+         I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+           I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
+           I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
+         I, f : &#39;a, x : &#39;b |- 1 : int -| {}
+</pre></div>
+</div>
+<p>作为约束生成的结果，我们知道表达式的类型是
+<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">'e</span></code>，其中</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&#39;a = &#39;d -&gt; &#39;e
+&#39;c = int -&gt; &#39;d
+int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+</pre></div>
+</div>
+<p>为了求解该方程组，我们使用统一算法：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>unify(&#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c)
+</pre></div>
+</div>
+<p>第一个约束产生一个替换 <code class="docutils literal notranslate"><span class="pre">{('d</span> <span class="pre">-&gt;</span> <span class="pre">'e)</span> <span class="pre">/</span> <span class="pre">'a}</span></code>，我们记录下来
+作为解决方案的一部分，并将其应用于其余约束：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+=
+{(&#39;d -&gt; &#39;e) / &#39;a}; unify((&#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c) {(&#39;d -&gt; &#39;e) / &#39;a})
+=
+{(&#39;d -&gt; &#39;e) / &#39;a}; unify(&#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c)
+</pre></div>
+</div>
+<p>第二个约束的行为与第一个约束类似：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+=
+{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; unify((int -&gt; int -&gt; int = &#39;b -&gt; &#39;c) {(int -&gt; &#39;d) / &#39;c})
+=
+{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; unify(int -&gt; int -&gt; int = &#39;b -&gt; int -&gt; &#39;d)
+</pre></div>
+</div>
+<p>函数约束分解为两个较小的约束：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+=
+{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; unify(int = &#39;b, int -&gt; int = int -&gt; &#39;d)
+</pre></div>
+</div>
+<p>我们得到另一个替换：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+=
+{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; unify((int -&gt; int = int -&gt; &#39;d) {int / &#39;b})
+=
+{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; unify(int -&gt; int = int -&gt; &#39;d)
+</pre></div>
+</div>
+<p>然后我们打破另一个函数约束：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+=
+{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; unify(int = int, int = &#39;d)
+</pre></div>
+</div>
+<p>由此产生的第一个新约束是微不足道的，只是被删除：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+=
+{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; unify(int = &#39;d)
+</pre></div>
+</div>
+<p>最后一个约束给了我们另一个替代：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>=
+{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; {int / &#39;d}
+</pre></div>
+</div>
+<p>最后，我们将统一的替换输出应用于推断的类型
+通过约束生成：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(&#39;a -&gt; &#39;b -&gt; &#39;e) {(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; {int / &#39;d}
+=
+((&#39;d -&gt; &#39;e) -&gt; &#39;b -&gt; &#39;e) {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; {int / &#39;d}
+=
+((&#39;d -&gt; &#39;e) -&gt; &#39;b -&gt; &#39;e) {int / &#39;b}; {int / &#39;d}
+=
+((&#39;d -&gt; &#39;e) -&gt; int -&gt; &#39;e) {int / &#39;d}
+=
+(int -&gt; &#39;e) -&gt; int -&gt; &#39;e
+</pre></div>
+</div>
+<p>事实上，这与 OCaml 为原始数据推断出的类型相同
+表达式：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">fun</span> <span class="n">f</span> <span class="o">-&gt;</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="o">((</span> <span class="o">+</span> <span class="o">)</span> <span class="n">x</span> <span class="mi">1</span><span class="o">);;</span>
+<span class="o">-</span> <span class="o">:</span> <span class="o">(</span><span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>除了 OCaml 使用不同的类型变量标识符之外。 OCaml 对我们很好
+并将类型变量“降低”为字母表中较小的字母。我们
+只需做一些额外的工作也可以做到这一点。</p>
+<p><strong>类型错误。</strong> 实际上，还有另一部分需要类型推断。如果
+统一失败，编译器或解释器需要产生有用的错误
+消息。这是一个重要的工程挑战，我们在此不予讨论。
+它需要跟踪的不仅仅是约束：我们需要知道为什么
+引入了约束，以及违反约束的后果。我们还需要
+跟踪约束回到产生它的词汇代码段，所以
+程序员可以看到问题出现在哪里。既然有可能
+约束可以以多种不同的顺序进行处理，有多种可能
+可能产生的错误消息。弄清楚哪一个将领导
+程序员找出错误的根本原因，而不是某些下游后果
+其中，是一个正在进行的研究领域。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/1jjGyPA9o1g" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</section>
+<section id="let">
+<h2><span class="section-number">10.6.5. </span>Let 多态<a class="headerlink" href="#let" title="Permalink to this heading">#</a></h2>
+<p>现在我们将向我们的小语言添加 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= x | i | b | e1 bop e2
+    | if e1 then e2 else e3
+    | fun x -&gt; e
+    | e1 e2
+    | let x = e1 in e2   (* new *)
+</pre></div>
+</div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/tB8sDHFT54I" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>事实证明，它们的类型推断比可能的要棘手得多
+预计。最简单的方法是添加此约束生成规则：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- let x = e1 in e2 : t2 -| C1, C2
+  if env |- e1 : t1 -| C1
+  and env, x : t1 |- e2 : t2 -| C2
+</pre></div>
+</div>
+<p>从类型检查的角度来看，这与我们一直使用的规则相同。
+对于许多 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式来说，它工作得很好。例如：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let x = 42 in x : int -| {}
+  {} |- 42 : int -| {}
+  x : int |- x : int -| {}
+</pre></div>
+</div>
+<p>问题是，当绑定的值是多态函数时，
+规则生成的约束过于严格。例如，考虑
+恒等函数：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="k">in</span>
+<span class="k">let</span> <span class="n">a</span> <span class="o">=</span> <span class="n">id</span> <span class="mi">0</span> <span class="k">in</span>
+<span class="n">id</span> <span class="bp">true</span>
+</pre></div>
+</div>
+<p>OCaml 可以轻松地将 <code class="docutils literal notranslate"><span class="pre">id</span></code> 的类型推断为 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 并允许它
+适用于 <code class="docutils literal notranslate"><span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">bool</span></code>。但上面的规则并非如此
+允许对这两种类型的应用。当我们使用它时，我们会生成
+以下类型和约束：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let id = fun x -&gt; x in (let a = id 0 in id true) : &#39;c -| &#39;a -&gt; &#39;a = int -&gt; &#39;b, &#39;a -&gt; &#39;a = bool -&gt; &#39;c
+  {} |- fun x -&gt; x : &#39;a -| {}
+    x : &#39;a |- x : &#39;a -| {}
+  id : &#39;a -&gt; &#39;a |- let a = id 0 in id true : &#39;c -| &#39;a -&gt; &#39;a = int -&gt; &#39;b, &#39;a -&gt; &#39;a = bool -&gt; &#39;c   &lt;--- POINT 1
+    id : &#39;a -&gt; &#39;a |- id 0 : &#39;b -| &#39;a -&gt; &#39;a = int -&gt; &#39;b
+      id : &#39;a -&gt; &#39;a |- id : &#39;a -&gt; &#39;a -| {}
+      id : &#39;a -&gt; &#39;a |- 0 : int -| {}
+    id : &#39;a -&gt; &#39;a, a : &#39;b |- id true : &#39;c -| &#39;a -&gt; &#39;a = bool -&gt; &#39;c   &lt;--- POINT 2
+      id : &#39;a -&gt; &#39;a, a : &#39;b |- id : &#39;a -&gt; &#39;a -| {}
+      id : &#39;a -&gt; &#39;a, a : &#39;b |- true : bool -| {}
+</pre></div>
+</div>
+<p>请注意，我们确实为 <code class="docutils literal notranslate"><span class="pre">id</span></code> 推断出类型 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code>，你可以在
+示例后面几行的环境。但是，在第 1 点，我们推断
+约束 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">=</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">'b</span></code>，在第 2 点，我们推断
+<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">=</span> <span class="pre">bool</span> <span class="pre">-&gt;</span> <span class="pre">'c</span></code>。当统一算法遇到那些
+约束，它将把它们分解为 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">=</span> <span class="pre">int</span></code>, ‘<code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">'b</span></code>, <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">=</span> <span class="pre">bool</span></code>,
+和<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">=</span> <span class="pre">'c</span></code>。第一个和第三个是矛盾的，因为我们不能
+有 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">=</span> <span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">=</span> <span class="pre">bool</span></code>。一个或另一个将被替换掉
+在统一期间，留下不可满足的约束<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">=</span> <span class="pre">bool</span></code>。那时
+点统一将会失败，表明该程序类型错误。</p>
+<p>问题是 <code class="docutils literal notranslate"><span class="pre">id</span></code> 的推断类型中的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 类型变量代表
+对于未知但<strong>固定</strong>类型。在每次应用 <code class="docutils literal notranslate"><span class="pre">id</span></code> 时，我们想让
+<code class="docutils literal notranslate"><span class="pre">'a</span></code> 成为 <strong>不同</strong> 类型，而不是强制它始终相同
+类型。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/me-Ll7mjNh8" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p><code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式的多态性问题的解决方案并不简单。
+它要求我们引入一种新的类型：<em>类型方案</em>。类型方案
+类似于数理逻辑中的“通用量化”。例如，在
+你可能会写出这样的逻辑：“对于所有自然数 <span class="math notranslate nohighlight">\(x\)</span>，它认为 <span class="math notranslate nohighlight">\(0 \cdot x
+= 0\)</span>”。 “为所有人”是普遍的量化：它从一个
+特别是 <span class="math notranslate nohighlight">\(x\)</span> 并陈述了一个适用于所有自然数的属性。</p>
+<p>类型方案写作 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">.</span> <span class="pre">t</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 是类型变量，<code class="docutils literal notranslate"><span class="pre">t</span></code> 是
+可能出现 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 的类型。例如，<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">.</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 是一个类型方案。它
+是接受 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 类型的值并返回值的函数的类型
+类型为 <code class="docutils literal notranslate"><span class="pre">'a</span></code>，对于所有 <code class="docutils literal notranslate"><span class="pre">'a</span></code>。因此，它是多态同一性的类型
+函数。</p>
+<p>在类型方案中，我们还可以在点的左侧放置许多类型变量。
+例如， <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">'b</span> <span class="pre">.</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 是一个函数的类型，它接受
+两个参数并返回第一个。在 OCaml 中，我们可以将其写为
+<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">x</span></code>。请注意，utop 正如我们所期望的那样推断出它的类型：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">f</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">;;</span>
+<span class="k">val</span> <span class="n">f</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>但我们实际上可以用类型方案手动写下注释：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">f</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">.</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">;;</span>
+<span class="k">val</span> <span class="n">f</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>请注意，OCaml 接受我们的手动类型注释，但不包括
+<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">'b</span> <span class="pre">.</span></code> 其输出中的一部分。 **但它隐含地存在并且始终存在
+** 一般来说，只要 OCaml 推断出类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 并且该类型已经具有
+在其中输入变量，实际上它是一个类型方案。例如，类型
+<code class="docutils literal notranslate"><span class="pre">List.length</span></code> 实际上是一个类型方案：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">mylen</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">.</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span><span class="o">;;</span>
+<span class="k">val</span> <span class="n">mylen</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>OCaml 只是不费心输出类型变量的列表
+类型方案中点的左侧。实际上，它们只会使输出变得混乱，并且
+许多程序员永远不需要了解它们。但现在你正在学习
+类型推断，是时候让你知道了。</p>
+<p>现在我们有了类型方案，我们将拥有将名称映射到的静态环境
+类型方案。我们可以将类型视为类型方案的特殊情况
+其中类型变量列表为空。对于类型方案，<code class="docutils literal notranslate"><span class="pre">let</span></code> 规则
+与上面的天真的规则相比，仅以一种方式进行更改，即 <code class="docutils literal notranslate"><span class="pre">generalize</span></code> on
+最后一行：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- let x = e1 in e2 : t2 -| C1, C2
+  if env |- e1 : t1 -| C1
+  and generalize(C1, env, x : t1) |- e2 : t2 -| C2
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">generalize</span></code> 的工作是采用像 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 这样的类型并_概括_它
+在环境 <code class="docutils literal notranslate"><span class="pre">env</span></code> 中进入类似 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">.</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 的类型方案
+约束<code class="docutils literal notranslate"><span class="pre">C1</span></code>。让我们稍后再回顾一下它是如何工作的。在此之前，
+还有另一条规则需要更改，即名称规则：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- n : instantiate(env(n)) -| {}
+</pre></div>
+</div>
+<p>唯一改变的是 <code class="docutils literal notranslate"><span class="pre">instantiate</span></code> 的使用。它的工作是
+采用像 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">.</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 这样的类型方案并将其实例化为新类型
+（这里我们严格指的是类型，而不是类型方案）具有新的类型变量。
+例如，如果 <code class="docutils literal notranslate"><span class="pre">'b</span></code> 不是，则 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">.</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 可以实例化为 <code class="docutils literal notranslate"><span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">'b</span></code>
+但在其他地方用作类型变量。</p>
+<p>以下是这两个修订后的规则如何协同工作以获得我们之前的示例
+正确的识别函数：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let id = fun x -&gt; x in (let a = id 0 in id true)
+  {} |- fun x -&gt; x : &#39;a -&gt; &#39;a -| {}
+    x : &#39;a |- x : &#39;a -| {}
+  id : &#39;a . &#39;a -&gt; &#39;a |- let a = id 0 in id true   &lt;--- POINT 1
+</pre></div>
+</div>
+<p>让我们在第 1 点暂停。当 <code class="docutils literal notranslate"><span class="pre">id</span></code> 被 <code class="docutils literal notranslate"><span class="pre">let</span></code> 放入环境中时
+规则，其类型从 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 泛化到 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">.</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code>；也就是说，从
+类型到类型方案。这记录了 <code class="docutils literal notranslate"><span class="pre">id</span></code> 的每个应用程序的事实
+应该为 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 使用它自己的值。正在进行：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let id = fun x -&gt; x in (let a = id 0 in id true)
+  {} |- fun x -&gt; x : &#39;a -&gt; &#39;a -| {}
+    x : &#39;a |- x : &#39;a -| {}
+  id : &#39;a . &#39;a -&gt; &#39;a |- let a = id 0 in id true   &lt;--- POINT 1
+    id : &#39;a . &#39;a -&gt; &#39;a |- id 0
+      id : &#39;a . &#39;a -&gt; &#39;a |- id : &#39;b -&gt; &#39;b -| {}   &lt;--- POINT 3
+</pre></div>
+</div>
+<p>在第 3 点暂停，当 <code class="docutils literal notranslate"><span class="pre">id</span></code> 应用于 <code class="docutils literal notranslate"><span class="pre">0</span></code> 时，我们实例化其类型
+变量 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 与新类型变量 <code class="docutils literal notranslate"><span class="pre">'b</span></code>。让我们完成：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let id = fun x -&gt; x in (let a = id 0 in id true) : &#39;e -| &#39;b -&gt; &#39;b = int -&gt; &#39;c, &#39;d -&gt; &#39;d = bool -&gt; &#39;e
+  {} |- fun x -&gt; x : &#39;a -&gt; &#39;a -| {}
+    x : &#39;a |- x : &#39;a -| {}
+  id : &#39;a . &#39;a -&gt; &#39;a |- let a = id 0 in id true : &#39;e -| &#39;b -&gt; &#39;b = int -&gt; &#39;c, &#39;d -&gt; &#39;d = bool -&gt; &#39;e   &lt;--- POINT 1
+    id : &#39;a . &#39;a -&gt; &#39;a |- id 0 : &#39;c -| &#39;b -&gt; &#39;b = int -&gt; &#39;c
+      id : &#39;a . &#39;a -&gt; &#39;a |- id : &#39;b -&gt; &#39;b -| {}   &lt;--- POINT 3
+      id : &#39;a . &#39;a -&gt; &#39;a |- 0 : int -| {}
+    id : &#39;a . &#39;a -&gt; &#39;a, a : &#39;b |- id true : &#39;e -| &#39;d -&gt; &#39;d = bool -&gt; &#39;e   &lt;--- POINT 2
+      id : &#39;a . &#39;a -&gt; &#39;a, a : &#39;b |- id : &#39;d -&gt; &#39;d -| {}   &lt;--- POINT 4
+      id : &#39;a . &#39;a -&gt; &#39;a, a : &#39;b |- true : bool -| {}
+</pre></div>
+</div>
+<p>在第 4 点，当 <code class="docutils literal notranslate"><span class="pre">id</span></code> 应用于 <code class="docutils literal notranslate"><span class="pre">true</span></code> 时，我们再次实例化其类型
+变量 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 具有新的类型变量，这次是 <code class="docutils literal notranslate"><span class="pre">'d</span></code>。所以约束条件
+第 1 点和第 2 点收集的数据不再矛盾，因为它们是
+谈论不同类型的变量。这些限制是：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&#39;b -&gt; &#39;b = int -&gt; &#39;c
+&#39;d -&gt; &#39;d = bool -&gt; &#39;e
+</pre></div>
+</div>
+<p>因此，统一算法将得出结论：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&#39;b = int
+&#39;c = int
+&#39;d = bool
+&#39;e = bool
+</pre></div>
+</div>
+<p>因此整个表达式被成功推断为类型 <code class="docutils literal notranslate"><span class="pre">bool</span></code>。</p>
+<p>**实例化和泛化。**我们使用了两个新函数，<code class="docutils literal notranslate"><span class="pre">instantiate</span></code>
+和 <code class="docutils literal notranslate"><span class="pre">generalize</span></code>，定义 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式的类型推断。我们需要
+定义这些函数。</p>
+<p>最简单的是<code class="docutils literal notranslate"><span class="pre">instantiate</span></code>。  给定一个类型方案 <code class="docutils literal notranslate"><span class="pre">'a1</span> <span class="pre">'a2</span> <span class="pre">...</span> <span class="pre">'an</span> <span class="pre">.</span> <span class="pre">t</span></code>，
+我们通过以下方式实例化它：</p>
+<ul class="simple">
+<li><p>选择 <code class="docutils literal notranslate"><span class="pre">n</span></code> 新鲜类型变量，以及</p></li>
+<li><p>将其中的每一个替换为 <code class="docutils literal notranslate"><span class="pre">t</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">'a1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">'an</span></code> 。</p></li>
+</ul>
+<p>与评估中的情况相比，这里的替换并不复杂
+替换模型，因为类型中没有任何内容可以绑定
+变量名称。</p>
+<p>但 <code class="docutils literal notranslate"><span class="pre">generalize</span></code> 需要更多工作。  这是 <code class="docutils literal notranslate"><span class="pre">let</span></code> 规则：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- let x = e1 in e2 : t2 -| C1, C2
+  if env |- e1 : t1 -| C1
+  and generalize (C1, env, x : t1) |- e2 : t2 -| C2
+</pre></div>
+</div>
+<p>为了概括 <code class="docutils literal notranslate"><span class="pre">t1</span></code>，我们执行以下操作。</p>
+<p>首先，我们假装 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 才是最重要的，而 <code class="docutils literal notranslate"><span class="pre">let</span></code> 的其余部分
+表达式不存在。如果 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 是整个程序，我们将如何完成
+类型推断？我们在 <code class="docutils literal notranslate"><span class="pre">C1</span></code> 上运行统一算法，得到替换
+<code class="docutils literal notranslate"><span class="pre">S</span></code>，并返回 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">S</span></code> 作为 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 的推断类型。所以，现在就这样做。我们打电话吧
+推断出类型 <code class="docutils literal notranslate"><span class="pre">u1</span></code>。我们还将 <code class="docutils literal notranslate"><span class="pre">S</span></code> 应用于 <code class="docutils literal notranslate"><span class="pre">env</span></code> 以获取新环境
+<code class="docutils literal notranslate"><span class="pre">env1</span></code>，现在反映了我们从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 收集的所有类型信息。</p>
+<p>其次，我们找出 <code class="docutils literal notranslate"><span class="pre">u1</span></code> 中的哪些类型变量应该被泛化。为什么
+不是全部吗？因为某些类型变量可以通过代码引入
+围绕 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式，例如，</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span>
+  <span class="o">(</span><span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="n">e1</span> <span class="k">in</span> <span class="n">e2</span><span class="o">)</span> <span class="o">(</span><span class="k">let</span> <span class="n">z</span> <span class="o">=</span> <span class="n">e3</span> <span class="k">in</span> <span class="n">e4</span><span class="o">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">x</span></code> 的类型变量不应在推断类型时进行泛化
+<code class="docutils literal notranslate"><span class="pre">y</span></code> 或 <code class="docutils literal notranslate"><span class="pre">z</span></code>，因为 <code class="docutils literal notranslate"><span class="pre">x</span></code> 必须在所有四个中具有相同的类型
+子表达式，<code class="docutils literal notranslate"><span class="pre">e1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">e4</span></code>。泛化可能会错误地允许 <code class="docutils literal notranslate"><span class="pre">x</span></code>
+<code class="docutils literal notranslate"><span class="pre">e1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 中有一种类型，但 <code class="docutils literal notranslate"><span class="pre">e3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e4</span></code> 中有不同的类型。</p>
+<p>因此，我们只概括 <code class="docutils literal notranslate"><span class="pre">u1</span></code> 中<strong>存在</strong>但在 <code class="docutils literal notranslate"><span class="pre">u1</span></code> 中<strong>不</strong>的变量
+<code class="docutils literal notranslate"><span class="pre">env1</span></code>。这样我们只概括 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 中的类型变量，而不是变量
+当我们开始推断 <code class="docutils literal notranslate"><span class="pre">let</span></code> 时，它们已经在环境中了
+表达式的类型。假设这些变量是 <code class="docutils literal notranslate"><span class="pre">'a1</span> <span class="pre">...</span> <span class="pre">'an</span></code>。我们的类型方案
+给 <code class="docutils literal notranslate"><span class="pre">x</span></code> 则为 <code class="docutils literal notranslate"><span class="pre">'a1</span> <span class="pre">...</span> <span class="pre">'an</span> <span class="pre">.</span> <span class="pre">u1</span></code>。</p>
+<p>将所有这些放在一起，我们最终得到：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>generalize(C1, env, x : t1) =
+  env1, x : &#39;a1 ... &#39;an . u1
+</pre></div>
+</div>
+<p>回到上面的识别函数的例子，我们有
+<code class="docutils literal notranslate"><span class="pre">generalize({},</span> <span class="pre">{},</span> <span class="pre">x</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a)</span></code>。在这个相当简单的情况下，<code class="docutils literal notranslate"><span class="pre">unify</span></code>
+从环境中没有发现新的平等，因此 <code class="docutils literal notranslate"><span class="pre">u1</span> <span class="pre">=</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">env1</span> <span class="pre">=</span> <span class="pre">{}</span></code>。 <code class="docutils literal notranslate"><span class="pre">u1</span></code> 中唯一的类型变量是 <code class="docutils literal notranslate"><span class="pre">'a</span></code>，并且它没有出现在
+<code class="docutils literal notranslate"><span class="pre">env1</span></code>。因此 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 被泛化，产生 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">.</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 作为类型方案
+<code class="docutils literal notranslate"><span class="pre">id</span></code>。</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">10.6.6. </span>多态性和可变性<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/6tj9WrRqPeU" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p><code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式的类型推断还有一个复杂之处。它
+当我们向语言添加可变引用时出现。考虑这个例子
+代码，在 OCaml 中不进行类型检查：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">succ</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="o">(</span> <span class="o">+</span> <span class="o">)</span> <span class="mi">1</span> <span class="n">x</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">id</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="n">ref</span> <span class="n">id</span><span class="o">;;</span>
+<span class="n">r</span> <span class="o">:=</span> <span class="n">succ</span><span class="o">;;</span>
+<span class="o">!</span><span class="n">r</span> <span class="bp">true</span><span class="o">;;</span>  <span class="c">(* error *)</span>
+</pre></div>
+</div>
+<p>很明显，我们应该推断 <code class="docutils literal notranslate"><span class="pre">succ</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">.</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code>。但是
+<code class="docutils literal notranslate"><span class="pre">r</span></code> 的类型应该是什么？我们很容易说我们应该推断
+<code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">.</span> <span class="pre">('a</span> <span class="pre">-&gt;</span> <span class="pre">'a)</span> <span class="pre">ref</span></code>。这将使我们实例化 <code class="docutils literal notranslate"><span class="pre">r</span></code> 的类型为
+第 4 行上的 <code class="docutils literal notranslate"><span class="pre">(int</span> <span class="pre">-&gt;</span> <span class="pre">int)</span> <span class="pre">ref</span></code> 并将 <code class="docutils literal notranslate"><span class="pre">succ</span></code> 存储在 <code class="docutils literal notranslate"><span class="pre">r</span></code> 中。但这也让我们
+在第 5 行将 <code class="docutils literal notranslate"><span class="pre">r</span></code> 的类型实例化为 <code class="docutils literal notranslate"><span class="pre">(bool</span> <span class="pre">-&gt;</span> <span class="pre">bool)</span> <span class="pre">ref</span></code>。
+灾难：它会导致将 <code class="docutils literal notranslate"><span class="pre">succ</span></code> 应用于 <code class="docutils literal notranslate"><span class="pre">true</span></code>，这不是类型安全的。</p>
+<p>OCaml及相关语言采用的解决方案称为<em>value
+限制：</em> 类型系统旨在防止多态可变值
+不再持有不止一种类型。让我们再重做一下这个例子，
+停下来看看顶层输出：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">id</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">;;</span>
+<span class="k">val</span> <span class="n">id</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>   <span class="c">(* as expected *)</span>
+
+<span class="o">#</span> <span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="n">ref</span> <span class="n">id</span><span class="o">;;</span>
+<span class="k">val</span> <span class="n">r</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="o">_</span><span class="n">weak1</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="o">_</span><span class="n">weak1</span><span class="o">)</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>   <span class="c">(* what is _weak? *)</span>
+
+<span class="o">#</span> <span class="n">r</span><span class="o">;;</span>
+<span class="o">-</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="o">_</span><span class="n">weak1</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="o">_</span><span class="n">weak1</span><span class="o">)</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>   <span class="c">(* it&#39;s consistent at least *)</span>
+
+<span class="o">#</span> <span class="n">r</span> <span class="o">:=</span> <span class="n">succ</span><span class="o">;;</span>
+<span class="o">-</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span> <span class="bp">()</span>
+
+<span class="o">#</span> <span class="n">r</span><span class="o">;;</span>
+<span class="o">-</span> <span class="o">:</span> <span class="o">(</span><span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">)</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>   <span class="c">(* did r just change type ?! *)</span>
+</pre></div>
+</div>
+<p>当推断出 <code class="docutils literal notranslate"><span class="pre">r</span></code> 的类型时，OCaml 会为其提供一个涉及 <em>weak</em> 类型的类型
+变量。所有此类变量的名称均以 <code class="docutils literal notranslate"><span class="pre">'_weak</span></code> 开头。弱型
+变量是一个尚未泛化的变量，因此无法实例化
+多种类型。相反，它表示一种尚不为人所知的单一类型。思考
+因为该变量的类型推断尚未完成：OCaml 正在等待
+以获得更多信息以准确确定它是什么。当 <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">:=</span> <span class="pre">succ</span></code> 为
+执行后，该信息最终变得可用。 OCaml 推断
+<code class="docutils literal notranslate"><span class="pre">'_weak1</span> <span class="pre">=</span> <span class="pre">int</span></code> 来自 <code class="docutils literal notranslate"><span class="pre">succ</span></code> 的类型。然后 OCaml 将 <code class="docutils literal notranslate"><span class="pre">'_weak1</span></code> 替换为
+<code class="docutils literal notranslate"><span class="pre">int</span></code> 无处不在。这就是最后一行产生错误的原因：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># !r true;;
+Error: This expression has type bool but an expression was expected of type int
+</pre></div>
+</div>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">:</span> <span class="pre">(int</span> <span class="pre">-&gt;</span> <span class="pre">int)</span> <span class="pre">ref</span></code>，我们不能将 <code class="docutils literal notranslate"><span class="pre">!r</span></code> 应用于 <code class="docutils literal notranslate"><span class="pre">bool</span></code>。</p>
+<p>这里我们不会介绍弱类型变量的实现。</p>
+<p>但是，我们不要离开多态类型和多态类型之间的相互作用这个话题。
+可变性还没有。你可能会认为这是一种现象
+仅影响 OCaml。但事实上，即使是 Java 也受到了影响。</p>
+<p>考虑以下类层次结构：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Animal</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">class</span> <span class="nc">Elephant</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Animal</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">class</span> <span class="nc">Rabbit</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Animal</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>现在假设我们创建了一系列动物：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Animal</span><span class="o">[]</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Rabbit</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span>
+</pre></div>
+</div>
+<p>这里我们使用<em>子类型多态性</em>来分配 <code class="docutils literal notranslate"><span class="pre">Rabbit</span></code> 对象的数组
+到 <code class="docutils literal notranslate"><span class="pre">Animal[]</span></code> 参考。这与<em>参数多态性</em>不同
+我们一直在 OCaml 中使用，但它仍然是多态性。</p>
+<p>如果我们尝试一下会怎样？</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="o">[</span><span class="mi">0</span><span class="o">]=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Elephant</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">a</span></code> 被输入为 <code class="docutils literal notranslate"><span class="pre">Animal</span></code> 数组，因此我们可以
+向其中分配一个大象对象，就像我们可以分配一个兔子对象一样。并且
+事实上，根据 Java 编译器的判断，该代码没有问题。但是Java给了我们一个
+如果我们运行该代码，则会出现运行时错误！</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Exception</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">ArrayStoreException</span>
+</pre></div>
+</div>
+<p>问题是，将第一个数组元素突变为兔子会留下
+我们使用一个 <code class="docutils literal notranslate"><span class="pre">Rabbit</span></code> 数组，其中一个元素是 <code class="docutils literal notranslate"><span class="pre">Elephant</span></code>。 （哎呀！安
+大象会坐在兔子身上。可怜的小面包。）但是在 Java 中，每个类型
+数组的对象应该是整个数组的属性。每个
+因此，由 <code class="docutils literal notranslate"><span class="pre">new</span> <span class="pre">Rabbit[2]</span></code> 创建的数组的元素必须是 <code class="docutils literal notranslate"><span class="pre">Rabbit</span></code>。所以
+Java 通过在运行时检测错误来防止上述分配
+引发异常。</p>
+<p>这实在是另一种形式的价值限制！值的类型
+根据值限制，存储在可变位置中的值可能不会更改。
+对于数组，Java 通过运行时检查来实现，而不是拒绝
+程序在编译时。这在稳健性之间取得了平衡
+（防止错误发生）和表现力（允许更多无错误
+程序进行类型检查）。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters/interp"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="typecheck.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">10.5. </span>类型检查</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="summary.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">10.7. </span>总结</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ocaml">10.6.1. OCaml 类型重建</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.6.2. 基于约束的类型推断</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">10.6.3. 解决约束</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">10.6.4. 整理类型推断</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let">10.6.5. Let 多态</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">10.6.6. 多态性和可变性</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

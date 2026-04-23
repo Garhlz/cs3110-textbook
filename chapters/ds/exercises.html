@@ -1,0 +1,999 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>9.9. 练习 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/ds/exercises';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="10. 解释器" href="../interp/intro.html" />
+    <link rel="prev" title="9.8. 总结" href="summary.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">9. 数据结构</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">9.8. 总结</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/ds/exercises.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/ds/exercises.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/ds/exercises.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>练习</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">9.9. </span>练习<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<p>Solutions to most exercises are <a href="https://github.com/cs3110/textbook-solutions">available</a>.
+We are happy to add or correct solutions. Please make contributions through GitHub.</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: hash insert [★★]</strong></p>
+<p>假设我们有一个关于整数键的哈希表。目前该表有 7 个
+空桶，哈希函数就是 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">hash</span> <span class="pre">k</span> <span class="pre">=</span> <span class="pre">k</span> <span class="pre">mod</span> <span class="pre">7</span></code>。
+绘制插入键 4、8、15、16 所产生的哈希表，
+23 和 42（无论你喜欢什么值）。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: relax bucket RI [★★]</strong></p>
+<p>我们要求哈希表桶不能包含重复项。什么会
+如果我们放宽此 RI 以允许重复，会发生什么情况？任何的效率
+操作（插入、查找或删除）发生变化吗？</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: strengthen bucket RI [★★]</strong></p>
+<p>如果我们加强桶 RI 要求每个桶都是
+按键排序？任何操作（插入、查找或
+删除）改变？</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: hash values [★★]</strong></p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">Hashtbl.hash</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 对多个不同类型的值进行哈希处理。制造
+确保至少尝试 <code class="docutils literal notranslate"><span class="pre">()</span></code>、<code class="docutils literal notranslate"><span class="pre">false</span></code>、<code class="docutils literal notranslate"><span class="pre">true</span></code>、<code class="docutils literal notranslate"><span class="pre">0</span></code>、<code class="docutils literal notranslate"><span class="pre">1</span></code>、<code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">[]</span></code>，以及
+每种类型的几个“较大”值。我们看到列表可以快速创建
+冲突。尝试创建二叉树并查找冲突。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: hashtbl usage [★★]</strong></p>
+<p>创建一个哈希表 <code class="docutils literal notranslate"><span class="pre">tab</span></code> 与 <code class="docutils literal notranslate"><span class="pre">Hashtbl.create</span></code> 其初始大小为 16。添加 31
+使用 <code class="docutils literal notranslate"><span class="pre">Hashtbl.add</span></code> 绑定到它。例如，你可以添加数字 1..31
+作为键，字符串“1”..“31”作为它们的值。使用 <code class="docutils literal notranslate"><span class="pre">Hashtbl.find</span></code> 查看
+对于 <code class="docutils literal notranslate"><span class="pre">tab</span></code> 中的键以及不在 <code class="docutils literal notranslate"><span class="pre">tab</span></code> 中的键。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: hashtbl stats [★]</strong></p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">Hashtbl.stats</span></code> 函数找出 <code class="docutils literal notranslate"><span class="pre">tab</span></code> 的统计信息（来自
+上面的练习）。表中有多少个桶？一个桶有多少个
+其中的单一绑定？</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: hashtbl bindings [★★]</strong></p>
+<p>定义一个函数 <code class="docutils literal notranslate"><span class="pre">bindings</span> <span class="pre">:</span> <span class="pre">('a,'b)</span> <span class="pre">Hashtbl.t</span> <span class="pre">-&gt;</span> <span class="pre">('a*'b)</span> <span class="pre">list</span></code>，使得
+<code class="docutils literal notranslate"><span class="pre">bindings</span> <span class="pre">h</span></code> 返回 <code class="docutils literal notranslate"><span class="pre">h</span></code> 中所有绑定的列表。使用你的函数查看全部
+<code class="docutils literal notranslate"><span class="pre">tab</span></code> 中的绑定（来自上面的练习）。 <em>提示：折叠。</em></p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: hashtbl load factor [★★]</strong></p>
+<p>定义一个函数 <code class="docutils literal notranslate"><span class="pre">load_factor</span> <span class="pre">:</span> <span class="pre">('a,'b)</span> <span class="pre">Hashtbl.t</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code>，使得
+<code class="docutils literal notranslate"><span class="pre">load_factor</span> <span class="pre">h</span></code> 是 <code class="docutils literal notranslate"><span class="pre">h</span></code> 的负载因子。 <code class="docutils literal notranslate"><span class="pre">tab</span></code> 的负载系数是多少？
+<em>提示：统计数据。</em></p>
+<p>添加一个到 <code class="docutils literal notranslate"><span class="pre">tab</span></code> 的绑定。统计数据或负载因子是否发生变化？现在还添加
+另一个绑定。现在统计数据或负载因子是否发生变化？ <em>提示：<code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code>
+当负载因子严格高于 2 时调整大小。</em></p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: functorial interface [★★★]</strong></p>
+<p>使用函数接口（即 <code class="docutils literal notranslate"><span class="pre">Hashtbl.Make</span></code>）创建一个哈希表，其
+键是不区分大小写的字符串。请注意遵守规范
+<code class="docutils literal notranslate"><span class="pre">Hashtbl.HashedType.hash</span></code> 的：</p>
+<blockquote>
+<div><p>如果根据 <code class="docutils literal notranslate"><span class="pre">equal</span></code> 两个键相等，则它们具有相同的哈希值
+由 <code class="docutils literal notranslate"><span class="pre">hash</span></code> 计算得出的值。</p>
+</div></blockquote>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: equals and hash [★★]</strong></p>
+<p>上一个练习引用了 <code class="docutils literal notranslate"><span class="pre">Hashtbl.HashedType.hash</span></code> 的规范。
+将其与 Java 的 <code class="docutils literal notranslate"><span class="pre">Object.hashCode()</span></code> <a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode--">specification</a> 进行比较。为什么这样做
+他们都有类似的要求吗？</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: bad hash [★★]</strong></p>
+<p>使用 functorial 接口创建一个哈希值非常糟糕的哈希表
+函数（例如，常数函数）。使用<code class="docutils literal notranslate"><span class="pre">stats</span></code>函数看看有多糟糕
+桶分布变为。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: linear probing [★★★★]</strong></p>
+<p>我们简要提到<em>探测</em>作为<em>链接</em>的替代方案。探测可以是
+有效地用于哈希表的硬件实现以及
+数据库。通过探测，每个桶只包含一个绑定。如果出现
+冲突时，我们通过数组向前搜索，如下所述。</p>
+<p><strong>你的任务：</strong> 实现一个使用线性探测的哈希表。详细信息是
+下面。</p>
+<p><strong>查找。</strong> 假设我们试图在表中查找绑定。我们散列
+绑定的密钥并在适当的存储桶中查找。如果已经有一个
+该存储桶中的不同键，我们开始在数组中向前搜索
+下一个桶，然后是下一个桶，依此类推，绕回到
+如有必要，位于数组的开头。最终我们要么</p>
+<ul class="simple">
+<li><p>找到一个空桶，在这种情况下我们要搜索的键没有绑定
+在表中；</p></li>
+<li><p>在到达空桶之前找到密钥，在这种情况下我们可以返回
+价值；或</p></li>
+<li><p>永远找不到键或空桶，而是绕回原处
+原始桶，这种情况下所有桶都已满并且密钥未绑定
+在表中。这种情况实际上不应该发生，因为我们不允许
+负载系数足够高以填充所有桶。</p></li>
+</ul>
+<p><strong>插入。</strong> 插入遵循与查找键相同的算法，不同之处在于
+每当我们第一次找到一个空桶时，我们就可以在那里插入绑定。</p>
+<p><strong>移除。</strong> 移除更加困难。一旦找到键，我们就不能
+桶是空的，因为这会导致未来的搜索受到影响
+早点停下来。相反，我们可以在该存储桶中引入一个特殊的“已删除”值
+指示存储桶不包含绑定，但搜索应该
+不止于此。</p>
+<p><strong>调整大小。</strong> 由于我们不希望数组完全填满，因此我们可以
+保持负载系数接近 1/4。当负载系数超过1/2时，我们可以加倍
+阵列，使负载系数回到 1/4。当负载系数低于
+1/8，我们可以将阵列减半，再次将负载系数恢复到 1/4。
+“删除”绑定使负载因子的定义变得复杂：</p>
+<ul class="simple">
+<li><p>当确定是否将表大小加倍时，我们计算负载
+系数为（绑定数量 + 已删除绑定数量）/（存储桶数量）。也就是说，
+删除的绑定有助于增加负载因子。</p></li>
+<li><p>当确定是否是表大小的一半时，我们计算负载因子
+为（绑定数量）/（存储桶数量）。也就是说，删除的绑定不算
+从而提高负载率。</p></li>
+</ul>
+<p>重新散列表时，删除的绑定当然不会重新插入到
+新表。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: functorized BST [★★★]</strong></p>
+<p>我们 BST 的实现假设可以使用
+内置比较运算符 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>、<code class="docutils literal notranslate"><span class="pre">=</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>。但如果客户想要怎么办
+使用自己的比较运算符？ （例如，忽略字符串中的大小写，或者
+具有仅使用记录的单个字段的记录集
+排序。）实现 <code class="docutils literal notranslate"><span class="pre">BstSet</span></code> 抽象作为参数化的函子
+启用客户端提供的比较运算符的结构，很像
+<a class="reference external" href="https://ocaml.org/api/Set.html">standard library <code class="docutils literal notranslate"><span class="pre">Set</span></code></a>。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: efficient traversal [★★★]</strong></p>
+<p>假设你想将树转换为列表。你必须输入值
+以某种顺序存储在树中。以下是三种方法：</p>
+<ul class="simple">
+<li><p><em>preorder</em>：每个节点的值出现在列表中其值之前
+左子树然后右子树。</p></li>
+<li><p><em>中序</em>：出现左子树的值，然后是节点处的值，
+然后是右子树的值。</p></li>
+<li><p><em>postorder</em>：节点的左子树和右子树的值出现，紧随其后
+通过节点处的值。</p></li>
+</ul>
+<p>这是实现这些<em>遍历</em>的代码，以及一些示例
+应用：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span> <span class="nc">Leaf</span> <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span class="n">preorder</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span> <span class="bp">[]</span>
+  <span class="o">|</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">l</span><span class="o">,</span><span class="n">v</span><span class="o">,</span><span class="n">r</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">@</span> <span class="n">preorder</span> <span class="n">l</span> <span class="o">@</span> <span class="n">preorder</span> <span class="n">r</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span class="n">inorder</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span> <span class="bp">[]</span>
+  <span class="o">|</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">l</span><span class="o">,</span><span class="n">v</span><span class="o">,</span><span class="n">r</span><span class="o">)</span> <span class="o">-&gt;</span>  <span class="n">inorder</span> <span class="n">l</span> <span class="o">@</span> <span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">@</span> <span class="n">inorder</span> <span class="n">r</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span class="n">postorder</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span> <span class="bp">[]</span>
+  <span class="o">|</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">l</span><span class="o">,</span><span class="n">v</span><span class="o">,</span><span class="n">r</span><span class="o">)</span> <span class="o">-&gt;</span>  <span class="n">postorder</span> <span class="n">l</span> <span class="o">@</span> <span class="n">postorder</span> <span class="n">r</span> <span class="o">@</span> <span class="o">[</span><span class="n">v</span><span class="o">]</span>
+
+<span class="k">let</span> <span class="n">t</span> <span class="o">=</span>
+  <span class="nc">Node</span><span class="o">(</span><span class="nc">Node</span><span class="o">(</span><span class="nc">Node</span><span class="o">(</span><span class="nc">Leaf</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">),</span> <span class="mi">2</span><span class="o">,</span> <span class="nc">Node</span><span class="o">(</span><span class="nc">Leaf</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">)),</span>
+       <span class="mi">4</span><span class="o">,</span>
+       <span class="nc">Node</span><span class="o">(</span><span class="nc">Node</span><span class="o">(</span><span class="nc">Leaf</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">),</span> <span class="mi">6</span><span class="o">,</span> <span class="nc">Node</span><span class="o">(</span><span class="nc">Leaf</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">)))</span>
+
+<span class="c">(*</span>
+<span class="c">  t is</span>
+<span class="c">        4</span>
+<span class="c">      /   \</span>
+<span class="c">     2     6</span>
+<span class="c">    / \   / \</span>
+<span class="c">   1   3 5   7</span>
+<span class="c">*)</span>
+
+<span class="k">let</span> <span class="bp">()</span> <span class="o">=</span> <span class="k">assert</span> <span class="o">(</span><span class="n">preorder</span> <span class="n">t</span>  <span class="o">=</span> <span class="o">[</span><span class="mi">4</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">1</span><span class="o">;</span><span class="mi">3</span><span class="o">;</span><span class="mi">6</span><span class="o">;</span><span class="mi">5</span><span class="o">;</span><span class="mi">7</span><span class="o">])</span>
+<span class="k">let</span> <span class="bp">()</span> <span class="o">=</span> <span class="k">assert</span> <span class="o">(</span><span class="n">inorder</span> <span class="n">t</span>   <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">;</span><span class="mi">5</span><span class="o">;</span><span class="mi">6</span><span class="o">;</span><span class="mi">7</span><span class="o">])</span>
+<span class="k">let</span> <span class="bp">()</span> <span class="o">=</span> <span class="k">assert</span> <span class="o">(</span><span class="n">postorder</span> <span class="n">t</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">3</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">5</span><span class="o">;</span><span class="mi">7</span><span class="o">;</span><span class="mi">6</span><span class="o">;</span><span class="mi">4</span><span class="o">])</span>
+</pre></div>
+</div>
+<p>在不平衡树上，上面的遍历函数需要二次最坏情况
+时间（以节点数计），因为 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 运算符。重新实施
+没有 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 的函数，而是使用 <code class="docutils literal notranslate"><span class="pre">::</span></code>，这样它们就能准确执行
+树中的每个 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 都有一次 cons。因此，最坏情况的执行时间将是
+线性。你需要为每个添加一个额外的累加器参数
+函数，很像尾递归。 （但是你的实现不会
+实际上是尾递归。）</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: RB draw complete [★★]</strong></p>
+<p>在值 1、2、…、15 上绘制完美二叉树。为节点着色
+三种不同的方式，使得（i）每种方式都是红黑树（即满足
+红黑不变量），以及（ii）用黑色创建树的三种方法
+高度分别为 2、3 和 4。回想一下，树的<em>黑色高度</em>
+是从根到叶子的任何路径上黑色节点的最大数量。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: RB draw insert [★★]</strong></p>
+<p>画出插入字符 D A T A S T R 后产生的红黑树
+U C T U R E 变成一棵空树。自己执行插入算法
+手，然后根据书中提供的实现检查你的工作。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: pow2 [★★]</strong></p>
+<p>使用这种类型：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">sequence</span> <span class="o">=</span> <span class="nc">Cons</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="o">(</span><span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">sequence</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>定义一个值 <code class="docutils literal notranslate"><span class="pre">pow2</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">sequence</span></code> ，其元素是 2 的幂：
+<code class="docutils literal notranslate"><span class="pre">&lt;1;</span> <span class="pre">2;</span> <span class="pre">4;</span> <span class="pre">8;</span> <span class="pre">16,</span> <span class="pre">...&gt;</span></code>。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: more sequences [★★]</strong></p>
+<p>定义以下序列：</p>
+<ul class="simple">
+<li><p>均匀的自然物</p></li>
+<li><p>无限重复的小写字母：a, b, c, …, z, a, b, …</p></li>
+<li><p>无休止的伪随机硬币翻转（例如，布尔值或带有 <code class="docutils literal notranslate"><span class="pre">Heads</span></code> 的变体
+和 <code class="docutils literal notranslate"><span class="pre">Tails</span></code> 构造函数）</p></li>
+</ul>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: nth [★★]</strong></p>
+<p>定义一个函数 <code class="docutils literal notranslate"><span class="pre">nth</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">sequence</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code>，使得
+<code class="docutils literal notranslate"><span class="pre">nth</span> <span class="pre">s</span> <span class="pre">n</span></code> 序列 <code class="docutils literal notranslate"><span class="pre">s</span></code> 中从零开始的位置 <code class="docutils literal notranslate"><span class="pre">n</span></code> 处的元素。
+例如，<code class="docutils literal notranslate"><span class="pre">nth</span> <span class="pre">pow2</span> <span class="pre">0</span> <span class="pre">=</span> <span class="pre">1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">nth</span> <span class="pre">pow2</span> <span class="pre">4</span> <span class="pre">=</span> <span class="pre">16</span></code>。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: hd tl [★★]</strong></p>
+<p>解释如何计算以下每个序列表达式：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hd</span> <span class="pre">nats</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tl</span> <span class="pre">nats</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hd</span> <span class="pre">(tl</span> <span class="pre">nats)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tl</span> <span class="pre">(tl</span> <span class="pre">nats)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hd</span> <span class="pre">(tl</span> <span class="pre">(tl</span> <span class="pre">nats))</span></code></p></li>
+</ul>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: filter [★★★]</strong></p>
+<p>定义一个函数<code class="docutils literal notranslate"><span class="pre">filter</span> <span class="pre">:</span> <span class="pre">('a</span> <span class="pre">-&gt;</span> <span class="pre">bool)</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">sequence</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">sequence</span></code>，比如
+<code class="docutils literal notranslate"><span class="pre">filter</span> <span class="pre">p</span> <span class="pre">s</span></code> 是 <code class="docutils literal notranslate"><span class="pre">s</span></code> 的子序列，其元素满足
+谓词 <code class="docutils literal notranslate"><span class="pre">p</span></code>。例如，<code class="docutils literal notranslate"><span class="pre">filter</span> <span class="pre">(fun</span> <span class="pre">n</span> <span class="pre">-&gt;</span> <span class="pre">n</span> <span class="pre">mod</span> <span class="pre">2</span> <span class="pre">=</span> <span class="pre">0)</span> <span class="pre">nats</span></code> 将是
+序列<code class="docutils literal notranslate"><span class="pre">&lt;0;</span> <span class="pre">2;</span> <span class="pre">4;</span> <span class="pre">6;</span> <span class="pre">8;</span> <span class="pre">10;</span> <span class="pre">...&gt;</span></code>。如果 <code class="docutils literal notranslate"><span class="pre">s</span></code> 没有元素
+满足 <code class="docutils literal notranslate"><span class="pre">p</span></code>，则 <code class="docutils literal notranslate"><span class="pre">filter</span> <span class="pre">p</span> <span class="pre">s</span></code> 不会终止。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: interleave [★★★]</strong></p>
+<p>定义一个函数<code class="docutils literal notranslate"><span class="pre">interleave</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">sequence</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">sequence</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">sequence</span></code>，比如
+<code class="docutils literal notranslate"><span class="pre">interleave</span> <span class="pre">&lt;a1;</span> <span class="pre">a2;</span> <span class="pre">a3;</span> <span class="pre">...&gt;</span> <span class="pre">&lt;b1;</span> <span class="pre">b2;</span> <span class="pre">b3;</span> <span class="pre">...&gt;</span></code> 是序列
+<code class="docutils literal notranslate"><span class="pre">&lt;a1;</span> <span class="pre">b1;</span> <span class="pre">a2;</span> <span class="pre">b2;</span> <span class="pre">a3;</span> <span class="pre">b3;</span> <span class="pre">...&gt;</span></code>。例如，<code class="docutils literal notranslate"><span class="pre">interleave</span> <span class="pre">nats</span> <span class="pre">pow2</span></code> 将是
+<code class="docutils literal notranslate"><span class="pre">&lt;0;</span> <span class="pre">1;</span> <span class="pre">1;</span> <span class="pre">2;</span> <span class="pre">2;</span> <span class="pre">4;</span> <span class="pre">3;</span> <span class="pre">8;</span> <span class="pre">...&gt;</span></code>。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: sift [★★★]</strong></p>
+<p><em>埃拉托斯特尼筛法</em>是一种计算素数的方法。</p>
+<ul class="simple">
+<li><p>从序列 <code class="docutils literal notranslate"><span class="pre">&lt;2;</span> <span class="pre">3;</span> <span class="pre">4;</span> <span class="pre">5;</span> <span class="pre">6;</span> <span class="pre">...&gt;</span></code> 开始。</p></li>
+<li><p>取2为素数。  删除所有 2 的倍数，因为它们不可能是质数。
+剩下 <code class="docutils literal notranslate"><span class="pre">&lt;3;</span> <span class="pre">5;</span> <span class="pre">7;</span> <span class="pre">9;</span> <span class="pre">11;</span> <span class="pre">...&gt;</span></code>。</p></li>
+<li><p>取3为质数并删除它的倍数。
+剩下 <code class="docutils literal notranslate"><span class="pre">&lt;5;</span> <span class="pre">7;</span> <span class="pre">11;</span> <span class="pre">13;</span> <span class="pre">17;</span> <span class="pre">...&gt;</span></code>。</p></li>
+<li><p>取5为质数，以此类推。</p></li>
+</ul>
+<p>定义一个函数 <code class="docutils literal notranslate"><span class="pre">sift</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">sequence</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">sequence</span></code>，使得
+<code class="docutils literal notranslate"><span class="pre">sift</span> <span class="pre">n</span> <span class="pre">s</span></code> 从 <code class="docutils literal notranslate"><span class="pre">s</span></code> 中删除 <code class="docutils literal notranslate"><span class="pre">n</span></code> 的所有倍数。 <em>提示：过滤。</em></p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: primes [★★★]</strong></p>
+<p>定义一个序列 <code class="docutils literal notranslate"><span class="pre">prime</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">sequence</span></code>，包含所有素数
+从 2 开始。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: approximately e [★★★★]</strong></p>
+<p>指数函数 <span class="math notranslate nohighlight">\(e^x\)</span> 可以通过以下方式计算
+无穷总和：</p>
+<div class="math notranslate nohighlight">
+\[
+e^x = \frac{x^0}{0!} + \frac{x^1}{1!} + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots + \frac{x^k}{k!} + \cdots
+\]</div>
+<p>定义一个函数 <code class="docutils literal notranslate"><span class="pre">e_terms</span> <span class="pre">:</span> <span class="pre">float</span> <span class="pre">-&gt;</span> <span class="pre">float</span> <span class="pre">sequence</span></code>。元素 <code class="docutils literal notranslate"><span class="pre">k</span></code>
+序列应该是无限和中的项 <code class="docutils literal notranslate"><span class="pre">k</span></code> 。例如，<code class="docutils literal notranslate"><span class="pre">e_terms</span> <span class="pre">1.0</span></code> 是
+序列 <code class="docutils literal notranslate"><span class="pre">&lt;1.0;</span> <span class="pre">1.0;</span> <span class="pre">0.5;</span> <span class="pre">0.1666...;</span> <span class="pre">0.041666...;</span> <span class="pre">...&gt;</span></code>。简单的方法
+计算涉及计算 <span class="math notranslate nohighlight">\(f(k) = \frac{x^k}{k!}\)</span> 的函数。</p>
+<p>定义一个函数 <code class="docutils literal notranslate"><span class="pre">total</span> <span class="pre">:</span> <span class="pre">float</span> <span class="pre">sequence</span> <span class="pre">-&gt;</span> <span class="pre">float</span> <span class="pre">sequence</span></code>，使得
+<code class="docutils literal notranslate"><span class="pre">total</span> <span class="pre">&lt;a;</span> <span class="pre">b;</span> <span class="pre">c;</span> <span class="pre">...&gt;</span></code> 是输入元素的运行总计，即
+<code class="docutils literal notranslate"><span class="pre">&lt;a;</span> <span class="pre">a+.b;</span> <span class="pre">a+.b+.c;</span> <span class="pre">...&gt;</span></code>。</p>
+<p>通过一起使用 <code class="docutils literal notranslate"><span class="pre">e_terms</span></code> 和 <code class="docutils literal notranslate"><span class="pre">total</span></code> ，你将能够计算连续的
+<span class="math notranslate nohighlight">\(e^x\)</span> 的近似值对应于无限的有限前缀
+总结。例如，你可以计算流
+<code class="docutils literal notranslate"><span class="pre">&lt;1.;</span> <span class="pre">2.;</span> <span class="pre">2.5;</span> <span class="pre">2.66666666666666652;</span> <span class="pre">2.70833333333333304;</span> <span class="pre">...&gt;</span></code>。它包含
+<span class="math notranslate nohighlight">\(e^1\)</span> 的连续近似，使得流的元素 <span class="math notranslate nohighlight">\(n\)</span> 是
+<span class="math notranslate nohighlight">\(\sum_{k=0}^{n} \frac{1^k}{k!}\)</span>。</p>
+<p>定义一个函数 <code class="docutils literal notranslate"><span class="pre">within</span> <span class="pre">:</span> <span class="pre">float</span> <span class="pre">-&gt;</span> <span class="pre">float</span> <span class="pre">sequence</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code>，使得
+<code class="docutils literal notranslate"><span class="pre">within</span> <span class="pre">eps</span> <span class="pre">s</span></code> 是 <code class="docutils literal notranslate"><span class="pre">s</span></code> 的第一个元素，其绝对差值
+该元素与其之前的元素之间的距离严格小于 <code class="docutils literal notranslate"><span class="pre">eps</span></code>。如果
+不存在这样的元素，允许 <code class="docutils literal notranslate"><span class="pre">within</span></code> 不终止（即进入
+“无限循环”）。作为先决条件，<em>容差</em> <code class="docutils literal notranslate"><span class="pre">eps</span></code> 必须严格遵守
+积极的。例如，
+<code class="docutils literal notranslate"><span class="pre">within</span> <span class="pre">0.1</span> <span class="pre">&lt;1.0;</span> <span class="pre">2.0;</span> <span class="pre">2.5;</span> <span class="pre">2.75;</span> <span class="pre">2.875;</span> <span class="pre">2.9375;</span> <span class="pre">2.96875;</span> <span class="pre">...&gt;</span></code> 是 <code class="docutils literal notranslate"><span class="pre">2.9375</span></code>。</p>
+<p>最后，定义一个函数 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">float</span> <span class="pre">-&gt;</span> <span class="pre">float</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code> ，使得 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">x</span> <span class="pre">eps</span></code> 为
+<span class="math notranslate nohighlight">\(e^x\)</span> 使用上述无限求和的有限前缀进行计算。
+当连续值之间的绝对差值达到时，计算应停止
+近似值低于 <code class="docutils literal notranslate"><span class="pre">eps</span></code>，它必须严格为正数。对于
+例如，<code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">1.</span> <span class="pre">0.01</span></code> 将是 <code class="docutils literal notranslate"><span class="pre">2.71666666666666634</span></code>。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: better e [★★★★]</strong></p>
+<p>尽管上面通过对无穷大求和来计算 <span class="math notranslate nohighlight">\(e^x\)</span> 的想法
+系列很好，上面建议的精确算法可以改进。对于
+例如，计算序列中的第 20 项会产生一个非常大的分子
+如果 <span class="math notranslate nohighlight">\(x\)</span> 很大，则加上分母。调查该行为，将其与
+内置函数<code class="docutils literal notranslate"><span class="pre">exp</span> <span class="pre">:</span> <span class="pre">float</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code>。寻找更好的方法来构建
+计算以改进你获得的近似值。 <em>提示：如果什么时候
+计算术语 <span class="math notranslate nohighlight">\(k\)</span> 你已经有了术语 <span class="math notranslate nohighlight">\(k-1\)</span>？然后你可以只做一个
+乘法和除法。</em></p>
+<p>另外，你可以改进 <code class="docutils literal notranslate"><span class="pre">within</span></code> 用来确定是否两个
+值很接近。确定 <span class="math notranslate nohighlight">\(a\)</span> 和 <span class="math notranslate nohighlight">\(b\)</span> 是否接近的一个好方法可能是
+为 <a class="reference external" href="https://www.boost.org/doc/libs/1_77_0/libs/math/doc/html/math_toolkit/float_comparison.html"><em>relative distance</em></a>：</p>
+<div class="math notranslate nohighlight">
+\[
+\left|\frac{a - b}{\mathit{min}(a, b)}\right| &lt; \epsilon.
+\]</div>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: different sequence rep [★★★]</strong></p>
+<p>考虑序列的这种替代表示：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">sequence</span> <span class="o">=</span> <span class="nc">Cons</span> <span class="k">of</span> <span class="o">(</span><span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">sequence</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>你会如何编码<code class="docutils literal notranslate"><span class="pre">hd</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">sequence</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code>，
+<code class="docutils literal notranslate"><span class="pre">tl</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">sequence</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">sequence</span></code>、<code class="docutils literal notranslate"><span class="pre">nats</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">sequence</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">map</span> <span class="pre">:</span> <span class="pre">('a</span> <span class="pre">-&gt;</span> <span class="pre">'b)</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">sequence</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">sequence</span></code> 吗？解释一下这是怎么回事
+表示比我们原来的表示还要懒惰。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: lazy hello [★]</strong></p>
+<p>定义类型为 <code class="docutils literal notranslate"><span class="pre">unit</span> <span class="pre">Lazy.t</span></code> 的值（与 <code class="docutils literal notranslate"><span class="pre">unit</span> <span class="pre">lazy_t</span></code> 同义），
+这样用 <code class="docutils literal notranslate"><span class="pre">Lazy.force</span></code> 强制该值会导致 <code class="docutils literal notranslate"><span class="pre">&quot;Hello</span> <span class="pre">lazy</span> <span class="pre">world&quot;</span></code> 成为
+打印。如果再次强制执行，则不应打印该字符串。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: lazy and [★★]</strong></p>
+<p>定义一个函数 <code class="docutils literal notranslate"><span class="pre">(&amp;&amp;&amp;)</span> <span class="pre">:</span> <span class="pre">bool</span> <span class="pre">Lazy.t</span> <span class="pre">-&gt;</span> <span class="pre">bool</span> <span class="pre">Lazy.t</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code>。它应该表现得
+就像一个短路布尔 AND。也就是说，<code class="docutils literal notranslate"><span class="pre">lb1</span> <span class="pre">&amp;&amp;&amp;</span> <span class="pre">lb2</span></code>应该首先强制
+<code class="docutils literal notranslate"><span class="pre">lb1</span></code>。如果是 <code class="docutils literal notranslate"><span class="pre">false</span></code>，则该函数应返回 <code class="docutils literal notranslate"><span class="pre">false</span></code>。否则，它
+应强制 <code class="docutils literal notranslate"><span class="pre">lb2</span></code> 并返回其值。</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: lazy sequence [★★★]</strong></p>
+<p>为 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">lazysequence</span></code> 类型实现 <code class="docutils literal notranslate"><span class="pre">map</span></code> 和 <code class="docutils literal notranslate"><span class="pre">filter</span></code>
+关于懒惰的部分。</p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters/ds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="summary.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">9.8. </span>总结</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../interp/intro.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">10. </span>解释器</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

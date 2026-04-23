@@ -1,0 +1,1162 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>9.7. 2-3 树 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/ds/twothree';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="9.8. 总结" href="summary.html" />
+    <link rel="prev" title="9.6. 持久数组" href="parrays.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">9. 数据结构</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/ds/twothree.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/ds/twothree.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/ds/twothree.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/ds/twothree.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/ds/twothree.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>2-3 树</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">9.7.1. 表示类型</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">9.7.2. 成员查询</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appel">9.7.3. 插入：Appel 算法</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">9.7.3.1. 合并</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">9.7.3.2. 拆分</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">9.7.3.3. 完成插入</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">9.7. </span>2-3 树<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<p><em>二三树</em>或 <em>2-3 树</em>是另一种平衡树数据结构，可用于实现集合和映射。
+与红黑树一样，2-3 树在避免可变性的同时实现了对数时间性能。
+Cormen 等人在<em>算法导论</em>中认为 2-3 树由 John Hopcroft 发明（1990 年，第 280 页）。</p>
+<section id="id2">
+<h2><span class="section-number">9.7.1. </span>表示类型<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>2-3 树概括了二叉树，因为 2-3 树中的每个节点都有两个子节点或三个子节点。
+这些分别称为 <em>2-nodes</em> 和 <em>3-nodes</em>。
+2 节点包含一个值，3 节点包含两个值：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">Leaf</span>
+  <span class="o">|</span> <span class="nc">Two</span> <span class="k">of</span> <span class="o">{</span>
+      <span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="c">(* left subtree *)</span>
+      <span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span>    <span class="c">(* value *)</span>
+      <span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>  <span class="c">(* right subtree *)</span>
+    <span class="o">}</span>
+  <span class="o">|</span> <span class="nc">Three</span> <span class="k">of</span> <span class="o">{</span>
+      <span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="c">(* left subtree *)</span>
+      <span class="n">vl</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span>   <span class="c">(* left value *)</span>
+      <span class="n">mt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="c">(* middle subtree *)</span>
+      <span class="n">vr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span>   <span class="c">(* right value *)</span>
+      <span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>  <span class="c">(* right subtree *)</span>
+    <span class="o">}</span>
+
+<span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="nc">Leaf</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a t =
+    Leaf
+  | Two of { lt : &#39;a t; v : &#39;a; rt : &#39;a t; }
+  | Three of { lt : &#39;a t; vl : &#39;a; mt : &#39;a t; vr : &#39;a; rt : &#39;a t; }
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;a t = Leaf
+</pre></div>
+</div>
+</div>
+</div>
+<p>当用于表示集合时，抽象函数会把节点中存储的值（类型为 <code class="docutils literal notranslate"><span class="pre">'a</span></code>）解释为集合中的元素。</p>
+<p>2-3 树的表示不变量有两部分。
+第一部分是“排序不变量”，它概括了 BST 不变量。
+排序不变量表示：</p>
+<ul class="simple">
+<li><p>对于任何 2 节点 <code class="docutils literal notranslate"><span class="pre">{lt;</span> <span class="pre">v;</span> <span class="pre">rt}</span></code>，值按 <code class="docutils literal notranslate"><span class="pre">lt</span> <span class="pre">&lt;</span> <span class="pre">v</span> <span class="pre">&lt;</span> <span class="pre">rt</span></code> 排序。
+其中 <code class="docutils literal notranslate"><span class="pre">lt</span> <span class="pre">&lt;</span> <span class="pre">v</span></code> 表示 <code class="docutils literal notranslate"><span class="pre">lt</span></code> 中的所有值都小于 <code class="docutils literal notranslate"><span class="pre">v</span></code>，<code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">&lt;</span> <span class="pre">rt</span></code> 的含义类似。</p></li>
+<li><p>对于任何 3 节点 <code class="docutils literal notranslate"><span class="pre">{lt;</span> <span class="pre">vl;</span> <span class="pre">mt;</span> <span class="pre">vr;</span> <span class="pre">rt}</span></code>，值按 <code class="docutils literal notranslate"><span class="pre">lt</span> <span class="pre">&lt;</span> <span class="pre">vl</span> <span class="pre">&lt;</span> <span class="pre">mt</span> <span class="pre">&lt;</span> <span class="pre">vr</span> <span class="pre">&lt;</span> <span class="pre">rt</span></code> 排序。</p></li>
+</ul>
+<p>表示不变量的第二部分是<em>平衡不变量</em>，它可以用三种等效的方式表示：</p>
+<ol class="arabic simple">
+<li><p>树上的每片叶子都处于相同的深度。</p></li>
+<li><p>树中的每个兄弟姐妹都处于相同的高度。</p></li>
+<li><p>树中的每条完整路径（即从根到叶子）都具有相同的长度。</p></li>
+</ol>
+<p>如果我们想与红黑树进行比较，后者可能是陈述平衡不变量的最有用的方法。
+回想一下，红黑树允许路径长度相差最多两倍。
+因此，2-3 树比红黑树对平衡的要求更严格。</p>
+<p>2-3 树中每条完整路径的长度与树中节点的数量成对数，这将产生对数时间运算。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">9.7.2. </span>成员查询<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>为了检查 2-3 树中的成员资格，我们使用 BST 成员资格算法的推广。
+排序不变量告诉我们，在每个分支，该往哪个方向寻找元素。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">mem</span> <span class="n">x</span> <span class="o">=</span> <span class="k">function</span>
+ <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="o">|</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span><span class="o">;</span> <span class="n">v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">}</span> <span class="o">-&gt;</span>
+     <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">v</span> <span class="k">then</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">lt</span> <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">v</span> <span class="k">then</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">rt</span> <span class="k">else</span> <span class="bp">true</span>
+ <span class="o">|</span> <span class="nc">Three</span> <span class="o">{</span> <span class="n">lt</span><span class="o">;</span> <span class="n">vl</span><span class="o">;</span> <span class="n">mt</span><span class="o">;</span> <span class="n">vr</span><span class="o">;</span> <span class="n">rt</span> <span class="o">}</span> <span class="o">-&gt;</span>
+     <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">vl</span> <span class="k">then</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">lt</span>
+     <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">vr</span> <span class="k">then</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">rt</span>
+     <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">vl</span> <span class="o">&amp;&amp;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">vr</span> <span class="k">then</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">mt</span>
+     <span class="k">else</span> <span class="bp">true</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val mem : &#39;a -&gt; &#39;a t -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="appel">
+<h2><span class="section-number">9.7.3. </span>插入：Appel 算法<a class="headerlink" href="#appel" title="Permalink to this heading">#</a></h2>
+<p>要插入元素，像往常一样，我们使用与 <code class="docutils literal notranslate"><span class="pre">mem</span></code> 中相同的搜索过程来查找元素应该在的位置。
+如果该元素已在树中，则不进行任何更改。
+如果该元素不在树中，则搜索在叶子处结束。
+但是我们如何在保持平衡不变的情况下将新元素插入该叶子呢？
+以下用于完成该任务的算法可能是民间传说；如果有读者知道可靠的引用，请告诉我们。
+但现在，由于迈克尔·克拉克森是从安德鲁·阿佩尔那里学到的，我们将其称为阿佩尔算法。</p>
+<p>使用 Appel 算法，我们将搜索结束的叶子转换为一个新的 2 节点，其中没有包含插入值的子节点。
+这保持了排序不变式，但通常违反了平衡不变式，因为新的 2 节点导致搜索路径的长度增加一。
+另一种说法是：树的高度增加一倍。</p>
+<p>因此，我们递归备份树以恢复平衡不变量并确保所有路径具有相同的长度。
+如果可能的话，我们的目标是找到一个“吸收”高度变化的地方。
+由于我们刚刚创建了一个新的 2 节点，因此当我们向上递归时，需要考虑两种情况：
+新节点的父节点是 2 节点，在这种情况下我们执行 <em>merge</em> 操作；或者它是一个 3 节点，在这种情况下我们执行 <em>split</em> 操作。
+这些操作的工作原理如下所述。</p>
+<section id="id4">
+<h3><span class="section-number">9.7.3.1. </span>合并<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<p>回想一下，我们试图解决的问题是 2 节点可能变得太高 — 它的高度可能比其兄弟节点的高度大一。
+我们将这样的 2 节点称为“高”节点。
+下面，标有星号的节点是高节点。
+如果一个高的 2 节点有一个 2 节点父节点，那么父节点可以通过自身变成 3 节点来吸收高度的变化。
+如下图所示：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>    y              x,y              x
+   / \           /  |  \           / \
+ *x*  c   ==&gt;   a   b   c  &lt;==    a  *y*
+ / \                                 / \
+a   b                               b   c
+</pre></div>
+</div>
+<p>在该图中，<code class="docutils literal notranslate"><span class="pre">a</span></code>、<code class="docutils literal notranslate"><span class="pre">b</span></code> 和 <code class="docutils literal notranslate"><span class="pre">c</span></code> 表示子树。
+有两种情况：从左边合并一个高节点<code class="docutils literal notranslate"><span class="pre">*x*</span></code>，从右边合并一个高节点<code class="docutils literal notranslate"><span class="pre">*y*</span></code>。
+无论哪种情况，tall 节点的值都会合并到其父节点中，从而将父节点从 2 节点转换为 3 节点。
+额外的高度被吸收，从而恢复平衡不变性。</p>
+<p>合并发生后，我们就完成了插入操作，并且可以一直递归到根，而无需进行进一步的更改。</p>
+</section>
+<section id="id5">
+<h3><span class="section-number">9.7.3.2. </span>拆分<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<p>如果一个高的 2 节点有一个 3 节点父节点怎么办？
+那么我们就不能合并，因为那会创建一个 4 节点。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>There are such things as <em>2-3-4 trees</em>, and perhaps surprisingly they are closely related to red-black trees.
+But here we will stick with 2-3 trees.</p>
+</div>
+<p>相反，我们将 3 节点父节点“拆分”为两个 2 节点。
+与已经存在的 high 2 节点一起，将具有两个 2 节点和一个 3 节点的树更改为具有三个 2 节点的树，如下所示：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>    y,z             *y*              x,y
+   / | \           /   \            / | \
+ *x* c  d  ==&gt;    x     z    &lt;==   a  b *z*
+ / \             / \   / \              / \
+a   b           a   b c   d            c   d
+
+                     ⇑
+
+                    x,z
+                   / | \
+                  a *y* d
+                    / \
+                   b   c
+</pre></div>
+</div>
+<p>需要考虑三种情况：拆分以容纳左侧 (<code class="docutils literal notranslate"><span class="pre">*x*</span></code>)、中间 (<code class="docutils literal notranslate"><span class="pre">*y*</span></code>) 或右侧 (<code class="docutils literal notranslate"><span class="pre">*z*</span></code>) 的高节点。
+无论如何，分裂之后，我们都取得了进步。
+以 <code class="docutils literal notranslate"><span class="pre">*y*</span></code> 为根的树的所有子树现在都具有相同的高度，因此以 <code class="docutils literal notranslate"><span class="pre">*y*</span></code> 为根的子树内已恢复平衡。
+然而，节点 <code class="docutils literal notranslate"><span class="pre">*y*</span></code> 已经变得<em>高</em>。
+如果 <code class="docutils literal notranslate"><span class="pre">*y*</span></code> 是整个树的根，那不是问题：不变量仍然成立。
+但如果 <code class="docutils literal notranslate"><span class="pre">*y*</span></code> 不是根，则 <code class="docutils literal notranslate"><span class="pre">*y*</span></code> 有某个兄弟节点，并且 <code class="docutils literal notranslate"><span class="pre">*y*</span></code> 变得比该兄弟节点更高。
+为了解决这个问题，我们需要向上递归。
+要么 <code class="docutils literal notranslate"><span class="pre">*y*</span></code> 的父节点会执行合并并吸收高度差异；或者，父级将执行分裂，本身变高，并将高度差异进一步向上传播。</p>
+</section>
+<section id="id6">
+<h3><span class="section-number">9.7.3.3. </span>完成插入<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<p>为了回顾一下，我们决定在每次插入新值时创建一个高的 2 节点。
+我们看到一个高的 2 节点可以合并到一个 2 节点父节点中，从而恢复平衡；或者，可以拆分 3 节点父节点，从而创建一个新的高 2 节点，我们继续尝试在树中吸收更高的高度。
+请注意，我们从未因任何这些插入、合并或拆分操作而生成高的 3 节点。
+因此，我们不必考虑任何与高 3 节点合并或分裂的情况。
+这意味着我们已经完成了算法的设计。</p>
+<p>我们可以如下所示实现插入。
+每个辅助函数返回一对树和一个布尔值，其中布尔值指示树是否已经生长 — 即返回的树的根是否很高。
+（实现这一点的另一种方法是引入自定义变体类型来跟踪树是否生长。）</p>
+<p>该代码比红黑树插入要长得多。
+部分原因是我们添加了所有注释来解释它。
+而且，具有两种不同的节点形状（2 节点与 3 节点）本质上会使代码更加复杂，并且使用记录而不是元组来存储节点携带的数据会使代码更加冗长。
+更简洁的实现是可能的。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">impossible</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">failwith</span> <span class="s2">&quot;impossible: grow returns Two&quot;</span>
+
+<span class="c">(** [ins x t] inserts [x] into [t] using Appel&#39;s algorithm. Returns:</span>
+<span class="c">    [new_t, grew], where [new_t] is the new tree (including [x]) and [grew] is</span>
+<span class="c">    whether the tree height grew. *)</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">ins</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">t</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">t</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span>
+      <span class="c">(* Insertion into a leaf creates a new 2-node, which grows the</span>
+<span class="c">          height. *)</span>
+      <span class="o">(</span><span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="nc">Leaf</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="nc">Leaf</span> <span class="o">},</span> <span class="bp">true</span><span class="o">)</span>
+  <span class="o">|</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span><span class="o">;</span> <span class="n">v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">}</span> <span class="o">-&gt;</span>
+      <span class="k">if</span> <span class="n">x</span> <span class="o">=</span> <span class="n">v</span> <span class="k">then</span>
+        <span class="c">(* If [x] is already in the tree, no change is needed. *)</span>
+        <span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="bp">false</span><span class="o">)</span>
+      <span class="k">else</span>
+        <span class="c">(* Otherwise, insert [x] into the left or right subtree, and</span>
+<span class="c">            incorporate the current 2-node into the result *)</span>
+        <span class="n">ins_sub2</span> <span class="n">x</span> <span class="n">lt</span> <span class="n">v</span> <span class="n">rt</span>
+  <span class="o">|</span> <span class="nc">Three</span> <span class="o">{</span> <span class="n">lt</span><span class="o">;</span> <span class="n">vl</span><span class="o">;</span> <span class="n">mt</span><span class="o">;</span> <span class="n">vr</span><span class="o">;</span> <span class="n">rt</span> <span class="o">}</span> <span class="o">-&gt;</span>
+      <span class="k">if</span> <span class="n">x</span> <span class="o">=</span> <span class="n">vl</span> <span class="o">||</span> <span class="n">x</span> <span class="o">=</span> <span class="n">vr</span> <span class="k">then</span>
+        <span class="c">(* If [x] is already in the tree, no change is needed. *)</span>
+        <span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="bp">false</span><span class="o">)</span>
+      <span class="k">else</span>
+        <span class="c">(* Otherwise, insert [x] into the left, middle, or right subtree, and</span>
+<span class="c">            incorporate the current 3-node into the result*)</span>
+        <span class="n">ins_sub3</span> <span class="n">x</span> <span class="n">lt</span> <span class="n">vl</span> <span class="n">mt</span> <span class="n">vr</span> <span class="n">rt</span>
+
+<span class="c">(** [ins_sub2 x lt v rt] inserts [x] into one of the subtrees of a 2-node,</span>
+<span class="c">    where that two-node is [Two {lt; v; rt}]. Returns [new_t, grew], where</span>
+<span class="c">    [new_t] is the new tree (including [lt], [v], and [rt]) and [grew] is</span>
+<span class="c">    whether the tree height grew as a result of the insert. Requires:</span>
+<span class="c">    [x &lt;&gt; v]. *)</span>
+<span class="k">and</span> <span class="n">ins_sub2</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">v</span> <span class="k">then</span>
+    <span class="c">(* [x] belongs in [lt]. *)</span>
+    <span class="n">ins_sub2_left</span> <span class="n">x</span> <span class="n">lt</span> <span class="n">v</span> <span class="n">rt</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">v</span> <span class="k">then</span> <span class="c">(* [x] belongs in [rt]. *)</span>
+    <span class="n">ins_sub2_right</span> <span class="n">x</span> <span class="n">lt</span> <span class="n">v</span> <span class="n">rt</span>
+  <span class="k">else</span>
+    <span class="c">(* [x] belongs in neither [lt] nor [rt], but then we should never have</span>
+<span class="c">        called [ins_sub2] on it. *)</span>
+    <span class="n">failwith</span> <span class="s2">&quot;precondition violated&quot;</span>
+
+<span class="c">(** [ins_sub2_left x lt v rt] inserts [x] into the left subtree of a 2-node,</span>
+<span class="c">    where that two-node is [Two {lt; v; rt}]. Returns [new_t, grew], where</span>
+<span class="c">    [new_t] is the new tree (including [lt], [v], and [rt]) and [grew] is</span>
+<span class="c">    whether the tree height grew as a result of the insert. *)</span>
+<span class="k">and</span> <span class="n">ins_sub2_left</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">lt</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="n">new_lt</span><span class="o">,</span> <span class="bp">false</span> <span class="o">-&gt;</span>
+      <span class="c">(* [x] was inserted into [lt] without growing the height, so we can</span>
+<span class="c">          safely reattach the resulting subtree without doing any more work to</span>
+<span class="c">          rebalance. *)</span>
+      <span class="o">(</span><span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">new_lt</span><span class="o">;</span> <span class="n">v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">},</span> <span class="bp">false</span><span class="o">)</span>
+  <span class="o">|</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">child_lt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">child_v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">child_rt</span> <span class="o">},</span> <span class="bp">true</span> <span class="o">-&gt;</span>
+      <span class="c">(* [x] was inserted into [lt], and that caused [lt] to grow in height</span>
+<span class="c">          and have a 2-node at its root. We can merge that 2-node into the</span>
+<span class="c">          current 2-node to form a 3-node, which absorbs the change in</span>
+<span class="c">          height. *)</span>
+      <span class="o">(</span><span class="nc">Three</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">child_lt</span><span class="o">;</span> <span class="n">vl</span> <span class="o">=</span> <span class="n">child_v</span><span class="o">;</span> <span class="n">mt</span> <span class="o">=</span> <span class="n">child_rt</span><span class="o">;</span> <span class="n">vr</span> <span class="o">=</span> <span class="n">v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">},</span> <span class="bp">false</span><span class="o">)</span>
+  <span class="o">|</span> <span class="o">_,</span> <span class="bp">true</span> <span class="o">-&gt;</span>
+      <span class="c">(* Growth must produce a 2-node at the root, which would have been</span>
+<span class="c">          handled by the previous branch. *)</span>
+      <span class="n">impossible</span> <span class="bp">()</span>
+
+<span class="c">(** [ins_sub2_right x lt v rt] inserts [x] into the right subtree of a 2-node,</span>
+<span class="c">    where that two-node is [Two {lt; v; rt}]. Returns [new_t, grew], where</span>
+<span class="c">    [new_t] is the new tree (including [lt], [v], and [rt]) and [grew] is</span>
+<span class="c">    whether the tree height grew as a result of the insert. *)</span>
+<span class="k">and</span> <span class="n">ins_sub2_right</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">rt</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="n">new_rt</span><span class="o">,</span> <span class="bp">false</span> <span class="o">-&gt;</span>
+      <span class="c">(* [x] was inserted into [rt] without growing the height, so we can</span>
+<span class="c">          safely reattach the resulting subtree without doing any more work to</span>
+<span class="c">          rebalance. *)</span>
+      <span class="o">(</span><span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span><span class="o">;</span> <span class="n">v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">new_rt</span> <span class="o">},</span> <span class="bp">false</span><span class="o">)</span>
+  <span class="o">|</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">child_lt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">child_v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">child_rt</span> <span class="o">},</span> <span class="bp">true</span> <span class="o">-&gt;</span>
+      <span class="c">(* [x] was inserted into [rt], and that caused [rt] to grow in height</span>
+<span class="c">          and have a 2-node at its root. We can merge that 2-node into the</span>
+<span class="c">          current 2-node to form a 3-node, which absorbs the change in</span>
+<span class="c">          height. *)</span>
+      <span class="o">(</span><span class="nc">Three</span> <span class="o">{</span> <span class="n">lt</span><span class="o">;</span> <span class="n">vl</span> <span class="o">=</span> <span class="n">v</span><span class="o">;</span> <span class="n">mt</span> <span class="o">=</span> <span class="n">child_lt</span><span class="o">;</span> <span class="n">vr</span> <span class="o">=</span> <span class="n">child_v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">child_rt</span> <span class="o">},</span> <span class="bp">false</span><span class="o">)</span>
+  <span class="o">|</span> <span class="o">_,</span> <span class="bp">true</span> <span class="o">-&gt;</span> <span class="n">impossible</span> <span class="bp">()</span>
+
+<span class="c">(** [ins_sub3 x lt vl mt vr rt] inserts [x] into one of the subtrees of a</span>
+<span class="c">    3-node, where that 3-node is [Three {lt; vl; mt; vr; rt}]. Returns</span>
+<span class="c">    [new_t, grew], where [new_t] is the new tree (including [lt], [vl], [mt],</span>
+<span class="c">    [vr], and [rt]) and [grew] is whether the tree height grew as a result of</span>
+<span class="c">    the insert. Requires: [x &lt;&gt; vl &amp;&amp; x &lt;&gt; vr]. *)</span>
+<span class="k">and</span> <span class="n">ins_sub3</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">vl</span> <span class="k">then</span>
+    <span class="c">(* [x] belongs in [lt]. *)</span>
+    <span class="n">ins_sub3_left</span> <span class="n">x</span> <span class="n">lt</span> <span class="n">vl</span> <span class="n">mt</span> <span class="n">vr</span> <span class="n">rt</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">vr</span> <span class="k">then</span>
+    <span class="c">(* [x] belongs in [rt]. *)</span>
+    <span class="n">ins_sub3_right</span> <span class="n">x</span> <span class="n">lt</span> <span class="n">vl</span> <span class="n">mt</span> <span class="n">vr</span> <span class="n">rt</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">vl</span> <span class="o">&amp;&amp;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">vr</span> <span class="k">then</span>
+    <span class="c">(* [x] belongs in [mt]. *)</span>
+    <span class="n">ins_sub3_middle</span> <span class="n">x</span> <span class="n">lt</span> <span class="n">vl</span> <span class="n">mt</span> <span class="n">vr</span> <span class="n">rt</span>
+  <span class="k">else</span>
+    <span class="c">(* [x] belongs in neither [lt] nor [mt] nor [rt], but then we should never</span>
+<span class="c">        have called [ins_sub3] on it. *)</span>
+    <span class="n">failwith</span> <span class="s2">&quot;precondition violated&quot;</span>
+
+<span class="c">(** [ins_sub3_left x lt vl mt vr rt] inserts [x] into the left subtree of a</span>
+<span class="c">    3-node, where that 3-node is [Three {lt; vl; mt; vr; rt}]. Returns</span>
+<span class="c">    [new_t, grew], where [new_t] is the new tree (including [lt], [vl], [mt],</span>
+<span class="c">    [vr], and [rt]) and [grew] is whether the tree height grew as a result of</span>
+<span class="c">    the insert. *)</span>
+<span class="k">and</span> <span class="n">ins_sub3_left</span>
+    <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">lt</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="n">new_lt</span><span class="o">,</span> <span class="bp">false</span> <span class="o">-&gt;</span>
+      <span class="c">(* [x] was inserted into [lt] without growing the height, so we can</span>
+<span class="c">          safely reattach the resulting subtree without doing any more work to</span>
+<span class="c">          rebalance. *)</span>
+      <span class="o">(</span><span class="nc">Three</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">new_lt</span><span class="o">;</span> <span class="n">vl</span><span class="o">;</span> <span class="n">mt</span><span class="o">;</span> <span class="n">vr</span><span class="o">;</span> <span class="n">rt</span> <span class="o">},</span> <span class="bp">false</span><span class="o">)</span>
+  <span class="o">|</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">child_lt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">child_v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">child_rt</span> <span class="o">},</span> <span class="bp">true</span> <span class="o">-&gt;</span>
+      <span class="c">(* [x] was inserted into [lt], and that caused [lt] to grow in height</span>
+<span class="c">          and have a 2-node at its root. We cannot merge that 2-node into the</span>
+<span class="c">          current 3-node. Instead, we split the 3-node into 2-nodes, which</span>
+<span class="c">          causes the growth to continue upward in the tree. *)</span>
+      <span class="o">(</span> <span class="nc">Two</span>
+          <span class="o">{</span>
+            <span class="n">lt</span> <span class="o">=</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">child_lt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">child_v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">child_rt</span> <span class="o">};</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">vl</span><span class="o">;</span>
+            <span class="n">rt</span> <span class="o">=</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">mt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">vr</span><span class="o">;</span> <span class="n">rt</span> <span class="o">};</span>
+          <span class="o">},</span>
+        <span class="bp">true</span> <span class="o">)</span>
+  <span class="o">|</span> <span class="o">_,</span> <span class="bp">true</span> <span class="o">-&gt;</span>
+      <span class="c">(* Growth must produce a 2-node at the root, which would have been</span>
+<span class="c">          handled by the previous branch. *)</span>
+      <span class="n">impossible</span> <span class="bp">()</span>
+
+<span class="c">(** [ins_sub3_right x lt vl mt vr rt] inserts [x] into the right subtree of a</span>
+<span class="c">    3-node, where that 3-node is [Three {lt; vl; mt; vr; rt}]. Returns</span>
+<span class="c">    [new_t, grew], where [new_t] is the new tree (including [lt], [vl], [mt],</span>
+<span class="c">    [vr], and [rt]) and [grew] is whether the tree height grew as a result of</span>
+<span class="c">    the insert. *)</span>
+<span class="k">and</span> <span class="n">ins_sub3_right</span>
+    <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">rt</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="n">new_rt</span><span class="o">,</span> <span class="bp">false</span> <span class="o">-&gt;</span>
+      <span class="c">(* [x] was inserted into [rt] without growing the height, so we can</span>
+<span class="c">          safely reattach the resulting subtree without doing any more work to</span>
+<span class="c">          rebalance. *)</span>
+      <span class="o">(</span><span class="nc">Three</span> <span class="o">{</span> <span class="n">lt</span><span class="o">;</span> <span class="n">vl</span><span class="o">;</span> <span class="n">mt</span><span class="o">;</span> <span class="n">vr</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">new_rt</span> <span class="o">},</span> <span class="bp">false</span><span class="o">)</span>
+  <span class="o">|</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">child_lt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">child_v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">child_rt</span> <span class="o">},</span> <span class="bp">true</span> <span class="o">-&gt;</span>
+      <span class="c">(* [x] was inserted into [rt], and that caused [rt] to grow in height</span>
+<span class="c">          and have a 2-node at its root. We cannot merge that 2-node into the</span>
+<span class="c">          current 3-node. Instead, we split the 3-node into 2-nodes, which</span>
+<span class="c">          causes the growth to continue upward in the tree. *)</span>
+      <span class="o">(</span> <span class="nc">Two</span>
+          <span class="o">{</span>
+            <span class="n">lt</span> <span class="o">=</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">vl</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">mt</span> <span class="o">};</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">vr</span><span class="o">;</span>
+            <span class="n">rt</span> <span class="o">=</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">child_lt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">child_v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">child_rt</span> <span class="o">};</span>
+          <span class="o">},</span>
+        <span class="bp">true</span> <span class="o">)</span>
+  <span class="o">|</span> <span class="o">_,</span> <span class="bp">true</span> <span class="o">-&gt;</span>
+      <span class="c">(* Growth must produce a 2-node at the root, which would have been</span>
+<span class="c">          handled by the previous branch. *)</span>
+      <span class="n">impossible</span> <span class="bp">()</span>
+
+<span class="c">(** [ins_sub3_middle x lt vl mt vr rt] inserts [x] into the middle subtree of</span>
+<span class="c">    a 3-node, where that 3-node is [Three {lt; vl; mt; vr; rt}]. Returns</span>
+<span class="c">    [new_t, grew], where [new_t] is the new tree (including [lt], [vl], [mt],</span>
+<span class="c">    [vr], and [rt]) and [grew] is whether the tree height grew as a result of</span>
+<span class="c">    the insert. *)</span>
+<span class="k">and</span> <span class="n">ins_sub3_middle</span>
+    <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">mt</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="n">new_mt</span><span class="o">,</span> <span class="bp">false</span> <span class="o">-&gt;</span>
+      <span class="c">(* [x] was inserted into [mt] without growing the height, so we can</span>
+<span class="c">          safely reattach the resulting subtree without doing any more work to</span>
+<span class="c">          rebalance. *)</span>
+      <span class="o">(</span><span class="nc">Three</span> <span class="o">{</span> <span class="n">lt</span><span class="o">;</span> <span class="n">vl</span><span class="o">;</span> <span class="n">mt</span> <span class="o">=</span> <span class="n">new_mt</span><span class="o">;</span> <span class="n">vr</span><span class="o">;</span> <span class="n">rt</span> <span class="o">},</span> <span class="bp">false</span><span class="o">)</span>
+  <span class="o">|</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">child_lt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">child_v</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">child_rt</span> <span class="o">},</span> <span class="bp">true</span> <span class="o">-&gt;</span>
+      <span class="c">(* [x] was inserted into [mt], and that caused [mt] to grow in height</span>
+<span class="c">          and have a 2-node at its root. We cannot merge that 2-node into the</span>
+<span class="c">          current 3-node. Instead, we split the 3-node into 2-nodes, which</span>
+<span class="c">          causes the growth to continue upward in the tree. *)</span>
+      <span class="o">(</span> <span class="nc">Two</span>
+          <span class="o">{</span>
+            <span class="n">lt</span> <span class="o">=</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">vl</span><span class="o">;</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">child_lt</span> <span class="o">};</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">child_v</span><span class="o">;</span>
+            <span class="n">rt</span> <span class="o">=</span> <span class="nc">Two</span> <span class="o">{</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">child_rt</span><span class="o">;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">vr</span><span class="o">;</span> <span class="n">rt</span> <span class="o">};</span>
+          <span class="o">},</span>
+        <span class="bp">true</span> <span class="o">)</span>
+  <span class="o">|</span> <span class="o">_,</span> <span class="bp">true</span> <span class="o">-&gt;</span>
+      <span class="c">(* Growth must produce a 2-node at the root, which would have been</span>
+<span class="c">          handled by the previous branch. *)</span>
+      <span class="n">impossible</span> <span class="bp">()</span>
+
+<span class="k">let</span> <span class="n">insert</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">new_tree</span><span class="o">,</span> <span class="o">_</span><span class="n">grew</span> <span class="o">=</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">s</span> <span class="k">in</span>
+  <span class="n">new_tree</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val impossible : unit -&gt; &#39;a = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ins : &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool = &lt;fun&gt;
+val ins_sub2 : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool = &lt;fun&gt;
+val ins_sub2_left : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool = &lt;fun&gt;
+val ins_sub2_right : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool = &lt;fun&gt;
+val ins_sub3 : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool = &lt;fun&gt;
+val ins_sub3_left : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool =
+  &lt;fun&gt;
+val ins_sub3_right : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool =
+  &lt;fun&gt;
+val ins_sub3_middle : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool =
+  &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert : &#39;a -&gt; &#39;a t -&gt; &#39;a t = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/ds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="parrays.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">9.6. </span>持久数组</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="summary.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">9.8. </span>总结</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">9.7.1. 表示类型</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">9.7.2. 成员查询</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appel">9.7.3. 插入：Appel 算法</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">9.7.3.1. 合并</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">9.7.3.2. 拆分</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">9.7.3.3. 完成插入</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

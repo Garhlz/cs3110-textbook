@@ -1,0 +1,1560 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>3.1. 列表 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/data/lists';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3.2. 变体" href="variants.html" />
+    <link rel="prev" title="3. 数据和类型" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">3. 数据和类型</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/data/lists.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/data/lists.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/data/lists.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/data/lists.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/data/lists.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>列表</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.1.1. 构建列表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.1.2. 访问列表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.1.3. （不）改变列表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3.1.4. 与列表的模式匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">3.1.5. 深度模式匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">3.1.6. 立即匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ocamldoc">3.1.7. OCamldoc 和列表语法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">3.1.8. 列表推导式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">3.1.9. 尾递归</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">3.1. </span>列表<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/x8oLIEtSRBs" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>OCaml 列表是一系列具有相同类型的值。它们
+以单链表实现。列表在语言中是一等公民：
+语言为轻松创建和使用列表提供了特殊支持。
+这是 OCaml 与许多其他函数式语言共享的特性。
+Python 这样的主流命令式语言如今也有这种支持。
+也许这是因为程序员喜欢把列表作为语言的一等组成部分来直接使用，
+而不必通过库来操作它们（像 C 和 Java 那样）。</p>
+<section id="id2">
+<h2><span class="section-number">3.1.1. </span>构建列表<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/I9u4kFPM7YI" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p><strong>语法。</strong> 构建列表有三种语法形式：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="bp">[]</span>
+<span class="n">e1</span> <span class="o">::</span> <span class="n">e2</span>
+<span class="o">[</span><span class="n">e1</span><span class="o">;</span> <span class="n">e2</span><span class="o">;</span> <span class="o">...;</span> <span class="n">en</span><span class="o">]</span>
+</pre></div>
+</div>
+<p>空列表写作 <code class="docutils literal notranslate"><span class="pre">[]</span></code>，读作“nil”，这个名字来自
+Lisp。给定一个列表 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 和元素 <code class="docutils literal notranslate"><span class="pre">elt</span></code>，我们可以把 <code class="docutils literal notranslate"><span class="pre">elt</span></code> 加到 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 前面：
+写作 <code class="docutils literal notranslate"><span class="pre">elt</span> <span class="pre">::</span> <span class="pre">lst</span></code>。双冒号运算符读作“cons”，这个名字
+它来自 Lisp 中的一个运算符，该运算符 <u>cons</u>tructs 内存中的对象。
+“Cons”也可以用作动词，例如“我会把一个元素 cons 到列表上”。
+列表的第一个元素通常称为它的“头部”，其余元素（如果有的话）
+称为它的<em>尾部</em>。</p>
+<p>cons 运算符 <code class="docutils literal notranslate"><span class="pre">::</span></code> 是右结合的，这意味着 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span> <span class="pre">::</span> <span class="pre">e3</span></code> 是
+理解为 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">(e2</span> <span class="pre">::</span> <span class="pre">e3)</span></code>，而不是 <code class="docutils literal notranslate"><span class="pre">(e1</span> <span class="pre">::</span> <span class="pre">e2)</span> <span class="pre">::</span> <span class="pre">e3</span></code>。</p>
+<p>方括号语法很方便，但没有必要。任意列表
+<code class="docutils literal notranslate"><span class="pre">[e1;</span> <span class="pre">e2;</span> <span class="pre">...;</span> <span class="pre">en]</span></code> 可以用更原始的 nil 和
+cons 语法：<code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span> <span class="pre">::</span> <span class="pre">...</span> <span class="pre">::</span> <span class="pre">en</span> <span class="pre">::</span> <span class="pre">[]</span></code>。当一种好用的语法可以
+用语言中更原始的语法定义出来时，我们称这种
+好用的语法为<em>语法糖</em>：它让语言变得“更甜”。
+把这种语法糖转换为更原始的语法称为“去糖”。</p>
+<p>因为列表的元素可以是任意表达式，所以列表可以是
+嵌套的深度任意深，例如 <code class="docutils literal notranslate"><span class="pre">[[[]];</span> <span class="pre">[[1;</span> <span class="pre">2;</span> <span class="pre">3]]]</span></code>。</p>
+<p><strong>动态语义。</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[]</span></code> 本身已经是一个值。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 计算得到 <code class="docutils literal notranslate"><span class="pre">v1</span></code>，且 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 计算得到 <code class="docutils literal notranslate"><span class="pre">v2</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span></code> 计算得到 <code class="docutils literal notranslate"><span class="pre">v1</span> <span class="pre">::</span> <span class="pre">v2</span></code>。</p></li>
+</ul>
+<p>由这些规则以及方括号语法如何去糖化，我们得到以下推导规则：</p>
+<ul class="simple">
+<li><p>如果对所有 <code class="docutils literal notranslate"><span class="pre">i</span></code> ∈ <code class="docutils literal notranslate"><span class="pre">1..n</span></code> 都有 <code class="docutils literal notranslate"><span class="pre">ei</span></code> 计算得到 <code class="docutils literal notranslate"><span class="pre">vi</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">[e1;</span> <span class="pre">...;</span> <span class="pre">en]</span></code> 计算得到 <code class="docutils literal notranslate"><span class="pre">[v1;</span> <span class="pre">...;</span> <span class="pre">vn]</span></code>。</p></li>
+</ul>
+<p>在求值规则中反复写”计算得到”开始变得枯燥。让我们引入一个更简洁的记号：我们用 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">==&gt;</span> <span class="pre">v</span></code> 表示”e 计算得到 v”。注意 <code class="docutils literal notranslate"><span class="pre">==&gt;</span></code> 不是 OCaml 语法的一部分，而是我们用来描述语言的元语言符号。用这个记号，我们可以改写上面的后两个规则：</p>
+<ul class="simple">
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">==&gt;</span> <span class="pre">v1</span></code>，且 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">==&gt;</span> <span class="pre">v2</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span> <span class="pre">==&gt;</span> <span class="pre">v1</span> <span class="pre">::</span> <span class="pre">v2</span></code>。</p></li>
+<li><p>如果对所有 <code class="docutils literal notranslate"><span class="pre">i</span></code> ∈ <code class="docutils literal notranslate"><span class="pre">1..n</span></code> 都有 <code class="docutils literal notranslate"><span class="pre">ei</span> <span class="pre">==&gt;</span> <span class="pre">vi</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">[e1;</span> <span class="pre">...;</span> <span class="pre">en]</span> <span class="pre">==&gt;</span> <span class="pre">[v1;</span> <span class="pre">...;</span> <span class="pre">vn]</span></code>。</p></li>
+</ul>
+<p><strong>静态语义。</strong></p>
+<p>列表的所有元素必须具有相同的类型。如果元素类型是 <code class="docutils literal notranslate"><span class="pre">t</span></code>，那么列表的类型就是 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">list</span></code>。你应该从右到左读这样的类型：<code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">list</span></code> 是一个 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的列表，<code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">list</span> <span class="pre">list</span></code> 是一个 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的列表的列表，等等。这里的 <code class="docutils literal notranslate"><span class="pre">list</span></code> 本身不是一个类型：没有办法构造一个仅为 <code class="docutils literal notranslate"><span class="pre">list</span></code> 类型的 OCaml 值。相反，<code class="docutils literal notranslate"><span class="pre">list</span></code> 是一个<em>类型构造器</em>：给定一个类型，它产生一个新的类型。例如，给定 <code class="docutils literal notranslate"><span class="pre">int</span></code>，它产生类型 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">list</span></code>。你可以把类型构造器想象成作用于类型而非值的函数。</p>
+<p>类型检查规则：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[]</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">list</span></code></p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t</span></code> 且 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">list</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">list</span></code>（若对优先级困惑，后者表示 <code class="docutils literal notranslate"><span class="pre">(e1</span> <span class="pre">::</span> <span class="pre">e2)</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">list</span></code>）。</p></li>
+</ul>
+<p>在 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 的规则中，记住 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 是一个类型变量：它代表一个未知的类型。所以空列表是一个元素类型未知的列表。如果我们在它前面 cons 一个 <code class="docutils literal notranslate"><span class="pre">int</span></code>，比如 <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">::</span> <span class="pre">[]</span></code>，编译器就会推断出这个特定列表的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。但如果在另一个地方我们在它前面 cons 一个 <code class="docutils literal notranslate"><span class="pre">bool</span></code>，比如 <code class="docutils literal notranslate"><span class="pre">true</span> <span class="pre">::</span> <span class="pre">[]</span></code>，编译器会推断出这个特定列表的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 必须是 <code class="docutils literal notranslate"><span class="pre">bool</span></code>。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">3.1.2. </span>访问列表<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/AkrlDpHN_zE" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>上面链接的视频中也使用了记录和元组作为例子。这些内容会在本书的 <a class="reference internal" href="records_tuples.html"><span class="doc std std-doc">后面部分</span></a> 介绍。</p>
+</div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/sO9wxUxajS4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>实际上，构造列表只有两种方法：nil 和 cons。所以如果我们想把列表分解成它的组成部分，就必须说明两种情况：列表为空时做什么，以及列表非空时（即，一个元素 cons 到另一个列表上时）做什么。我们用一种叫<em>模式匹配</em>的语言特性来实现这一点。</p>
+<p>下面是使用模式匹配计算列表总和的示例：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">lst</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">lst</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+  <span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">h</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum : int list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>这个函数会取得输入 <code class="docutils literal notranslate"><span class="pre">lst</span></code>，并检查它是否具有与空列表相同的形状。
+如果是，就返回 0。否则，如果它匹配列表形状 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">::</span> <span class="pre">t</span></code>，
+就让 <code class="docutils literal notranslate"><span class="pre">h</span></code> 成为 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 的第一个元素，让 <code class="docutils literal notranslate"><span class="pre">t</span></code> 成为 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 的其余元素，
+并返回 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">+</span> <span class="pre">sum</span> <span class="pre">t</span></code>。这里的变量名表示“头部”和“尾部”，
+是一种常见习惯；当然，如果愿意，我们也可以使用其他名字。
+另一种常见习惯是：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">xs</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">xs</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+  <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs&#39;</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">xs&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum : int list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>也就是说，输入列表命名为 xs（读作 EX-uhs），头元素命名为
+x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
+<p>从语法上讲，没有必要使用这么多行来定义 <code class="docutils literal notranslate"><span class="pre">sum</span></code>。我们可以
+全部在一行完成：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">xs</span> <span class="o">=</span> <span class="k">match</span> <span class="n">xs</span> <span class="k">with</span> <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs&#39;</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">xs&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum : int list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>或者，请注意 <code class="docutils literal notranslate"><span class="pre">with</span></code> 之后的第一个 <code class="docutils literal notranslate"><span class="pre">|</span></code> 是可选的，无论有多少个
+我们使用的行，我们也可以写：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">xs</span> <span class="o">=</span> <span class="k">match</span> <span class="n">xs</span> <span class="k">with</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs&#39;</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">xs&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum : int list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>多行格式是我们在本书中通常使用的格式，因为它有助于
+人眼能更好地理解语法。OCaml 代码格式化工具，
+不过，只要代码很短，就会转向单行格式
+足以适合仅一条线。</p>
+<p>这是使用模式匹配计算列表长度的另一个示例：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">length</span> <span class="n">lst</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">lst</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+  <span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">length</span> <span class="n">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : &#39;a list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>请注意我们实际上并不需要变量 <code class="docutils literal notranslate"><span class="pre">h</span></code> 在右侧
+模式匹配。当我们想要指示模式中存在某些值时
+无需实际命名，我们可以编写 <code class="docutils literal notranslate"><span class="pre">_</span></code> （下划线字符）：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">length</span> <span class="n">lst</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">lst</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+  <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">length</span> <span class="n">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : &#39;a list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>该函数实际上是作为 OCaml 标准库 <code class="docutils literal notranslate"><span class="pre">List</span></code> 的一部分内置的
+模块。它的名字是<code class="docutils literal notranslate"><span class="pre">List.length</span></code>。该“点”符号表示
+名为 <code class="docutils literal notranslate"><span class="pre">List</span></code> 的模块内名为 <code class="docutils literal notranslate"><span class="pre">length</span></code> 的函数，很像点
+许多其他语言中使用的符号。</p>
+<p>这是第三个示例，它将一个列表附加到
+另一个列表：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">append</span> <span class="n">lst1</span> <span class="n">lst2</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">lst1</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="n">lst2</span>
+  <span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">h</span> <span class="o">::</span> <span class="n">append</span> <span class="n">t</span> <span class="n">lst2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val append : &#39;a list -&gt; &#39;a list -&gt; &#39;a list = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>例如，<code class="docutils literal notranslate"><span class="pre">append</span> <span class="pre">[1;</span> <span class="pre">2]</span> <span class="pre">[3;</span> <span class="pre">4]</span></code> 是 <code class="docutils literal notranslate"><span class="pre">[1;</span> <span class="pre">2;</span> <span class="pre">3;</span> <span class="pre">4]</span></code>。这个函数其实就是
+可用作内置运算符 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>，因此我们可以编写
+<code class="docutils literal notranslate"><span class="pre">[1;</span> <span class="pre">2]</span> <span class="pre">&#64;</span> <span class="pre">[3;</span> <span class="pre">4]</span></code>。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/VDRTatjSl0E" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>作为最后一个例子，我们可以编写一个函数来确定是否
+列表为空：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">empty</span> <span class="n">lst</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">lst</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+  <span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;a list -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>但是有一种更好的方法可以在不进行模式匹配的情况下编写相同的函数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">empty</span> <span class="n">lst</span> <span class="o">=</span>
+  <span class="n">lst</span> <span class="o">=</span> <span class="bp">[]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;a list -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>请注意上面的所有递归函数与通过以下方法进行证明有何相似之处
+自然数归纳法：每个自然数要么是 0，要么是 1
+大于其他一些自然数 <span class="math notranslate nohighlight">\(n\)</span>，因此归纳证明具有
+0 的基本情况和 <span class="math notranslate nohighlight">\(n + 1\)</span> 的归纳情况。同样，我们所有的函数
+有一个空列表的基本情况和一个包含列表的递归情况
+比另一个列表多一个元素。这种相似性并非偶然。有一个
+归纳与递归之间的深厚关系；我们将探讨这一点
+本书后面将详细介绍这种关系。</p>
+<p>顺便说一句，有两个库函数 <code class="docutils literal notranslate"><span class="pre">List.hd</span></code> 和 <code class="docutils literal notranslate"><span class="pre">List.tl</span></code> 会返回
+列表的头部和尾部。但在惯用的 OCaml 中，不建议直接把这些函数
+应用到列表上。问题在于，如果把它们应用到空列表，它们会抛出异常，
+而你必须记得处理这个异常。相反，你应该使用模式匹配：
+这样你会被迫至少处理空列表和非空列表两种情况，
+从而避免异常，让程序更加健壮。</p>
+</section>
+<section id="id4">
+<h2><span class="section-number">3.1.3. </span>（不）改变列表<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>列表是不可变的。没有办法把列表中的某个元素
+改成另一个值。相反，OCaml 程序员会从旧列表创建新列表。
+例如，假设我们想编写一个返回相同列表的函数
+作为其输入列表，但把第一个元素（如果有）加一。
+我们可以这样做：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">inc_first</span> <span class="n">lst</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">lst</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">[]</span>
+  <span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">h</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">::</span> <span class="n">t</span>
+</pre></div>
+</div>
+<p>现在你可能会担心这样是否浪费空间。毕竟，
+编译器至少有两种方法可以实现上述代码：</p>
+<ol class="arabic simple">
+<li><p>在模式匹配到 cons 时，复制整个尾部列表 <code class="docutils literal notranslate"><span class="pre">t</span></code> 来创建新列表，
+使得使用的内存量增加
+数量与 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的长度成比例。</p></li>
+<li><p>在旧列表和新列表之间共享尾列表 <code class="docutils literal notranslate"><span class="pre">t</span></code>，这样
+使用的内存量不会增加—超出一块额外的内存
+存储 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">+</span> <span class="pre">1</span></code> 所需的内存。</p></li>
+</ol>
+<p>事实上，编译器执行的是后者。所以没必要担心。
+编译器实现共享非常安全的原因正是
+列表元素是不可变的。如果它们是可变的，那么我们就必须
+担心我的列表是否与你的列表共享，
+以及我所做的更改是否会在你的列表中可见。所以不变性使得
+更容易推理代码，并使编译器可以安全地执行
+执行优化。</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">3.1.4. </span>与列表的模式匹配<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>我们在上面看到了如何使用模式匹配来访问列表。让我们更仔细地
+观察这个语言特性。</p>
+<p><strong>语法。</strong></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">match</span> <span class="n">e</span> <span class="k">with</span>
+<span class="o">|</span> <span class="n">p1</span> <span class="o">-&gt;</span> <span class="n">e1</span>
+<span class="o">|</span> <span class="n">p2</span> <span class="o">-&gt;</span> <span class="n">e2</span>
+<span class="o">|</span> <span class="o">...</span>
+<span class="o">|</span> <span class="n">pn</span> <span class="o">-&gt;</span> <span class="n">en</span>
+</pre></div>
+</div>
+<p>每个子句 <code class="docutils literal notranslate"><span class="pre">pi</span> <span class="pre">-&gt;</span> <span class="pre">ei</span></code> 称为模式匹配的<em>分支</em>或<em>情况</em>。
+整个模式匹配中的第一个竖线是可选的。</p>
+<p>这里的 <code class="docutils literal notranslate"><span class="pre">p</span></code> 是一种新的语法形式，称为<em>模式</em>。目前，有一个模式
+可能是：</p>
+<ul class="simple">
+<li><p>变量名称，例如 <code class="docutils literal notranslate"><span class="pre">x</span></code></p></li>
+<li><p>下划线字符 <code class="docutils literal notranslate"><span class="pre">_</span></code>，称为 <em>通配符</em></p></li>
+<li><p>空列表 <code class="docutils literal notranslate"><span class="pre">[]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p1</span> <span class="pre">::</span> <span class="pre">p2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[p1;</span> <span class="pre">...;</span> <span class="pre">pn]</span></code></p></li>
+</ul>
+<p>变量名称在模式中不得出现多次。例如，
+模式 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">::</span> <span class="pre">x</span></code> 是非法的。通配符可以出现任意多次。</p>
+<p>随着我们更多地了解 OCaml 中可用的数据结构，我们将扩展
+模式的可能性。</p>
+<p><strong>动态语义。</strong></p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/sz72NP4u4DQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>模式匹配涉及两个相互关联的任务：确定模式是否
+匹配一个值，并确定该值的哪些部分应该关联
+模式中的变量名称。前一个任务直观上是关于
+确定模式和值是否具有相同的<em>形状</em>。后一个任务
+是关于确定模式引入的<em>变量绑定</em>。对于
+例如，考虑以下代码：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">match</span> <span class="mi">1</span> <span class="o">::</span> <span class="bp">[]</span> <span class="k">with</span>
+<span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">h</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : bool = true
+</pre></div>
+</div>
+</div>
+</div>
+<p>在求值第二个分支的右侧时，<code class="docutils literal notranslate"><span class="pre">h</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">1</span></code>
+并且 <code class="docutils literal notranslate"><span class="pre">t</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">[]</span></code>。让我们写 <code class="docutils literal notranslate"><span class="pre">h-&gt;1</span></code> 来表示变量绑定：
+<code class="docutils literal notranslate"><span class="pre">h</span></code> 具有值 <code class="docutils literal notranslate"><span class="pre">1</span></code>；这不是一段 OCaml 语法，而是一个
+我们用来推理语言的符号。所以产生的变量绑定
+第二个分支将是 <code class="docutils literal notranslate"><span class="pre">h-&gt;1,</span> <span class="pre">t-&gt;[]</span></code>。</p>
+<p>使用该表示法，以下是模式何时匹配值的定义，并且
+匹配的绑定产生：</p>
+<ul class="simple">
+<li><p>模式 <code class="docutils literal notranslate"><span class="pre">x</span></code> 匹配任何值 <code class="docutils literal notranslate"><span class="pre">v</span></code> 并生成变量绑定
+<code class="docutils literal notranslate"><span class="pre">x-&gt;v</span></code>.</p></li>
+<li><p>模式 <code class="docutils literal notranslate"><span class="pre">_</span></code> 匹配任何值并且不产生绑定。</p></li>
+<li><p>模式 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 与值 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 匹配并且不生成任何绑定。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">p1</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 并生成一组 <span class="math notranslate nohighlight">\(b_1\)</span> 绑定，并且如果 <code class="docutils literal notranslate"><span class="pre">p2</span></code> 匹配
+<code class="docutils literal notranslate"><span class="pre">v2</span></code> 并生成一组 <span class="math notranslate nohighlight">\(b_2\)</span> 绑定，然后 <code class="docutils literal notranslate"><span class="pre">p1</span> <span class="pre">::</span> <span class="pre">p2</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">v1</span> <span class="pre">::</span> <span class="pre">v2</span></code>
+并生成绑定集 <span class="math notranslate nohighlight">\(b_1 \cup b_2\)</span> 。注意 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 必须是一个列表
+（因为它位于 <code class="docutils literal notranslate"><span class="pre">::</span></code> 的右侧）并且可以具有任意长度：0
+元素、1 个元素或多个元素。请注意，联合 <span class="math notranslate nohighlight">\(b_1 \cup b_2\)</span>
+单独绑定同一个变量时，绑定永远不会出现问题
+在 <span class="math notranslate nohighlight">\(b_1\)</span> 和 <span class="math notranslate nohighlight">\(b_2\)</span> 中，因为语法限制没有变量
+名称可能在模式中出现多次。</p></li>
+<li><p>如果对 <code class="docutils literal notranslate"><span class="pre">1..n</span></code> 中的所有 <code class="docutils literal notranslate"><span class="pre">i</span></code>，<code class="docutils literal notranslate"><span class="pre">pi</span></code> 与 <code class="docutils literal notranslate"><span class="pre">vi</span></code> 匹配并产生集合
+<span class="math notranslate nohighlight">\(b_i\)</span> 的绑定，然后 <code class="docutils literal notranslate"><span class="pre">[p1;</span> <span class="pre">...;</span> <span class="pre">pn]</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">[v1;</span> <span class="pre">...;</span> <span class="pre">vn]</span></code> 并产生
+绑定集 <span class="math notranslate nohighlight">\(\bigcup_i b_i\)</span> 。请注意，此模式指定
+列表的长度必须准确。</p></li>
+</ul>
+<p>现在我们可以说明如何求值 <code class="docutils literal notranslate"><span class="pre">match</span> <span class="pre">e</span> <span class="pre">with</span> <span class="pre">p1</span> <span class="pre">-&gt;</span> <span class="pre">e1</span> <span class="pre">|</span> <span class="pre">...</span> <span class="pre">|</span> <span class="pre">pn</span> <span class="pre">-&gt;</span> <span class="pre">en</span></code>：</p>
+<ul class="simple">
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">e</span></code> 计算为值 <code class="docutils literal notranslate"><span class="pre">v</span></code>。</p></li>
+<li><p>尝试将 <code class="docutils literal notranslate"><span class="pre">v</span></code> 与 <code class="docutils literal notranslate"><span class="pre">p1</span></code> 匹配，然后与 <code class="docutils literal notranslate"><span class="pre">p2</span></code> 匹配，依此类推，按顺序
+它们出现在匹配表达式中。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">v</span></code> 与任何模式都不匹配，则求值
+匹配表达式会引发 <code class="docutils literal notranslate"><span class="pre">Match_failure</span></code> 异常。我们还没有讨论过
+OCaml 中的异常，但你肯定在其他语言中熟悉它们
+语言。我们将在本章结尾处回到异常情况，之后
+我们已经介绍了 OCaml 中的一些其他内置数据结构。</p></li>
+<li><p>否则，让 <code class="docutils literal notranslate"><span class="pre">pi</span></code> 成为第一个匹配的模式，并让 <span class="math notranslate nohighlight">\(b\)</span> 成为匹配的模式。
+通过将 <code class="docutils literal notranslate"><span class="pre">v</span></code> 与 <code class="docutils literal notranslate"><span class="pre">pi</span></code> 匹配而生成的变量绑定。</p></li>
+<li><p>将这些绑定替换为 <code class="docutils literal notranslate"><span class="pre">ei</span></code> 内的 <span class="math notranslate nohighlight">\(b\)</span>，生成新表达式 <code class="docutils literal notranslate"><span class="pre">e'</span></code>。</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">e'</span></code> 求值为值 <code class="docutils literal notranslate"><span class="pre">v'</span></code>。</p></li>
+<li><p>整个匹配表达式的结果是<code class="docutils literal notranslate"><span class="pre">v'</span></code>。</p></li>
+</ul>
+<p>例如，下面展示如何求值这个匹配表达式：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">match</span> <span class="mi">1</span> <span class="o">::</span> <span class="bp">[]</span> <span class="k">with</span>
+<span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">t</span> <span class="o">=</span> <span class="bp">[]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : bool = true
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">::</span> <span class="pre">[]</span></code> 已经是一个值。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[]</span></code> 与 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">::</span> <span class="pre">[]</span></code> 不匹配。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">::</span> <span class="pre">t</span></code> 确实匹配 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">::</span> <span class="pre">[]</span></code> 并生成变量绑定
+{<code class="docutils literal notranslate"><span class="pre">h-&gt;1</span></code>,<code class="docutils literal notranslate"><span class="pre">t-&gt;[]</span></code>}，因为：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">h</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">1</span></code> 并生成变量绑定 <code class="docutils literal notranslate"><span class="pre">h-&gt;1</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 并生成变量绑定 <code class="docutils literal notranslate"><span class="pre">t-&gt;[]</span></code>。</p></li>
+</ul>
+</li>
+<li><p>将 {<code class="docutils literal notranslate"><span class="pre">h-&gt;1</span></code>,<code class="docutils literal notranslate"><span class="pre">t-&gt;[]</span></code>} 替换为 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">&amp;&amp;</span> <span class="pre">t</span> <span class="pre">=</span> <span class="pre">[]</span></code> 内
+生成一个新表达式 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">&amp;&amp;</span> <span class="pre">[]</span> <span class="pre">=</span> <span class="pre">[]</span></code>。</p></li>
+<li><p>求值 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">&amp;&amp;</span> <span class="pre">[]</span> <span class="pre">=</span> <span class="pre">[]</span></code> 会产生值 <code class="docutils literal notranslate"><span class="pre">true</span></code>。我们省略了
+此处说明该事实的理由，但它是根据其他求值规则得出的
+用于内置运算符和函数应用程序。</p></li>
+<li><p>所以整个匹配表达式的结果是<code class="docutils literal notranslate"><span class="pre">true</span></code>。</p></li>
+</ul>
+<p><strong>静态语义。</strong></p>
+<ul class="simple">
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">ta</span></code> 且对于所有 <code class="docutils literal notranslate"><span class="pre">i</span></code>，则认为 <code class="docutils literal notranslate"><span class="pre">pi</span> <span class="pre">:</span> <span class="pre">ta</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ei</span> <span class="pre">:</span> <span class="pre">tb</span></code>，
+然后<code class="docutils literal notranslate"><span class="pre">(match</span> <span class="pre">e</span> <span class="pre">with</span> <span class="pre">p1</span> <span class="pre">-&gt;</span> <span class="pre">e1</span> <span class="pre">|</span> <span class="pre">...</span> <span class="pre">|</span> <span class="pre">pn</span> <span class="pre">-&gt;</span> <span class="pre">en)</span> <span class="pre">:</span> <span class="pre">tb</span></code>。</p></li>
+</ul>
+<p>该规则依赖于能够判断模式是否具有特定类型。
+像往常一样，类型推断在这里发挥作用。OCaml 编译器推断
+任何模式变量的类型以及所有出现的通配符
+模式。至于列表模式，它们具有与以下相同的类型检查规则：
+列出表达式。</p>
+<p><strong>额外的静态检查。</strong></p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/aLQJpk9vXD4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>除了类型检查规则之外，编译器还有另外两项检查
+对每个匹配表达式执行的操作。</p>
+<p>首先，**详尽性：**编译器检查以确保存在
+足够的模式以保证其中至少有一个与表达式匹配
+<code class="docutils literal notranslate"><span class="pre">e</span></code>，无论该表达式在运行时的值是什么。这确保了
+程序员没有忘记任何分支。例如，下面的函数
+将导致编译器发出警告：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">head</span> <span class="n">lst</span> <span class="o">=</span> <span class="k">match</span> <span class="n">lst</span> <span class="k">with</span> <span class="n">h</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">h</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File &quot;[12]&quot;, line 1, characters 15-41:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1 | let head lst = match lst with h :: _ -&gt; h
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning 8 [partial-match]: this pattern-matching is not exhaustive.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Here is an example of a case that is not matched:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val head : &#39;a list -&gt; &#39;a = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>通过向程序员提出警告，编译器正在帮助
+程序员防范 <code class="docutils literal notranslate"><span class="pre">Match_failure</span></code> 异常的可能性
+运行时。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>抱歉，上面的单元格的输出如何被分成许多行
+HTML。当前是 <a class="reference external" href="https://github.com/executablebooks/jupyter-book/issues/973">open issue with JupyterBook</a>，框架
+用于构建本书。</p>
+</div>
+<p>其次，**未使用的分支：**编译器检查是否有任何
+分支永远无法匹配，因为之前的分支之一是
+保证成功。例如，下面的函数将导致编译器
+发出警告：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">lst</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">lst</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">h</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">t</span>
+  <span class="o">|</span> <span class="o">[</span> <span class="n">h</span> <span class="o">]</span> <span class="o">-&gt;</span> <span class="n">h</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File &quot;[13]&quot;, line 4, characters 4-9:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4 |   | [ h ] -&gt; h
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>        ^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning 11 [redundant-case]: this match case is unused.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum : int list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>第二个分支未使用，因为第一个分支会匹配
+第二个分支能匹配的任何内容。</p>
+<p>未使用的匹配情况通常表明程序员编写了其他内容
+比他们的意图。因此，通过提出该警告，编译器正在提供帮助
+程序员检测代码中潜在的错误。</p>
+<p>以下是导致未使用匹配情况警告的最常见错误之一。
+理解它也是检查你是否真正理解
+匹配表达式的动态语义：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">length_is</span> <span class="n">lst</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span> <span class="n">lst</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File &quot;[14]&quot;, line 4, characters 4-5:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4 |   | _ -&gt; false
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>        ^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning 11 [redundant-case]: this match case is unused.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length_is : &#39;a list -&gt; &#39;b -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>程序员原本想表达：如果 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 的长度等于 <code class="docutils literal notranslate"><span class="pre">n</span></code>，那么
+该函数返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>，否则返回 <code class="docutils literal notranslate"><span class="pre">false</span></code>。但事实上
+该函数<em>总是</em>返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>。为什么？因为模式变量 <code class="docutils literal notranslate"><span class="pre">n</span></code> 是
+与函数参数 <code class="docutils literal notranslate"><span class="pre">n</span></code> 不同。假设 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 的长度为 5。
+那么模式匹配就变成：<code class="docutils literal notranslate"><span class="pre">match</span> <span class="pre">5</span> <span class="pre">with</span> <span class="pre">n</span> <span class="pre">-&gt;</span> <span class="pre">true</span> <span class="pre">|</span> <span class="pre">_</span> <span class="pre">-&gt;</span> <span class="pre">false</span></code>。<code class="docutils literal notranslate"><span class="pre">n</span></code>
+是否匹配 5？是的，根据上面的规则：变量模式匹配任何值。
+这里产生绑定 <code class="docutils literal notranslate"><span class="pre">n-&gt;5</span></code>。然后求值会把该绑定应用到
+<code class="docutils literal notranslate"><span class="pre">true</span></code>，也就是用 5 替换 <code class="docutils literal notranslate"><span class="pre">true</span></code> 中所有出现的 <code class="docutils literal notranslate"><span class="pre">n</span></code>。
+没有这样的出现。因此求值完成，结果就是
+<code class="docutils literal notranslate"><span class="pre">true</span></code>。</p>
+<p>程序员真正想写的是：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">length_is</span> <span class="n">lst</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span> <span class="n">lst</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="n">m</span> <span class="o">-&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length_is : &#39;a list -&gt; int -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>或者更好：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">length_is</span> <span class="n">lst</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="nn">List</span><span class="p">.</span><span class="n">length</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length_is : &#39;a list -&gt; int -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id6">
+<h2><span class="section-number">3.1.5. </span>深度模式匹配<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>模式可以嵌套。  这样做可以让你的代码深入了解
+列表的结构。  例如：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">::</span> <span class="pre">[]</span></code> 与所有列表仅匹配一个元素</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span></code> 匹配所有至少包含一个元素的列表</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span> <span class="pre">::</span> <span class="pre">[]</span></code> 匹配所有包含两个元素的列表</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span></code> 匹配所有至少包含三个元素的列表</p></li>
+</ul>
+</section>
+<section id="id7">
+<h2><span class="section-number">3.1.6. </span>立即匹配<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/VgVP8Tin6yY" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>当你有一个立即与其最终模式匹配的函数时
+争论，有一个很好的语法糖可以用来避免写作
+额外的代码。这是一个例子：而不是</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">lst</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">lst</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+  <span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">h</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum : int list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>你可以写</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+  <span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">h</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum : int list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">function</span></code> 一词是一个关键字。请注意，我们可以省略该行
+包含 <code class="docutils literal notranslate"><span class="pre">match</span></code> 以及从未使用过的参数名称
+除了那条线之外的任何其他地方。但在这种情况下，这一点尤其重要
+函数的规范注释，用于记录该参数的内容
+应该是，因为代码不再给它一个描述性的名称。</p>
+</section>
+<section id="ocamldoc">
+<h2><span class="section-number">3.1.7. </span>OCamldoc 和列表语法<a class="headerlink" href="#ocamldoc" title="Permalink to this heading">#</a></h2>
+<p>OCamldoc 是一个类似于 Javadoc 的文档生成器。它提取注释
+从源代码生成 HTML（以及其他输出格式）。
+生成 <code class="docutils literal notranslate"><span class="pre">List</span></code> 模块的 <a class="reference external" href="https://ocaml.org/api/List.html">标准库网页文档</a>
+由该模块的 <a class="reference external" href="https://github.com/ocaml/ocaml/blob/trunk/stdlib/list.mli">标准库源代码</a> 中的 OCamldoc 提供，
+例如。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>OCamldoc 中有一个使用方括号的语法约定，
+很容易和列表混淆。</p>
+<p>在 OCamldoc 注释中，源代码用方括号括起来。那段代码
+会以等宽字体呈现，并在输出 HTML 中进行语法高亮。
+本例中的方括号并不表示列表。</p>
+</div>
+<p>例如，这是标准库源代码中 <code class="docutils literal notranslate"><span class="pre">List.hd</span></code> 的注释
+代码：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** Return the first element of the given list. Raise</span>
+<span class="c">   [Failure &quot;hd&quot;] if the list is empty. *)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">[Failure</span> <span class="pre">&quot;hd&quot;]</span></code> 并不意味着包含异常的列表
+<code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">&quot;hd&quot;</span></code>。相反，它意味着将表达式 <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">&quot;hd&quot;</span></code> 排版为
+源代码，如你所见<a class="reference external" href="https://ocaml.org/api/List.html">here</a>。</p>
+<p>当你想将列表作为以下内容的一部分进行讨论时，这可能会变得特别令人困惑
+文档。例如，我们可以这样重写该注释：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [hd lst] returns the first element of [lst].</span>
+<span class="c">    Raises [Failure &quot;hd&quot;] if [lst = []]. *)</span>
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">[lst</span> <span class="pre">=</span> <span class="pre">[]]</span></code> 中，外部方括号表示源代码作为
+注释，而内部方括号表示空列表。</p>
+</section>
+<section id="id8">
+<h2><span class="section-number">3.1.8. </span>列表推导式<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h2>
+<p>一些语言，包括 Python 和 Haskell，有一种称为
+<em>推导式</em>的语法，允许用类似数学中集合推导式的方式编写列表。
+推导式最早的例子似乎来自
+函数式语言 NPL，设计于 1977 年。</p>
+<p>OCaml 没有内置的推导式语法支持。虽然有些
+开发了扩展，但似乎不再支持任何扩展。初级
+通过推导式完成的主要任务（过滤掉一些元素，以及
+转换其他元素）实际上已经得到<em>高阶
+编程</em>，我们将在后面的章节中学习，以及管道运算符，
+我们已经了解到了。因此，推导式提供的额外语法
+从来没有真正需要过。</p>
+</section>
+<section id="id9">
+<h2><span class="section-number">3.1.9. </span>尾递归<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h2>
+<p>回想一下，如果一个函数递归地调用自身，那么它就是“尾递归”，但是
+递归调用返回后不执行任何计算，并且
+立即将其递归调用的值返回给调用者。考虑
+这两个实现，<code class="docutils literal notranslate"><span class="pre">sum</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sum_tr</span></code> 对列表求和：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="o">(</span><span class="n">l</span> <span class="o">:</span> <span class="kt">int</span> <span class="kt">list</span><span class="o">)</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">l</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+  <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="o">(</span><span class="n">sum</span> <span class="n">xs</span><span class="o">)</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span class="n">sum_plus_acc</span> <span class="o">(</span><span class="n">acc</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">(</span><span class="n">l</span> <span class="o">:</span> <span class="kt">int</span> <span class="kt">list</span><span class="o">)</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">l</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="n">acc</span>
+  <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs</span> <span class="o">-&gt;</span> <span class="n">sum_plus_acc</span> <span class="o">(</span><span class="n">acc</span> <span class="o">+</span> <span class="n">x</span><span class="o">)</span> <span class="n">xs</span>
+
+<span class="k">let</span> <span class="n">sum_tr</span> <span class="o">:</span> <span class="kt">int</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span>
+  <span class="n">sum_plus_acc</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum : int list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum_plus_acc : int -&gt; int list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum_tr : int list -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>请观察上面的 <code class="docutils literal notranslate"><span class="pre">sum</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sum_tr</span></code> 函数之间的以下区别：
+在<code class="docutils literal notranslate"><span class="pre">sum</span></code>函数中，不是尾递归，递归调用之后
+返回其值，我们向其添加 <code class="docutils literal notranslate"><span class="pre">x</span></code> 。在尾部递归 <code class="docutils literal notranslate"><span class="pre">sum_tr</span></code> 中，或者更确切地说
+在<code class="docutils literal notranslate"><span class="pre">sum_plus_acc</span></code>中，递归调用返回后，我们立即返回
+值无需进一步计算。</p>
+<p>如果你要在很长的列表上编写函数，尾递归就变成了
+对性能很重要。因此，当你可以选择使用
+尾递归与非尾递归函数，你可能最好使用
+在很长的列表上使用尾递归函数以实现空间效率。
+因此，List 模块记录了哪些函数是尾递归的
+哪些不是。</p>
+<p>但这并不意味着尾递归实现严格来说更好。
+例如，尾递归函数可能更难阅读。 （考虑
+<code class="docutils literal notranslate"><span class="pre">sum_plus_acc</span></code>。）此外，在某些情况下实现尾递归
+函数需要进行预处理或后处理以反转
+列表。在中小型列表上，反转列表的开销（两者
+及时并为反向列表分配内存）可以使
+尾递归版本时间效率较低。什么是“小”与“大”
+在这里？这很难说，但根据
+<a class="reference external" href="https://ocaml.org/api/List.html"><code class="docutils literal notranslate"><span class="pre">List</span></code> 模块的标准库文档</a>。</p>
+<p>这是一个有用的尾递归函数，可以生成长列表：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [from i j l] is the list containing the integers from [i] to [j],</span>
+<span class="c">    inclusive, followed by the list [l].</span>
+<span class="c">    Example:  [from 1 3 [0] = [1; 2; 3; 0]] *)</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">from</span> <span class="n">i</span> <span class="n">j</span> <span class="n">l</span> <span class="o">=</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span> <span class="k">then</span> <span class="n">l</span> <span class="k">else</span> <span class="n">from</span> <span class="n">i</span> <span class="o">(</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">(</span><span class="n">j</span> <span class="o">::</span> <span class="n">l</span><span class="o">)</span>
+
+<span class="c">(** [i -- j] is the list containing the integers from [i] to [j], inclusive. *)</span>
+<span class="k">let</span> <span class="o">(</span> <span class="o">--</span> <span class="o">)</span> <span class="n">i</span> <span class="n">j</span> <span class="o">=</span> <span class="n">from</span> <span class="n">i</span> <span class="n">j</span> <span class="bp">[]</span>
+
+<span class="k">let</span> <span class="n">long_list</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">--</span> <span class="mi">1_000_000</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val from : int -&gt; int -&gt; int list -&gt; int list = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( -- ) : int -&gt; int -&gt; int list = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val long_list : int list =
+  [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19; 20;
+   21; 22; 23; 24; 25; 26; 27; 28; 29; 30; 31; 32; 33; 34; 35; 36; 37; 38;
+   39; 40; 41; 42; 43; 44; 45; 46; 47; 48; 49; 50; 51; 52; 53; 54; 55; 56;
+   57; 58; 59; 60; 61; 62; 63; 64; 65; 66; 67; 68; 69; 70; 71; 72; 73; 74;
+   75; 76; 77; 78; 79; 80; 81; 82; 83; 84; 85; 86; 87; 88; 89; 90; 91; 92;
+   93; 94; 95; 96; 97; 98; 99; 100; 101; 102; 103; 104; 105; 106; 107; 108;
+   109; 110; 111; 112; 113; 114; 115; 116; 117; 118; 119; 120; 121; 122; 123;
+   124; 125; 126; 127; 128; 129; 130; 131; 132; 133; 134; 135; 136; 137; 138;
+   139; 140; 141; 142; 143; 144; 145; 146; 147; 148; 149; 150; 151; 152; 153;
+   154; 155; 156; 157; 158; 159; 160; 161; 162; 163; 164; 165; 166; 167; 168;
+   169; 170; 171; 172; 173; 174; 175; 176; 177; 178; 179; 180; 181; 182; 183;
+   184; 185; 186; 187; 188; 189; 190; 191; 192; 193; 194; 195; 196; 197; 198;
+   199; 200; 201; 202; 203; 204; 205; 206; 207; 208; 209; 210; 211; 212; 213;
+   214; 215; 216; 217; 218; 219; 220; 221; 222; 223; 224; 225; 226; 227; 228;
+   229; 230; 231; 232; 233; 234; 235; 236; 237; 238; 239; 240; 241; 242; 243;
+   244; 245; 246; 247; 248; 249; 250; 251; 252; 253; 254; 255; 256; 257; 258;
+   259; 260; 261; 262; 263; 264; 265; 266; 267; 268; 269; 270; 271; 272; 273;
+   274; 275; 276; 277; 278; 279; 280; 281; 282; 283; 284; 285; 286; 287; 288;
+   289; 290; 291; 292; 293; 294; 295; 296; 297; 298; ...]
+</pre></div>
+</div>
+</div>
+</div>
+<p>值得研究 <code class="docutils literal notranslate"><span class="pre">--</span></code> 的定义，以说服自己
+你了解（i）它是如何工作的以及（ii）为什么它是尾递归的。</p>
+<p>你将来可能会决定再次创建这样的列表。而不是
+必须记住这个定义在哪里，并且必须将其复制到你的
+代码，这是使用内置库创建相同列表的简单方法
+函数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">List</span><span class="p">.</span><span class="n">init</span> <span class="mi">1_000_000</span> <span class="nn">Fun</span><span class="p">.</span><span class="n">id</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list =
+[0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19; 20;
+ 21; 22; 23; 24; 25; 26; 27; 28; 29; 30; 31; 32; 33; 34; 35; 36; 37; 38; 39;
+ 40; 41; 42; 43; 44; 45; 46; 47; 48; 49; 50; 51; 52; 53; 54; 55; 56; 57; 58;
+ 59; 60; 61; 62; 63; 64; 65; 66; 67; 68; 69; 70; 71; 72; 73; 74; 75; 76; 77;
+ 78; 79; 80; 81; 82; 83; 84; 85; 86; 87; 88; 89; 90; 91; 92; 93; 94; 95; 96;
+ 97; 98; 99; 100; 101; 102; 103; 104; 105; 106; 107; 108; 109; 110; 111; 112;
+ 113; 114; 115; 116; 117; 118; 119; 120; 121; 122; 123; 124; 125; 126; 127;
+ 128; 129; 130; 131; 132; 133; 134; 135; 136; 137; 138; 139; 140; 141; 142;
+ 143; 144; 145; 146; 147; 148; 149; 150; 151; 152; 153; 154; 155; 156; 157;
+ 158; 159; 160; 161; 162; 163; 164; 165; 166; 167; 168; 169; 170; 171; 172;
+ 173; 174; 175; 176; 177; 178; 179; 180; 181; 182; 183; 184; 185; 186; 187;
+ 188; 189; 190; 191; 192; 193; 194; 195; 196; 197; 198; 199; 200; 201; 202;
+ 203; 204; 205; 206; 207; 208; 209; 210; 211; 212; 213; 214; 215; 216; 217;
+ 218; 219; 220; 221; 222; 223; 224; 225; 226; 227; 228; 229; 230; 231; 232;
+ 233; 234; 235; 236; 237; 238; 239; 240; 241; 242; 243; 244; 245; 246; 247;
+ 248; 249; 250; 251; 252; 253; 254; 255; 256; 257; 258; 259; 260; 261; 262;
+ 263; 264; 265; 266; 267; 268; 269; 270; 271; 272; 273; 274; 275; 276; 277;
+ 278; 279; 280; 281; 282; 283; 284; 285; 286; 287; 288; 289; 290; 291; 292;
+ 293; 294; 295; 296; 297; 298; ...]
+</pre></div>
+</div>
+</div>
+</div>
+<p>表达式 <code class="docutils literal notranslate"><span class="pre">List.init</span> <span class="pre">len</span> <span class="pre">f</span></code> 创建列表 <code class="docutils literal notranslate"><span class="pre">[f</span> <span class="pre">0;</span> <span class="pre">f</span> <span class="pre">1;</span> <span class="pre">...;</span> <span class="pre">f</span> <span class="pre">(len</span> <span class="pre">-</span> <span class="pre">1)]</span></code>，
+如果 <code class="docutils literal notranslate"><span class="pre">len</span></code> 大于 10,000，它会递归地尾部执行此操作。函数
+<code class="docutils literal notranslate"><span class="pre">Fun.id</span></code> 只是识别函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span></code>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/data"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>数据和类型</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="variants.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">3.2. </span>变体</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.1.1. 构建列表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.1.2. 访问列表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.1.3. （不）改变列表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3.1.4. 与列表的模式匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">3.1.5. 深度模式匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">3.1.6. 立即匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ocamldoc">3.1.7. OCamldoc 和列表语法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">3.1.8. 列表推导式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">3.1.9. 尾递归</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

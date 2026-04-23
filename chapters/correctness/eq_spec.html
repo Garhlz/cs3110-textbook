@@ -1,0 +1,1416 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>8.9. 等式规范 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/correctness/eq_spec';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="8.10. 总结" href="summary.html" />
+    <link rel="prev" title="8.8. 结构归纳法" href="structural_induction.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">8. 正确性</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/correctness/eq_spec.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/correctness/eq_spec.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/correctness/eq_spec.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/correctness/eq_spec.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/correctness/eq_spec.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>等式规范</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">8.9.1. 示例：堆栈</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">8.9.2. 示例：队列</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">8.9.3. 示例：批量队列</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">8.9.4. 设计等式规范</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">8.9. </span>等式规范<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<p>接下来让我们应对更大的挑战：证明数据的正确性
+结构，例如堆栈、队列或集合。</p>
+<p>正确性证明总是需要规范。在证明正确性时
+迭代阶乘，我们使用递归阶乘作为规范。以此类推，
+我们可以提供数据结构的两种实现——一种简单，另一种
+复杂且高效——并证明两者等价。那会
+要求我们引入在两种实现之间进行转换的方法。对于
+例如，我们可以证明用有效方法实现的映射的正确性
+平衡二叉搜索树相对于低效的实现
+关联列表，通过定义函数将树转换为列表。这样一个
+方法当然是有效的，但它并没有带来关于验证的新想法
+供我们学习。</p>
+<p>相反，我们将寻求基于<em>等式的不同方法
+规范</em>，又名<em>代数规范</em>。这些的想法是</p>
+<ul class="simple">
+<li><p>定义数据结构操作的类型，以及</p></li>
+<li><p>编写一组方程来定义操作如何与一个交互
+另一个。</p></li>
+</ul>
+<p>“代数”这个词出现在这里的原因（部分）是
+基于类型和方程的方法是我们在高中代数中学到的东西。
+例如，以下是一些运算符的规范：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="o">:</span> <span class="kt">int</span>
+<span class="mi">1</span> <span class="o">:</span> <span class="kt">int</span>
+<span class="o">-</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+<span class="o">+</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+<span class="o">*</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+
+<span class="o">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">)</span> <span class="o">+</span> <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="o">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="o">)</span>
+<span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">a</span>
+<span class="n">a</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">a</span>
+<span class="n">a</span> <span class="o">+</span> <span class="o">(-</span><span class="n">a</span><span class="o">)</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="o">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="o">)</span> <span class="o">*</span> <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="o">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">c</span><span class="o">)</span>
+<span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">a</span>
+<span class="n">a</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">=</span> <span class="n">a</span>
+<span class="n">a</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">a</span> <span class="o">*</span> <span class="o">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="o">)</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span>
+</pre></div>
+</div>
+<p>这些运算符的类型以及相关方程都是已知的事实
+学习代数时。</p>
+<p>我们现在的目标是为数据结构编写类似的规范，并使用
+他们对实现的正确性进行推理。</p>
+<section id="id2">
+<h2><span class="section-number">8.9.1. </span>示例：堆栈<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/Pyz2xEzD2cY" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>以下是一些熟悉的堆栈操作及其类型。</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Stack =
+  sig
+    type &#39;a t
+    val empty : &#39;a t
+    val is_empty : &#39;a t -&gt; bool
+    val peek : &#39;a t -&gt; &#39;a
+    val push : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val pop : &#39;a t -&gt; &#39;a t
+  end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>像往常一样，需要对 <code class="docutils literal notranslate"><span class="pre">peek</span></code> 等进行设计选择，了解要做什么
+与空堆栈。这里我们没有使用<code class="docutils literal notranslate"><span class="pre">option</span></code>，这表明<code class="docutils literal notranslate"><span class="pre">peek</span></code>
+将在空堆栈上引发异常。所以我们谨慎地放松我们的
+禁止例外。</p>
+<p>过去我们用英语给出了这些操作规范，例如，</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="c">(** [push x s] is the stack [s] with [x] pushed on the top. *)</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span>
+</pre></div>
+</div>
+<p>但现在，我们将编写一些方程来描述操作的工作原理：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1. is_empty empty = true
+2. is_empty (push x s) = false
+3. peek (push x s) = x
+4. pop (push x s) = s
+</pre></div>
+</div>
+<p>（稍后我们将回到<em>如何</em>设计此类方程的问题。）
+这些方程中出现的变量都被隐式普遍量化。
+以下是如何阅读每个方程：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">is_empty</span> <span class="pre">empty</span> <span class="pre">=</span> <span class="pre">true</span></code>。  空栈是空的。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_empty</span> <span class="pre">(push</span> <span class="pre">x</span> <span class="pre">s)</span> <span class="pre">=</span> <span class="pre">false</span></code>。  刚刚压入的堆栈是
+非空。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">peek</span> <span class="pre">(push</span> <span class="pre">x</span> <span class="pre">s)</span> <span class="pre">=</span> <span class="pre">x</span></code>。  推动然后立即查看会产生任何结果
+价值被推了。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pop</span> <span class="pre">(push</span> <span class="pre">x</span> <span class="pre">s)</span> <span class="pre">=</span> <span class="pre">s</span></code>。  推入然后立即弹出产生原始的
+堆栈。</p></li>
+</ol>
+<p>仅凭这些方程，我们就可以推断出很多关于如何
+堆栈操作的顺序必须有效。例如，</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  peek (pop (push 1 (push 2 empty)))
+=   { equation 4 }
+  peek (push 2 empty)
+=   { equation 3 }
+  2
+</pre></div>
+</div>
+<p>根据方程， <code class="docutils literal notranslate"><span class="pre">peek</span> <span class="pre">empty</span></code> 不等于任何值，因为有
+不存在 <code class="docutils literal notranslate"><span class="pre">peek</span> <span class="pre">empty</span> <span class="pre">=</span> <span class="pre">...</span></code> 形式的方程。一切都是真实的，无论
+选择的堆栈实现：任何正确的实现都必须导致
+要保持的方程。</p>
+<p>假设我们将堆栈实现为列表，如下所示：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListStack</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">hd</span>
+  <span class="k">let</span> <span class="n">push</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
+  <span class="k">let</span> <span class="n">pop</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">tl</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStack :
+  sig
+    type &#39;a t = &#39;a list
+    val empty : &#39;a list
+    val is_empty : &#39;a list -&gt; bool
+    val peek : &#39;a list -&gt; &#39;a
+    val push : &#39;a -&gt; &#39;a list -&gt; &#39;a list
+    val pop : &#39;a list -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>接下来我们可以<em>证明</em>每个方程都适用于实现。所有这些
+现在证明很容易，并且完全通过评估进行。例如，
+这是方程 3 的证明：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  peek (push x s)
+=   { evaluation }
+  peek (x :: s)
+=   { evaluation }
+  x
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2><span class="section-number">8.9.2. </span>示例：队列<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/lAJz6ZnsbNI" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>堆栈很容易。  排队怎么样？  这是规格：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Queue</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">front</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">enq</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">deq</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Queue =
+  sig
+    type &#39;a t
+    val empty : &#39;a t
+    val is_empty : &#39;a t -&gt; bool
+    val front : &#39;a t -&gt; &#39;a
+    val enq : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val deq : &#39;a t -&gt; &#39;a t
+  end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1.  is_empty empty = true
+2.  is_empty (enq x q) = false
+3a. front (enq x q) = x            if is_empty q = true
+3b. front (enq x q) = front q      if is_empty q = false
+4a. deq (enq x q) = empty          if is_empty q = true
+4b. deq (enq x q) = enq x (deq q)  if is_empty q = false
+</pre></div>
+</div>
+<p>队列操作的类型实际上与类型相同
+的堆栈操作。  在这里，将它们并排进行比较：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>            <span class="k">module</span> <span class="k">type</span> <span class="nc">Queue</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>                          <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>                   <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>        <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>              <span class="k">val</span> <span class="n">front</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>      <span class="k">val</span> <span class="n">enq</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>             <span class="k">val</span> <span class="n">deq</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">end</span>                                <span class="k">end</span>
+</pre></div>
+</div>
+<p>查看每一行：虽然操作可能有不同的名称，但它的类型
+是一样的。  显然，仅这些类型并不能告诉我们足够的信息
+操作。  但方程式确实如此！  以下是如何阅读每个方程：</p>
+<ol class="arabic simple">
+<li><p>空队列是空的。</p></li>
+<li><p>入队使队列非空。</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">x</span></code> 放入空队列会使 <code class="docutils literal notranslate"><span class="pre">x</span></code> 成为前面的元素。
+但如果队列不为空，则排队不会更改前面的元素。</p></li>
+<li><p>在空队列上入队然后出队会使队列为空。
+但如果队列不为空，则可以进行入队和出队操作
+被交换。</p></li>
+</ol>
+<p>例如，</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  front (deq (enq 1 (enq 2 empty)))
+=   { equations 4b and 2 }
+  front (enq 1 (deq (enq 2 empty)))
+=   { equations 4a and 1 }
+  front (enq 1 empty)
+=   { equations 3a and 1 }
+  1
+</pre></div>
+</div>
+<p>根据方程式，<code class="docutils literal notranslate"><span class="pre">front</span> <span class="pre">empty</span></code> 不等于任何值。</p>
+<p>将队列实现为列表会导致易于实现的实现
+仅通过评估进行验证。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListQueue</span> <span class="o">:</span> <span class="nc">Queue</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="n">q</span> <span class="o">=</span> <span class="n">q</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">front</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">hd</span>
+  <span class="k">let</span> <span class="n">enq</span> <span class="n">x</span> <span class="n">q</span> <span class="o">=</span> <span class="n">q</span> <span class="o">@</span> <span class="o">[</span><span class="n">x</span><span class="o">]</span>
+  <span class="k">let</span> <span class="n">deq</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">tl</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListQueue : Queue
+</pre></div>
+</div>
+</div>
+</div>
+<p>例如4a可以这样验证：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  deq (enq x empty)
+=   { evaluation of empty and enq}
+  deq ([] @ [x])
+=   { evaluation of @ }
+  deq [x]
+=   { evaluation of deq }
+  []
+=   { evaluation of empty }
+  empty
+</pre></div>
+</div>
+<p>以及4b，如下：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  deq (enq x q)
+=  { evaluation of enq and deq }
+  List.tl (q @ [x])
+=  { lemma, below, and q &lt;&gt; [] }
+  (List.tl q) @ [x]
+
+  enq x (deq q)
+=  { evaluation }
+  (List.tl q) @ [x]
+</pre></div>
+</div>
+<p>这是引理：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Lemma: if xs &lt;&gt; [], then List.tl (xs @ ys) = (List.tl xs) @ ys.
+Proof: if xs &lt;&gt; [], then xs = h :: t for some h and t.
+
+  List.tl ((h :: t) @ ys)
+=   { evaluation of @ }
+  List.tl (h :: (t @ ys))
+=   { evaluation of tl }
+  t @ ys
+
+  (List.tl (h :: t)) @ ys
+=   { evaluation of tl }
+  t @ ys
+
+QED
+</pre></div>
+</div>
+<p>请注意 3b 和 4b 中 <code class="docutils literal notranslate"><span class="pre">q</span></code> 不为空的前提条件如何确保我们
+永远不必处理等式证明中提出的异常。</p>
+</section>
+<section id="id4">
+<h2><span class="section-number">8.9.3. </span>示例：批量队列<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>回想一下，批处理队列表示具有两个列表的队列：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">BatchedQueue</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(* AF: [(o, i)] represents the queue [o @ (List.rev i)].</span>
+<span class="c">     RI: if [o] is empty then [i] is empty. *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="o">(</span><span class="bp">[]</span><span class="o">,</span> <span class="bp">[]</span><span class="o">)</span>
+
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">i</span><span class="o">)</span> <span class="o">=</span> <span class="k">if</span> <span class="n">o</span> <span class="o">=</span> <span class="bp">[]</span> <span class="k">then</span> <span class="bp">true</span> <span class="k">else</span> <span class="bp">false</span>
+
+  <span class="k">let</span> <span class="n">enq</span> <span class="n">x</span> <span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">i</span><span class="o">)</span> <span class="o">=</span> <span class="k">if</span> <span class="n">o</span> <span class="o">=</span> <span class="bp">[]</span> <span class="k">then</span> <span class="o">([</span><span class="n">x</span><span class="o">],</span> <span class="bp">[]</span><span class="o">)</span> <span class="k">else</span> <span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">x</span> <span class="o">::</span> <span class="n">i</span><span class="o">)</span>
+
+  <span class="k">let</span> <span class="n">front</span> <span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="o">_)</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">hd</span> <span class="n">o</span>
+
+  <span class="k">let</span> <span class="n">deq</span> <span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">i</span><span class="o">)</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="nn">List</span><span class="p">.</span><span class="n">tl</span> <span class="n">o</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">rev</span> <span class="n">i</span><span class="o">,</span> <span class="bp">[]</span><span class="o">)</span>
+    <span class="o">|</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">i</span><span class="o">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module BatchedQueue :
+  sig
+    type &#39;a t = &#39;a list * &#39;a list
+    val empty : &#39;a list * &#39;b list
+    val is_empty : &#39;a list * &#39;b -&gt; bool
+    val enq : &#39;a -&gt; &#39;a list * &#39;a list -&gt; &#39;a list * &#39;a list
+    val front : &#39;a list * &#39;b -&gt; &#39;a
+    val deq : &#39;a list * &#39;a list -&gt; &#39;a list * &#39;a list
+  end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>这个实现与之前的实现有表面上的不同
+我们给出的，因为它使用对而不是记录，并且它引发了内置
+异常 <code class="docutils literal notranslate"><span class="pre">Failure</span></code> 而不是自定义异常 <code class="docutils literal notranslate"><span class="pre">Empty</span></code>。</p>
+<p>这个实现正确吗？  我们只需验证方程即可找到答案。</p>
+<p>首先，一个引理：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Lemma:  if is_empty q = true, then q = empty.
+Proof:  Since is_empty q = true, it must be that q = (f, b) and f = [].
+By the RI, it must also be that b = [].  Thus q = ([], []) = empty.
+QED
+</pre></div>
+</div>
+<p>验证方程 1：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  is_empty empty
+=   { eval empty }
+  is_empty ([], [])
+=   { eval is_empty }
+  [] = []
+=   { eval = }
+  true
+</pre></div>
+</div>
+<p>验证方程 2：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  is_empty (enq x q) = false
+=   { eval enq }
+  is_empty (if f = [] then [x], [] else f, x :: b)
+
+case analysis: f = []
+
+  is_empty (if f = [] then [x], [] else f, x :: b)
+=   { eval if, f = [] }
+  is_empty ([x], [])
+=   { eval is_empty }
+  [x] = []
+=   { eval = }
+  false
+
+case analysis: f = h :: t
+
+  is_empty (if f = [] then [x], [] else f, x :: b)
+=   { eval if, f = h :: t }
+  is_empty (h :: t, x :: b)
+=   { eval is_empty }
+  h :: t = []
+=   { eval = }
+  false
+</pre></div>
+</div>
+<p>验证方程 3a：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  front (enq x q) = x
+=   { emptiness lemma }
+  front (enq x ([], []))
+=   { eval enq }
+  front ([x], [])
+=   { eval front }
+  x
+</pre></div>
+</div>
+<p>验证方程 3b：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  front (enq x q)
+=   { rewrite q as (h :: t, b), because q is not empty }
+  front (enq x (h :: t, b))
+=   { eval enq }
+  front (h :: t, x :: b)
+=   { eval front }
+  h
+
+  front q
+=   { rewrite q as (h :: t, b), because q is not empty }
+  front (h :: t, b)
+=   { eval front }
+  h
+</pre></div>
+</div>
+<p>验证方程 4a：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  deq (enq x q)
+=   { emptiness lemma }
+  deq (enq x ([], []))
+=   { eval enq }
+  deq ([x], [])
+=   { eval deq }
+  List.rev [], []
+=   { eval rev }
+  [], []
+=   { eval empty }
+  empty
+</pre></div>
+</div>
+<p>验证方程 4b：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Show: deq (enq x q) = enq x (deq q)  assuming is_empty q = false.
+Proof: Since is_empty q = false, q must be (h :: t, b).
+
+Case analysis:  t = [], b = []
+
+  deq (enq x q)
+=   { rewriting q as ([h], []) }
+  deq (enq x ([h], []))
+=   { eval enq }
+  deq ([h], [x])
+=   { eval deq }
+  List.rev [x], []
+=   { eval rev }
+  [x], []
+
+  enq x (deq q)
+=   { rewriting q as ([h], []) }
+  enq x (deq ([h], []))
+=   { eval deq }
+  enq x (List.rev [], [])
+=   { eval rev }
+  enq x ([], [])
+=   { eval enq }
+  [x], []
+
+Case analysis:  t = [], b = h&#39; :: t&#39;
+
+  deq (enq x q)
+=   { rewriting q as ([h], h&#39; :: t&#39;) }
+  deq (enq x ([h], h&#39; :: t&#39;))
+=   { eval enq }
+  deq ([h], x :: h&#39; :: t&#39;)
+=   { eval deq }
+  (List.rev (x :: h&#39; :: t&#39;), [])
+
+  enq x (deq q)
+=   { rewriting q as ([h], h&#39; :: t&#39;) }
+  enq x (deq ([h], h&#39; :: t&#39;))
+=   { eval deq }
+  enq x (List.rev (h&#39; :: t&#39;), [])
+=   { eval enq }
+  (List.rev (h&#39; :: t&#39;), [x])
+
+STUCK
+</pre></div>
+</div>
+<p>等等，我们刚刚被困住了！ <code class="docutils literal notranslate"><span class="pre">(List.rev</span> <span class="pre">(x</span> <span class="pre">::</span> <span class="pre">h'</span> <span class="pre">::</span> <span class="pre">t'),</span> <span class="pre">[])</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">(List.rev</span> <span class="pre">(h'</span> <span class="pre">::</span> <span class="pre">t'),</span> <span class="pre">[x])</span></code> 不同。但是，抽象地讲，他们确实
+代表同一个队列：<code class="docutils literal notranslate"><span class="pre">(List.rev</span> <span class="pre">t')</span> <span class="pre">&#64;</span> <span class="pre">[h';</span> <span class="pre">x]</span></code>。</p>
+<p>为了解决这个问题，我们将采用以下方程来表示
+类型：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e = e&#39;   if  AF(e) = AF(e&#39;)
+</pre></div>
+</div>
+<p>该方程使我们得出结论，两个不同的表达式是
+等于：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  AF((List.rev (h&#39; :: t&#39;), [x]))
+=   { apply AF }
+  List.rev (h&#39; :: t&#39;) @ List.rev [x]
+=   { rev distributes over @, an exercise in the previous lecture }
+  List.rev ([x] @ (h&#39; :: t&#39;))
+=   { eval @ }
+  List.rev (x :: h&#39; :: t&#39;)
+
+  AF((List.rev (x :: h&#39; :: t&#39;), []))
+=   { apply AF }
+  List.rev (x :: h&#39; :: t&#39;) @ List.rev []
+=   { eval rev }
+  List.rev (x :: h&#39; :: t&#39;) @ []
+=   { eval @ }
+  List.rev (x :: h&#39; :: t&#39;)
+</pre></div>
+</div>
+<p>现在我们摆脱困境了：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  (List.rev (h&#39; :: t&#39;), [x])
+=   { AF equation }
+  (List.rev (x :: h&#39; :: t&#39;), [])
+</pre></div>
+</div>
+<p>还剩下一个案例分析来完成证明：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Case analysis:  t = h&#39; :: t&#39;
+
+  deq (enq x q)
+=   { rewriting q as (h :: h&#39; :: t&#39;, b) }
+  deq (enq x (h :: h&#39; :: t&#39;, b))
+=   { eval enq }
+  deq (h :: h&#39; :: t, x :: b)
+=   { eval deq }
+  h&#39; :: t, x :: b
+
+  enq x (deq q)
+=   { rewriting q as (h :: h&#39; :: t&#39;, b) }
+  enq x (deq (h :: h&#39; :: t&#39;, b))
+=   { eval deq }
+  enq x (h&#39; :: t&#39;, b)
+=   { eval enq }
+  h&#39; :: t&#39;, x :: b
+
+QED
+</pre></div>
+</div>
+<p>我们对批量队列的验证到此结束。请注意，我们必须添加
+涉及抽象函数的额外方程以获得证明
+通过：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e = e&#39;   if  AF(e) = AF(e&#39;)
+</pre></div>
+</div>
+<p>我们在证明过程中使用了 RI。 AF 和 RI 确实是
+重要！</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">8.9.4. </span>设计等式规范<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/8uJmKmsiF2I" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>对于堆栈和队列，我们提供了一些方程作为规范。
+设计这些方程在某种程度上是认真思考数据的问题
+结构。但还有更多的事情要做。</p>
+<p>数据结构的每个值都是通过一些操作构造的。对于一个
+堆栈，这些操作是 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 和 <code class="docutils literal notranslate"><span class="pre">push</span></code>。可能有一些 <code class="docutils literal notranslate"><span class="pre">pop</span></code>
+涉及的操作，但这些操作是可以消除的。例如，<code class="docutils literal notranslate"><span class="pre">pop</span> <span class="pre">(push</span> <span class="pre">1</span> <span class="pre">（推</span> <span class="pre">2</span> <span class="pre">空））</span></code> is really the same stack as <code class="docutils literal notranslate"><span class="pre">推</span> <span class="pre">2</span> <span class="pre">空</span></code>。后者是
+该堆栈的<em>规范形式</em>：还有许多其他方法来构造它，但是
+这是最简单的。事实上，每个可能的堆栈值都可以构造为
+与 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 和 <code class="docutils literal notranslate"><span class="pre">push</span></code>。类似地，每个可能的队列值都可以是
+仅使用 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 和 <code class="docutils literal notranslate"><span class="pre">enq</span></code> 构造：如果涉及 <code class="docutils literal notranslate"><span class="pre">deq</span></code> 操作，
+这些是可以消除的。</p>
+<p>我们将数据结构的操作分类如下：</p>
+<ul class="simple">
+<li><p><strong>生成器</strong>是涉及创建规范形式的那些操作。
+它们返回数据结构类型的值。例如，<code class="docutils literal notranslate"><span class="pre">empty</span></code>、<code class="docutils literal notranslate"><span class="pre">push</span></code>、
+<code class="docutils literal notranslate"><span class="pre">enq</span></code>。</p></li>
+<li><p><strong>操纵器</strong>是创建数据结构值的操作
+类型，但不需要创建规范形式。例如，<code class="docutils literal notranslate"><span class="pre">pop</span></code>、<code class="docutils literal notranslate"><span class="pre">deq</span></code>。</p></li>
+<li><p><strong>查询</strong>不返回数据结构类型的值。例如，
+<code class="docutils literal notranslate"><span class="pre">is_empty</span></code>、<code class="docutils literal notranslate"><span class="pre">peek</span></code>、<code class="docutils literal notranslate"><span class="pre">front</span></code>。</p></li>
+</ul>
+<p>给定这样的分类，我们可以设计一个方程的规范
+通过将非生成器应用于生成器来构建数据结构。例如：什么是
+<code class="docutils literal notranslate"><span class="pre">is_empty</span></code> 返回 <code class="docutils literal notranslate"><span class="pre">empty</span></code>？在 <code class="docutils literal notranslate"><span class="pre">push</span></code> 上？ <code class="docutils literal notranslate"><span class="pre">front</span></code> 在 <code class="docutils literal notranslate"><span class="pre">enq</span></code> 上返回什么？什么
+<code class="docutils literal notranslate"><span class="pre">deq</span></code> 是否在 <code class="docutils literal notranslate"><span class="pre">enq</span></code> 上返回？等等</p>
+<p>因此，如果数据结构有 <code class="docutils literal notranslate"><span class="pre">n</span></code> 生成器和 <code class="docutils literal notranslate"><span class="pre">m</span></code> 非生成器，我们
+首先尝试创建 <code class="docutils literal notranslate"><span class="pre">n*m</span></code> 方程，每对一个
+发电机和非发电机。每个方程都将展示如何简化
+表达。在某些情况下，我们可能需要几个方程，具体取决于
+一些比较的结果。例如，在队列规范中，我们有
+以下方程：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">is_empty</span> <span class="pre">empty</span> <span class="pre">=</span> <span class="pre">true</span></code>：这是一个非生成器 <code class="docutils literal notranslate"><span class="pre">is_empty</span></code> 应用于
+生成器 <code class="docutils literal notranslate"><span class="pre">empty</span></code>。它只是减少为布尔值，这不涉及
+数据结构类型（队列）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_empty</span> <span class="pre">(enq</span> <span class="pre">x</span> <span class="pre">q)</span> <span class="pre">=</span> <span class="pre">false</span></code>：非生成器 <code class="docutils literal notranslate"><span class="pre">is_empty</span></code> 应用于
+生成器 <code class="docutils literal notranslate"><span class="pre">enq</span></code>。它再次简单地简化为布尔值。</p></li>
+<li><p>有两个子情况。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">front</span> <span class="pre">(enq</span> <span class="pre">x</span> <span class="pre">q)</span> <span class="pre">=</span> <span class="pre">x</span></code>，如果 <code class="docutils literal notranslate"><span class="pre">is_empty</span> <span class="pre">q</span> <span class="pre">=</span> <span class="pre">true</span></code>。非生成器 <code class="docutils literal notranslate"><span class="pre">front</span></code>
+应用于生成器 <code class="docutils literal notranslate"><span class="pre">enq</span></code>。它减少到 <code class="docutils literal notranslate"><span class="pre">x</span></code>，这是一个更小的
+表达式比原来的<code class="docutils literal notranslate"><span class="pre">front</span> <span class="pre">(enq</span> <span class="pre">x</span> <span class="pre">q)</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">front</span> <span class="pre">(enq</span> <span class="pre">x</span> <span class="pre">q)</span> <span class="pre">=</span> <span class="pre">front</span> <span class="pre">q</span></code>，<code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">is_empty</span> <span class="pre">q</span> <span class="pre">=</span> <span class="pre">false</span></code>。这同样
+简化为更小的表达式。</p></li>
+</ul>
+</li>
+<li><p>同样，有两个子情况。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">deq</span> <span class="pre">(enq</span> <span class="pre">x</span> <span class="pre">q)</span> <span class="pre">=</span> <span class="pre">empty</span></code>，如果 <code class="docutils literal notranslate"><span class="pre">is_empty</span> <span class="pre">q</span> <span class="pre">=</span> <span class="pre">true</span></code>。这简化了
+原始表达式，将其减少为 <code class="docutils literal notranslate"><span class="pre">empty</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deq</span> <span class="pre">(enq</span> <span class="pre">x</span> <span class="pre">q)</span> <span class="pre">=</span> <span class="pre">enq</span> <span class="pre">x</span> <span class="pre">(deq</span> <span class="pre">q)</span></code>，如果 <code class="docutils literal notranslate"><span class="pre">is_empty</span> <span class="pre">q</span> <span class="pre">=</span> <span class="pre">false</span></code>。这简化了
+原始表达式，通过将其简化为应用于更小的生成器
+参数，<code class="docutils literal notranslate"><span class="pre">deq</span> <span class="pre">q</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">deq</span> <span class="pre">(enq</span> <span class="pre">x</span> <span class="pre">q)</span></code>。</p></li>
+</ul>
+</li>
+</ol>
+<p>我们通常不会设计涉及非生成元对的方程。有时
+不过，需要成对的生成器，正如我们将在下一个示例中看到的那样。</p>
+<p><strong>示例：集合。</strong> 这是集合的一个小界面：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Set =
+  sig
+    type &#39;a t
+    val empty : &#39;a t
+    val is_empty : &#39;a t -&gt; bool
+    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val mem : &#39;a -&gt; &#39;a t -&gt; bool
+    val remove : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+  end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>生成器是 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 和 <code class="docutils literal notranslate"><span class="pre">add</span></code>。唯一的操纵器是 <code class="docutils literal notranslate"><span class="pre">remove</span></code>。最后，
+<code class="docutils literal notranslate"><span class="pre">is_empty</span></code> 和 <code class="docutils literal notranslate"><span class="pre">mem</span></code> 是查询。所以我们应该期望至少 2 * 3 = 6
+方程，每对生成器和非生成器一个。这是一个
+等式规范：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1.  is_empty empty = true
+2.  is_empty (add x s) = false
+3.  mem x empty = false
+4a. mem y (add x s) = true                    if x = y
+4b. mem y (add x s) = mem y s                 if x &lt;&gt; y
+5.  remove x empty = empty
+6a. remove y (add x s) = remove y s           if x = y
+6b. remove y (add x s) = add x (remove y s)   if x &lt;&gt; y
+</pre></div>
+</div>
+<p>不过，请考虑这两组：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">add</span> <span class="pre">0</span> <span class="pre">(add</span> <span class="pre">1</span> <span class="pre">empty)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">add</span> <span class="pre">1</span> <span class="pre">(add</span> <span class="pre">0</span> <span class="pre">empty)</span></code></p></li>
+</ul>
+<p>它们都直观地表示集合 {0,1}。然而，我们无法证明那些
+使用上述规范，两组是相等的。我们缺少一个方程
+涉及两台发电机：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">7.</span>  <span class="n">add</span> <span class="n">x</span> <span class="p">(</span><span class="n">add</span> <span class="n">y</span> <span class="n">s</span><span class="p">)</span> <span class="o">=</span> <span class="n">add</span> <span class="n">y</span> <span class="p">(</span><span class="n">add</span> <span class="n">x</span> <span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/correctness"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="structural_induction.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">8.8. </span>结构归纳法</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="summary.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">8.10. </span>总结</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">8.9.1. 示例：堆栈</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">8.9.2. 示例：队列</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">8.9.3. 示例：批量队列</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">8.9.4. 设计等式规范</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

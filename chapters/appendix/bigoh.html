@@ -1,0 +1,1008 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Big-Oh 记号 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/appendix/bigoh';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="虚拟机" href="vm.html" />
+    <link rel="prev" title="Curry-Howard 对应" href="../adv/curry-howard.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/appendix/bigoh.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/appendix/bigoh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/appendix/bigoh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Big-Oh 记号</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">算法和效率，尝试 1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">算法和效率，尝试 2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#big-ell">Big-Ell 表示法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Big-Oh 记号</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Big-Oh，到此为止</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Big-Oh 记号的注意事项</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">算法和效率，尝试 3</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="big-oh">
+<h1>Big-Oh 记号<a class="headerlink" href="#big-oh" title="Permalink to this heading">#</a></h1>
+<p>“高效”是什么意思？康奈尔大学教授 Jon Kleinberg 和 Éva Tardos 在其教科书《算法设计》（2006）第 2 章中有精彩的阐释。本附录是从函数式编程视角对该内容的总结与诠释。
+最终结论是：如果一个算法在输入规模 <span class="math notranslate nohighlight">\(n\)</span> 上的最坏情况运行时间为 <span class="math notranslate nohighlight">\(O(n^d)\)</span>
+（对某个常数 <span class="math notranslate nohighlight">\(d\)</span>），则认为该算法是“高效的”。但我们需要经过几个步骤才能建立这一定义。</p>
+<section id="id1">
+<h2>算法和效率，尝试 1<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>定义效率的天真的尝试可能会如下进行：</p>
+<p><strong>尝试 1：</strong> 如果算法在实现后，对特定输入实例只花费少量时间，
+则该算法是高效的。</p>
+<p>但这个定义存在很多问题，例如：</p>
+<ul class="simple">
+<li><p>低效的算法可以在小型测试用例上快速运行。</p></li>
+<li><p>快速处理器和优化编译器可能导致低效算法运行
+迅速地。</p></li>
+<li><p>当编码马虎时，高效的算法可能会运行缓慢。</p></li>
+<li><p>某些输入实例比其他实例更难。</p></li>
+<li><p>小输入上的效率并不意味着大输入上的效率。</p></li>
+<li><p>不同客户的耐心程度不同；对我来说快的，对你来说可能很慢。</p></li>
+</ul>
+<p><strong>第 1 课：</strong> 从这次尝试中学到的一个教训是：用时钟时间来衡量算法效率并不合理。
+我们需要一个合理地独立于硬件、编译器和其他软件的指标。
+也许一个好的衡量标准，是计算求值期间执行的“步骤”数量，而不是时钟时间。</p>
+<p>但是，现在我们遇到了一个新问题：我们应该如何定义“步骤”？它需要是
+与机器无关的东西。它应该以某种方式代表一个原始单位
+计算。有很大的灵活性。以下是一些常见的选择：</p>
+<ul class="simple">
+<li><p>在伪代码中，我们可能将步骤视为一行。</p></li>
+<li><p>在命令式语言中，我们可能会计算赋值、数组索引、指针
+解引用和算术运算作为步骤。</p></li>
+<li><p>在 OCaml 中，我们可以计算函数或运算符应用程序、let 绑定，以及
+选择 <code class="docutils literal notranslate"><span class="pre">if</span></code> 或 <code class="docutils literal notranslate"><span class="pre">match</span></code> 的分支作为步骤。</p></li>
+</ul>
+<p>事实上，所有这些“步骤”可能确实需要不同的时间。
+但实际上，这并不重要。</p>
+<p><strong>第 2 课：</strong> 我们从尝试 1 中学到的另一个教训是：在
+特定的输入实例不是正确的指标。我们需要一个能够
+预测任何输入实例的运行时间。所以不要使用特定的
+输入（例如，数字、矩阵或文本文档），最好
+使用输入的<em>规模</em>（例如，表示该值所需的位数
+number，或者矩阵中的行数和列数，或者字节数
+在文档中）作为度量。</p>
+<p>但我们又遇到了一个新问题：如何定义“规模”？正如刚刚给出的例子所示，
+规模应该衡量某个输入相对于其他输入有多大。
+在数据结构的语境中，最常见的规模度量也许只是数据结构维护的元素数量：
+列表中的节点数，或图中的节点数和边数等。</p>
+<p>算法是否可能在两个“规模”相同的输入上运行不同时间？
+当然。例如，将矩阵乘以全零可能会更快
+比乘以任意数字。但在实践中，规模通常比
+精确的输入更有用。</p>
+<p><strong>第 3 课：</strong> 我们从尝试 1 中学到的第三个教训是“少量
+时间”这个词太相对了。我们想要一个相当客观的指标，
+而不是依赖于什么构成“小”的主观概念。</p>
+<p>一种不错的想法是，一种有效的算法需要击败
+<em>暴力搜索</em>。这意味着一一列举所有答案，检查
+各自看看是否正确。例如，暴力排序算法
+会枚举列表的每个可能的排列，检查是否
+它是输入列表的排序版本。这是一个糟糕的排序算法！
+当然，快速排序胜过它。</p>
+<p>暴力搜索是几乎所有算法的简单、愚蠢的解决方案
+问题。但它需要枚举一个巨大的空间。事实上，一个
+指数规模的空间。所以更好的想法是做少于指数级的
+工作。什么小于指数（例如 <span class="math notranslate nohighlight">\(2^n\)</span>）？一种可能性是多项式
+（例如，<span class="math notranslate nohighlight">\(n^2\)</span>）。</p>
+<p>一个直接的反对意见可能是多项式有各种大小。例如，
+<span class="math notranslate nohighlight">\(n^{100}\)</span> 比 <span class="math notranslate nohighlight">\(n^2\)</span> 大得多。还有一些非多项式，例如
+<span class="math notranslate nohighlight">\(n^{1 +.02 (\log n)}\)</span>，可能足以击败指数。
+但在实践中，多项式似乎确实工作得很好。</p>
+</section>
+<section id="id2">
+<h2>算法和效率，尝试 2<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>结合尝试 1 中的经验教训 1 到 3，我们进行了第二次尝试
+定义效率：</p>
+<p><strong>尝试 2：</strong> 如果算法执行的最大步骤数是其输入规模的多项式，
+则该算法是高效的。</p>
+<p>注意这三个想法是如何结合在一起的：步骤数、规模、多项式。</p>
+<p>但如果尝试使用这个定义，它仍然不完美。为最大执行步骤数给出精确公式，
+可能会非常繁琐。例如，在另一本算法教科书中，作者推导出下面这个多项式，
+用于表示插入排序伪代码实现的执行步骤数：</p>
+<div class="math notranslate nohighlight">
+\[
+c_1 n + c_2 (n - 1) + c_4 (n - 1) + c_5 \sum_{j=2}^{n} t_j + c_6 \sum_{j=2}^{n} (t_j - 1) + c_7 \sum_{j=2}^{n} (t_j - 1) + c_8 (n - 1)
+\]</div>
+<p>我们不需要解释所有变量的含义。它太复杂了。我们同情那位必须处理这个公式的研究生。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>插入排序运行时间的公式来自 Cormen、Leiserson、Rivest 和 Stein 的
+<em>算法导论</em>（第 3 版，2009 年）。我们不是在取笑他们；
+他们也会告诉你，这样的公式太复杂。</p>
+</div>
+<p>像这样精确的执行边界很难找到，而且有点
+无意义的。如果 Java 伪代码需要 25 个步骤，但编译为
+RISC-V需要250步，这个精度有用吗？</p>
+<p>在某些情况下，是的。如果你正在构建驾驶飞机或控制飞机的代码
+对于核反应堆，你可能实际上关心精确、实时的保证。</p>
+<p>但除此之外，我们最好能识别出广泛的算法类别
+具有类似的性能。而不是说算法运行在</p>
+<div class="math notranslate nohighlight">
+\[1.62 n^2 + 3.5 n + 8\]</div>
+<p>步骤，只是说它以 <span class="math notranslate nohighlight">\(n^2\)</span> 步骤运行怎么样？也就是说，我们可以忽略
+<em>低阶项</em>和最高阶项的<em>常数因子</em>。</p>
+<p>我们忽略低阶项，因为我们想要大局观。算法效率为
+所有这些都是关于解释当输入变得非常大时算法的性能。
+我们不太关心小输入。低阶项在关注大规模输入时并不重要。
+下表显示了步数与输入规模 N 的关系，假设每一步需要 1 微秒。
+“很长”意味着更多
+比宇宙中原子的估计数量还要多。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(N\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(N\)</span>  <span class="math notranslate nohighlight">\(N^2\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(N^3\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(2^N\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>N=10</p></td>
+<td class="text-center"><p>&lt; 1 秒</p></td>
+<td class="text-center"><p>&lt; 1 秒</p></td>
+<td class="text-center"><p>&lt; 1 秒</p></td>
+<td class="text-center"><p>&lt; 1 秒</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>N=100</p></td>
+<td class="text-center"><p>&lt; 1 秒</p></td>
+<td class="text-center"><p>&lt; 1 秒</p></td>
+<td class="text-center"><p>1秒</p></td>
+<td class="text-center"><p>1017年</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>N=1,000</p></td>
+<td class="text-center"><p>&lt; 1 秒</p></td>
+<td class="text-center"><p>1 秒</p></td>
+<td class="text-center"><p>18 分钟</p></td>
+<td class="text-center"><p>很长</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>N=10,000</p></td>
+<td class="text-center"><p>&lt; 1 秒</p></td>
+<td class="text-center"><p>2 分钟</p></td>
+<td class="text-center"><p>12 天</p></td>
+<td class="text-center"><p>很长</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>N=100,000</p></td>
+<td class="text-center"><p>&lt; 1 秒</p></td>
+<td class="text-center"><p>3小时</p></td>
+<td class="text-center"><p>32年</p></td>
+<td class="text-center"><p>很长</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>N=1,000,000</p></td>
+<td class="text-center"><p>1秒</p></td>
+<td class="text-center"><p>12天</p></td>
+<td class="text-center"><p>104年</p></td>
+<td class="text-center"><p>很长</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>正如你所看到的，当输入变大时，表中各列之间会出现巨大差异。
+我们不妨忽略低阶项，因为在考虑大规模输入时，它们完全被最高阶项主导。</p>
+<p>常数因子呢？我当前的笔记本电脑可能会快 2 倍（也就是说，
+常数因子 2) 比我几年前买的那个要大，但这不是一个
+该算法的有趣属性。同样，伪代码中的 <span class="math notranslate nohighlight">\(1.62 n^2\)</span> 步骤
+可能是 <span class="math notranslate nohighlight">\(1620 n^2\)</span> 条汇编步骤（即常数因子 1000），但是
+这又不是算法的一个有趣的属性。那么，我们真的应该
+关心一种算法是否比另一种算法花费 2 倍或 1000 倍的时间，如果它只是一个
+常数因子？</p>
+<p>答案是：也许吧。实际代码中的性能调优是为了获得
+让常数变小。如果你让某段代码快了一倍，你的雇主可能会很高兴！
+但这与<strong>算法</strong>无关。当我们衡量算法效率时，常数因子实际上并不重要。</p>
+<p>因此，所有这些都说明，我们应该用<strong>不精确的抽象</strong>来衡量运行时间。
+我们可以直接写 <span class="math notranslate nohighlight">\(n^2\)</span>，而不是 <span class="math notranslate nohighlight">\(1.62 n^2 + 3.5 n + 8\)</span>。
+不精确抽象对你来说并不新鲜。你可能会写 <span class="math notranslate nohighlight">\(\pm 1\)</span> 来不精确地
+抽象出 1 以内的量。在计算机科学中，你已经知道我们使用
+Big-Oh 表示法作为不精确的抽象：<span class="math notranslate nohighlight">\(1.62 n^2 + 3.5 n + 8\)</span> 是 <span class="math notranslate nohighlight">\(O(n^2)\)</span>。</p>
+</section>
+<section id="big-ell">
+<h2>Big-Ell 表示法<a class="headerlink" href="#big-ell" title="Permalink to this heading">#</a></h2>
+<p>在回顾 Big-Oh 表示法之前，让我们先从一些简单的东西开始
+以前可能没见过：Big-Ell 记号。</p>
+<p>Big-Ell 是对“小于或等于”（<u>l</u>ess than or equal to）某个数的自然数集合的不精确抽象。
+它的定义如下：</p>
+<div class="math notranslate nohighlight">
+\[
+L(n) = \{ m \mid 0 \leq m \leq n\}
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(m\)</span> 和 <span class="math notranslate nohighlight">\(n\)</span> 是自然数。即 <span class="math notranslate nohighlight">\(L(n)\)</span> 代表所有
+小于或等于 <span class="math notranslate nohighlight">\(n\)</span> 的自然数。例如，<span class="math notranslate nohighlight">\(L(5) = \{0, 1, 2, 3, 4,
+5\}\)</span>。</p>
+<p>你能用 Big-Ell 做算术吗？例如，<span class="math notranslate nohighlight">\(1 + L(5)\)</span> 是什么？
+老实说，这不是一个适定的问题：我们认为加法是一种运算
+是在整数上定义的，而不是在整数集上定义的。但合理的
+<span class="math notranslate nohighlight">\(1 + \{0, 1, 2, 3, 4, 5\}\)</span> 的解释可能是做加法
+集合中的每个元素，产生 <span class="math notranslate nohighlight">\(\{1, 2, 3, 4, 5, 6\}\)</span>。请注意 <span class="math notranslate nohighlight">\(\{1, 2, 3,
+4, 5, 6\}\)</span> 是 <span class="math notranslate nohighlight">\(\{0, 1, 2, 3, 4, 5, 6\}\)</span> 的真子集，后者是
+<span class="math notranslate nohighlight">\(L(6)\)</span>。所以我们可以说<span class="math notranslate nohighlight">\(1 + L(5) \subseteq L(6)\)</span>。我们甚至可以说
+<span class="math notranslate nohighlight">\(1 + L(5) \subseteq L(7)\)</span>，但它不是<em>紧</em>：前一个子集关系
+包含尽可能少的额外元素，而后者是“松散”的
+不必要地包括额外的。</p>
+<p>有关 Big Ell 的更多信息，请参阅<em>具体数学</em>，第 9 章，1989 年，作者：Graham，
+高德纳和帕塔什尼克。</p>
+</section>
+<section id="id3">
+<h2>Big-Oh 记号<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>如果你了解 Big-Ell，并且了解函数式编程，那么这里是
+一些好消息：你可以轻松理解 Big-Oh。</p>
+<p>让我们通过几个步骤来构建 Big-Oh 的定义。我们将从版本开始
+1，我们将其写为 <span class="math notranslate nohighlight">\(O_1\)</span>。它基于 <span class="math notranslate nohighlight">\(L\)</span>：</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(L(n)\)</span> 表示任何小于或等于 a 的<strong>自然数</strong>
+<strong>自然数</strong> <span class="math notranslate nohighlight">\(n\)</span>。</p></li>
+<li><p><span class="math notranslate nohighlight">\(O_1(g)\)</span> 表示任何小于或等于的<strong>自然函数</strong>
+到 <strong>自然函数</strong> <span class="math notranslate nohighlight">\(g\)</span>。</p></li>
+</ul>
+<p><em>自然函数</em>只是自然数上的函数；也就是说，它的类型是
+<span class="math notranslate nohighlight">\(\mathbb{N} \rightarrow \mathbb{N}\)</span>。</p>
+<p>我们对 <span class="math notranslate nohighlight">\(O_1\)</span> 所做的就是从 <strong>自然数</strong> 升级到 <strong>自然数
+函数</strong>。所以 Big-Oh 版本 1 只是 Big-Ell 的<em>高阶</em>版本。
+怎么样！</p>
+<p>当然，我们需要弄清楚函数小于意味着什么
+另一个函数。这是一个合理的形式化：</p>
+<p><strong>Big-Oh 版本 1：</strong> <span class="math notranslate nohighlight">\(O_1(g) = \{ f \mid \forall n \mathrel{.} f(n) \leq g(n)\}\)</span></p>
+<p>例如，考虑将其输入加倍的函数。在数学课本上，
+该函数可以写为 <span class="math notranslate nohighlight">\(g(n) = 2n\)</span>。在 OCaml 中我们会写
+<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">g</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">n</span></code> 或 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">g</span> <span class="pre">=</span> <span class="pre">fun</span> <span class="pre">n</span> <span class="pre">-&gt;</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">n</span></code> 或只是匿名
+<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">n</span> <span class="pre">-&gt;</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">n</span></code>。在数学中，相同的匿名函数可以写成
+lambda 表示法为 <span class="math notranslate nohighlight">\(\lambda n . 2n\)</span>。继续使用 lambda 表示法，我们有：</p>
+<div class="math notranslate nohighlight">
+\[
+O_1(\lambda n . 2n) = \{ f \mid \forall n \mathrel{.} f(n) \leq 2n \}
+\]</div>
+<p>因此</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\((\lambda n . n) \in O_1(\lambda n . 2n)\)</span>，</p></li>
+<li><p><span class="math notranslate nohighlight">\((\lambda n . \frac{n}{2}) \in O_1(\lambda n . 2n)\)</span>，但是</p></li>
+<li><p><span class="math notranslate nohighlight">\((\lambda n . 3n) \notin O_1(\lambda n . 2n)\)</span>。</p></li>
+</ul>
+<p>接下来，回想一下，在定义算法效率时，我们想忽略
+常数因子。<span class="math notranslate nohighlight">\(O_1\)</span> 对此没有帮助。我们真正想要的是让所有
+这些函数：</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\((\lambda n . n)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\((\lambda n . 2n)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\((\lambda n . 3n)\)</span></p></li>
+</ul>
+<p>都位于 <span class="math notranslate nohighlight">\(O(\lambda n . n)\)</span> 中。</p>
+<p>为此，我们定义 <span class="math notranslate nohighlight">\(O_2\)</span> 来忽略常数因子：</p>
+<p><strong>Big-Oh 版本 2：</strong> <span class="math notranslate nohighlight">\(O_2(g) = \{ f \mid \exists c \gt 0 \forall n
+\mathrel{.} f(n) \leq c g(n)\}\)</span></p>
+<p>存在量化的正常数 <span class="math notranslate nohighlight">\(c\)</span> 让我们可以把函数 <span class="math notranslate nohighlight">\(g\)</span>
+“抬高”为所需的任何常数倍。例如，</p>
+<div class="math notranslate nohighlight">
+\[
+O_2(\lambda n . n^3) = \{ f \mid \exists c \gt 0 \forall n \mathrel{.} f(n) \leq c n^3 \}
+\]</div>
+<p>因此 <span class="math notranslate nohighlight">\((\lambda n . 3n^3) \in O_2(\lambda n . n^3)\)</span>，因为 <span class="math notranslate nohighlight">\(3 n^3 \leq
+c n^3\)</span>，只要取 <span class="math notranslate nohighlight">\(c = 3\)</span>、<span class="math notranslate nohighlight">\(c = 4\)</span> 或任何更大的 <span class="math notranslate nohighlight">\(c\)</span>。</p>
+<p>最后，请记住，我们不关心小输入：分析算法效率时，我们关注大规模情况。
+对于小输入，算法恰好快一点或慢一点并不重要。
+事实上，我们可以为这些小输入硬编码一个查找表，如果
+算法对他们来说太慢了！真正重要的是性能
+大规模输入。</p>
+<p>为此，我们定义 <span class="math notranslate nohighlight">\(O_3\)</span> 来忽略小输入：</p>
+<p><strong>Big-Oh 版本 3：</strong> <span class="math notranslate nohighlight">\(O_3(g) = \{ f \mid \exists c \gt 0 \exists n_0 \gt
+0 \forall n \geq n_0 \mathrel{.} f(n) \leq c g(n)\}\)</span></p>
+<p>存在量化的正常数 <span class="math notranslate nohighlight">\(n_0\)</span> 让我们可以“忽略”所有
+规模不超过它的输入。例如，</p>
+<div class="math notranslate nohighlight">
+\[
+O_3(\lambda n . n^2) = \{ f \mid \exists c \gt 0 \exists n_0 \gt 0 \forall n \geq n_0 \mathrel{.} f(n) \leq c n^2\}
+\]</div>
+<p>因此 <span class="math notranslate nohighlight">\((\lambda n . 2n) \in O_3(\lambda n . n^2)\)</span>，因为 <span class="math notranslate nohighlight">\(2n \leq c
+n^2\)</span>，只要取 <span class="math notranslate nohighlight">\(c = 2\)</span> 且 <span class="math notranslate nohighlight">\(n_0 = 2\)</span>。请注意，通过选择 <span class="math notranslate nohighlight">\(n_0 = 2\)</span>，
+我们忽略了 <span class="math notranslate nohighlight">\(\lambda n . 2n\)</span> 在 <span class="math notranslate nohighlight">\(n = 1\)</span> 处暂时有点太大的事实。
+这就是忽略“小”输入的力量。</p>
+</section>
+<section id="id4">
+<h2>Big-Oh，到此为止<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>第 3 版是 Big-Oh 的正确定义。  我们在这里重复一遍，真的：</p>
+<p><strong>Big-Oh：</strong> <span class="math notranslate nohighlight">\(O(g) = \{ f \mid \exists c \gt 0 \exists n_0 \gt 0 \forall n \geq n_0 \mathrel{.} f(n) \leq c g(n)\}\)</span></p>
+<p>这是你应该了解的最终重要版本。但不要只是记住它。
+如果你理解我们在这里给出的推导，你将能够重新创建它
+任何需要的时候都可以从头开始。</p>
+<p>Big-Oh 被称为<em>渐近上界</em>。如果 <span class="math notranslate nohighlight">\(f \in O(g)\)</span>，
+则 <span class="math notranslate nohighlight">\(f\)</span> 的效率至少不比 <span class="math notranslate nohighlight">\(g\)</span> 渐近更差，但也可能比 <span class="math notranslate nohighlight">\(g\)</span> 更高效。</p>
+</section>
+<section id="id5">
+<h2>Big-Oh 记号的注意事项<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p><strong>警告 1.</strong> 因为它是一个上限，所以我们总是可以夸大 Big-Oh
+语句：例如，如果 <span class="math notranslate nohighlight">\(f \in O(n^2)\)</span>，则也是 <span class="math notranslate nohighlight">\(f \in O(n^3)\)</span>，并且 <span class="math notranslate nohighlight">\(f \in
+O(2^n)\)</span> 等。但我们的目标始终是给出<em>紧</em>上限，无论我们是否
+明确地说或不说。所以当被问到算法的运行时间是多少时
+也就是说，你应该始终给出尽可能紧的 Big-Oh 界。</p>
+<p><strong>警告 2.</strong> 大多数作者不是使用 <span class="math notranslate nohighlight">\(O(g) = \{ f \mid \ldots \}\)</span>
+而是写 <span class="math notranslate nohighlight">\(O(g(n)) = \{ f(n) \mid \ldots \}\)</span>。他们并不是真正的意思
+<span class="math notranslate nohighlight">\(g\)</span> 应用于 <span class="math notranslate nohighlight">\(n\)</span>。它们意味着在输入 <span class="math notranslate nohighlight">\(n\)</span> 上参数化的函数 <span class="math notranslate nohighlight">\(g\)</span> 但不是
+尚未应用。这是严重误导的，通常是由于不
+理解匿名函数。这个故事的寓意是：更多的人需要
+研究函数式编程。</p>
+<p><strong>警告 3.</strong> 而不是 <span class="math notranslate nohighlight">\(\lambda n . 2n \in O(\lambda n . n^2)\)</span> 几乎所有
+作者写作 <span class="math notranslate nohighlight">\(2n = O(n^2)\)</span>。这是对符号的严重滥用，
+本不应该被允许，却永久地进入了计算机科学的集体意识。
+标准辩护是这里的 <span class="math notranslate nohighlight">\(=\)</span> 应读作“是”而不是“等于”。
+这显然站不住脚，甚至提出这种辩护的人通常也会礼貌地承认它很牵强。有时
+我们陷入了祖先的错误之中。这是其中之一。
+小心这种“单向平等”，如果有机会的话，
+教你的（智力）孩子做得更好。</p>
+</section>
+<section id="id6">
+<h2>算法和效率，尝试 3<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>我们来回顾一下。  我们定义效率的第一次尝试是：</p>
+<p><strong>尝试 1：</strong> 如果算法在实现后，对特定输入实例只花费少量时间，
+则该算法是高效的。</p>
+<p>通过用步骤数替代时间、用输入规模替代特定输入实例、
+用多项式替代“少量”，我们将其改进为：</p>
+<p><strong>尝试 2：</strong> 如果算法执行的最大步骤数是其输入规模的多项式，
+则该算法是高效的。</p>
+<p>这确实是一个非常好的定义。  但使用 Big-Oh 表示法
+让它更具体一点，我们可以进行第三次也是最后一次尝试：</p>
+<p><strong>尝试 3：</strong> 如果算法在规模为 <span class="math notranslate nohighlight">\(n\)</span> 的输入上的最坏情况运行时间是
+<span class="math notranslate nohighlight">\(O(n^d)\)</span>（对某个常数 <span class="math notranslate nohighlight">\(d\)</span>），则该算法是高效的。</p>
+<p>通过“最坏情况运行时间”，我们的意思与“最大数量”相同
+执行步骤”，只是用不同且可能更常见的词语表达。
+最坏的情况是执行时间最长。 “时间”是一个常见的委婉说法
+这里指执行步骤，用来强调我们要考虑计算需要多长时间。</p>
+<p><em>空间</em>是最常见的另一个需要考虑的效率特征。算法
+在需要常数或线性空间时，效率可能更高或更低。
+你已经通过尾递归和列表熟悉了这一点
+OCaml。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters/appendix"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../adv/curry-howard.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">Curry-Howard 对应</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="vm.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">虚拟机</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">算法和效率，尝试 1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">算法和效率，尝试 2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#big-ell">Big-Ell 表示法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Big-Oh 记号</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Big-Oh，到此为止</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Big-Oh 记号的注意事项</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">算法和效率，尝试 3</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,2062 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>5.2. 模块 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/modules/modules';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5.3. 模块和顶层" href="toplevel.html" />
+    <link rel="prev" title="5.1. 模块系统" href="module_systems.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">5. 模块化编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/modules/modules.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/modules/modules.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/modules/modules.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/modules/modules.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/modules/modules.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>模块</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.2.1. 模块定义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open">5.2.2. 作用域和 Open</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.2.3. 模块类型定义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5.2.4. 模块类型语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">5.2.5. 模块类型是静态的</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">5.2.6. 一等模块</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">5.2. </span>模块<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/hIUSrPxCdHc" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>在深入讨论之前，我们首先从 OCaml 模块系统的几个示例开始
+进入细节。</p>
+<p><em>结构</em>只是定义的集合，例如：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span>
+  <span class="k">let</span> <span class="n">inc</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="k">type</span> <span class="n">primary_color</span> <span class="o">=</span> <span class="nc">Red</span> <span class="o">|</span> <span class="nc">Green</span> <span class="o">|</span> <span class="nc">Blue</span>
+  <span class="k">exception</span> <span class="nc">Oops</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>在某种程度上，结构就像一个记录：结构有一些不同的
+具有名称的组件。但与记录不同的是，它可以定义新类型、异常、
+等等。</p>
+<p>上面的代码本身无法编译，因为结构不具有相同的
+作为整数或函数等值的一流状态。你不能只是输入
+utop 中的代码，或将该结构传递给函数等。你可以做的是
+将结构绑定到名称：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">MyModule</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">inc</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="k">type</span> <span class="n">primary_color</span> <span class="o">=</span> <span class="nc">Red</span> <span class="o">|</span> <span class="nc">Green</span> <span class="o">|</span> <span class="nc">Blue</span>
+  <span class="k">exception</span> <span class="nc">Oops</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module MyModule :
+  sig
+    val inc : int -&gt; int
+    type primary_color = Red | Green | Blue
+    exception Oops
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>OCaml 的输出具有以下形式：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">MyModule</span> <span class="o">:</span> <span class="k">sig</span> <span class="o">...</span> <span class="k">end</span>
+</pre></div>
+</div>
+<p>这表明 <code class="docutils literal notranslate"><span class="pre">MyModule</span></code> 已被定义，并且已被推断
+具有出现在冒号右侧的<em>模块类型</em>。那个模块
+类型写为<em>signature</em>：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">sig</span>
+  <span class="k">val</span> <span class="n">inc</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">type</span> <span class="n">primary_color</span> <span class="o">=</span> <span class="nc">Red</span> <span class="o">|</span> <span class="nc">Green</span> <span class="o">|</span> <span class="nc">Blue</span>
+  <span class="k">exception</span> <span class="nc">Oops</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>签名本身是<em>规范</em>的集合。规格为
+变体类型和异常只是它们的原始定义，所以
+<code class="docutils literal notranslate"><span class="pre">primary_color</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Oops</span></code> 与原始版本没有什么不同
+结构。 <code class="docutils literal notranslate"><span class="pre">inc</span></code> 的规范是用 <code class="docutils literal notranslate"><span class="pre">val</span></code> 关键字编写的，
+与我们在其中定义 <code class="docutils literal notranslate"><span class="pre">inc</span></code> 时顶层的响应完全相同。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>“规范”一词的这种使用可能会令人困惑，因为许多
+程序员会用这个词来表示“指定行为的注释”
+一个函数。”但如果我们稍微拓宽一下视野，我们就可以允许这种类型
+函数的定义是其规范的一部分。所以这至少是一种相关的感觉
+这个词。</p>
+</div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/8Q-2b7iGvXE" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>模块中的定义通常比模块中的定义更密切相关
+<code class="docutils literal notranslate"><span class="pre">MyModule</span></code>。通常一个模块会实现一些数据结构。例如，这里
+是一个以链表形式实现的堆栈模块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListStack</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(** [empty] is the empty stack. *)</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+
+  <span class="c">(** [is_empty s] is whether [s] is empty. *)</span>
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+
+  <span class="c">(** [push x s] pushes [x] onto the top of [s]. *)</span>
+  <span class="k">let</span> <span class="n">push</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span> <span class="n">x</span> <span class="o">::</span> <span class="n">s</span>
+
+  <span class="c">(** [Empty] is raised when an operation cannot be applied</span>
+<span class="c">      to an empty stack. *)</span>
+  <span class="k">exception</span> <span class="nc">Empty</span>
+
+  <span class="c">(** [peek s] is the top element of [s].</span>
+<span class="c">      Raises [Empty] if [s] is empty. *)</span>
+  <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">x</span>
+
+  <span class="c">(** [pop s] is all but the top element of [s].</span>
+<span class="c">      Raises [Empty] if [s] is empty. *)</span>
+  <span class="k">let</span> <span class="n">pop</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStack :
+  sig
+    val empty : &#39;a list
+    val is_empty : &#39;a list -&gt; bool
+    val push : &#39;a -&gt; &#39;a list -&gt; &#39;a list
+    exception Empty
+    val peek : &#39;a list -&gt; &#39;a
+    val pop : &#39;a list -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p><code class="docutils literal notranslate"><span class="pre">pop</span></code> 的规范可能会让你感到惊讶。请注意，它不会返回
+顶部元素。这是 <code class="docutils literal notranslate"><span class="pre">peek</span></code> 的工作。相反，<code class="docutils literal notranslate"><span class="pre">pop</span></code> 返回除顶部之外的所有内容
+元素。</p>
+</div>
+<p>然后我们可以使用该模块来操作堆栈：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">ListStack</span><span class="p">.</span><span class="n">push</span> <span class="mi">2</span> <span class="o">(</span><span class="nn">ListStack</span><span class="p">.</span><span class="n">push</span> <span class="mi">1</span> <span class="nn">ListStack</span><span class="p">.</span><span class="n">empty</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [2; 1]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>对于那些来自以下国家的程序员来说，这里潜藏着一个常见的困惑：
+面向对象的语言。人们很容易将 <code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 视为
+你调用其方法的对象。事实上 <code class="docutils literal notranslate"><span class="pre">ListStack.push</span></code> 隐约看起来像
+我们在 <code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 对象上调用 <code class="docutils literal notranslate"><span class="pre">push</span></code> 方法。但事实并非如此
+正在发生。在面向对象语言中，你可以实例化许多堆栈对象。但在这里，
+只有一个 <code class="docutils literal notranslate"><span class="pre">ListStack</span></code>。而且它在很大程度上不是一个物体
+因为它没有 <code class="docutils literal notranslate"><span class="pre">this</span></code> 或 <code class="docutils literal notranslate"><span class="pre">self</span></code> 关键字的概念来表示接收
+方法调用的对象。</p>
+</div>
+<p>无可否认，这是相当冗长的代码。很快我们就会看到几个解决方案
+问题，但现在有一个：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">ListStack</span><span class="p">.</span><span class="o">(</span><span class="n">push</span> <span class="mi">2</span> <span class="o">(</span><span class="n">push</span> <span class="mi">1</span> <span class="n">empty</span><span class="o">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [2; 1]
+</pre></div>
+</div>
+</div>
+</div>
+<p>通过写入 <code class="docutils literal notranslate"><span class="pre">ListStack.(e)</span></code>，<code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 中的所有名称都可以在 <code class="docutils literal notranslate"><span class="pre">e</span></code> 中使用
+无需每次都写入前缀 <code class="docutils literal notranslate"><span class="pre">ListStack.</span></code> 。另一个改进
+可以使用管道运算符：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">ListStack</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">1</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">2</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [2; 1]
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在我们可以从左到右阅读代码，而不必解析括号。
+好的。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>这里潜伏着另一个常见的面向对象混淆。很容易让人想到
+<code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 作为实例化对象的类。那不是
+但情况是这样的。请注意上面没有使用 <code class="docutils literal notranslate"><span class="pre">new</span></code> 运算符来创建堆栈，
+也没有任何构造函数（在该词的 OO 意义上）。</p>
+</div>
+<p>模块比类更加基础。模块只是一个集合
+其自己的命名空间中的定义。在 <code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 中，我们有一些定义
+函数—<code class="docutils literal notranslate"><span class="pre">push</span></code>、<code class="docutils literal notranslate"><span class="pre">pop</span></code>等—和一个值<code class="docutils literal notranslate"><span class="pre">empty</span></code>。</p>
+<p>因此，在 Java 中，我们可以使用如下代码创建几个堆栈：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Stack</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Stack</span><span class="p">();</span>
+<span class="n">s1</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">s1</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">Stack</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Stack</span><span class="p">();</span>
+<span class="n">s2</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>在 OCaml 中，可以按如下方式创建相同的堆栈：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">s1</span> <span class="o">=</span> <span class="nn">ListStack</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">1</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">2</span><span class="o">)</span>
+<span class="k">let</span> <span class="n">s2</span> <span class="o">=</span> <span class="nn">ListStack</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">3</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val s1 : int list = [2; 1]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val s2 : int list = [3]
+</pre></div>
+</div>
+</div>
+</div>
+<section id="id2">
+<h2><span class="section-number">5.2.1. </span>模块定义<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/EUJXBpra0oY" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p><code class="docutils literal notranslate"><span class="pre">module</span></code> 定义关键字非常类似于 <code class="docutils literal notranslate"><span class="pre">let</span></code> 定义关键字
+我们之前学过。 （假设 OCaml 设计者可以选择使用
+<code class="docutils literal notranslate"><span class="pre">let_module</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">module</span></code> 以强调相似性。）区别在于
+只是这样：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">let</span></code> 将值绑定到名称，而</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">module</span></code> 将<em>模块值</em>绑定到名称。</p></li>
+</ul>
+<p><strong>语法。</strong></p>
+<p>模块定义最常见的语法很简单：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ModuleName</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="n">module_items</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>其中结构内的 <code class="docutils literal notranslate"><span class="pre">module_items</span></code> 可以包含 <code class="docutils literal notranslate"><span class="pre">let</span></code> 定义、<code class="docutils literal notranslate"><span class="pre">type</span></code>
+定义、<code class="docutils literal notranslate"><span class="pre">exception</span></code> 定义以及嵌套 <code class="docutils literal notranslate"><span class="pre">module</span></code>
+定义。模块名称必须以大写字母开头，并且符合习惯用法
+他们使用 <code class="docutils literal notranslate"><span class="pre">CamelCase</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">Snake_case</span></code>。</p>
+<p>但更准确的语法版本是：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ModuleName</span> <span class="o">=</span> <span class="n">module_expression</span>
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">struct</span></code> 只是 <code class="docutils literal notranslate"><span class="pre">module_expression</span></code> 的一种。这是另一个：
+已定义模块的名称。例如，你可以写 <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">L</span> <span class="pre">=</span> <span class="pre">List</span></code>
+如果你想要 <code class="docutils literal notranslate"><span class="pre">List</span></code> 模块的简短别名。我们会看到其他类型的
+本节和本章后面的模块表达式。</p>
+<p>结构内的定义可以选择以 <code class="docutils literal notranslate"><span class="pre">;;</span></code> 终止，如下所示
+顶层：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;;</span>
+  <span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="kt">int</span><span class="o">;;</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val x : int type t = int end
+</pre></div>
+</div>
+</div>
+</div>
+<p>有时，如果你尝试诊断，临时添加可能会很有用
+语法错误。  它将帮助 OCaml 理解你需要两个定义
+在语法上是分开的。  修复了潜在的错误之后，
+不过，你可以删除 <code class="docutils literal notranslate"><span class="pre">;;</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">;;</span></code> 的一个用例是，如果你想将表达式作为
+模块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;;</span>
+  <span class="k">assert</span> <span class="o">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">);;</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val x : int end
+</pre></div>
+</div>
+</div>
+</div>
+<p>但可以在没有 <code class="docutils literal notranslate"><span class="pre">;;</span></code> 的情况下重写为：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="k">assert</span> <span class="o">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val x : int end
+</pre></div>
+</div>
+</div>
+</div>
+<p>结构也可以写在一行上，之间有可选的 <code class="docutils literal notranslate"><span class="pre">;;</span></code>
+可读性项目：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">N</span> <span class="o">=</span> <span class="k">struct</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">end</span>
+<span class="k">module</span> <span class="nc">O</span> <span class="o">=</span> <span class="k">struct</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;;</span> <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module N : sig val x : int val y : int end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module O : sig val x : int val y : int end
+</pre></div>
+</div>
+</div>
+</div>
+<p>允许使用空结构：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">E</span> <span class="o">=</span> <span class="k">struct</span> <span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module E : sig end
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>动态语义。</strong></p>
+<p>我们已经知道表达式被计算为值。同样，一个模块
+表达式被计算为<em>模块值</em>或简称为“模块”。唯一的
+到目前为止，从求值的角度来看，我们唯一感兴趣的模块表达式
+其实就是结构。结构求值很简单：只需
+按其中出现的顺序评估其中的每个定义。正因为如此，
+因此，较早的定义在较晚的定义的范围内，但不在较晚的定义范围内
+反之亦然。所以这个模块很好：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val x : int val y : int end
+</pre></div>
+</div>
+</div>
+</div>
+<p>但这个模块不是，因为当时 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的 <code class="docutils literal notranslate"><span class="pre">let</span></code> 定义是
+正在评估，<code class="docutils literal notranslate"><span class="pre">y</span></code> 尚未绑定：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
+  <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[13]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">10</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span>
+<span class="mi">2</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
+              <span class="o">^</span>
+<span class="ne">Error</span>: Unbound value y
+</pre></div>
+</div>
+</div>
+</div>
+<p>当然，如果需要的话可以使用相互递归：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(* Requires: input is non-negative. *)</span>
+  <span class="k">let</span> <span class="k">rec</span> <span class="n">even</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+    <span class="o">|</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="n">odd</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+  <span class="k">and</span> <span class="n">odd</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="o">|</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="n">even</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val even : int -&gt; bool val odd : int -&gt; bool end
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>静态语义。</strong></p>
+<p>如果结构中的所有定义都是其本身，则该结构是类型良好的
+根据我们已经学过的所有打字规则，打字良好。</p>
+<p>正如我们在顶级输出中看到的，结构的模块类型是签名。
+不过，模块类型还有更多内容。让我们暂时搁置一下吧
+先说说范围。</p>
+</section>
+<section id="open">
+<h2><span class="section-number">5.2.2. </span>作用域和 Open<a class="headerlink" href="#open" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/GjlKfsY2nY8" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>定义模块 <code class="docutils literal notranslate"><span class="pre">M</span></code> 后，你可以使用以下命令访问其中的名称
+点运算符。例如：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">42</span> <span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val x : int end
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">M</span><span class="p">.</span><span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 42
+</pre></div>
+</div>
+</div>
+</div>
+<p>当然，从模块外部来看，名称 <code class="docutils literal notranslate"><span class="pre">x</span></code> 本身没有意义：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[17]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+<span class="mi">1</span> <span class="o">|</span> <span class="n">x</span>
+    <span class="o">^</span>
+<span class="ne">Error</span>: Unbound value x
+</pre></div>
+</div>
+</div>
+</div>
+<p>但是你可以将模块的所有定义带入当前作用域
+使用 <code class="docutils literal notranslate"><span class="pre">open</span></code>：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">M</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 42
+</pre></div>
+</div>
+</div>
+</div>
+<p>打开模块就像为模块中定义的每个名称编写本地定义
+模块。例如， <code class="docutils literal notranslate"><span class="pre">open</span> <span class="pre">String</span></code> 带来了来自
+<a class="reference external" href="https://ocaml.org/api/String.html">String module</a> 进入范围，并具有类似于以下的效果
+在本地命名空间上：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">length</span> <span class="o">=</span> <span class="nn">String</span><span class="p">.</span><span class="n">length</span>
+<span class="k">let</span> <span class="n">get</span> <span class="o">=</span> <span class="nn">String</span><span class="p">.</span><span class="n">get</span>
+<span class="k">let</span> <span class="n">lowercase_ascii</span> <span class="o">=</span> <span class="nn">String</span><span class="p">.</span><span class="n">lowercase_ascii</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>如果模块中定义了类型、异常或模块，那么它们也是
+使用 <code class="docutils literal notranslate"><span class="pre">open</span></code> 纳入作用域。</p>
+<p><strong>始终打开的模块。</strong>
+有一个自动打开的<a class="reference external" href="https://ocaml.org/api/Stdlib.html">special module called <code class="docutils literal notranslate"><span class="pre">Stdlib</span></code></a>
+在每个 OCaml 程序中。它包含“内置”函数和运算符。你
+因此永远不需要在它定义的任何名称前添加 <code class="docutils literal notranslate"><span class="pre">Stdlib.</span></code> 前缀，
+不过，如果你需要明确地识别来自以下位置的名称，则可以这样做
+它。早些时候，这个模块被命名为 <code class="docutils literal notranslate"><span class="pre">Pervasives</span></code>，你可能仍然会看到
+某些代码库中的名称。</p>
+<p><strong>作为模块项打开。</strong>
+<code class="docutils literal notranslate"><span class="pre">open</span></code> 是另一种 <code class="docutils literal notranslate"><span class="pre">module_item</span></code>。这样我们就可以打开里面的一个模块了
+另一个：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">open</span> <span class="nc">List</span>
+
+  <span class="c">(** [uppercase_all lst] upper-cases all the elements of [lst]. *)</span>
+  <span class="k">let</span> <span class="n">uppercase_all</span> <span class="o">=</span> <span class="n">map</span> <span class="nn">String</span><span class="p">.</span><span class="n">uppercase_ascii</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val uppercase_all : string list -&gt; string list end
+</pre></div>
+</div>
+</div>
+</div>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">List</span></code> 已打开，因此它的名称 <code class="docutils literal notranslate"><span class="pre">map</span></code> 在作用域内。但如果我们也想
+去掉 <code class="docutils literal notranslate"><span class="pre">String.</span></code> 呢？</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">open</span> <span class="nc">List</span>
+  <span class="k">open</span> <span class="nc">String</span>
+
+  <span class="c">(** [uppercase_all lst] upper-cases all the elements of [lst]. *)</span>
+  <span class="k">let</span> <span class="n">uppercase_all</span> <span class="o">=</span> <span class="n">map</span> <span class="n">uppercase_ascii</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[21]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">6</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">26</span><span class="o">-</span><span class="mi">41</span><span class="p">:</span>
+<span class="mi">6</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">uppercase_all</span> <span class="o">=</span> <span class="nb">map</span> <span class="n">uppercase_ascii</span>
+                              <span class="o">^^^^^^^^^^^^^^^</span>
+<span class="ne">Error</span>: The value uppercase_ascii has type string -&gt; string
+       <span class="n">but</span> <span class="n">an</span> <span class="n">expression</span> <span class="n">was</span> <span class="n">expected</span> <span class="n">of</span> <span class="nb">type</span> <span class="n">char</span> <span class="o">-&gt;</span> <span class="n">char</span>
+       <span class="n">Type</span> <span class="n">string</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">compatible</span> <span class="k">with</span> <span class="nb">type</span> <span class="n">char</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在我们有一个问题，因为 <code class="docutils literal notranslate"><span class="pre">String</span></code> 也定义了名称 <code class="docutils literal notranslate"><span class="pre">map</span></code>，但是带有一个
+与 <code class="docutils literal notranslate"><span class="pre">List</span></code> 不同的类型。像往常一样，后面的定义会掩盖前面的定义，
+因此，按照我们的预期，选择了 <code class="docutils literal notranslate"><span class="pre">String.map</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">List.map</span></code> 。</p>
+<p>如果你在代码中使用许多模块，那么你可能至少有
+像这样的一次碰撞。通常它会带有标准的高阶函数
+就像在许多库模块中定义的 <code class="docutils literal notranslate"><span class="pre">map</span></code> 一样。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>因此，通常最好的做法是 <strong>不要</strong> 在 <code class="docutils literal notranslate"><span class="pre">.ml</span></code> 文件或结构的顶部 <code class="docutils literal notranslate"><span class="pre">open</span></code>
+你将要使用的所有模块。这也许不同于
+与你习惯使用 Java 等语言的方式不同，你可能会
+<code class="docutils literal notranslate"><span class="pre">import</span></code> 许多带有 <code class="docutils literal notranslate"><span class="pre">*</span></code> 的包。相反，最好将作用域限制在
+你打开的模块。</p>
+</div>
+<p><strong>限制打开作用域。</strong>
+我们已经看到了一种限制打开作用域的方法：<code class="docutils literal notranslate"><span class="pre">M.(e)</span></code>。在 <code class="docutils literal notranslate"><span class="pre">e</span></code> 内部，
+模块 <code class="docutils literal notranslate"><span class="pre">M</span></code> 中的所有名称都在作用域内。这对于在短表达式中短暂使用 <code class="docutils literal notranslate"><span class="pre">M</span></code> 很有用：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(* remove surrounding whitespace from [s] and convert it to lower case *)</span>
+<span class="k">let</span> <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;BigRed &quot;</span>
+<span class="k">let</span> <span class="n">s&#39;</span> <span class="o">=</span> <span class="n">s</span> <span class="o">|&gt;</span> <span class="nn">String</span><span class="p">.</span><span class="n">trim</span> <span class="o">|&gt;</span> <span class="nn">String</span><span class="p">.</span><span class="n">lowercase_ascii</span> <span class="c">(* long way *)</span>
+<span class="k">let</span> <span class="n">s&#39;&#39;</span> <span class="o">=</span> <span class="nn">String</span><span class="p">.</span><span class="o">(</span><span class="n">s</span> <span class="o">|&gt;</span> <span class="n">trim</span> <span class="o">|&gt;</span> <span class="n">lowercase_ascii</span><span class="o">)</span> <span class="c">(* short way *)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val s : string = &quot;BigRed &quot;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val s&#39; : string = &quot;bigred&quot;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val s&#39;&#39; : string = &quot;bigred&quot;
+</pre></div>
+</div>
+</div>
+</div>
+<p>但是，如果你想将模块纳入整个函数的范围，或者
+其他一些大代码块？ （诚然很奇怪）的语法是
+<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">open</span> <span class="pre">M</span> <span class="pre">in</span> <span class="pre">e</span></code>。它使 <code class="docutils literal notranslate"><span class="pre">M</span></code> 中的所有名称都在 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的范围内。对于
+示例：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [lower_trim s] is [s] in lower case with whitespace removed. *)</span>
+<span class="k">let</span> <span class="n">lower_trim</span> <span class="n">s</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="k">open</span> <span class="nc">String</span> <span class="k">in</span>
+  <span class="n">s</span> <span class="o">|&gt;</span> <span class="n">trim</span> <span class="o">|&gt;</span> <span class="n">lowercase_ascii</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lower_trim : string -&gt; string = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>回到我们的 <code class="docutils literal notranslate"><span class="pre">uppercase_all</span></code> 示例，最好避免任何类型的
+打开并简单地明确我们在哪里使用哪个模块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(** [uppercase_all lst] upper-cases all the elements of [lst]. *)</span>
+  <span class="k">let</span> <span class="n">uppercase_all</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> <span class="nn">String</span><span class="p">.</span><span class="n">uppercase_ascii</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val uppercase_all : string list -&gt; string list end
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id3">
+<h2><span class="section-number">5.2.3. </span>模块类型定义<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/4Uew8GEegyg" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>我们已经看到 OCaml 会将签名推断为模块的类型。
+现在让我们看看如何自己编写这些模块类型。举个例子，这里是
+基于列表的堆栈的模块类型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">exception</span> <span class="nc">Empty</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type LIST_STACK =
+  sig
+    exception Empty
+    val empty : &#39;a list
+    val is_empty : &#39;a list -&gt; bool
+    val push : &#39;a -&gt; &#39;a list -&gt; &#39;a list
+    val peek : &#39;a list -&gt; &#39;a
+    val pop : &#39;a list -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在我们已经有了基于列表的堆栈的模块和模块类型，我们
+应该将规范注释从结构移到签名中。
+这些注释是中名称规范的正确组成部分
+签名。它们指定行为，从而增强类型的规范
+由 <code class="docutils literal notranslate"><span class="pre">val</span></code> 声明提供。</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="c">(** [Empty] is raised when an operation cannot be applied</span>
+<span class="c">      to an empty stack. *)</span>
+  <span class="k">exception</span> <span class="nc">Empty</span>
+
+  <span class="c">(** [empty] is the empty stack. *)</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+
+  <span class="c">(** [is_empty s] is whether [s] is empty. *)</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+
+  <span class="c">(** [push x s] pushes [x] onto the top of [s]. *)</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+
+  <span class="c">(** [peek s] is the top element of [s].</span>
+<span class="c">      Raises [Empty] if [s] is empty. *)</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+
+  <span class="c">(** [pop s] is all but the top element of [s].</span>
+<span class="c">      Raises [Empty] if [s] is empty. *)</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">ListStack</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+
+  <span class="k">let</span> <span class="n">push</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span> <span class="n">x</span> <span class="o">::</span> <span class="n">s</span>
+
+  <span class="k">exception</span> <span class="nc">Empty</span>
+
+  <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">x</span>
+
+  <span class="k">let</span> <span class="n">pop</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type LIST_STACK =
+  sig
+    exception Empty
+    val empty : &#39;a list
+    val is_empty : &#39;a list -&gt; bool
+    val push : &#39;a -&gt; &#39;a list -&gt; &#39;a list
+    val peek : &#39;a list -&gt; &#39;a
+    val pop : &#39;a list -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStack :
+  sig
+    val empty : &#39;a list
+    val is_empty : &#39;a list -&gt; bool
+    val push : &#39;a -&gt; &#39;a list -&gt; &#39;a list
+    exception Empty
+    val peek : &#39;a list -&gt; &#39;a
+    val pop : &#39;a list -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>然而，到目前为止，没有任何信息告诉 OCaml 之间存在关系
+<code class="docutils literal notranslate"><span class="pre">LIST_STACK</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ListStack</span></code>。如果我们希望 OCaml 确保 <code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 确实
+确实有 <code class="docutils literal notranslate"><span class="pre">LIST_STACK</span></code> 指定的模块类型，我们可以添加一个类型
+<code class="docutils literal notranslate"><span class="pre">module</span></code> 定义第一行的注释：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+
+  <span class="k">let</span> <span class="n">push</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span> <span class="n">x</span> <span class="o">::</span> <span class="n">s</span>
+
+  <span class="k">exception</span> <span class="nc">Empty</span>
+
+  <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">x</span>
+
+  <span class="k">let</span> <span class="n">pop</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStack : LIST_STACK
+</pre></div>
+</div>
+</div>
+</div>
+<p>编译器同意模块 <code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 确实定义了所有项目
+由 <code class="docutils literal notranslate"><span class="pre">LIST_STACK</span></code> 使用适当的类型指定。  如果我们不小心
+省略某些项目，类型注释将被拒绝：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+
+  <span class="k">let</span> <span class="n">push</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span> <span class="n">x</span> <span class="o">::</span> <span class="n">s</span>
+
+  <span class="k">exception</span> <span class="nc">Empty</span>
+
+  <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">x</span>
+
+  <span class="c">(* [pop] is missing *)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[28]&quot;</span><span class="p">,</span> <span class="n">lines</span> <span class="mi">1</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">32</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span>
+<span class="g g-Whitespace"> </span><span class="mi">1</span> <span class="o">|</span> <span class="o">................................</span><span class="n">struct</span>
+<span class="g g-Whitespace"> </span><span class="mi">2</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="g g-Whitespace"> </span><span class="mi">3</span> <span class="o">|</span> 
+<span class="g g-Whitespace"> </span><span class="mi">4</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="n">function</span> <span class="p">[]</span> <span class="o">-&gt;</span> <span class="n">true</span> <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="n">false</span>
+<span class="g g-Whitespace"> </span><span class="mi">5</span> <span class="o">|</span> 
+<span class="o">...</span>
+<span class="mi">12</span> <span class="o">|</span>     <span class="o">|</span> <span class="n">x</span> <span class="p">::</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="n">x</span>
+<span class="mi">13</span> <span class="o">|</span> 
+<span class="mi">14</span> <span class="o">|</span>   <span class="p">(</span><span class="o">*</span> <span class="p">[</span><span class="n">pop</span><span class="p">]</span> <span class="ow">is</span> <span class="n">missing</span> <span class="o">*</span><span class="p">)</span>
+<span class="mi">15</span> <span class="o">|</span> <span class="n">end</span>
+<span class="ne">Error</span>: Signature mismatch:
+       <span class="o">...</span>
+       <span class="n">The</span> <span class="n">value</span> <span class="n">pop</span> <span class="ow">is</span> <span class="n">required</span> <span class="n">but</span> <span class="ow">not</span> <span class="n">provided</span>
+       <span class="n">File</span> <span class="s2">&quot;[26]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">21</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">30</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>语法。</strong></p>
+<p>模块类型最常见的语法很简单：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">ModuleTypeName</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="n">specifications</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>其中签名内的 <code class="docutils literal notranslate"><span class="pre">specifications</span></code> 可以包含 <code class="docutils literal notranslate"><span class="pre">val</span></code> 声明，类型
+定义、异常定义和嵌套 <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">type</span></code> 定义。喜欢
+结构，签名可以写在多行或一行上，并且
+允许空签名 <code class="docutils literal notranslate"><span class="pre">sig</span> <span class="pre">end</span></code>。</p>
+<p>但是，正如我们在模块定义中看到的，语法的更准确版本
+将是：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">ModuleTypeName</span> <span class="o">=</span> <span class="n">module_type</span>
+</pre></div>
+</div>
+<p>其中签名只是 <code class="docutils literal notranslate"><span class="pre">module_type</span></code> 的一种。另一个是名字
+已定义的模块类型—例如，<code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">type</span> <span class="pre">LS</span> <span class="pre">=</span> <span class="pre">LIST_STACK</span></code>。
+我们将在本节和本章的后面看到其他模块类型。</p>
+<p>按照约定，模块类型名称通常是 <code class="docutils literal notranslate"><span class="pre">CamelCase</span></code>，就像模块名称一样。所以
+为什么我们使用上面的 <code class="docutils literal notranslate"><span class="pre">ALL_CAPS</span></code> 作为 <code class="docutils literal notranslate"><span class="pre">LIST_STACK</span></code> ？是为了避免一个可能的情况
+这个例子中的混淆点，我们现在对此进行说明。我们可以改为
+使用 <code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 作为模块和模块类型的名称：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">ListStack</span> <span class="o">=</span> <span class="k">sig</span> <span class="o">...</span> <span class="k">end</span>
+<span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">ListStack</span> <span class="o">=</span> <span class="k">struct</span> <span class="o">...</span> <span class="k">end</span>
+</pre></div>
+</div>
+<p>在 OCaml 中，模块和模块类型的命名空间是不同的，所以它是
+拥有名为 <code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 的模块和名为 的模块类型是完全有效的
+<code class="docutils literal notranslate"><span class="pre">ListStack</span></code>。编译器不会对你的意思感到困惑，因为
+它们出现在不同的句法上下文中。但作为一个人你很可能会得到
+被那些看似超载的名字搞糊涂了。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>对模块类型使用 <code class="docutils literal notranslate"><span class="pre">ALL_CAPS</span></code> 一度很常见，你可能
+仍然看到它。这是标准机器学习的旧约定。但社会
+从那时起，所有大写字母的约定都发生了变化。对于现代读者来说，一个名字
+像 <code class="docutils literal notranslate"><span class="pre">LIST_STACK</span></code> 可能会觉得你的代码在无礼地对你大喊大叫。那
+是 <a class="reference external" href="https://newrepublic.com/article/117390/netiquette-capitalization-how-caps-became-code-yelling">evolved in the 1980s</a> 的内涵。较旧的编程
+语言（例如 Pascal、COBOL、FORTRAN）通常对关键字使用全部大写
+甚至他们自己的名字。现代语言仍然习惯性地使用全部大写
+常量 — 例如 Java 的 <code class="docutils literal notranslate"><span class="pre">Math.PI</span></code>，或者 Python 的
+<a class="reference external" href="https://www.python.org/dev/peps/pep-0008/#constants">风格指南</a>。</p>
+</div>
+<p><strong>更多语法。</strong></p>
+<p>我们现在还应该为模块类型注释添加语法。  模块
+定义可以包括可选的类型注释：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ModuleName</span> <span class="o">:</span> <span class="n">module_type</span> <span class="o">=</span> <span class="n">module_expression</span>
+</pre></div>
+</div>
+<p>并且模块表达式可能包含手动类型注释：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">(</span><span class="n">module_expression</span> <span class="o">:</span> <span class="n">module_type</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>该语法类似于我们如何编写 <code class="docutils literal notranslate"><span class="pre">(e</span> <span class="pre">:</span> <span class="pre">t)</span></code> 来手动指定
+表达式 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>。</p>
+<p>以下是一些示例，展示了如何使用该语法：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListStackAlias</span> <span class="o">:</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="nc">ListStack</span>
+<span class="c">(* equivalently *)</span>
+<span class="k">module</span> <span class="nc">ListStackAlias</span> <span class="o">=</span> <span class="o">(</span><span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">LIST_STACK</span><span class="o">)</span>
+
+<span class="k">module</span> <span class="nc">M</span> <span class="o">:</span> <span class="k">sig</span> <span class="k">val</span> <span class="n">x</span> <span class="o">:</span> <span class="kt">int</span> <span class="k">end</span> <span class="o">=</span> <span class="k">struct</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">42</span> <span class="k">end</span>
+<span class="c">(* equivalently *)</span>
+<span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="o">(</span><span class="k">struct</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">42</span> <span class="k">end</span> <span class="o">:</span> <span class="k">sig</span> <span class="k">val</span> <span class="n">x</span> <span class="o">:</span> <span class="kt">int</span> <span class="k">end</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStackAlias : LIST_STACK
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStackAlias : LIST_STACK
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val x : int end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val x : int end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>并且，模块类型可以包含嵌套模块规范：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">X</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">val</span> <span class="n">x</span> <span class="o">:</span> <span class="kt">int</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="k">type</span> <span class="nc">T</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">module</span> <span class="nc">Inner</span> <span class="o">:</span> <span class="nc">X</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">M</span> <span class="o">:</span> <span class="nc">T</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">module</span> <span class="nc">Inner</span> <span class="o">:</span> <span class="nc">X</span> <span class="o">=</span> <span class="k">struct</span>
+    <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">42</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type X = sig val x : int end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>在上面的示例中，<code class="docutils literal notranslate"><span class="pre">T</span></code> 指定必须有一个名为
+<code class="docutils literal notranslate"><span class="pre">Inner</span></code>，其模块类型为 <code class="docutils literal notranslate"><span class="pre">X</span></code>。这里，类型注释是强制性的，
+因为否则我们将无法得知 <code class="docutils literal notranslate"><span class="pre">Inner</span></code> 的情况。在实现 <code class="docutils literal notranslate"><span class="pre">T</span></code> 时，
+因此，模块 <code class="docutils literal notranslate"><span class="pre">M</span></code> 必须提供一个具有该名称的模块 (i)，它还 (ii)
+符合模块类型<code class="docutils literal notranslate"><span class="pre">X</span></code> 的规格。</p>
+<p><strong>动态语义。</strong></p>
+<p>由于模块类型实际上是类型，因此不会对它们进行评估。他们没有
+动态语义。</p>
+<p><strong>静态语义。</strong></p>
+<p>在本节前面，我们推迟讨论模块的静态语义
+表达式。现在我们已经了解了模块类型，我们可以回到上面
+讨论。  接下来，我们将在其自己的部分中这样做，因为讨论将
+冗长。</p>
+</section>
+<section id="id4">
+<h2><span class="section-number">5.2.4. </span>模块类型语义<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/VprvFk7KKWk" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">M</span></code> 只是一个 <code class="docutils literal notranslate"><span class="pre">struct</span></code> 块，则其模块类型是
+编译器对其进行推断。但这可以通过模块类型注释来改变。
+我们必须回答的关键问题是：类型注释对于模块意味着什么？
+也就是说，当我们在<code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">M</span> <span class="pre">:</span> <span class="pre">T</span> <span class="pre">=</span> <span class="pre">...</span></code>中写入<code class="docutils literal notranslate"><span class="pre">:</span> <span class="pre">T</span></code>时，意味着什么？</p>
+<p>编译器保证两个属性：</p>
+<ol class="arabic simple">
+<li><p><em>签名匹配：</em> <code class="docutils literal notranslate"><span class="pre">T</span></code> 中声明的每个名称均在 <code class="docutils literal notranslate"><span class="pre">M</span></code> 中定义
+相同或更通用的类型。</p></li>
+<li><p><em>封装</em>又名<em>不透明度：</em> <code class="docutils literal notranslate"><span class="pre">M</span></code> 中定义的任何未出现在 <code class="docutils literal notranslate"><span class="pre">T</span></code> 中的名称都不是
+对 <code class="docutils literal notranslate"><span class="pre">M</span></code> 之外的代码可见。</p></li>
+</ol>
+<p>但更完整的答案涉及<em>子类型化</em>，这是一个概念
+你以前可能见过面向对象语言。我们要采取
+现在简要介绍一下该领域，然后回到 OCaml 和模块。</p>
+<p>在 Java 中，<code class="docutils literal notranslate"><span class="pre">extends</span></code> 关键字创建类之间的子类型关系：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">C</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">class</span> <span class="nc">D</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+
+<span class="n">D</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">D</span><span class="p">();</span>
+<span class="n">C</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>子类型允许将 <code class="docutils literal notranslate"><span class="pre">d</span></code> 分配给最后一行的 <code class="docutils literal notranslate"><span class="pre">c</span></code>
+示例。因为 <code class="docutils literal notranslate"><span class="pre">D</span></code> 扩展了 <code class="docutils literal notranslate"><span class="pre">C</span></code>，Java 认为 <code class="docutils literal notranslate"><span class="pre">D</span></code> 是 <code class="docutils literal notranslate"><span class="pre">C</span></code> 的子类型，并且
+因此允许从 <code class="docutils literal notranslate"><span class="pre">D</span></code> 实例化的对象可以在任何地方使用
+预期从 <code class="docutils literal notranslate"><span class="pre">C</span></code> 实例化对象。由 <code class="docutils literal notranslate"><span class="pre">D</span></code> 的程序员决定
+当然，确保这不会导致任何运行时错误。 <code class="docutils literal notranslate"><span class="pre">D</span></code> 的方法
+例如，必须确保 <code class="docutils literal notranslate"><span class="pre">C</span></code> 的类不变量成立。所以通过写
+<code class="docutils literal notranslate"><span class="pre">D</span> <span class="pre">extends</span> <span class="pre">C</span></code>，程序员承担了一些责任，反过来
+通过编写此类赋值语句获得一些灵活性。</p>
+<p>那么什么是“亚型”呢？这个概念在很多方面取决于语言。
+对于独立于语言的概念，我们求助于芭芭拉·利斯科夫（Barbara Liskov）。她赢得了图灵奖
+2008 年获奖的部分原因是她在面向对象语言设计方面的工作。二十
+几年前，她发明了现在所谓的<em>利斯科夫替代法
+解释子类型的原理</em>。它说如果 <code class="docutils literal notranslate"><span class="pre">S</span></code> 是 <code class="docutils literal notranslate"><span class="pre">T</span></code> 的子类型，那么
+用 <code class="docutils literal notranslate"><span class="pre">S</span></code> 类型的对象替换 <code class="docutils literal notranslate"><span class="pre">T</span></code> 类型的对象不应改变
+程序的任何期望的行为。你可以看到它在 Java 中工作
+上面的例子，无论是语言允许的内容还是程序员的内容
+必须保证。</p>
+<p>Java 中子类型的特殊风格称为<em>名义子类型</em>，它
+也就是说，它是基于名称的。在我们的示例中，<code class="docutils literal notranslate"><span class="pre">D</span></code> 是 <code class="docutils literal notranslate"><span class="pre">C</span></code> 的子类型
+因为名字的宣布方式。程序员决定了该子类型
+关系，语言毫无疑问地接受了法令。确实，
+<em>仅</em>存在的子类型关系是那些已按名称规定的关系
+通过这样使用 <code class="docutils literal notranslate"><span class="pre">extends</span></code> 和 <code class="docutils literal notranslate"><span class="pre">implements</span></code>。</p>
+<p>现在是时候返回 OCaml 了。它的模块系统也使用子类型，
+关于里氏替换原理的基本直觉相同。但是OCaml
+使用一种不同的风格，称为“结构子类型”。也就是说，它是基于
+模块的结构而不是它们的名称。这里的“结构”只是指
+模块中包含的定义。这些定义用于确定
+<code class="docutils literal notranslate"><span class="pre">(M</span> <span class="pre">:</span> <span class="pre">T)</span></code> 是否可以接受作为类型注释，其中 <code class="docutils literal notranslate"><span class="pre">M</span></code> 是一个模块并且
+<code class="docutils literal notranslate"><span class="pre">T</span></code> 是一种模块类型。</p>
+<p>让我们通过几个例子来探讨这个结构的想法，从
+该模块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">let</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val x : int val z : int end
+</pre></div>
+</div>
+</div>
+</div>
+<p>模块 <code class="docutils literal notranslate"><span class="pre">M</span></code> 包含两个定义。你可以在签名中看到这些内容
+OCaml 输出的模块：它包含 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">:</span> <span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">:</span> <span class="pre">int</span></code>。  因为
+对于前者，接受以下模块类型注释：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">X</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">val</span> <span class="n">x</span> <span class="o">:</span> <span class="kt">int</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">MX</span> <span class="o">=</span> <span class="o">(</span><span class="nc">M</span> <span class="o">:</span> <span class="nc">X</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type X = sig val x : int end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module MX : X
+</pre></div>
+</div>
+</div>
+</div>
+<p>模块类型 <code class="docutils literal notranslate"><span class="pre">X</span></code> 需要名为 <code class="docutils literal notranslate"><span class="pre">x</span></code> 且类型为 <code class="docutils literal notranslate"><span class="pre">int</span></code> 的模块项。  模块<code class="docutils literal notranslate"><span class="pre">M</span></code>
+确实包含这样的项目。  所以 <code class="docutils literal notranslate"><span class="pre">(M</span> <span class="pre">:</span> <span class="pre">X)</span></code> 是有效的。  同样的效果
+对于 <code class="docutils literal notranslate"><span class="pre">z</span></code>：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Z</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">val</span> <span class="n">z</span> <span class="o">:</span> <span class="kt">int</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">MZ</span> <span class="o">=</span> <span class="o">(</span><span class="nc">M</span> <span class="o">:</span> <span class="nc">Z</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Z = sig val z : int end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module MZ : Z
+</pre></div>
+</div>
+</div>
+</div>
+<p>或者对于 <code class="docutils literal notranslate"><span class="pre">x</span></code> 和 <code class="docutils literal notranslate"><span class="pre">z</span></code>：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">XZ</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">val</span> <span class="n">x</span> <span class="o">:</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">z</span> <span class="o">:</span> <span class="kt">int</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">MXZ</span> <span class="o">=</span> <span class="o">(</span><span class="nc">M</span> <span class="o">:</span> <span class="nc">XZ</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type XZ = sig val x : int val z : int end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module MXZ : XZ
+</pre></div>
+</div>
+</div>
+</div>
+<p>但不适用于 <code class="docutils literal notranslate"><span class="pre">y</span></code>，因为 <code class="docutils literal notranslate"><span class="pre">M</span></code> 不包含此类项目：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Y</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">val</span> <span class="n">y</span> <span class="o">:</span> <span class="kt">int</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">MY</span> <span class="o">=</span> <span class="o">(</span><span class="nc">M</span> <span class="o">:</span> <span class="nc">Y</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Y = sig val y : int end
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[35]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">5</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">13</span><span class="o">-</span><span class="mi">14</span><span class="p">:</span>
+<span class="mi">5</span> <span class="o">|</span> <span class="n">module</span> <span class="n">MY</span> <span class="o">=</span> <span class="p">(</span><span class="n">M</span> <span class="p">:</span> <span class="n">Y</span><span class="p">)</span>
+                 <span class="o">^</span>
+<span class="ne">Error</span>: Signature mismatch:
+       <span class="n">Modules</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+         <span class="n">sig</span> <span class="n">val</span> <span class="n">x</span> <span class="p">:</span> <span class="nb">int</span> <span class="n">val</span> <span class="n">z</span> <span class="p">:</span> <span class="nb">int</span> <span class="n">end</span>
+       <span class="ow">is</span> <span class="ow">not</span> <span class="n">included</span> <span class="ow">in</span>
+         <span class="n">Y</span>
+       <span class="n">The</span> <span class="n">value</span> <span class="n">y</span> <span class="ow">is</span> <span class="n">required</span> <span class="n">but</span> <span class="ow">not</span> <span class="n">provided</span>
+       <span class="n">File</span> <span class="s2">&quot;[35]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">13</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>仔细查看该错误消息。学习在小内容上阅读此类错误
+当示例出现在大量代码中时，它们会对你有所帮助。 OCaml是
+比较两个签名，对应于两边的两个表达式
+<code class="docutils literal notranslate"><span class="pre">(M</span> <span class="pre">:</span> <span class="pre">Y)</span></code> 中的冒号。线路</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">sig</span> <span class="k">val</span> <span class="n">x</span> <span class="o">:</span> <span class="kt">int</span> <span class="k">val</span> <span class="n">z</span> <span class="o">:</span> <span class="kt">int</span> <span class="k">end</span>
+</pre></div>
+</div>
+<p>是 OCaml 用于 <code class="docutils literal notranslate"><span class="pre">M</span></code> 的签名。由于 <code class="docutils literal notranslate"><span class="pre">M</span></code> 是一个模块，因此
+签名只是 <code class="docutils literal notranslate"><span class="pre">M</span></code> 中定义的名称和类型。OCaml
+将该签名与 <code class="docutils literal notranslate"><span class="pre">Y</span></code> 进行比较，发现不匹配：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>The value `y&#39; is required but not provided
+</pre></div>
+</div>
+<p>这是因为 <code class="docutils literal notranslate"><span class="pre">Y</span></code> 需要 <code class="docutils literal notranslate"><span class="pre">y</span></code> 但 <code class="docutils literal notranslate"><span class="pre">M</span></code> 没有提供这样的定义。</p>
+<p>这是另一个用于练习阅读的错误消息：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Xstring</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">val</span> <span class="n">x</span> <span class="o">:</span> <span class="kt">string</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">MXstring</span> <span class="o">=</span> <span class="o">(</span><span class="nc">M</span> <span class="o">:</span> <span class="nc">Xstring</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Xstring = sig val x : string end
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[36]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">5</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">19</span><span class="o">-</span><span class="mi">20</span><span class="p">:</span>
+<span class="mi">5</span> <span class="o">|</span> <span class="n">module</span> <span class="n">MXstring</span> <span class="o">=</span> <span class="p">(</span><span class="n">M</span> <span class="p">:</span> <span class="n">Xstring</span><span class="p">)</span>
+                       <span class="o">^</span>
+<span class="ne">Error</span>: Signature mismatch:
+       <span class="n">Modules</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+         <span class="n">sig</span> <span class="n">val</span> <span class="n">x</span> <span class="p">:</span> <span class="nb">int</span> <span class="n">val</span> <span class="n">z</span> <span class="p">:</span> <span class="nb">int</span> <span class="n">end</span>
+       <span class="ow">is</span> <span class="ow">not</span> <span class="n">included</span> <span class="ow">in</span>
+         <span class="n">Xstring</span>
+       <span class="n">Values</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span> <span class="n">val</span> <span class="n">x</span> <span class="p">:</span> <span class="nb">int</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">included</span> <span class="ow">in</span> <span class="n">val</span> <span class="n">x</span> <span class="p">:</span> <span class="n">string</span>
+       <span class="n">The</span> <span class="nb">type</span> <span class="nb">int</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">compatible</span> <span class="k">with</span> <span class="n">the</span> <span class="nb">type</span> <span class="n">string</span>
+       <span class="n">File</span> <span class="s2">&quot;[36]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">16</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
+       <span class="n">File</span> <span class="s2">&quot;[31]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">6</span><span class="o">-</span><span class="mi">7</span><span class="p">:</span> <span class="n">Actual</span> <span class="n">declaration</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>这次的错误是</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Values do not match: val x : int is not included in val x : string
+</pre></div>
+</div>
+<p>错误发生了变化，因为 <code class="docutils literal notranslate"><span class="pre">M</span></code> 确实提供了 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的定义，但是在
+与 <code class="docutils literal notranslate"><span class="pre">Xstring</span></code> 所需的类型不同。这就是“不包含在”的意思
+在这里。那么为什么 OCaml 不说一些更直接的话，比如“是
+不一样”？这是因为类型不必完全相同。如果
+提供的值的类型是多态的，它足以满足所需值的
+类型是该多态类型的实例化。</p>
+<p>例如，如果签名需要类型 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>，则它足以满足
+提供 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型值的结构：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">IntFun</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">val</span> <span class="n">f</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">IdFun</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">Iid</span> <span class="o">=</span> <span class="o">(</span><span class="nc">IdFun</span> <span class="o">:</span> <span class="nc">IntFun</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type IntFun = sig val f : int -&gt; int end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module IdFun : sig val f : &#39;a -&gt; &#39;a end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module Iid : IntFun
+</pre></div>
+</div>
+</div>
+</div>
+<p>到目前为止，所有这些例子只是比较定义的问题
+结构提供的定义的签名所需要的。但这里是
+一个可能令人惊讶的例子：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">MXZ&#39;</span> <span class="o">=</span> <span class="o">((</span><span class="nc">M</span> <span class="o">:</span> <span class="nc">X</span><span class="o">)</span> <span class="o">:</span> <span class="nc">Z</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[38]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">15</span><span class="o">-</span><span class="mi">22</span><span class="p">:</span>
+<span class="mi">1</span> <span class="o">|</span> <span class="n">module</span> <span class="n">MXZ</span><span class="s1">&#39; = ((M : X) : Z)</span>
+                   <span class="o">^^^^^^^</span>
+<span class="ne">Error</span>: Signature mismatch:
+       <span class="n">Modules</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span> <span class="n">X</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">included</span> <span class="ow">in</span> <span class="n">Z</span>
+       <span class="n">The</span> <span class="n">value</span> <span class="n">z</span> <span class="ow">is</span> <span class="n">required</span> <span class="n">but</span> <span class="ow">not</span> <span class="n">provided</span>
+       <span class="n">File</span> <span class="s2">&quot;[33]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">13</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>为什么 OCaml 抱怨 <code class="docutils literal notranslate"><span class="pre">z</span></code> 是必需的但未提供？我们从
+<code class="docutils literal notranslate"><span class="pre">M</span></code> 的定义表明它确实有一个值 <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">:</span> <span class="pre">int</span></code>。  然而
+错误消息可能奇怪地声称：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>The value `z&#39; is required but not provided.
+</pre></div>
+</div>
+<p>出现此错误的原因是我们已经提供了类型注释
+模块表达式 <code class="docutils literal notranslate"><span class="pre">(M</span> <span class="pre">:</span> <span class="pre">X)</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">X</span></code>。  这会导致模块表达式
+仅在模块类型 <code class="docutils literal notranslate"><span class="pre">X</span></code> 处可见。  换句话说，我们忘记了
+该注释之后不可撤销地存在 <code class="docutils literal notranslate"><span class="pre">z</span></code> 。  所有这一切都是
+已知该模块具有 <code class="docutils literal notranslate"><span class="pre">X</span></code> 所需的项目。</p>
+<p>在所有这些示例之后，以下是模块类型的静态语义
+注释：</p>
+<ul class="simple">
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">M</span></code> 的模块类型是 a，则模块类型注释 <code class="docutils literal notranslate"><span class="pre">(M</span> <span class="pre">:</span> <span class="pre">T)</span></code> 有效
+<code class="docutils literal notranslate"><span class="pre">T</span></code> 的子类型。 <code class="docutils literal notranslate"><span class="pre">(M</span> <span class="pre">:</span> <span class="pre">T)</span></code> 的模块类型在任何其他类型中都是 <code class="docutils literal notranslate"><span class="pre">T</span></code>
+检查。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">S</span></code> 中的定义集是一个，则模块类型 <code class="docutils literal notranslate"><span class="pre">S</span></code> 是 <code class="docutils literal notranslate"><span class="pre">T</span></code> 的子类型
+<code class="docutils literal notranslate"><span class="pre">T</span></code> 中的超集。  允许实例化 <code class="docutils literal notranslate"><span class="pre">T</span></code> 中的定义
+类型来自 <code class="docutils literal notranslate"><span class="pre">S</span></code> 的变量。</p></li>
+</ul>
+<p>第二条规则中的“sub”与“super”不是拼写错误。考虑这些模块
+类型和模块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">T</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">val</span> <span class="n">a</span> <span class="o">:</span> <span class="kt">int</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="k">type</span> <span class="nc">S</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">val</span> <span class="n">a</span> <span class="o">:</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">b</span> <span class="o">:</span> <span class="kt">bool</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">A</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">AB</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="bp">true</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">AC</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">let</span> <span class="n">c</span> <span class="o">=</span> <span class="sc">&#39;c&#39;</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type T = sig val a : int end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type S = sig val a : int val b : bool end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module A : sig val a : int end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module AB : sig val a : int val b : bool end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module AC : sig val a : int val c : char end
+</pre></div>
+</div>
+</div>
+</div>
+<p>模块类型 <code class="docutils literal notranslate"><span class="pre">S</span></code> 提供了 <code class="docutils literal notranslate"><span class="pre">T</span></code> 中定义的<em>超</em>集，因为它添加了
+<code class="docutils literal notranslate"><span class="pre">b</span></code> 的定义。那么为什么 <code class="docutils literal notranslate"><span class="pre">S</span></code> 被称为 <code class="docutils literal notranslate"><span class="pre">T</span></code> 的<em>子</em>类型呢？想想
+设置所有模块值 <code class="docutils literal notranslate"><span class="pre">M</span></code> 的 <span class="math notranslate nohighlight">\(\mathit{Type}(T)\)</span>，使得 <code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">:</span> <span class="pre">T</span></code>。那一套
+包含 <code class="docutils literal notranslate"><span class="pre">A</span></code>、<code class="docutils literal notranslate"><span class="pre">AB</span></code>、<code class="docutils literal notranslate"><span class="pre">AC</span></code> 等。再考虑集合
+所有模块值 <code class="docutils literal notranslate"><span class="pre">M</span></code> 的 <span class="math notranslate nohighlight">\(\mathit{Type}(S)\)</span> 使得 <code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">:</span> <span class="pre">S</span></code>。该集合包含
+<code class="docutils literal notranslate"><span class="pre">AB</span></code> 但不是 <code class="docutils literal notranslate"><span class="pre">A</span></code> 也不是 <code class="docutils literal notranslate"><span class="pre">AC</span></code>。所以<span class="math notranslate nohighlight">\(\mathit{Type}(S) \subset \mathit{Type}(T)\)</span>，
+因为有一些模块值在 <span class="math notranslate nohighlight">\(\mathit{Type}(T)\)</span> 中但不在
+<span class="math notranslate nohighlight">\(\mathit{Type}(S)\)</span>。</p>
+<p>作为另一个例子，堆栈的模块类型 <code class="docutils literal notranslate"><span class="pre">StackHistory</span></code> 可能会自定义我们的
+通常的 <code class="docutils literal notranslate"><span class="pre">Stack</span></code> 签名通过添加操作 <code class="docutils literal notranslate"><span class="pre">history</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 来返回
+历史上曾有多少项被推入堆栈。那个<code class="docutils literal notranslate"><span class="pre">history</span></code>
+操作使 <code class="docutils literal notranslate"><span class="pre">StackHistory</span></code> 中的定义集大于
+<code class="docutils literal notranslate"><span class="pre">Stack</span></code>，因此在上面的规则中使用“超集”。但是模块的集合
+实现 <code class="docutils literal notranslate"><span class="pre">StackHistory</span></code> 的值小于模块值集
+实现 <code class="docutils literal notranslate"><span class="pre">Stack</span></code>，因此使用“子集”。</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">5.2.5. </span>模块类型是静态的<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>关于模块类型注释有效性的决定是在编译时做出的
+而不是运行时。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>因此，模块类型注释给程序员带来了潜在的困惑
+习惯于面向对象语言，其中子类型的工作方式有所不同。</p>
+</div>
+<p>例如，Python 程序员就习惯于所谓的“鸭子打字”。他们
+可能期望 <code class="docutils literal notranslate"><span class="pre">((M</span> <span class="pre">:</span> <span class="pre">X)</span> <span class="pre">:</span> <span class="pre">Z)</span></code> 有效，因为 <code class="docutils literal notranslate"><span class="pre">z</span></code> 在运行时确实存在
+<code class="docutils literal notranslate"><span class="pre">M</span></code>。但在 OCaml 中，<code class="docutils literal notranslate"><span class="pre">(M</span> <span class="pre">:</span> <span class="pre">X)</span></code> 的编译时类型在视图中隐藏了 <code class="docutils literal notranslate"><span class="pre">z</span></code>
+不可撤销地。</p>
+<p>另一方面，Java 程序员可能期望模块类型注释
+像类型转换一样工作。因此，首先将 <code class="docutils literal notranslate"><span class="pre">M</span></code> “转换”为 <code class="docutils literal notranslate"><span class="pre">X</span></code> 然后再“转换”似乎是有效的
+<code class="docutils literal notranslate"><span class="pre">Z</span></code>。在 Java 中，此类类型转换会根据需要在运行时进行检查。但是OCaml
+模块类型注释是静态的。一旦做了 <code class="docutils literal notranslate"><span class="pre">X</span></code> 的注释，就有
+无法在编译时检查文件中可能存在哪些其他项目
+module— 需要运行时检查，而 OCaml 不允许这样做。</p>
+<p>在这两种情况下，你可能会感觉 OCaml 限制过于严格。或许。但是
+作为这种限制的回报，OCaml 保证<strong>不存在
+Java 或 Python 中可能发生的运行时错误</strong>，无论是
+由于强制转换导致的运行时错误，或者由于缺失而导致的运行时错误
+方法。</p>
+</section>
+<section id="id6">
+<h2><span class="section-number">5.2.6. </span>一等模块<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>在 OCaml 中，模块不像函数那样一流。但有可能
+<em>打包</em>模块作为一流的价值。简而言之：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">(module</span> <span class="pre">M</span> <span class="pre">:</span> <span class="pre">T)</span></code> 将模块类型为 <code class="docutils literal notranslate"><span class="pre">T</span></code> 的模块 <code class="docutils literal notranslate"><span class="pre">M</span></code> 打包为一个值。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(val</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">T)</span></code> 将 <code class="docutils literal notranslate"><span class="pre">e</span></code> 解包到类型为 <code class="docutils literal notranslate"><span class="pre">T</span></code> 的模块中。</p></li>
+</ul>
+<p>我们不会进一步介绍这一点，但如果你好奇，可以看看
+<a class="reference external" href="https://ocaml.org/manual/firstclassmodules.html">手册</a>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/modules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module_systems.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">5.1. </span>模块系统</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="toplevel.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">5.3. </span>模块和顶层</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.2.1. 模块定义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open">5.2.2. 作用域和 Open</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.2.3. 模块类型定义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5.2.4. 模块类型语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">5.2.5. 模块类型是静态的</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">5.2.6. 一等模块</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

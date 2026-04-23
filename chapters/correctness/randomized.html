@@ -1,0 +1,1335 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>8.6. 使用 QCheck 进行随机测试 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/correctness/randomized';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="8.7. 证明正确性" href="proving_correctness.html" />
+    <link rel="prev" title="8.5. 黑盒测试与玻璃盒测试" href="black_glass_box.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">8. 正确性</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/correctness/randomized.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/correctness/randomized.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/correctness/randomized.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/correctness/randomized.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/correctness/randomized.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>使用 QCheck 进行随机测试</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">8.6.1. 随机数生成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">8.6.2. QCheck 抽象</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">8.6.3. 测试性质</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">8.6.4. QCheck 的信息输出</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">8.6.5. 使用 QCheck 测试函数</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="qcheck">
+<h1><span class="section-number">8.6. </span>使用 QCheck 进行随机测试<a class="headerlink" href="#qcheck" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/62SYeSlSCNM" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p><em>随机测试</em>又名<em>模糊测试</em>是生成随机数的过程
+输入并将它们提供给程序或函数以查看程序是否
+行为正确。当前的问题是如何确定什么是正确的
+输出是针对给定输入的。如果<em>参考实现</em>是
+available— 也就是说，一个被认为是正确的实现，但在
+其他一些方式还不够（例如，它的性能太慢，或者它处于
+不同的语言）—那么两个实现的输出可以是
+比较。否则，也许可以检查输出的某些“属性”。对于
+例如，</p>
+<ul class="simple">
+<li><p>“不崩溃”是用户界面中一个令人感兴趣的属性；</p></li>
+<li><p>将 <span class="math notranslate nohighlight">\(n\)</span> 元素添加到数据集合中，然后删除这些元素，以及
+最终得到一个空集合，是数据中感兴趣的属性
+结构；和</p></li>
+<li><p>在密钥下加密字符串，然后在该密钥下解密它并得到
+返回原始字符串是加密方案中感兴趣的属性
+就像恩尼格玛一样。</p></li>
+</ul>
+<p>随机测试是一种非常强大的技术。它经常被用在
+测试程序是否存在安全漏洞。 <a class="reference external" href="https://github.com/c-cube/qcheck"><code class="docutils literal notranslate"><span class="pre">qcheck</span></code> package</a>
+for OCaml 支持随机测试。讨论完之后我们接下来再看
+随机数生成。</p>
+<section id="id1">
+<h2><span class="section-number">8.6.1. </span>随机数生成<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>为了理解随机测试，我们需要简短地讨论一下随机测试
+数生成。</p>
+<p>大多数语言都提供生成随机数的工具。事实上，这些
+生成器通常不是真正随机的（从某种意义上说，它们完全是随机的）
+不可预测）但实际上是 <a class="reference external" href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator"><em>pseudorandom</em></a>：数字序列
+他们生成通过良好的统计测试，以确保没有可辨别的
+其中的模式，但序列本身是一个确定性函数
+初始<em>种子</em>值。 （回想一下，前缀 <em>pseudo</em> 来自希腊语
+<em>pseudēs</em> 表示“假”。） <a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/util/Random.html">Java</a> 和
+<a class="reference external" href="https://docs.python.org/3/library/random.html">Python</a> 都提供伪随机数生成器 (PRNG)。所以
+OCaml 在标准库的 <a class="reference external" href="https://ocaml.org/api/Random.html"><code class="docutils literal notranslate"><span class="pre">Random</span></code> module</a> 中执行。</p>
+<p><strong>实验。</strong> 启动 utop 的新会话并输入以下内容：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+<span class="o">#</span> <span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+<span class="o">#</span> <span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+</pre></div>
+</div>
+<p>每个响应都是一个整数 <span class="math notranslate nohighlight">\(i\)</span> ，使得 <span class="math notranslate nohighlight">\(0 \leq i &lt; 100\)</span> 。</p>
+<p>现在退出 utop 并开始另一个新会话。再次输入相同的短语。你
+将得到与上次相同的答复。事实上，除非你的 OCaml
+安装与制作本书时使用的安装有些不同，你将
+得到与下面相同的数字：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+<span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+<span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 54
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 62
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 10
+</pre></div>
+</div>
+</div>
+</div>
+<p>并不完全不可预测，是吗？</p>
+<p><strong>PRNG。</strong> 尽管出于安全和加密的目的，PRNG 会导致
+可怕的漏洞，用于其他目的—包括测试和
+模拟—PRNG 就可以了。它们的可预测性甚至很有用：
+给定相同的初始种子，PRNG 将始终产生相同的序列
+伪随机数，从而能够重复特定的序列
+测试或特定的模拟。</p>
+<p>PRNG 的一般工作方式是初始化一个它所保留的“状态”
+来自初始种子的内部。从那时起，每次PRNG生成一个
+新值，它必须更新该状态。 <code class="docutils literal notranslate"><span class="pre">Random</span></code> 模块使得它
+可以以有限的方式操纵该状态。例如，你可以</p>
+<ul class="simple">
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">Random.get_state</span></code> 获取当前状态，</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">Random.State.copy</span></code> 复制当前状态，</p></li>
+<li><p>请求从特定状态生成的随机 <code class="docutils literal notranslate"><span class="pre">int</span></code>
+<code class="docutils literal notranslate"><span class="pre">Random.State.int</span></code>，以及</p></li>
+<li><p>自己初始化状态。函数 <code class="docutils literal notranslate"><span class="pre">Random.self_init</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">Random.State.make_self_init</span></code> 将选择一个“随机”种子来初始化
+状态。他们通过从一个名为的特殊 Unix 文件中采样来做到这一点
+<a class="reference external" href="https://en.wikipedia.org/wiki//dev/random"><code class="docutils literal notranslate"><span class="pre">/dev/urandom</span></code></a>，旨在提供尽可能接近真实的
+计算机可以具有随机性。</p></li>
+</ul>
+<p><strong>重复实验。</strong> 启动一个新的 utop 会话。输入以下内容：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="nn">Random</span><span class="p">.</span><span class="n">self_init</span> <span class="bp">()</span><span class="o">;;</span>
+<span class="o">#</span> <span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+<span class="o">#</span> <span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+<span class="o">#</span> <span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+</pre></div>
+</div>
+<p>现在再做一次（无论你是否退出 utop
+或不在两者之间）。  你会发现你得到了不同的
+值的序列。  很有可能你得到的会有所不同
+比以下值：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Random</span><span class="p">.</span><span class="n">self_init</span> <span class="bp">()</span><span class="o">;;</span>
+<span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+<span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+<span class="nn">Random</span><span class="p">.</span><span class="n">int</span> <span class="mi">100</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 23
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 70
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 43
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h2><span class="section-number">8.6.2. </span>QCheck 抽象<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>在使用 QCheck 进行测试之前，我们需要先了解三个抽象：
+生成器、属性和任意值。  如果你想跟随
+utop，使用此指令加载 QCheck：</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">require</span> <span class="s2">&quot;qcheck&quot;</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>生成器。</strong> QCheck 提供的关键功能之一是
+生成各种类型的伪随机值的能力。这是一些
+执行此操作的模块的签名：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">QCheck</span> <span class="o">:</span> <span class="k">sig</span>
+  <span class="o">...</span>
+  <span class="k">module</span> <span class="nc">Gen</span> <span class="o">:</span>
+  <span class="k">sig</span>
+    <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="nn">Random</span><span class="p">.</span><span class="nn">State</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+    <span class="k">val</span> <span class="kt">int</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">t</span>
+    <span class="k">val</span> <span class="n">generate</span> <span class="o">:</span> <span class="o">?</span><span class="n">rand</span><span class="o">:</span><span class="nn">Random</span><span class="p">.</span><span class="nn">State</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="n">n</span><span class="o">:</span><span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+    <span class="k">val</span> <span class="n">generate1</span> <span class="o">:</span> <span class="o">?</span><span class="n">rand</span><span class="o">:</span><span class="nn">Random</span><span class="p">.</span><span class="nn">State</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+    <span class="o">...</span>
+  <span class="k">end</span>
+  <span class="o">...</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">QCheck.Gen.t</span></code> 是一个函数，它接受 PRNG 状态并使用它来
+产生类型为 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 的伪随机值。所以 <code class="docutils literal notranslate"><span class="pre">QCheck.Gen.int</span></code> 产生
+伪随机整数。函数 <code class="docutils literal notranslate"><span class="pre">generate1</span></code> 实际上生成
+一个伪随机值。它采用一个可选参数，即 PRNG 状态；如果
+未提供该参数，它使用默认的 PRNG 状态。函数
+<code class="docutils literal notranslate"><span class="pre">generate</span></code> 生成 <code class="docutils literal notranslate"><span class="pre">n</span></code> 伪随机值的列表。</p>
+<p>QCheck 实现了许多伪随机值的生成器。这里还有一些
+他们：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">QCheck</span> <span class="o">:</span> <span class="k">sig</span>
+  <span class="o">...</span>
+  <span class="k">module</span> <span class="nc">Gen</span> <span class="o">:</span>
+  <span class="k">sig</span>
+    <span class="k">val</span> <span class="kt">int</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">t</span>
+    <span class="k">val</span> <span class="n">small_int</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">t</span>
+    <span class="k">val</span> <span class="n">int_range</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="n">t</span>
+    <span class="k">val</span> <span class="kt">list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="n">t</span>
+    <span class="k">val</span> <span class="n">list_size</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="n">t</span>
+    <span class="k">val</span> <span class="kt">string</span> <span class="o">:</span> <span class="o">?</span><span class="n">gen</span><span class="o">:</span><span class="kt">char</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">string</span> <span class="n">t</span>
+    <span class="k">val</span> <span class="n">small_string</span> <span class="o">:</span> <span class="o">?</span><span class="n">gen</span><span class="o">:</span><span class="kt">char</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">string</span> <span class="n">t</span>
+    <span class="o">...</span>
+  <span class="k">end</span>
+  <span class="o">...</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>你可以在 <a class="reference external" href="https://c-cube.github.io/qcheck/0.17/qcheck-core/QCheck/Gen/index.html">文档</a> 中了解这一点以及许多其他内容。</p>
+<p><strong>属性。</strong> 人们很容易认为 QCheck 将使我们能够测试
+函数通过生成许多伪随机输入到函数，运行
+对它们运行，然后检查输出是否正确。但有
+立即出现一个问题：QCheck 如何知道每个的正确输出是什么？
+这些输入？由于它们是随机生成的，测试工程师无法
+对正确的输出进行硬编码。</p>
+<p>因此，QCheck 允许我们检查每个输出的“属性”是否成立。
+属性是类型 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code> 的函数，对于某些类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>，它告诉我们
+<code class="docutils literal notranslate"><span class="pre">t</span></code> 类型的值是否表现出某些所需的特征。在这里，为了
+例如，有两个属性；判断一个整数是否是
+Even，另一个确定列表是否按非递减排序
+根据内置 <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code> 运算符进行排序：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">is_even</span> <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="ow">mod</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span class="n">is_sorted</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+  <span class="o">|</span> <span class="o">[_]</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+  <span class="o">|</span> <span class="n">h1</span> <span class="o">::</span> <span class="o">(</span><span class="n">h2</span> <span class="o">::</span> <span class="n">t</span> <span class="k">as</span> <span class="n">t&#39;</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">h1</span> <span class="o">&lt;=</span> <span class="n">h2</span> <span class="o">&amp;&amp;</span> <span class="n">is_sorted</span> <span class="n">t&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val is_even : int -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val is_sorted : &#39;a list -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>任意。</strong> 我们向 QCheck 呈现要检查的输出的方式是
+类型为 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">QCheck.arbitrary</span></code> 的值。该类型表示“任意”值
+类型为 <code class="docutils literal notranslate"><span class="pre">'a</span></code>— 也就是说，它是伪随机选择的值
+想要检查，更具体地说，检查它是否满足某个属性。</p>
+<p>我们可以使用该函数从生成器中创建<em>任意</em>
+<code class="docutils literal notranslate"><span class="pre">QCheck.make</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">QCheck.Gen.t</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">QCheck.arbitrary</span></code>。 （其实这个函数
+接受一些我们在这里省略的可选参数。）这实际上不是
+创建任意值的正常方法，但这是一种可以帮助我们的简单方法
+理解他们；过一会儿我们就会恢复正常。例如，
+下面的表达式代表任意整数：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">QCheck</span><span class="p">.</span><span class="n">make</span> <span class="nn">QCheck</span><span class="p">.</span><span class="nn">Gen</span><span class="p">.</span><span class="n">int</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int QCheck.arbitrary =
+{QCheck.gen = &lt;fun&gt;; print = None; small = None; shrink = None;
+ collect = None; stats = []}
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+</section>
+<section id="id3">
+<h2><span class="section-number">8.6.3. </span>测试性质<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>为了构建 QCheck 测试，我们创建一个任意值和一个属性，并将它们传递给
+到 <code class="docutils literal notranslate"><span class="pre">QCheck.Test.make</span></code> ，其类型可以简化为：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">make</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="nn">QCheck</span><span class="p">.</span><span class="n">arbitrary</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">bool</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">t</span>
+</pre></div>
+</div>
+<p>实际上，该函数还采用几个我们省略的可选参数
+在这里。该测试将生成一定数量的任意值并检查是否
+他们每个人都有财产。例如，以下代码创建一个 QCheck
+检查任意整数是否为偶数的测试：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">t</span> <span class="o">=</span> <span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">make</span> <span class="o">(</span><span class="nn">QCheck</span><span class="p">.</span><span class="n">make</span> <span class="nn">QCheck</span><span class="p">.</span><span class="nn">Gen</span><span class="p">.</span><span class="n">int</span><span class="o">)</span> <span class="n">is_even</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val t : QCheck.Test.t = QCheck2.Test.Test &lt;abstr&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>如果我们想改变检查的任意数量，我们可以
+将可选整数参数 <code class="docutils literal notranslate"><span class="pre">~count</span></code> 传递给 <code class="docutils literal notranslate"><span class="pre">QCheck.Test.make</span></code>。</p>
+<p>我们可以使用 <code class="docutils literal notranslate"><span class="pre">QCheck_runner.run_tests</span> <span class="pre">:</span> <span class="pre">QCheck.Test.t</span> <span class="pre">list</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 运行该测试。
+（该函数再次采用一些我们在此处省略的可选参数。）
+如果列表中的所有测试都通过，则返回整数 0，否则返回 1。对于
+上面的测试，运行它很大概率会输出1，因为它会
+生成至少一个奇数。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">QCheck_runner</span><span class="p">.</span><span class="n">run_tests</span> <span class="o">[</span><span class="n">t</span><span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+random seed: 439696666
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- <span class=" -Color -Color-Bold -Color-Bold-Red">Failure</span> --------------------------------------------------------------------
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test anon_test_1 failed (0 shrink steps):
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;no printer&gt;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>================================================================================
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Red">failure</span> (1 tests failed, 0 tests errored, ran 1 tests)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 1
+</pre></div>
+</div>
+</div>
+</div>
+<p>不幸的是，该输出的信息量并不大。它没有告诉我们什么
+特定值未能满足属性！我们将解决这个问题
+一会儿。</p>
+<p>如果你想制作一个运行 QCheck 测试并打印的 OCaml 程序
+结果，有一个函数 <code class="docutils literal notranslate"><span class="pre">QCheck_runner.run_tests_main</span></code> 的工作原理很像
+<code class="docutils literal notranslate"><span class="pre">OUnit2.run_test_tt_main</span></code>：只需将其作为测试中的最终表达式调用
+文件。例如：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="c">(* code that constructs a [QCheck.Test.t list] *)</span>
+<span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="nn">QCheck_runner</span><span class="p">.</span><span class="n">run_tests_main</span> <span class="n">tests</span>
+</pre></div>
+</div>
+<p>要编译 QCheck 代码，只需将 <code class="docutils literal notranslate"><span class="pre">qcheck</span></code> 库添加到 <code class="docutils literal notranslate"><span class="pre">dune</span></code> 文件中：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">(executable</span>
+<span class="go"> ...</span>
+<span class="go"> (libraries ... qcheck))</span>
+</pre></div>
+</div>
+<p>QCheck 测试可以转换为 OUnit 测试并包含在通常的测试中
+我们一直在编写 OUnit 测试套件。执行此操作的函数是：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">QCheck_runner</span><span class="p">.</span><span class="n">to_ounit2_test</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : ?rand:Random.State.t -&gt; QCheck2.Test.t -&gt; OUnit2.test = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id4">
+<h2><span class="section-number">8.6.4. </span>QCheck 的信息输出<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>我们在上面注意到，到目前为止 QCheck 的输出只告诉我们“是否”有一些
+任意者满足了一个属性，但没有满足任意者未能满足的“哪个”属性
+它。让我们解决这个问题。</p>
+<p>问题在于我们如何直接从生成器构造任意值。
+任意的不仅仅是一个生成器。 QCheck 库需要
+知道如何打印生成器的值，以及其他一些东西。你
+可以看到<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">QCheck.arbitrary</span></code>的定义中：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">show</span> <span class="nn">QCheck</span><span class="p">.</span><span class="n">arbitrary</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a arbitrary = private {
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  gen : &#39;a QCheck.Gen.t;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  print : &#39;a QCheck.Print.t option;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  small : (&#39;a -&gt; int) option;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  shrink : &#39;a QCheck.Shrink.t option;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  collect : (&#39;a -&gt; string) option;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  stats : &#39;a QCheck.stat list;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>}
+</pre></div>
+</div>
+</div>
+</div>
+<p>除了生成器字段 <code class="docutils literal notranslate"><span class="pre">gen</span></code> 之外，还有一个包含
+从生成器打印值的可选函数，以及其他一些可选函数
+领域也是如此。幸运的是，我们通常不需要找到一种方法来完成这些
+我们自己田野； <code class="docutils literal notranslate"><span class="pre">QCheck</span></code> 模块提供了许多对应的任意值
+到 <code class="docutils literal notranslate"><span class="pre">QCheck.Gen</span></code> 中找到的生成器：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">QCheck</span> <span class="o">:</span>
+  <span class="k">sig</span>
+    <span class="o">...</span>
+  <span class="k">val</span> <span class="kt">int</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">arbitrary</span>
+  <span class="k">val</span> <span class="n">small_int</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">arbitrary</span>
+  <span class="k">val</span> <span class="n">int_range</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="n">arbitrary</span>
+  <span class="k">val</span> <span class="kt">list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">arbitrary</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="n">arbitrary</span>
+  <span class="k">val</span> <span class="n">list_of_size</span> <span class="o">:</span> <span class="kt">int</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">arbitrary</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="n">arbitrary</span>
+  <span class="k">val</span> <span class="kt">string</span> <span class="o">:</span> <span class="kt">string</span> <span class="n">arbitrary</span>
+  <span class="k">val</span> <span class="n">small_string</span> <span class="o">:</span> <span class="kt">string</span> <span class="n">arbitrary</span>
+    <span class="o">...</span>
+  <span class="k">end</span>
+</pre></div>
+</div>
+<p>使用这些任意值，我们可以获得改进的错误消息：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">t</span> <span class="o">=</span> <span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">make</span> <span class="o">~</span><span class="n">name</span><span class="o">:</span><span class="s2">&quot;my_test&quot;</span> <span class="nn">QCheck</span><span class="p">.</span><span class="n">int</span> <span class="n">is_even</span><span class="o">;;</span>
+<span class="nn">QCheck_runner</span><span class="p">.</span><span class="n">run_tests</span> <span class="o">[</span><span class="n">t</span><span class="o">];;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val t : QCheck.Test.t = QCheck2.Test.Test &lt;abstr&gt;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- <span class=" -Color -Color-Bold -Color-Bold-Red">Failure</span> --------------------------------------------------------------------
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test my_test failed (86 shrink steps):
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>63
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>================================================================================
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Red">failure</span> (1 tests failed, 0 tests errored, ran 1 tests)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 1
+</pre></div>
+</div>
+</div>
+</div>
+<p>输出告诉我们 <code class="docutils literal notranslate"><span class="pre">my_test</span></code> 失败，并向我们显示输入
+导致了失败。</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">8.6.5. </span>使用 QCheck 测试函数<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>QCheck 难题的最后一部分是使用随机生成的输入
+测试函数的输出是否满足某些属性。例如，这里有一个
+QCheck测试<code class="docutils literal notranslate"><span class="pre">double</span></code>的输出是否正确：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">double</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">double_check</span> <span class="n">x</span> <span class="o">=</span> <span class="n">double</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">t</span> <span class="o">=</span> <span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">make</span> <span class="o">~</span><span class="n">count</span><span class="o">:</span><span class="mi">1000</span> <span class="nn">QCheck</span><span class="p">.</span><span class="n">int</span> <span class="n">double_check</span><span class="o">;;</span>
+<span class="nn">QCheck_runner</span><span class="p">.</span><span class="n">run_tests</span> <span class="o">[</span><span class="n">t</span><span class="o">];;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val double : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val double_check : int -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val t : QCheck.Test.t = QCheck2.Test.Test &lt;abstr&gt;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>================================================================================
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">success</span> (ran 1 tests)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 0
+</pre></div>
+</div>
+</div>
+</div>
+<p>上面，<code class="docutils literal notranslate"><span class="pre">double</span></code> 是我们正在测试的函数。我们正在测试的属性
+<code class="docutils literal notranslate"><span class="pre">double_check</span></code>，就是 <code class="docutils literal notranslate"><span class="pre">double</span> <span class="pre">x</span></code> 始终是 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">+</span> <span class="pre">x</span></code>。我们通过以下方式做到这一点
+QCheck 创建 1000 个任意整数并测试每个整数的属性是否成立
+其中。</p>
+<p>这里还有几个例子，取自 QCheck 自己的文档。
+首先检查 <code class="docutils literal notranslate"><span class="pre">List.rev</span></code> 是否是<em>对合</em>，这意味着应用它
+两次将带你回到原始列表。  这是一个属性，应该
+保持列表反转的正确实施。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">rev_involutive</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="o">(</span><span class="n">lst</span> <span class="o">|&gt;</span> <span class="n">rev</span> <span class="o">|&gt;</span> <span class="n">rev</span> <span class="o">=</span> <span class="n">lst</span><span class="o">);;</span>
+<span class="k">let</span> <span class="n">t</span> <span class="o">=</span> <span class="nn">QCheck</span><span class="p">.</span><span class="o">(</span><span class="nn">Test</span><span class="p">.</span><span class="n">make</span> <span class="o">~</span><span class="n">count</span><span class="o">:</span><span class="mi">1000</span> <span class="o">(</span><span class="kt">list</span> <span class="kt">int</span><span class="o">)</span> <span class="n">rev_involutive</span><span class="o">);;</span>
+<span class="nn">QCheck_runner</span><span class="p">.</span><span class="n">run_tests</span> <span class="o">[</span><span class="n">t</span><span class="o">];;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val rev_involutive : &#39;a list -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val t : QCheck.Test.t = QCheck2.Test.Test &lt;abstr&gt;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>================================================================================
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">success</span> (ran 1 tests)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 0
+</pre></div>
+</div>
+</div>
+</div>
+<p>事实上，运行 1000 次随机测试表明，没有一个失败。 <code class="docutils literal notranslate"><span class="pre">int</span></code>
+上面使用的生成器在 OCaml 的整个范围内统一生成整数
+整数。 <code class="docutils literal notranslate"><span class="pre">list</span></code> 生成器创建其元素是单独的列表
+由 <code class="docutils literal notranslate"><span class="pre">int</span></code> 生成。根据<code class="docutils literal notranslate"><span class="pre">list</span></code>的文档，每个的长度
+列表是由另一个生成器 <code class="docutils literal notranslate"><span class="pre">nat</span></code> 随机生成的，它生成“小
+自然数。”这意味着什么？没有指定。但如果我们读到
+<a class="reference external" href="https://github.com/c-cube/qcheck/blob/18247cf40af4272f7a2f93e273724b962db61b01/src/core/QCheck2.ml#L276">current source code</a>，我们看到这些是从0到10,000的整数，
+并偏向于该范围内较小的数字。</p>
+<p>第二个示例检查所有列表是否已排序。  当然，并不是所有的名单
+<em>已</em>排序！  所以我们应该预料到这个测试会失败。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">is_sorted</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">sort</span> <span class="nn">Stdlib</span><span class="p">.</span><span class="n">compare</span> <span class="n">lst</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">t</span> <span class="o">=</span> <span class="nn">QCheck</span><span class="p">.</span><span class="o">(</span><span class="nn">Test</span><span class="p">.</span><span class="n">make</span> <span class="o">~</span><span class="n">count</span><span class="o">:</span><span class="mi">1000</span> <span class="o">(</span><span class="kt">list</span> <span class="n">small_nat</span><span class="o">)</span> <span class="n">is_sorted</span><span class="o">);;</span>
+<span class="nn">QCheck_runner</span><span class="p">.</span><span class="n">run_tests</span> <span class="o">[</span><span class="n">t</span><span class="o">];;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val is_sorted : &#39;a list -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File &quot;[14]&quot;, line 2, characters 44-53:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2 | let t = QCheck.(Test.make ~count:1000 (list small_nat) is_sorted);;
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                ^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Alert deprecated: QCheck.small_nat
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Use [nat_small] instead
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val t : QCheck.Test.t = QCheck2.Test.Test &lt;abstr&gt;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- <span class=" -Color -Color-Bold -Color-Bold-Red">Failure</span> --------------------------------------------------------------------
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test anon_test_4 failed (15 shrink steps):
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1; 0]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>================================================================================
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Red">failure</span> (1 tests failed, 0 tests errored, ran 1 tests)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 1
+</pre></div>
+</div>
+</div>
+</div>
+<p>输出显示了未排序的列表示例，因此违反了
+财产。生成器 <code class="docutils literal notranslate"><span class="pre">small_nat</span></code> 类似于 <code class="docutils literal notranslate"><span class="pre">nat</span></code> 但范围从 0 到 100。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/correctness"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="black_glass_box.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">8.5. </span>黑盒测试与玻璃盒测试</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="proving_correctness.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">8.7. </span>证明正确性</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">8.6.1. 随机数生成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">8.6.2. QCheck 抽象</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">8.6.3. 测试性质</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">8.6.4. QCheck 的信息输出</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">8.6.5. 使用 QCheck 测试函数</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

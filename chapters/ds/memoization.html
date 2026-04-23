@@ -1,0 +1,1182 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>9.5. 记忆化 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/ds/memoization';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="9.6. 持久数组" href="parrays.html" />
+    <link rel="prev" title="9.4. 序列" href="sequence.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">9. 数据结构</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/ds/memoization.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/ds/memoization.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/ds/memoization.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/ds/memoization.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/ds/memoization.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>记忆化</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">9.5.1. 斐波那契</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">9.5.2. 使用高阶函数进行记忆化</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">9.5.3. 只是为了好玩：派对优化</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">9.5. </span>记忆化<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<p>在上一节中，我们看到 <code class="docutils literal notranslate"><span class="pre">Lazy</span></code> 模块会记住计算结果，
+这样就不必浪费时间重新计算它们。记忆化是一种强大的技术：
+它能在不改变算法工作方式的情况下，渐近地加速简单递归算法。</p>
+<p>让我们看看如何应用抽象原则，发明一种记忆化<em>任意</em>函数的方法，
+使该函数在任意给定输入上只计算一次。
+我们最终将使用命令式数据结构（数组和哈希表）作为一部分
+我们的解决方案。</p>
+<section id="id2">
+<h2><span class="section-number">9.5.1. </span>斐波那契<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>让我们再次考虑计算第 n 个斐波那契数的问题。
+简单的递归实现需要指数时间，因为
+一遍又一遍地重新计算相同的斐波那契数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fib</span> <span class="n">n</span> <span class="o">=</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">fib</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">fib</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fib : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>准确地说，它的运行时间是<span class="math notranslate nohighlight">\(O(\phi^n)\)</span>，其中<span class="math notranslate nohighlight">\(\phi\)</span>是
+黄金比例，<span class="math notranslate nohighlight">\(\frac{1 + \sqrt{5}}{2}\)</span>。</p>
+</div>
+<p>如果我们在计算斐波那契数时记录它们，我们就可以避免这种冗余
+工作。这个想法是，每当我们计算 <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">n</span></code> 时，我们都会将其存储在索引表中
+由 <code class="docutils literal notranslate"><span class="pre">n</span></code> 提供。在这种情况下，索引键是整数，所以我们可以实现这个
+使用数组的表：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">fibm</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">memo</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">option</span> <span class="kt">array</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">make</span> <span class="o">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="nc">None</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="k">rec</span> <span class="n">f_mem</span> <span class="n">n</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">memo</span><span class="o">.(</span><span class="n">n</span><span class="o">)</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">result</span> <span class="o">-&gt;</span> <span class="c">(* computed already *)</span> <span class="n">result</span>
+    <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span>
+        <span class="k">let</span> <span class="n">result</span> <span class="o">=</span>
+          <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">f_mem</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">f_mem</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="o">)</span>
+        <span class="k">in</span>
+        <span class="c">(* record in table *)</span>
+        <span class="n">memo</span><span class="o">.(</span><span class="n">n</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="nc">Some</span> <span class="n">result</span><span class="o">;</span>
+        <span class="n">result</span>
+  <span class="k">in</span>
+  <span class="n">f_mem</span> <span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fibm : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">fibm</span></code> 内部定义的函数 <code class="docutils literal notranslate"><span class="pre">f_mem</span></code> 包含原始递归
+算法，除了在进行计算之前它首先检查结果是否
+已经被计算并存储在表中；如果是，它就只是
+返回结果。</p>
+<p>我们如何分析这个函数的运行时间呢？单次花费的时间
+如果我们排除任何递归调用所花费的时间，则对 <code class="docutils literal notranslate"><span class="pre">f_mem</span></code> 的调用是 <span class="math notranslate nohighlight">\(O(1)\)</span>
+它碰巧进行的递归调用。现在我们寻找一种方法来限制总数
+通过查找正在取得的进展的某种度量来进行递归调用。</p>
+<p>进度衡量的一个很好的选择，不仅在这里而且对于许多用途
+记忆化问题，是表中非空条目的数量（即，
+包含 <code class="docutils literal notranslate"><span class="pre">Some</span> <span class="pre">n</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">None</span></code>）。每次 <code class="docutils literal notranslate"><span class="pre">f_mem</span></code> 使两者递归
+调用它还会将非空条目的数量增加一（填充
+表中以前的空条目填入新值）。由于表中只有
+<code class="docutils literal notranslate"><span class="pre">n</span></code> 条目，因此总共只能有 <span class="math notranslate nohighlight">\(O(n)\)</span> 次对 <code class="docutils literal notranslate"><span class="pre">f_mem</span></code> 的调用，对于
+<span class="math notranslate nohighlight">\(O(n)\)</span> 的总运行时间（因为我们上面确定每个调用需要
+<span class="math notranslate nohighlight">\(O(1)\)</span> 时间）。记忆带来的加速因此减少了运行时间
+从指数时间降低到线性时间，这是巨大的变化。例如，对于 <span class="math notranslate nohighlight">\(n=4\)</span>，
+记忆化带来的加速超过一百万倍！</p>
+<p>能够应用记忆化的关键是存在常见的子问题
+正在反复解决。因此我们可以使用一些额外的存储空间
+节省重复计算。</p>
+<p>尽管此代码使用命令式构造（具体来说，数组更新），
+副作用在函数 <code class="docutils literal notranslate"><span class="pre">fibm</span></code> 之外不可见。所以从客户端的角度来看，<code class="docutils literal notranslate"><span class="pre">fibm</span></code> 是函数式的。
+我们不需要提及内部使用的命令式实现（也就是良性副作用）。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">9.5.2. </span>使用高阶函数进行记忆化<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>现在我们已经看到了记忆一个函数的示例，让我们使用高阶函数
+函数来记忆任何函数。首先，考虑记住一个的情况
+非递归函数 <code class="docutils literal notranslate"><span class="pre">f</span></code>。在这种情况下，我们只需要创建一个哈希表
+存储调用 <code class="docutils literal notranslate"><span class="pre">f</span></code> 的每个参数的相应值
+（为了记住多参数函数，我们可以使用柯里化和非柯里化来
+转换为单个参数函数）。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">memo</span> <span class="n">f</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">h</span> <span class="o">=</span> <span class="nn">Hashtbl</span><span class="p">.</span><span class="n">create</span> <span class="mi">11</span> <span class="k">in</span>
+  <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span>
+    <span class="k">try</span> <span class="nn">Hashtbl</span><span class="p">.</span><span class="n">find</span> <span class="n">h</span> <span class="n">x</span>
+    <span class="k">with</span> <span class="nc">Not_found</span> <span class="o">-&gt;</span>
+      <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="n">f</span> <span class="n">x</span> <span class="k">in</span>
+      <span class="nn">Hashtbl</span><span class="p">.</span><span class="n">add</span> <span class="n">h</span> <span class="n">x</span> <span class="n">y</span><span class="o">;</span>
+      <span class="n">y</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val memo : (&#39;a -&gt; &#39;b) -&gt; &#39;a -&gt; &#39;b = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>然而，对于递归函数，递归调用结构需要是
+已修改。这可以独立于正在执行的函数而被抽象出来
+已记忆：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">memo_rec</span> <span class="n">f</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">h</span> <span class="o">=</span> <span class="nn">Hashtbl</span><span class="p">.</span><span class="n">create</span> <span class="mi">16</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="k">rec</span> <span class="n">g</span> <span class="n">x</span> <span class="o">=</span>
+    <span class="k">try</span> <span class="nn">Hashtbl</span><span class="p">.</span><span class="n">find</span> <span class="n">h</span> <span class="n">x</span>
+    <span class="k">with</span> <span class="nc">Not_found</span> <span class="o">-&gt;</span>
+      <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="n">f</span> <span class="n">g</span> <span class="n">x</span> <span class="k">in</span>
+      <span class="nn">Hashtbl</span><span class="p">.</span><span class="n">add</span> <span class="n">h</span> <span class="n">x</span> <span class="n">y</span><span class="o">;</span>
+      <span class="n">y</span>
+  <span class="k">in</span>
+  <span class="n">g</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val memo_rec : ((&#39;a -&gt; &#39;b) -&gt; &#39;a -&gt; &#39;b) -&gt; &#39;a -&gt; &#39;b = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在我们可以使用这个通用函数稍微重写上面的原始 <code class="docutils literal notranslate"><span class="pre">fib</span></code> 函数
+记忆技术：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">fib_memo</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">fib</span> <span class="n">self</span> <span class="n">n</span> <span class="o">=</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">self</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">self</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="o">)</span>
+  <span class="k">in</span>
+  <span class="n">memo_rec</span> <span class="n">fib</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fib_memo : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id4">
+<h2><span class="section-number">9.5.3. </span>只是为了好玩：派对优化<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>假设我们想为一家组织结构图为二叉树的公司举办一场聚会。
+每个员工都有一个相关的“有趣的价值”，我们想要一组受邀的员工
+员工拥有最大的总乐趣价值。然而，如果他的员工
+上级是被邀请的，所以我们从不邀请两个有联系的员工
+组织结构图。 （这个问题不太有趣的名字是最大权重独立
+设置在树中。）对于具有 <span class="math notranslate nohighlight">\(n\)</span> 员工的组织结构图，可能有 <span class="math notranslate nohighlight">\(2^{n}\)</span>
+邀请列表，所以比较每个有效的乐趣的幼稚算法
+邀请列表需要指数时间。</p>
+<p>我们可以使用记忆将其转化为线性时间算法。我们从
+定义一个变体类型来代表员工。每个节点的 <code class="docutils literal notranslate"><span class="pre">int</span></code> 是
+乐趣。</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">tree</span> <span class="o">=</span> <span class="nc">Empty</span> <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">tree</span> <span class="o">*</span> <span class="n">tree</span>
+</pre></div>
+</div>
+<p>现在，我们如何递归地解决这个问题？一个重要的观察结果是，在任何
+树中，不包含根节点的最优邀请列表为
+左子树和右子树的最佳邀请列表的并集。还有
+包含根节点的最优邀请列表将是
+左右孩子的最佳邀请列表不包括
+它们各自的根节点。所以拥有优化函数似乎很有用
+需要邀请根节点的情况的邀请列表，以及
+对于排除根节点的情况。我们将调用这两个函数
+<code class="docutils literal notranslate"><span class="pre">party_in</span></code> 和 <code class="docutils literal notranslate"><span class="pre">party_out</span></code>。那么party的结果就是最大的
+这两个函数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Unmemoized</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="n">tree</span> <span class="o">=</span>
+    <span class="o">|</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">tree</span> <span class="o">*</span> <span class="n">tree</span>
+
+  <span class="c">(* Returns optimum fun for t. *)</span>
+  <span class="k">let</span> <span class="k">rec</span> <span class="n">party</span> <span class="n">t</span> <span class="o">=</span> <span class="n">max</span> <span class="o">(</span><span class="n">party_in</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">party_out</span> <span class="n">t</span><span class="o">)</span>
+
+  <span class="c">(* Returns optimum fun for t assuming the root node of t</span>
+<span class="c">   * is included. *)</span>
+  <span class="k">and</span> <span class="n">party_in</span> <span class="n">t</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">t</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">Empty</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+    <span class="o">|</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">v</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">v</span> <span class="o">+</span> <span class="n">party_out</span> <span class="n">left</span> <span class="o">+</span> <span class="n">party_out</span> <span class="n">right</span>
+
+  <span class="c">(* Returns optimum fun for t assuming the root node of t</span>
+<span class="c">   * is excluded. *)</span>
+  <span class="k">and</span> <span class="n">party_out</span> <span class="n">t</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">t</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">Empty</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+    <span class="o">|</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">v</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">party</span> <span class="n">left</span> <span class="o">+</span> <span class="n">party</span> <span class="n">right</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module Unmemoized :
+  sig
+    type tree = Empty | Node of int * tree * tree
+    val party : tree -&gt; int
+    val party_in : tree -&gt; int
+    val party_out : tree -&gt; int
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>该代码的运行时间呈指数级增长。但请注意，只有 <span class="math notranslate nohighlight">\(n\)</span>
+可能有不同的派对召唤。如果我们更改代码来记住结果
+在这些调用中，性能在 <span class="math notranslate nohighlight">\(n\)</span> 中呈线性。这是一个版本
+记住聚会的结果并计算实际的邀请列表。
+请注意，此代码直接在树中记忆结果。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Memoized</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(* This version memoizes the optimal fun value for each tree node. It</span>
+<span class="c">     also remembers the best invite list. Each tree node has the name of</span>
+<span class="c">     the employee as a string. *)</span>
+  <span class="k">type</span> <span class="n">tree</span> <span class="o">=</span>
+    <span class="o">|</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span>
+        <span class="kt">int</span> <span class="o">*</span> <span class="kt">string</span> <span class="o">*</span> <span class="n">tree</span> <span class="o">*</span> <span class="n">tree</span> <span class="o">*</span> <span class="o">(</span><span class="kt">int</span> <span class="o">*</span> <span class="kt">string</span> <span class="kt">list</span><span class="o">)</span> <span class="n">option</span> <span class="n">ref</span>
+
+  <span class="k">let</span> <span class="k">rec</span> <span class="n">party</span> <span class="n">t</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">*</span> <span class="kt">string</span> <span class="kt">list</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">t</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">Empty</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="bp">[]</span><span class="o">)</span>
+    <span class="o">|</span> <span class="nc">Node</span> <span class="o">(_,</span> <span class="n">name</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">memo</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span>
+        <span class="k">match</span> <span class="o">!</span><span class="n">memo</span> <span class="k">with</span>
+        <span class="o">|</span> <span class="nc">Some</span> <span class="n">result</span> <span class="o">-&gt;</span> <span class="n">result</span>
+        <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span>
+            <span class="k">let</span> <span class="n">infun</span><span class="o">,</span> <span class="n">innames</span> <span class="o">=</span> <span class="n">party_in</span> <span class="n">t</span> <span class="k">in</span>
+            <span class="k">let</span> <span class="n">outfun</span><span class="o">,</span> <span class="n">outnames</span> <span class="o">=</span> <span class="n">party_out</span> <span class="n">t</span> <span class="k">in</span>
+            <span class="k">let</span> <span class="n">result</span> <span class="o">=</span>
+              <span class="k">if</span> <span class="n">infun</span> <span class="o">&gt;</span> <span class="n">outfun</span> <span class="k">then</span> <span class="o">(</span><span class="n">infun</span><span class="o">,</span> <span class="n">innames</span><span class="o">)</span>
+              <span class="k">else</span> <span class="o">(</span><span class="n">outfun</span><span class="o">,</span> <span class="n">outnames</span><span class="o">)</span>
+            <span class="k">in</span>
+            <span class="n">memo</span> <span class="o">:=</span> <span class="nc">Some</span> <span class="n">result</span><span class="o">;</span>
+            <span class="n">result</span><span class="o">)</span>
+
+  <span class="k">and</span> <span class="n">party_in</span> <span class="n">t</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">t</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">Empty</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="bp">[]</span><span class="o">)</span>
+    <span class="o">|</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">v</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">,</span> <span class="o">_)</span> <span class="o">-&gt;</span>
+        <span class="k">let</span> <span class="n">lfun</span><span class="o">,</span> <span class="n">lnames</span> <span class="o">=</span> <span class="n">party_out</span> <span class="n">l</span> <span class="k">and</span> <span class="n">rfun</span><span class="o">,</span> <span class="n">rnames</span> <span class="o">=</span> <span class="n">party_out</span> <span class="n">r</span> <span class="k">in</span>
+        <span class="o">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">lfun</span> <span class="o">+</span> <span class="n">rfun</span><span class="o">,</span> <span class="n">name</span> <span class="o">::</span> <span class="n">lnames</span> <span class="o">@</span> <span class="n">rnames</span><span class="o">)</span>
+
+  <span class="k">and</span> <span class="n">party_out</span> <span class="n">t</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">t</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">Empty</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="bp">[]</span><span class="o">)</span>
+    <span class="o">|</span> <span class="nc">Node</span> <span class="o">(_,</span> <span class="o">_,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">,</span> <span class="o">_)</span> <span class="o">-&gt;</span>
+        <span class="k">let</span> <span class="n">lfun</span><span class="o">,</span> <span class="n">lnames</span> <span class="o">=</span> <span class="n">party</span> <span class="n">l</span> <span class="k">and</span> <span class="n">rfun</span><span class="o">,</span> <span class="n">rnames</span> <span class="o">=</span> <span class="n">party</span> <span class="n">r</span> <span class="k">in</span>
+        <span class="o">(</span><span class="n">lfun</span> <span class="o">+</span> <span class="n">rfun</span><span class="o">,</span> <span class="n">lnames</span> <span class="o">@</span> <span class="n">rnames</span><span class="o">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module Memoized :
+  sig
+    type tree =
+        Empty
+      | Node of int * string * tree * tree * (int * string list) option ref
+    val party : tree -&gt; int * string list
+    val party_in : tree -&gt; int * string list
+    val party_out : tree -&gt; int * string list
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>为什么记忆化对解决这个问题如此有效？和斐波那契算法一样，
+这里也有重叠子问题这一性质：朴素递归实现会多次用相同参数调用同一个函数。
+记忆化函数可以保存所有这些调用的结果。进一步说，派对优化问题还具有最优子结构：
+问题的最优答案可以由子问题的最优答案计算得到。并不是所有优化问题都有这种性质。
+使用记忆化有效解决优化问题的关键，是弄清楚如何编写一个递归函数，
+既实现该算法，又具有这两个性质。有时这需要仔细思考。</p>
+<!--
+*****
+MRC 7/22/21：下面的部分需要更多解释。还有价值
+`big` 在原始注释中未定义，因此代码无法编译。
+我添加了 `target + 1` 的定义，但不知道这是否“足够大”。
+*****
+
+## 最优换行
+
+这是一个更复杂的例子。假设我们有一些想要的文本
+格式为特定列宽内的段落。例如，我们可能有
+如果我们正在编写一个网络浏览器来执行此操作。为简单起见，我们假设
+所有字符都具有相同的宽度。文本的格式包括
+选择某些单词对在其之间放置换行符。例如，当
+应用于本段中的单词列表，宽度为 60，我们想要输出
+像下面这样：
+
+```ocaml
+let it =
+  ["Here is a more involved example of memoization. Suppose that",
+   "we have some text that we want to format as a paragraph",
+   ...
+   "applied to the list of words in this paragraph, with width",
+   "60, we want output like the following:"] : string list
+```
+
+良好的格式会占用每一列的大部分内容，并且也使每一行都相似
+宽度。贪婪的方法是尽可能填充每一行，
+但这可能会导致线条长度差异很大。例如，如果我们
+将字符串“这可能是一个困难的例子”格式化为 13 个字符的宽度，
+我们得到了可以改进的格式：
+
+```text
+this may be a
+difficult
+example
+```
+
+请注意，最佳分割是：
+```text
+this may be
+a difficult
+example
+```
+
+TeX 格式化程序可以很好地保持线宽相似
+找到使剩余空间的立方总和最小化的格式
+每行（最后一行除外）。然而，对于 $n$ 字，有
+$\Omega(2^n)$ 可能的格式，因此算法不可能检查它们
+全部用于大文本输入。值得注意的是，我们可以使用记忆法来找到
+高效地优化格式化。事实上，记忆化对许多优化问题都很有用。
+优化问题。
+
+我们首先编写一个简单的递归算法来遍历列表并尝试
+在每个单词后插入换行符，或不插入换行符：
+
+```{code-cell} ocaml
+(** Result of formatting a string. A result [(lst, n)] means a string
+    was formatted into the lines in [lst], with a total sum-of-cubes
+    cost of [n]. Invariant: the list is never empty. *)
+type break_result = string list * int
+
+(** Result: format the words in [words] into a list of lines optimally,
+    minimizing the sum of the cubes of differences between the line
+    lengths and [target]. Performance: worst-case time is exponential in
+    the number of words. *)
+let linebreak1 (words : string list) (target : int) : string list =
+  let rec lb (clen : int) (words : string list) : break_result =
+    match words with
+    | [] -> ([ "" ], 0) (* no charge for last line *)
+    | word :: rest ->
+        (* Try two ways of doing it: (1) insert a linebreak right after
+           current word, or (2) continue the current line. Pick the
+           better one. *)
+        let wlen = String.length word in
+        let contlen = if clen = 0 then wlen else clen + 1 + wlen in
+        let l1, c1' = lb 0 rest in
+        let cube x = x * x * x in
+        let c1 = c1' + cube (target - contlen) in
+        if contlen <= target then
+          match lb contlen rest with
+          | [], _ -> failwith "invariant violated"
+          | h2 :: t2, c2 ->
+              if c1 < c2 then (word :: l1, c1)
+              else
+                ((if h2 = "" then word else word ^ " " ^ h2) :: t2, c2)
+        else
+          let big = target + 1 in
+          (word :: l1, big)
+  in
+  let result, cost = lb 0 words in
+  result
+```
+
+该算法是指数算法，因为它计算所有可能的格式。它
+因此速度太慢而不实用。
+
+关键的观察结果是，在文本段落的最佳格式中，
+超过任何给定点的文本格式是最佳格式
+只是该文本，因为它的第一个字符从列位置开始
+先前格式化文本结束的位置。因此，格式化问题具有最优
+以这种方式铸造时的下部结构。
+
+因此，如果我们计算特定换行位置之后的最佳格式，
+该格式对于所有可能的文本格式之前的格式是最好的
+打破。
+
+我们可以通过记住最佳格式来使 `linebreak` 花费线性时间
+调用在 `clen = 0` 处。 （我们可以记住所有调用，但这不会
+大大提高速度。）这只需要引入一个函数 `lb_mem` 即可
+查找并记录记忆的格式化结果：
+
+```ocaml
+(** Result of formatting a string. A result [(lst, n)] means a string
+    was formatted into the lines in [lst], with a total sum-of-cubes
+    cost of [n]. Invariant: the list is never empty. *)
+type break_result = string list * int
+
+(* Same spec as linebreak1. Performance: worst-case time is linear in
+   the number of words. *)
+let linebreak2 (words : string list) (target : int) : string list =
+  let memo : break_result option array =
+    Array.make (List.length words + 1) None
+  in
+  let rec lb_mem (words : string list) : break_result =
+    let n = List.length words in
+    match Array.get memo n with
+    | Some br -> br
+    | None ->
+        let br = lb 0 words in
+        Array.set memo n (Some br);
+        br
+  and lb (clen : int) (words : string list) : break_result =
+    match words with
+    | [] -> ([ "" ], 0) (* no charge for last line *)
+    | word :: rest -> (
+        let wlen = String.length word in
+        let contlen = if clen = 0 then wlen else clen + 1 + wlen in
+        let l1, c1' = lb_mem rest in
+        let c1 = c1' + cube (target - contlen) in
+        if contlen > target then
+          let big = target + 1 in
+          (word :: l1, big)
+        else
+          match lb contlen rest with
+          | [], _ -> failwith "invariant violated"
+          | h2 :: t2, c2 ->
+              if c1 < c2 then (word :: l1, c1)
+              else
+                ((if h2 = "" then word else word ^ " " ^ h2) :: t2, c2))
+  in
+  let result, cost = lb 0 words in
+  result
+```
+--></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/ds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="sequence.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">9.4. </span>序列</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="parrays.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">9.6. </span>持久数组</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">9.5.1. 斐波那契</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">9.5.2. 使用高阶函数进行记忆化</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">9.5.3. 只是为了好玩：派对优化</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

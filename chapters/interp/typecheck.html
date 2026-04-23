@@ -1,0 +1,937 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>10.5. 类型检查 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/interp/typecheck';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="10.6. 类型推断" href="inference.html" />
+    <link rel="prev" title="10.4. 环境模型" href="environment.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">10. 解释器</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/interp/typecheck.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/interp/typecheck.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/interp/typecheck.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>类型检查</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simpl">10.5.1. SimPL 类型系统</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.5.2. SimPL 类型检查器</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">10.5.3. 类型安全</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">10.5. </span>类型检查<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/_whuqDIWiO0" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>早些时候，我们跳过了类型检查阶段。现在让我们回到这一点。
+在词法分析和解析之后，编译的下一阶段是语义分析，
+语义分析的首要任务是类型检查。</p>
+<p><em>类型系统</em>是如何确定一个类型是否是一个数学描述
+表达式是<em>类型错误</em>或<em>类型正确</em>，在后一种情况下，类型是什么
+的表达式是. <em>类型检查器</em>是一个实现类型的程序
+系统，即实现语言的静态语义的系统。</p>
+<p>通常，类型系统被表述为三元关系
+<span class="math notranslate nohighlight">\(\mathit{HasType}(\Gamma, e, t)\)</span>，这意味着表达式 <span class="math notranslate nohighlight">\(e\)</span> 的类型为 <span class="math notranslate nohighlight">\(t\)</span>
+在静态环境 <span class="math notranslate nohighlight">\(\Gamma\)</span> 中。<em>静态环境</em>，又名<em>类型上下文</em>，是
+从标识符到类型的映射。静态环境是用来记录什么的
+变量在范围内，以及它们的类型是什么。希腊字母的使用
+静态环境的 <span class="math notranslate nohighlight">\(\Gamma\)</span> 是传统的。</p>
+<p>三元关系 <span class="math notranslate nohighlight">\(\mathit{HasType}\)</span> 通常用中缀编写
+不过，符号为 <span class="math notranslate nohighlight">\(\Gamma \vdash e : t\)</span>。你可以阅读十字转门符号
+<span class="math notranslate nohighlight">\(\vdash\)</span> 作为“证明”或“显示”，即静态环境 <span class="math notranslate nohighlight">\(\Gamma\)</span> 显示
+<span class="math notranslate nohighlight">\(e\)</span> 的类型为 <span class="math notranslate nohighlight">\(t\)</span>。</p>
+<p>让我们通过消除希腊语和
+数学排版。我们只需写 <code class="docutils literal notranslate"><span class="pre">env</span> <span class="pre">|-</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code> 来表示静态
+环境 <code class="docutils literal notranslate"><span class="pre">env</span></code> 显示 <code class="docutils literal notranslate"><span class="pre">e</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>。我们之前使用 <code class="docutils literal notranslate"><span class="pre">env</span></code> 来表示
+大步关系 <code class="docutils literal notranslate"><span class="pre">==&gt;</span></code> 中的动态环境。既然总是有可能
+查看我们是否使用 <code class="docutils literal notranslate"><span class="pre">==&gt;</span></code> 或 <code class="docutils literal notranslate"><span class="pre">|-</span></code> 关系， <code class="docutils literal notranslate"><span class="pre">env</span></code> 的含义为
+动态或静态环境总是可辨别的。</p>
+<p>让我们为空静态环境写 <code class="docutils literal notranslate"><span class="pre">{}</span></code> ，并写 <code class="docutils literal notranslate"><span class="pre">x:t</span></code> 表示 <code class="docutils literal notranslate"><span class="pre">x</span></code> 是
+绑定到 <code class="docutils literal notranslate"><span class="pre">t</span></code>。所以， <code class="docutils literal notranslate"><span class="pre">{foo:int,</span> <span class="pre">bar:bool}</span></code> 将是静态环境
+<code class="docutils literal notranslate"><span class="pre">foo</span></code> 的类型为 <code class="docutils literal notranslate"><span class="pre">int</span></code>，而 <code class="docutils literal notranslate"><span class="pre">bar</span></code> 的类型为 <code class="docutils literal notranslate"><span class="pre">bool</span></code>。静态环境可以绑定
+标识符最多一次。我们将写 <code class="docutils literal notranslate"><span class="pre">env[x</span> <span class="pre">-&gt;</span> <span class="pre">t]</span></code> 来表示静态环境
+它包含 <code class="docutils literal notranslate"><span class="pre">env</span></code> 的所有绑定，并将 <code class="docutils literal notranslate"><span class="pre">x</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">t</span></code>。如果 <code class="docutils literal notranslate"><span class="pre">x</span></code> 是
+已经绑定在 <code class="docutils literal notranslate"><span class="pre">env</span></code> 中，那么旧的绑定将被新的绑定替换
+<code class="docutils literal notranslate"><span class="pre">t</span></code> 在 <code class="docutils literal notranslate"><span class="pre">env[x</span> <span class="pre">-&gt;</span> <span class="pre">t]</span></code> 中。与动态环境一样，如果我们想要更多
+数学符号我们会写 <span class="math notranslate nohighlight">\(\mapsto\)</span> 而不是 <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code>
+<code class="docutils literal notranslate"><span class="pre">env[x</span> <span class="pre">-&gt;</span> <span class="pre">v]</span></code>，但我们的目标是在标准上轻松输入的符号
+键盘。</p>
+<p>有了所有这些机制，我们终于可以定义良好类型的含义了：
+表达式 <code class="docutils literal notranslate"><span class="pre">e</span></code> 在静态环境 <code class="docutils literal notranslate"><span class="pre">env</span></code> 中是<strong>类型正确的</strong>（如果存在）
+类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 对应 <code class="docutils literal notranslate"><span class="pre">env</span> <span class="pre">|-</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code>。因此，类型检查器的目标是找到
+这样的类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>，从一些初始静态环境开始。</p>
+<p>假装初始静态环境是空的很方便。但在
+实践中，很少有语言真正使用空静态环境来
+确定程序是否类型正确。例如，在 OCaml 中，有很多
+始终在范围内的内置标识符，例如
+<code class="docutils literal notranslate"><span class="pre">Stdlib</span></code> 模块。</p>
+<section id="simpl">
+<h2><span class="section-number">10.5.1. </span>SimPL 类型系统<a class="headerlink" href="#simpl" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/9Lxz8qS3uQ8" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>回想一下 SimPL 的语法：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= x | i | b | e1 bop e2
+    | if e1 then e2 else e3
+    | let x = e1 in e2
+
+bop ::= + | * | &lt;=
+</pre></div>
+</div>
+<p>让我们为 SimPL 定义一个类型系统 <code class="docutils literal notranslate"><span class="pre">env</span> <span class="pre">|-</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code> 。 SimPL 中唯一的类型是
+整数和布尔值：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>t ::= int | bool
+</pre></div>
+</div>
+<p>为了定义 <code class="docutils literal notranslate"><span class="pre">|-</span></code>，我们将发明一组<em>打字规则</em>来指定类型
+表达式的类型基于其子表达式的类型。换句话说，
+<code class="docutils literal notranslate"><span class="pre">|-</span></code> 是一个<em>归纳定义的关系</em>，可以通过离散关系来了解
+数学课程。因此，它有一些基本情况和一些归纳情况。</p>
+<p>对于基本情况，整数常量在任何静态环境中都具有类型 <code class="docutils literal notranslate"><span class="pre">int</span></code>
+无论如何，布尔常量同样总是具有类型 <code class="docutils literal notranslate"><span class="pre">bool</span></code>，并且变量
+具有静态环境规定的任何类型。以下是
+表达这些想法的输入规则：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- i : int
+env |- b : bool
+{x : t, ...} |- x : t
+</pre></div>
+</div>
+<p>其余的句法形式是归纳格。</p>
+<p><strong>Let.</strong> 正如我们从 OCaml 中所知，我们输入检查 let 的主体
+使用通过新绑定扩展的范围的表达式。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- let x = e1 in e2 : t2
+  if env |- e1 : t1
+  and env[x -&gt; t1] |- e2 : t2
+</pre></div>
+</div>
+<p>该规则表示 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">e1</span> <span class="pre">in</span> <span class="pre">e2</span></code> 在静态环境 <code class="docutils literal notranslate"><span class="pre">env</span></code> 中具有类型 <code class="docutils literal notranslate"><span class="pre">t2</span></code>，
+但前提是满足某些条件。第一个条件是 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 具有类型
+<code class="docutils literal notranslate"><span class="pre">t1</span></code> 在 <code class="docutils literal notranslate"><span class="pre">env</span></code> 中。第二个是 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 在新的静态中具有类型 <code class="docutils literal notranslate"><span class="pre">t2</span></code>
+环境，它被扩展为将 <code class="docutils literal notranslate"><span class="pre">x</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">t1</span></code>。</p>
+<p><strong>二元运算符。</strong> 我们需要一些不同的二元运算符规则。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- e1 bop e2 : int
+  if bop is + or *
+  and env |- e1 : int
+  and env |- e2 : int
+
+env |- e1 &lt;= e2 : bool
+  if env |- e1 : int
+  and env |- e2 : int
+</pre></div>
+</div>
+<p><strong>If.</strong> 就像 OCaml 一样，if 表达式必须有一个布尔值守卫，并且它的两个
+分支必须具有相同的类型。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- if e1 then e2 else e3 : t
+  if env |- e1 : bool
+  and env |- e2 : t
+  and env |- e3 : t
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2><span class="section-number">10.5.2. </span>SimPL 类型检查器<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/BN_nIMgFZ_o" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>让我们基于我们定义的类型系统为 SimPL 实现一个类型检查器
+上一节。你可以下载完整的类型检查器作为
+SimPL 解释器：<a href="../../code/simpl.zip">simpl.zip</a></p>
+<p>我们需要一个变体来表示类型：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">typ</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">TInt</span>
+  <span class="o">|</span> <span class="nc">TBool</span>
+</pre></div>
+</div>
+<p>该变体的自然名称当然是“type”而不是“typ”，
+但前者已经是 OCaml 中的关键字。我们必须为构造函数添加前缀
+用“T”来消除它们与 <code class="docutils literal notranslate"><span class="pre">expr</span></code> 类型的构造函数的歧义，其中
+包括 <code class="docutils literal notranslate"><span class="pre">Int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Bool</span></code>。</p>
+<p>让我们介绍一个静态环境的小签名，基于
+到目前为止我们已经介绍过的抽象：空的静态环境，查找
+变量，并扩展静态环境。</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">StaticEnvironment</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="c">(** [t] is the type of a static environment. *)</span>
+  <span class="k">type</span> <span class="n">t</span>
+
+  <span class="c">(** [empty] is the empty static environment. *)</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="n">t</span>
+
+  <span class="c">(** [lookup env x] gets the binding of [x] in [env].</span>
+<span class="c">      Raises: [Failure] if [x] is not bound in [env]. *)</span>
+  <span class="k">val</span> <span class="n">lookup</span> <span class="o">:</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">string</span> <span class="o">-&gt;</span> <span class="n">typ</span>
+
+  <span class="c">(** [extend env x ty] is [env] extended with a binding</span>
+<span class="c">      of [x] to [ty]. *)</span>
+  <span class="k">val</span> <span class="n">extend</span> <span class="o">:</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">string</span> <span class="o">-&gt;</span> <span class="n">typ</span> <span class="o">-&gt;</span> <span class="n">t</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>使用关联列表很容易实现该签名。</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">StaticEnvironment</span> <span class="o">:</span> <span class="nc">StaticEnvironment</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="o">(</span><span class="kt">string</span> <span class="o">*</span> <span class="n">typ</span><span class="o">)</span> <span class="kt">list</span>
+
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+
+  <span class="k">let</span> <span class="n">lookup</span> <span class="n">env</span> <span class="n">x</span> <span class="o">=</span>
+    <span class="k">try</span> <span class="nn">List</span><span class="p">.</span><span class="n">assoc</span> <span class="n">x</span> <span class="n">env</span>
+    <span class="k">with</span> <span class="nc">Not_found</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Unbound variable&quot;</span>
+
+  <span class="k">let</span> <span class="n">extend</span> <span class="n">env</span> <span class="n">x</span> <span class="n">ty</span> <span class="o">=</span>
+    <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">ty</span><span class="o">)</span> <span class="o">::</span> <span class="n">env</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>现在我们可以实现类型关系 <code class="docutils literal notranslate"><span class="pre">|-</span></code>。我们将通过编写一个来做到这一点
+函数 <code class="docutils literal notranslate"><span class="pre">typeof</span> <span class="pre">:</span> <span class="pre">StaticEnvironment.t</span> <span class="pre">-&gt;</span> <span class="pre">expr</span> <span class="pre">-&gt;</span> <span class="pre">typ</span></code>，这样
+<code class="docutils literal notranslate"><span class="pre">typeof</span> <span class="pre">env</span> <span class="pre">e</span> <span class="pre">=</span> <span class="pre">t</span></code> 当且仅当 <code class="docutils literal notranslate"><span class="pre">env</span> <span class="pre">|-</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code> 时。请注意 <code class="docutils literal notranslate"><span class="pre">typeof</span></code>
+函数产生类型作为输出，因此该函数实际上是在推断
+键入！对于 SimPL 来说，这一推论很容易；这将是相当困难的
+更大的语言。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/m3bt3BYB0vQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>让我们从基本案例开始：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">StaticEnvironment</span>
+
+<span class="c">(** [typeof env e] is the type of [e] in static environment [env].</span>
+<span class="c">    Raises: [Failure] if [e] is not well-typed in [env]. *)</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">typeof</span> <span class="n">env</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Int</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="nc">TInt</span>
+  <span class="o">|</span> <span class="nc">Bool</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="nc">TBool</span>
+  <span class="o">|</span> <span class="nc">Var</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">lookup</span> <span class="n">env</span> <span class="n">x</span>
+  <span class="o">...</span>
+</pre></div>
+</div>
+<p>请注意到目前为止 <code class="docutils literal notranslate"><span class="pre">typeof</span></code> 的实现是如何基于我们的规则的
+先前为 <code class="docutils literal notranslate"><span class="pre">|-</span></code> 定义。特别是：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">typeof</span></code> 是一个递归函数，就像 <code class="docutils literal notranslate"><span class="pre">|-</span></code> 是一个归纳关系一样。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">typeof</span></code> 递归的基本情况与基本情况相同
+对于 <code class="docutils literal notranslate"><span class="pre">|-</span></code>。</p></li>
+</ul>
+<p>另请注意 <code class="docutils literal notranslate"><span class="pre">typeof</span></code> 的实现与
+<code class="docutils literal notranslate"><span class="pre">|-</span></code> 的定义：错误处理。类型系统没有说明要做什么
+错误；相反，它只是定义了类型良好的含义。类型
+另一方面，checker 需要采取行动并报告错误类型的程序。
+我们的 <code class="docutils literal notranslate"><span class="pre">typeof</span></code> 函数通过引发异常来实现这一点。 <code class="docutils literal notranslate"><span class="pre">lookup</span></code> 函数，在
+特别是，如果我们尝试查找一个变量，则会引发异常
+没有被束缚在静态环境中。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/TiKPU5rYeF8" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>让我们继续讨论递归情况：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="o">...</span>
+  <span class="o">|</span> <span class="nc">Let</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">typeof_let</span> <span class="n">env</span> <span class="n">x</span> <span class="n">e1</span> <span class="n">e2</span>
+  <span class="o">|</span> <span class="nc">Binop</span> <span class="o">(</span><span class="n">bop</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">typeof_bop</span> <span class="n">env</span> <span class="n">bop</span> <span class="n">e1</span> <span class="n">e2</span>
+  <span class="o">|</span> <span class="nc">If</span> <span class="o">(</span><span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">,</span> <span class="n">e3</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">typeof_if</span> <span class="n">env</span> <span class="n">e1</span> <span class="n">e2</span> <span class="n">e3</span>
+</pre></div>
+</div>
+<p>为了保留，我们为每个分支分解了一个辅助函数
+模式匹配可读。每个助手直接编码的想法
+<code class="docutils literal notranslate"><span class="pre">|-</span></code> 规则，添加了错误处理。</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">and</span> <span class="n">typeof_let</span> <span class="n">env</span> <span class="n">x</span> <span class="n">e1</span> <span class="n">e2</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">t1</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e1</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">env&#39;</span> <span class="o">=</span> <span class="n">extend</span> <span class="n">env</span> <span class="n">x</span> <span class="n">t1</span> <span class="k">in</span>
+  <span class="n">typeof</span> <span class="n">env&#39;</span> <span class="n">e2</span>
+
+<span class="k">and</span> <span class="n">typeof_bop</span> <span class="n">env</span> <span class="n">bop</span> <span class="n">e1</span> <span class="n">e2</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">t1</span><span class="o">,</span> <span class="n">t2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e1</span><span class="o">,</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e2</span> <span class="k">in</span>
+  <span class="k">match</span> <span class="n">bop</span><span class="o">,</span> <span class="n">t1</span><span class="o">,</span> <span class="n">t2</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">Add</span><span class="o">,</span> <span class="nc">TInt</span><span class="o">,</span> <span class="nc">TInt</span>
+  <span class="o">|</span> <span class="nc">Mult</span><span class="o">,</span> <span class="nc">TInt</span><span class="o">,</span> <span class="nc">TInt</span> <span class="o">-&gt;</span> <span class="nc">TInt</span>
+  <span class="o">|</span> <span class="nc">Leq</span><span class="o">,</span> <span class="nc">TInt</span><span class="o">,</span> <span class="nc">TInt</span> <span class="o">-&gt;</span> <span class="nc">TBool</span>
+  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Operator and operand type mismatch&quot;</span>
+
+<span class="k">and</span> <span class="n">typeof_if</span> <span class="n">env</span> <span class="n">e1</span> <span class="n">e2</span> <span class="n">e3</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e1</span> <span class="o">=</span> <span class="nc">TBool</span>
+  <span class="k">then</span> <span class="k">begin</span>
+    <span class="k">let</span> <span class="n">t2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e2</span> <span class="k">in</span>
+    <span class="k">if</span> <span class="n">t2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e3</span> <span class="k">then</span> <span class="n">t2</span>
+    <span class="k">else</span> <span class="n">failwith</span> <span class="s2">&quot;Branches of if must have same type&quot;</span>
+  <span class="k">end</span>
+  <span class="k">else</span> <span class="n">failwith</span> <span class="s2">&quot;Guard of if must have type bool&quot;</span>
+</pre></div>
+</div>
+<p>请注意 <code class="docutils literal notranslate"><span class="pre">typeof</span></code> 实现中的递归调用如何准确地发生在
+<code class="docutils literal notranslate"><span class="pre">|-</span></code> 的定义是归纳式的。</p>
+<p>最后，我们可以实现一个函数来检查表达式是否为
+类型良好：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [typecheck e] checks whether [e] is well-typed in</span>
+<span class="c">    the empty static environment. Raises: [Failure] if not. *)</span>
+<span class="k">let</span> <span class="n">typecheck</span> <span class="n">e</span> <span class="o">=</span>
+  <span class="n">ignore</span> <span class="o">(</span><span class="n">typeof</span> <span class="n">empty</span> <span class="n">e</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2><span class="section-number">10.5.3. </span>类型安全<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/MrmEIbDOfnk" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>类型系统的目的是什么？可能有很多，但其中之一
+主要目的是确保不会发生某些运行时错误。现在那
+我们知道如何用 <code class="docutils literal notranslate"><span class="pre">|-</span></code> 关系形式化类型系统并用
+通过 <code class="docutils literal notranslate"><span class="pre">--&gt;</span></code> 关系，我们可以使这个想法变得精确。</p>
+<p>语言设计者的目标通常包括确保这两个
+在 <code class="docutils literal notranslate"><span class="pre">|-</span></code> 和 <code class="docutils literal notranslate"><span class="pre">--&gt;</span></code> 之间建立关系的属性都包含：</p>
+<ul class="simple">
+<li><p><strong>进展：</strong> 如果一个表达式类型正确，那么它要么已经是一个
+值，或者至少可以采取一步。我们可以将其形式化为“对于所有
+<code class="docutils literal notranslate"><span class="pre">e</span></code>，如果存在 <code class="docutils literal notranslate"><span class="pre">t</span></code> 使得 <code class="docutils literal notranslate"><span class="pre">{}</span> <span class="pre">|-</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code> 存在，则 <code class="docutils literal notranslate"><span class="pre">e</span></code> 是一个值，或者
+存在 <code class="docutils literal notranslate"><span class="pre">e'</span></code> 这样 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">--&gt;</span> <span class="pre">e'</span></code>。”</p></li>
+<li><p><strong>保留：</strong> 如果一个表达式类型正确，那么如果该表达式
+步骤，新表达式与旧表达式具有相同的类型。正式地，
+“对于所有 <code class="docutils literal notranslate"><span class="pre">e</span></code> 和 <code class="docutils literal notranslate"><span class="pre">t</span></code> 这样的 <code class="docutils literal notranslate"><span class="pre">{}</span> <span class="pre">|-</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code>，如果存在这样的 <code class="docutils literal notranslate"><span class="pre">e'</span></code>
+<code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">--&gt;</span> <span class="pre">e'</span></code>，然后<code class="docutils literal notranslate"><span class="pre">{}</span> <span class="pre">|-</span> <span class="pre">e'</span> <span class="pre">:</span> <span class="pre">t</span></code>。”</p></li>
+</ul>
+<p>总而言之，进步加上保存意味着对一个事物的评估
+类型良好的表达式永远不会“卡住”，这意味着它达到一个非值
+无法迈出一步。此属性称为“类型安全”。</p>
+<p>例如，使用 SimPL 求值关系 <code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">+</span> <span class="pre">true</span></code> 会陷入困境，
+因为原始 <code class="docutils literal notranslate"><span class="pre">+</span></code> 操作不能接受布尔值作为操作数。但是
+SimPL 类型系统不会接受该程序，从而使我们免于陷入困境
+达到那种境地。</p>
+<p>回顾我们写的SimPL，到处都是<code class="docutils literal notranslate"><span class="pre">step</span></code>的实现
+我们提出例外的地方是评估会陷入困境的地方。但是
+类型系统保证这些异常永远不会发生。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters/interp"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="environment.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">10.4. </span>环境模型</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="inference.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">10.6. </span>类型推断</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simpl">10.5.1. SimPL 类型系统</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.5.2. SimPL 类型检查器</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">10.5.3. 类型安全</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

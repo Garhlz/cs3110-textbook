@@ -1,0 +1,1151 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>8.5. 黑盒测试与玻璃盒测试 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/correctness/black_glass_box';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="8.6. 使用 QCheck 进行随机测试" href="randomized.html" />
+    <link rel="prev" title="8.4. 测试与调试" href="test_debug.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">8. 正确性</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/correctness/black_glass_box.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/correctness/black_glass_box.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/correctness/black_glass_box.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/correctness/black_glass_box.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/correctness/black_glass_box.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>黑盒测试与玻璃盒测试</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">8.5.1. 黑盒测试</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">8.5.2. 数据抽象的黑盒测试</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">8.5.3. 玻璃盒测试</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">8.5.4. 数据抽象的玻璃盒测试</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">8.5.5. 黑盒与玻璃盒</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bisect">8.5.6. Bisect</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">8.5. </span>黑盒测试与玻璃盒测试<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/W8FEhZIpYCg" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>我们想知道一个程序适用于所有可能的输入。问题
+测试的一个缺点是尝试所有可能的输入通常是不可行的。
+例如，假设我们正在实现一个提供抽象的模块
+有理数的数据类型。它的操作之一可能是添加
+函数 <code class="docutils literal notranslate"><span class="pre">plus</span></code>，例如：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">RATIONAL</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="c">(** A [t] is a rational. *)</span>
+  <span class="k">type</span> <span class="n">t</span>
+
+  <span class="c">(** [create p q] is the rational number [p/q].</span>
+<span class="c">      Raises: [Invalid_argument &quot;0&quot;] if [q] is 0. *)</span>
+  <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="n">t</span>
+
+  <span class="c">(** [plus r1 r2] is [r1 + r2]. *)</span>
+  <span class="k">val</span> <span class="n">plus</span> <span class="o">:</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">Rational</span> <span class="o">:</span> <span class="nc">RATIONAL</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(** AF: [(p, q)] represents the rational number [p/q].</span>
+<span class="c">      RI: [q] is not 0. *)</span>
+  <span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="kt">int</span> <span class="o">*</span> <span class="kt">int</span>
+
+  <span class="k">let</span> <span class="n">create</span> <span class="n">p</span> <span class="n">q</span> <span class="o">=</span>
+    <span class="k">if</span> <span class="n">q</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">invalid_arg</span> <span class="s2">&quot;0&quot;</span> <span class="k">else</span> <span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">q</span><span class="o">)</span>
+
+  <span class="k">let</span> <span class="n">plus</span> <span class="o">(</span><span class="n">p1</span><span class="o">,</span> <span class="n">q1</span><span class="o">)</span> <span class="o">(</span><span class="n">p2</span><span class="o">,</span> <span class="n">q2</span><span class="o">)</span> <span class="o">=</span>
+    <span class="o">(</span><span class="n">p1</span> <span class="o">*</span> <span class="n">q2</span> <span class="o">+</span> <span class="n">p2</span> <span class="o">*</span> <span class="n">q1</span><span class="o">,</span> <span class="n">q1</span> <span class="o">*</span> <span class="n">q2</span><span class="o">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type RATIONAL =
+  sig type t val create : int -&gt; int -&gt; t val plus : t -&gt; t -&gt; t end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module Rational : RATIONAL
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>彻底测试这一函数需要什么？我们想尝试
+所有可能的理性作为 <code class="docutils literal notranslate"><span class="pre">r1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">r2</span></code> 参数。有理数形成
+来自两个整数，并且在现代 OCaml 实现上有 <span class="math notranslate nohighlight">\(2^{63}\)</span> 整数。
+因此，大约有 <span class="math notranslate nohighlight">\((2^{63})^4 = 2^{252}\)</span> 可能的输入
+<code class="docutils literal notranslate"><span class="pre">plus</span></code> 函数。即使我们每纳秒测试一次添加，也需要
+大约 <span class="math notranslate nohighlight">\(10^{59}\)</span> 年才能完成这一函数的测试。</p>
+<p>显然我们无法彻底测试软件。但这并不意味着我们应该
+放弃测试。这只是意味着我们需要仔细思考我们的
+测试用例应该尽可能有效地说服我们
+该代码有效。</p>
+<p>考虑上面我们的 <code class="docutils literal notranslate"><span class="pre">create</span></code> 函数。它接受两个整数 <code class="docutils literal notranslate"><span class="pre">p</span></code> 和 <code class="docutils literal notranslate"><span class="pre">q</span></code> 作为
+论据。我们应该如何选择数量相对较少的测试
+让我们相信该函数在所有可能的情况下都可以正确工作的案例
+输入？我们可以将所有可能输入的空间可视化为一个大正方形：</p>
+<p><img alt="" src="../../_images/create_inputs.png" /></p>
+<p>这个正方形大约有 <span class="math notranslate nohighlight">\(2^{126}\)</span> 个点，所以我们无法测试它们
+所有。对它们进行全部测试将主要是浪费时间—大多数
+可能的输入并没有提供任何新内容。我们需要一种方法来找到一组点
+在这个空间中进行测试，这些内容很有趣，并且可以很好地了解
+程序在整个空间中的行为。</p>
+<p>输入空间通常包含许多子集，其中的行为
+整个子集中的代码在某些基本方面是相似的。我们不明白
+通过测试每个此类子集的多个输入来获取任何附加信息。</p>
+<p>如果我们测试输入空间的所有有趣区域，我们已经取得了很好的成绩
+<em>覆盖范围</em>。我们希望测试能够在某种有用的意义上覆盖可能的空间
+程序输入。</p>
+<p>实现覆盖的两种好方法是<em>黑盒测试</em>和<em>玻璃盒
+测试</em>。接下来我们讨论这些。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/PmfQ9xS2YhQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<section id="id2">
+<h2><span class="section-number">8.5.1. </span>黑盒测试<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/2GjVqe9IKEk" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>在选择测试用例以获得良好的覆盖范围时，我们可能需要考虑两者
+正在测试的程序或模块的规范和实现。
+事实证明，我们通常可以通过以下方式很好地挑选测试用例：
+只看规范而忽略实现。这是已知的
+作为<strong>黑盒测试</strong>。这个想法是我们将代码视为黑匣子
+我们只能看到它的表面：它的规格。我们选择测试用例
+通过查看规范如何隐式引入划分边界
+不同区域可能投入的空间。</p>
+<p>在编写黑盒测试用例时，我们会问自己哪组测试用例是
+将产生规范所预测的独特行为。它是
+尝试<em>典型输入</em>和<em>边界情况</em>输入很重要
+又名<em>角落情况</em>或<em>边缘情况</em>。一个常见的错误是只测试典型的
+输入，结果是程序通常可以工作，但失败的次数较少
+频繁的情况。确定方法也很重要
+规范创建了应该引发类似行为的输入类
+函数，并测试这些<em>通过规范的路径</em>。这里有
+一些例子。</p>
+<p><strong>示例 1.</strong></p>
+<p>以下是有关如何测试 <code class="docutils literal notranslate"><span class="pre">create</span></code> 函数的一些想法：</p>
+<ul class="simple">
+<li><p>查看上面的正方形，我们发现它的边界位于 <code class="docutils literal notranslate"><span class="pre">min_int</span></code> 处，并且
+<code class="docutils literal notranslate"><span class="pre">max_int</span></code>。我们想要尝试在角落和沿线构建理性
+正方形的边，例如 <code class="docutils literal notranslate"><span class="pre">create</span> <span class="pre">min_int</span> <span class="pre">min_int</span></code>、<code class="docutils literal notranslate"><span class="pre">create</span> <span class="pre">max_int</span> <span class="pre">2</span></code> 等。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p=0</span></code> 行很重要，因为 <code class="docutils literal notranslate"><span class="pre">p/q</span></code> 一直为零。我们应该尝试
+<code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">q)</span></code> 用于 <code class="docutils literal notranslate"><span class="pre">q</span></code> 的各种值。</p></li>
+<li><p>我们应该在空间的所有四个象限中尝试一些典型的 <code class="docutils literal notranslate"><span class="pre">(p,</span> <span class="pre">q)</span></code> 对。</p></li>
+<li><p>我们应该尝试两个 <code class="docutils literal notranslate"><span class="pre">(p,</span> <span class="pre">q)</span></code> 对，其中 <code class="docutils literal notranslate"><span class="pre">q</span></code> 均分为 <code class="docutils literal notranslate"><span class="pre">p</span></code>，并且
+其中 <code class="docutils literal notranslate"><span class="pre">q</span></code> 不分为 <code class="docutils literal notranslate"><span class="pre">p</span></code> 的对。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">q)</span></code>、<code class="docutils literal notranslate"><span class="pre">(-1,</span> <span class="pre">q)</span></code>、<code class="docutils literal notranslate"><span class="pre">(p,</span> <span class="pre">1)</span></code>、<code class="docutils literal notranslate"><span class="pre">(p,</span> <span class="pre">-1)</span></code> 形式对，用于各种 <code class="docutils literal notranslate"><span class="pre">p</span></code> 和
+考虑到有理数的属性，<code class="docutils literal notranslate"><span class="pre">q</span></code> 也可能很有趣。</p></li>
+</ul>
+<p>规范还指出，代码将检查 <code class="docutils literal notranslate"><span class="pre">q</span></code> 是否不为零。我们
+应该构建一些测试用例以确保此检查按照广告完成。
+尝试 <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">0)</span></code>、<code class="docutils literal notranslate"><span class="pre">(max_int,</span> <span class="pre">0)</span></code>、<code class="docutils literal notranslate"><span class="pre">(min_int,</span> <span class="pre">0)</span></code>、<code class="docutils literal notranslate"><span class="pre">(-1,</span> <span class="pre">0)</span></code>、<code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code> 来查看
+他们都提出了指定的例外可能是一组足够的
+黑盒测试。</p>
+<p><strong>示例 2.</strong></p>
+<p>考虑一个函数 <code class="docutils literal notranslate"><span class="pre">list_max</span></code>：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** Return the maximum element in the list. *)</span>
+<span class="k">val</span> <span class="n">list_max</span><span class="o">:</span> <span class="kt">int</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+</pre></div>
+</div>
+<p>什么是一套好的黑盒测试用例？这里的输入空间是
+所有可能的整数列表。我们需要尝试一些典型的输入并考虑
+边界情况。根据此规范，边界情况包括以下内容：</p>
+<ul class="simple">
+<li><p>包含一个元素的列表。事实上，一个空列表可能是第一个
+我们想到的边界情况。看看上面的规格，我们意识到
+没有指定空列表的情况下会发生什么。于是，思考
+关于边界情况对于识别错误也很有用
+规格。</p></li>
+<li><p>包含两个元素的列表。</p></li>
+<li><p>一个列表，其中最大值是第一个元素。或者最后一个元素。或者
+列表中间的某个位置。</p></li>
+<li><p>每个元素都相等的列表。</p></li>
+<li><p>一个列表，其中元素按升序排列，并且一个
+其中它们按降序排列。</p></li>
+<li><p>最大元素为 <code class="docutils literal notranslate"><span class="pre">max_int</span></code> 的列表，以及
+最大元素为 <code class="docutils literal notranslate"><span class="pre">min_int</span></code>。</p></li>
+</ul>
+<p><strong>示例 3.</strong></p>
+<p>考虑函数 <code class="docutils literal notranslate"><span class="pre">sqrt</span></code>：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [sqrt x n] is the square root of [x] computed to an accuracy of [n]</span>
+<span class="c">    significant digits.</span>
+<span class="c">    Requires: [x &gt;= 0] and [n &gt;= 1]. *)</span>
+<span class="k">val</span> <span class="n">sqrt</span> <span class="o">:</span> <span class="kt">float</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">float</span>
+</pre></div>
+</div>
+<p>前提条件确定了 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的两种可能性（要么是 0，要么是
+更大）和 <code class="docutils literal notranslate"><span class="pre">n</span></code> 的两种可能性（要么是 1 要么更大）。这导致
+四个“规范路径”，即代表性路径和边界路径
+满足前提条件的情况，我们应该测试：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> 为 0，<code class="docutils literal notranslate"><span class="pre">n</span></code> 为 1</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> 大于 0 并且 <code class="docutils literal notranslate"><span class="pre">n</span></code> 为 1</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> 为 0 并且 <code class="docutils literal notranslate"><span class="pre">n</span></code> 大于 1</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> 大于 0，<code class="docutils literal notranslate"><span class="pre">n</span></code> 大于 1。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2><span class="section-number">8.5.2. </span>数据抽象的黑盒测试<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>到目前为止，我们一直在考虑一次只测试一个函数。但数据
+抽象通常有很多操作，我们需要测试这些操作如何
+操作彼此交互。区分<em>消费者</em>和
+数据抽象的<em>生产者</em>：</p>
+<ul class="simple">
+<li><p>消费者是一种将数据抽象值视为
+输入。</p></li>
+<li><p>生产者是一个返回数据抽象值的操作
+作为输出。</p></li>
+</ul>
+<p>例如，考虑这个集合抽象：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">sig</span>
+
+  <span class="c">(** [&#39;a t] is the type of a set whose elements have type [&#39;a]. *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+
+  <span class="c">(** [empty] is the empty set. *)</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+
+  <span class="c">(** [size s] is the number of elements in [s]. *</span>
+<span class="c">      [size empty] is [0]. *)</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+
+  <span class="c">(** [add x s] is a set containing all the elements of</span>
+<span class="c">      [s] as well as element [x]. *)</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+
+  <span class="c">(** [mem x s] is [true] iff [x] is an element of [s]. *)</span>
+  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Set =
+  sig
+    type &#39;a t
+    val empty : &#39;a t
+    val size : &#39;a t -&gt; int
+    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val mem : &#39;a -&gt; &#39;a t -&gt; bool
+  end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">empty</span></code> 和 <code class="docutils literal notranslate"><span class="pre">add</span></code> 函数是生产者；以及 <code class="docutils literal notranslate"><span class="pre">size</span></code>、<code class="docutils literal notranslate"><span class="pre">add</span></code> 和 <code class="docutils literal notranslate"><span class="pre">mem</span></code>
+函数是消费者。</p>
+<p>当黑盒测试数据抽象时，我们应该测试每个消费者如何
+数据抽象处理通过它的每个生产者的每条路径。在
+<code class="docutils literal notranslate"><span class="pre">Set</span></code> 示例，这意味着测试以下内容：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code> 如何处理 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 集；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code> 如何处理 <code class="docutils literal notranslate"><span class="pre">add</span></code> 生成的集合，当 <code class="docutils literal notranslate"><span class="pre">add</span></code> 离开集合时
+不变以及增加集合时；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">add</span></code> 如何处理 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">add</span></code> 本身生成的集合；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mem</span></code> 如何处理 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 和 <code class="docutils literal notranslate"><span class="pre">add</span></code> 生成的集，包括路径
+其中 <code class="docutils literal notranslate"><span class="pre">mem</span></code> 在已添加的元素以及元素上调用
+那还没有。</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2><span class="section-number">8.5.3. </span>玻璃盒测试<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/128hYUobA_g" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>黑盒测试是编写测试用例时的一个很好的起点，但是
+最终这还不够。特别是，无法确定如何
+实际上对黑盒测试套件的实现进行了很多报道
+达到—我们其实需要知道实现源码。测试
+基于该代码的测试称为“玻璃盒”或“白盒”测试。玻璃盒
+测试可以通过测试“执行路径”来改进黑盒
+实现代码：有条件求值的一系列表达式
+基于 if 表达式、match 表达式和函数应用程序。测试
+共同执行所有路径的情况被称为“路径完整”。在一个
+最小，路径完整性要求每一行代码，甚至对于
+程序中的每个表达式，都应该有一个测试用例使其
+被处决。任何未执行的代码都可能包含错误（如果从未执行过的话）
+已测试。</p>
+<p>为了真正的路径完整性，我们必须考虑所有可能的执行路径
+从开始到结束每个函数，并尝试练习每条不同的路径。在
+一般来说这是不可行的，因为路径太多。一个好的方法是
+将路径集视为我们试图探索的空间，并
+确定该空间内值得测试的边界情况。</p>
+<p>例如，考虑以下函数的实现，该函数查找
+三个参数中的最大值：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">max3</span> <span class="n">x</span> <span class="n">y</span> <span class="n">z</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span> <span class="k">then</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">z</span> <span class="k">then</span> <span class="n">x</span> <span class="k">else</span> <span class="n">z</span>
+  <span class="k">else</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">z</span> <span class="k">then</span> <span class="n">y</span> <span class="k">else</span> <span class="n">z</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val max3 : &#39;a -&gt; &#39;a -&gt; &#39;a -&gt; &#39;a = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>黑盒测试可能会导致我们发明许多测试，但是看看
+实现表明，通过代码只有四个路径—the
+返回 <code class="docutils literal notranslate"><span class="pre">x</span></code>、<code class="docutils literal notranslate"><span class="pre">z</span></code>、<code class="docutils literal notranslate"><span class="pre">y</span></code> 或 <code class="docutils literal notranslate"><span class="pre">z</span></code>（再次）的路径。我们可以测试每一个
+具有代表性输入的路径，例如：<code class="docutils literal notranslate"><span class="pre">max3</span> <span class="pre">3</span> <span class="pre">2</span> <span class="pre">1</span></code>、<code class="docutils literal notranslate"><span class="pre">max3</span> <span class="pre">3</span> <span class="pre">2</span> <span class="pre">4</span></code>、
+<code class="docutils literal notranslate"><span class="pre">max3</span> <span class="pre">1</span> <span class="pre">2</span> <span class="pre">1</span></code>、<code class="docutils literal notranslate"><span class="pre">max3</span> <span class="pre">1</span> <span class="pre">2</span> <span class="pre">3</span></code>。</p>
+<p>在进行玻璃盒测试时，我们应该包括每个分支的测试用例
+每个（嵌套）if 表达式以及每个（嵌套）模式的每个分支都匹配。如果
+有递归函数，我们应该包括基本案例的测试用例
+以及每个递归调用。此外，我们应该包括测试用例来触发
+每个可能引发异常的地方。</p>
+<p>当然，路径完整测试并不能保证不存在错误。我们
+仍然需要根据规范进行测试，即进行黑盒测试。对于
+例如，下面是 <code class="docutils literal notranslate"><span class="pre">max3</span></code> 的一个损坏的实现：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">max3</span> <span class="n">x</span> <span class="n">y</span> <span class="n">z</span> <span class="o">=</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>测试 <code class="docutils literal notranslate"><span class="pre">max3</span> <span class="pre">2</span> <span class="pre">1</span> <span class="pre">1</span></code> 路径完整，但未揭示错误。</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">8.5.4. </span>数据抽象的玻璃盒测试<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>查看抽象函数和表示不变量以获取有关的提示
+数据操纵的值空间中可能存在哪些边界
+抽象。表示不变量是构建一个特别有效的工具
+有用的测试用例。查看 <code class="docutils literal notranslate"><span class="pre">Rational</span></code> 数据的代表不变量
+从上面的抽象中，我们看到它要求 <code class="docutils literal notranslate"><span class="pre">q</span></code> 非零。因此，我们
+应该构建测试用例来查看是否有可能导致该不变性
+被侵犯。</p>
+</section>
+<section id="id6">
+<h2><span class="section-number">8.5.5. </span>黑盒与玻璃盒<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>黑盒测试有一些重要的优点：</p>
+<ul class="simple">
+<li><p>它不要求我们看到正在测试的代码。有时
+代码不会以源代码形式提供，但我们仍然可以
+无需它即可构建有用的测试用例。编写测试的人
+案例不需要了解实现。</p></li>
+<li><p>测试用例不依赖于实现。他们可以是
+与实现并行或之前编写。进一步，好
+黑盒测试用例不需要改变，即使
+实现被完全重写。</p></li>
+<li><p>构造黑盒测试用例引发程序员思考
+仔细了解规范及其含义。很多
+通过这种方式捕获规范错误。</p></li>
+</ul>
+<p>黑盒测试的缺点是其覆盖范围可能不如
+正如我们所希望的那样高，因为它必须在没有实现的情况下工作。</p>
+</section>
+<section id="bisect">
+<h2><span class="section-number">8.5.6. </span>Bisect<a class="headerlink" href="#bisect" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/efAvB6KuHLY" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>玻璃盒测试可以借助“代码覆盖率工具”来评估
+该代码已由测试套件执行。 OCaml 的 <a class="reference external" href="https://github.com/aantron/bisect_ppx">bisect_ppx</a> 工具
+可以告诉你程序中的哪些表达式已经过测试，以及哪些表达式已经过测试
+不。它的工作原理如下：</p>
+<ul class="simple">
+<li><p>你可以使用 Bisect_ppx （此后简称为 Bisect）编译代码：
+编译过程的一部分。它“检测”你的代码，主要是通过
+插入要计算的附加表达式。</p></li>
+<li><p>你运行你的代码。 Bisect 插入的仪器会导致你
+除了你编写的任何功能之外，还可以进行一些编程
+你自己：程序现在将记录源代码中的哪些表达式
+实际上在运行时执行，而哪些则不执行。此外，该计划还将
+现在生成一个包含该信息的输出文件。</p></li>
+<li><p>你在该输出文件上运行一个名为 <code class="docutils literal notranslate"><span class="pre">bisect-ppx-report</span></code> 的工具。它产生
+HTML 显示代码的哪些部分已执行，哪些部分未执行。</p></li>
+</ul>
+<p>这对测试套件的计算覆盖率有何帮助？如果你运行你的
+OUnit测试套件，其中的测试用例将导致任何函数中的代码
+他们测试要被处决。如果你没有足够的测试用例，可以在你的代码中添加一些代码
+函数永远不会被执行。 Bisect 制作的报告将向你展示
+到底是什么代码。然后，你可以设计新的玻璃盒测试用例以引起
+要执行的代码，将它们添加到你的 OUnit 套件中，然后创建一个新的 Bisect
+报告以确认代码确实得到执行。</p>
+<p><strong>二等分教程。</strong></p>
+<ol class="arabic">
+<li><p>下载文件 <a href="../../code/sorts.ml">sorts.ml</a>。你会
+找到插入排序和归并排序的实现。</p></li>
+<li><p>下载文件 <a href="../../code/test_sorts.ml">test_sorts.ml</a>。它
+具有 OUnit 测试套件的框架。</p></li>
+<li><p>创建 <code class="docutils literal notranslate"><span class="pre">dune</span></code> 文件来执行 <code class="docutils literal notranslate"><span class="pre">test_sorts</span></code>：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(executable
+ (name test_sorts)
+ (libraries ounit2)
+ (instrumentation
+  (backend bisect_ppx)))
+</pre></div>
+</div>
+</li>
+<li><p>运行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>dune<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>--instrument-with<span class="w"> </span>bisect_ppx<span class="w"> </span>./test_sorts.exe
+</pre></div>
+</div>
+</li>
+</ol>
+<p>这将在启用 Bisect 覆盖的情况下执行测试套件，从而导致一些
+将生成名为 <code class="docutils literal notranslate"><span class="pre">bisectNNNN.coverage</span></code> 的文件。</p>
+<ol class="arabic" start="5">
+<li><p>运行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>bisect-ppx-report<span class="w"> </span>html
+</pre></div>
+</div>
+</li>
+</ol>
+<p>从测试套件执行中生成 Bisect 报告。  报告
+位于新创建的名为 <code class="docutils literal notranslate"><span class="pre">_coverage</span></code> 的目录中。</p>
+<ol class="arabic" start="6">
+<li><p>在网络浏览器中打开文件 <code class="docutils literal notranslate"><span class="pre">_coverage/index.html</span></code>。查看每个文件
+覆盖范围；你会看到我们已经成功测试了 <code class="docutils literal notranslate"><span class="pre">sorts.ml</span></code> 的百分之几
+到目前为止我们的测试套件。单击该报告中 <code class="docutils literal notranslate"><span class="pre">sorts.ml</span></code> 的链接。
+你会发现我们只覆盖了源代码的一行。</p></li>
+<li><p>测试文件中有一些额外的测试。尝试取消注释这些，如
+记录在测试文件中，并增加代码覆盖率。每个之间
+运行，需要删除<code class="docutils literal notranslate"><span class="pre">bisectNNNN.coverage</span></code>文件，否则
+该报告将包含以前运行的信息：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>rm<span class="w"> </span>bisect*.coverage
+</pre></div>
+</div>
+</li>
+</ol>
+<p>当你取消注释所提供的测试时，你应该处于 25%
+覆盖范围，包括所有插入排序的实现。为了好玩，尝试一下
+添加更多测试以获得合并排序的 100% 覆盖率。</p>
+<p><strong>并行性。</strong> 默认情况下，OUnit 将尝试运行以下中的一些测试
+并行，这减少了运行大型测试套件所需的时间
+权衡使其测试运行的顺序不确定。这是
+如果你正在测试命令式代码，这可能会影响覆盖率。使
+测试一次运行一个，按顺序，你可以传递标志
+<code class="docutils literal notranslate"><span class="pre">-runner</span> <span class="pre">sequential</span></code> 到可执行文件。 OUnit 将看到该标志并停止
+并行化：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>dune<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>--instrument-with<span class="w"> </span>bisect_ppx<span class="w"> </span>./test_sorts.exe<span class="w"> </span>--<span class="w"> </span>-runner<span class="w"> </span>sequential
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/correctness"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="test_debug.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">8.4. </span>测试与调试</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="randomized.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">8.6. </span>使用 QCheck 进行随机测试</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">8.5.1. 黑盒测试</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">8.5.2. 数据抽象的黑盒测试</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">8.5.3. 玻璃盒测试</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">8.5.4. 数据抽象的玻璃盒测试</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">8.5.5. 黑盒与玻璃盒</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bisect">8.5.6. Bisect</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

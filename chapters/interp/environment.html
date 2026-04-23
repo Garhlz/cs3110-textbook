@@ -1,0 +1,989 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>10.4. 环境模型 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/interp/environment';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="10.5. 类型检查" href="typecheck.html" />
+    <link rel="prev" title="10.3. 替换模型" href="substitution.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">10. 解释器</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/interp/environment.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/interp/environment.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/interp/environment.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>环境模型</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lambda">10.4.1. 在环境模型中求值 Lambda 演算</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.4.2. 词法作用域与动态作用域</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">10.4.3. 在环境模型中求值 Lambda 演算的第二次尝试</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">10.4.4. 环境模型中 Lambda 演算的实现</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-ocaml">10.4.5. 在环境模型中求值 Core OCaml</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">10.4. </span>环境模型<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/cYnSVZIczJE" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>到目前为止，我们一直在使用替换模型来求值程序。这是一个
+很好的求值思维模型，常用于编程
+语言理论。</p>
+<p>但在实现方面，替换模型并不是最好的选择。
+它太“急切”了：它会替换变量的每次出现，
+即使这种情况永远不需要发生。例如，<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">42</span> <span class="pre">in</span> <span class="pre">e</span></code>
+将需要遍历整个 <code class="docutils literal notranslate"><span class="pre">e</span></code>，而 <code class="docutils literal notranslate"><span class="pre">e</span></code> 可能是一个非常大的表达式，
+即使 <code class="docutils literal notranslate"><span class="pre">x</span></code> 从未出现在 <code class="docutils literal notranslate"><span class="pre">e</span></code> 中，或者即使 <code class="docutils literal notranslate"><span class="pre">x</span></code> 仅出现在 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的分支内
+永远不会被求值的 if 表达式。</p>
+<p>为了提高效率，最好采用<em>惰性</em>方式：只有当解释器确实需要变量的值时，
+才进行替换。这就是“环境模型”背后的关键思想。在这个模型中，
+有一种数据结构称为“动态环境”，简称“环境”，
+它是一个将变量名映射到值的字典。
+每当需要变量的值时，就会在该字典中查找它。</p>
+<p>为了纳入环境，求值关系需要改变。相对于
+<code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">--&gt;</span> <span class="pre">e'</span></code> 或 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">==&gt;</span> <span class="pre">v</span></code> 的，两者都是二元关系，我们现在需要一个
+三元关系，即</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;env,</span> <span class="pre">e&gt;</span> <span class="pre">--&gt;</span> <span class="pre">e'</span></code>，或</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;env,</span> <span class="pre">e&gt;</span> <span class="pre">==&gt;</span> <span class="pre">v</span></code>，</p></li>
+</ul>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">env</span></code> 表示环境，<code class="docutils literal notranslate"><span class="pre">&lt;env,</span> <span class="pre">e&gt;</span></code> 称为 <em>machine
+配置</em>。该配置代表计算机的状态
+求值程序：<code class="docutils literal notranslate"><span class="pre">env</span></code> 代表计算机内存的一部分（
+变量与值的绑定），<code class="docutils literal notranslate"><span class="pre">e</span></code> 代表程序。</p>
+<p>作为符号，让：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">{}</span></code> 代表空环境，</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{x1:v1,</span> <span class="pre">x2:v2,</span> <span class="pre">...}</span></code> 表示将 <code class="docutils literal notranslate"><span class="pre">x1</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 等的环境，</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">env[x</span> <span class="pre">-&gt;</span> <span class="pre">v]</span></code> 表示环境 <code class="docutils literal notranslate"><span class="pre">env</span></code> 和变量 <code class="docutils literal notranslate"><span class="pre">x</span></code>
+另外绑定到值 <code class="docutils literal notranslate"><span class="pre">v</span></code>，并且</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">env(x)</span></code> 表示 <code class="docutils literal notranslate"><span class="pre">x</span></code> 与 <code class="docutils literal notranslate"><span class="pre">env</span></code> 的绑定。</p></li>
+</ul>
+<p>如果我们想要一个更数学的符号，我们会写 <span class="math notranslate nohighlight">\(\mapsto\)</span> 而不是
+<code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> 在 <code class="docutils literal notranslate"><span class="pre">env[x</span> <span class="pre">-&gt;</span> <span class="pre">v]</span></code> 中，但我们的目标是易于在
+标准键盘。</p>
+<p>我们将在本章的其余部分集中讨论
+环境模型。当然也可以定义一个小步
+版本也一样。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/93CN7gV_G2w" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/YZO-vQohBYA" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<section id="lambda">
+<h2><span class="section-number">10.4.1. </span>在环境模型中求值 Lambda 演算<a class="headerlink" href="#lambda" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/l0Db3KW5X_U" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>回想一下 lambda 演算是函数式语言的片段
+涉及函数及应用：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= x | e1 e2 | fun x -&gt; e
+
+v ::= fun x -&gt; e
+</pre></div>
+</div>
+<p>让我们探讨一下如何定义 lambda 的大步求值关系
+环境模型中的演算。变量规则只是说要查找
+环境中的变量名称：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, x&gt; ==&gt; env(x)
+</pre></div>
+</div>
+<p>这条函数规则表示匿名函数求值为它自身。毕竟，函数就是值：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, fun x -&gt; e&gt; ==&gt; fun x -&gt; e
+</pre></div>
+</div>
+<p>最后，这条应用规则表示：先把左侧 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 求值为函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code>，
+再把右侧求值为 <code class="docutils literal notranslate"><span class="pre">v2</span></code>，然后在把函数参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 映射到 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 的扩展环境中
+求值函数体 <code class="docutils literal notranslate"><span class="pre">e</span></code>：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, e1 e2&gt; ==&gt; v
+  if &lt;env, e1&gt; ==&gt; fun x -&gt; e
+  and &lt;env, e2&gt; ==&gt; v2
+  and &lt;env[x -&gt; v2], e&gt; ==&gt; v
+</pre></div>
+</div>
+<p>看起来很合理，对吧？问题是，<strong>这是错误的。</strong> 至少，如果
+你希望评估的行为与 OCaml 相同。或者，老实说，几乎任何
+其他现代语言。</p>
+<p>如果我们再添加两种语言，会更容易解释为什么它是错误的
+特点：let 表达式和整型常量。整数常量将
+对自己的评价：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, i&gt; ==&gt; i
+</pre></div>
+</div>
+<p>至于 let 表达式，请记住我们实际上并不“需要”它们，
+因为<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">e1</span> <span class="pre">in</span> <span class="pre">e2</span></code>可以重写为<code class="docutils literal notranslate"><span class="pre">(fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e2)</span> <span class="pre">e1</span></code>。
+尽管如此，它们的语义是：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, let x = e1 in e2&gt; ==&gt; v
+  if &lt;env, e1&gt; ==&gt; v1
+  and &lt;env[x -&gt; v1], e2&gt; ==&gt; v
+</pre></div>
+</div>
+<p>这条规则实际上只是从上面的其他规则中得出的，使用该规则
+重写。</p>
+<p>这个表达式的计算结果是什么？</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>let x = 1 in
+let f = fun y -&gt; x in
+let x = 2 in
+f 0
+</pre></div>
+</div>
+<p>根据我们迄今为止的语义，它将评估如下：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">1</span></code> 将产生环境 <code class="docutils literal notranslate"><span class="pre">{x:1}</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">f</span> <span class="pre">=</span> <span class="pre">fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">x</span></code> 将产生环境 <code class="docutils literal notranslate"><span class="pre">{x:1,</span> <span class="pre">f:(fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">x)}</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">2</span></code> 将产生环境 <code class="docutils literal notranslate"><span class="pre">{x:2,</span> <span class="pre">f:(fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">x)}</span></code>。注意如何
+<code class="docutils literal notranslate"><span class="pre">x</span></code> 到 <code class="docutils literal notranslate"><span class="pre">1</span></code> 的绑定被新绑定隐藏。</p></li>
+<li><p>现在我们将评估 <code class="docutils literal notranslate"><span class="pre">&lt;{x:2,</span> <span class="pre">f:(fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">x)},</span> <span class="pre">f</span> <span class="pre">0&gt;</span></code>：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="n">f</span><span class="p">:(</span><span class="n">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="p">)},</span> <span class="n">f</span> <span class="mi">0</span><span class="o">&gt;</span> <span class="o">==&gt;</span> <span class="mi">2</span>
+  <span class="n">because</span> <span class="o">&lt;</span><span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="n">f</span><span class="p">:(</span><span class="n">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="p">)},</span> <span class="n">f</span><span class="o">&gt;</span> <span class="o">==&gt;</span> <span class="n">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span>
+  <span class="ow">and</span> <span class="o">&lt;</span><span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="n">f</span><span class="p">:(</span><span class="n">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="p">)},</span> <span class="mi">0</span><span class="o">&gt;</span> <span class="o">==&gt;</span> <span class="mi">0</span>
+  <span class="ow">and</span> <span class="o">&lt;</span><span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="n">f</span><span class="p">:(</span><span class="n">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="p">)}[</span><span class="n">y</span> <span class="o">-&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="o">&gt;</span> <span class="o">==&gt;</span> <span class="mi">2</span>
+    <span class="n">because</span> <span class="o">&lt;</span><span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="n">f</span><span class="p">:(</span><span class="n">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="p">),</span> <span class="n">y</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span> <span class="n">x</span><span class="o">&gt;</span> <span class="o">==&gt;</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</li>
+<li><p>因此结果是 <code class="docutils literal notranslate"><span class="pre">2</span></code>。</p></li>
+</ul>
+<p>但根据 utop（以及替换模型），它的求值如下：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">f</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">in</span>
+  <span class="n">f</span> <span class="mi">0</span><span class="o">;;</span>
+<span class="o">-</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>因此结果是 <code class="docutils literal notranslate"><span class="pre">1</span></code>。显然，<code class="docutils literal notranslate"><span class="pre">1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">2</span></code> 是不同的答案！</p>
+<p>出了什么问题？  这与范围有关。</p>
+</section>
+<section id="id2">
+<h2><span class="section-number">10.4.2. </span>词法作用域与动态作用域<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/s9kiXx0cSb4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>有两种不同的方式来理解变量的范围： 变量
+可以是<em>动态</em>作用域或<em>词法</em>作用域。这一切都归结为
+求值函数体时使用的环境：</p>
+<ul class="simple">
+<li><p>根据<strong>动态作用域规则</strong>，函数体在
+应用函数时的当前动态环境，而不是旧的
+定义函数时存在的动态环境。</p></li>
+<li><p>根据<strong>词法作用域规则</strong>，函数体在
+定义函数时存在的旧动态环境，而不是
+应用该函数时的当前环境。</p></li>
+</ul>
+<p>动态作用域的规则就是我们上面的语义所实现的。让我们看看
+回到函数应用的语义：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, e1 e2&gt; ==&gt; v
+  if &lt;env, e1&gt; ==&gt; fun x -&gt; e
+  and &lt;env, e2&gt; ==&gt; v2
+  and &lt;env[x -&gt; v2], e&gt; ==&gt; v
+</pre></div>
+</div>
+<p>请注意主体 <code class="docutils literal notranslate"><span class="pre">e</span></code> 是如何在同一环境 <code class="docutils literal notranslate"><span class="pre">env</span></code> 中进行求值的
+就像应用该函数时一样。  在示例程序中</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>let x = 1 in
+let f = fun y -&gt; x in
+let x = 2 in
+f 0
+</pre></div>
+</div>
+<p>这意味着 <code class="docutils literal notranslate"><span class="pre">f</span></code> 在 <code class="docutils literal notranslate"><span class="pre">x</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">2</span></code> 的环境中进行求值，
+因为这是 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的最新绑定。</p>
+<p>但 OCaml 实现了词法作用域规则，这与
+替换模型。根据该规则，<code class="docutils literal notranslate"><span class="pre">x</span></code> 在 <code class="docutils literal notranslate"><span class="pre">f</span></code> 主体中绑定到 <code class="docutils literal notranslate"><span class="pre">1</span></code>
+定义了 <code class="docutils literal notranslate"><span class="pre">f</span></code> ，并且稍后将 <code class="docutils literal notranslate"><span class="pre">x</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">2</span></code> 不会改变这一事实。</p>
+<p>经过数十年编程语言设计经验的共识是
+词法范围是正确的选择。也许主要原因是
+词法范围支持名称无关原则。回想一下，这个原则
+表示变量的名称与程序的含义无关，因为
+只要该名称的使用一致。</p>
+<p>尽管如此，动态作用域在某些情况下还是有用的。有些语言使用它
+作为规范（例如，Emacs LISP、LaTeX），并且某些语言有特殊的方法
+去做（例如 Perl、Racket）。但如今，大多数语言都没有它。</p>
+<p>现代语言<em>确实</em>具有一种类似于
+动态范围，那就是例外。异常处理类似于动态
+范围，因为引发异常会将控制权转移到“最近的”
+异常处理程序，就像动态作用域如何使用“最新”绑定一样
+变量。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">10.4.3. </span>在环境模型中求值 Lambda 演算的第二次尝试<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/Y0V_92x5J-Q" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>那么问题就变成了，我们如何实现词法作用域？看来
+需要时间旅行，因为函数体需要在旧的动态中进行评估
+早已消失的环境。</p>
+<p>答案是语言实现必须安排保持旧的
+周围的环境。这确实是 OCaml 和其他语言必须做的事情。
+为此，他们使用了一种称为“闭包”的数据结构。</p>
+<p>闭包有两个部分：</p>
+<ul class="simple">
+<li><p>一个 <em>code</em> 部分，其中包含函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code>，以及</p></li>
+<li><p>一个 <em>environment</em> 部分，其中包含当时的环境 <code class="docutils literal notranslate"><span class="pre">env</span></code>
+函数被定义。</p></li>
+</ul>
+<p>你可以把闭包想象成一对，只不过没有办法
+直接在OCaml源代码中写一个闭包，并且没有办法解构
+将其配对到 OCaml 源代码中的组件中。这对完全隐藏
+通过语言实现从你那里得到。</p>
+<p>我们将闭包标记为 <code class="docutils literal notranslate"><span class="pre">(|</span> <span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e,</span> <span class="pre">env</span> <span class="pre">|)</span></code>。分隔符 <code class="docutils literal notranslate"><span class="pre">(|</span> <span class="pre">...</span> <span class="pre">|)</span></code>
+旨在唤起 OCaml 对，但当然它们不是合法的 OCaml 语法。</p>
+<p>使用该符号，我们可以重新定义求值关系，如下所示：</p>
+<p>函数规则现在规定匿名函数的求值结果是闭包：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, fun x -&gt; e&gt; ==&gt; (| fun x -&gt; e, env |)
+</pre></div>
+</div>
+<p>该规则将定义环境保存为闭包的一部分，以便它可以
+在将来的某个时刻使用。</p>
+<p>应用程序规则要求使用该闭包：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, e1 e2&gt; ==&gt; v
+  if &lt;env, e1&gt; ==&gt; (| fun x -&gt; e, defenv |)
+  and &lt;env, e2&gt; ==&gt; v2
+  and &lt;defenv[x -&gt; v2], e&gt; ==&gt; v
+</pre></div>
+</div>
+<p>该规则使用闭包的环境 <code class="docutils literal notranslate"><span class="pre">defenv</span></code> （其名称旨在
+建议“定义环境”）来评估函数体 <code class="docutils literal notranslate"><span class="pre">e</span></code>。</p>
+<p>let 表达式的派生规则保持不变：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, let x = e1 in e2&gt; ==&gt; v
+  if &lt;env, e1&gt; ==&gt; v1
+  and &lt;env[x -&gt; v1], e2&gt; ==&gt; v
+</pre></div>
+</div>
+<p>这是因为主体 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 的定义环境与
+评估 let 表达式时的当前环境 <code class="docutils literal notranslate"><span class="pre">env</span></code> 。</p>
+</section>
+<section id="id4">
+<h2><span class="section-number">10.4.4. </span>环境模型中 Lambda 演算的实现<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>你可以下载上述两个 lambda 演算语义的完整实现：
+<a href="../../code/lambda-env.zip">lambda-env.zip</a>。在<code class="docutils literal notranslate"><span class="pre">main.ml</span></code>中，有一个
+名为 <code class="docutils literal notranslate"><span class="pre">scope</span></code> 的定义，可用于在词法和动态之间切换
+范围。</p>
+</section>
+<section id="core-ocaml">
+<h2><span class="section-number">10.4.5. </span>在环境模型中求值 Core OCaml<a class="headerlink" href="#core-ocaml" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/z2ktAgYTCRw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>Core 的（一大步）环境模型语义中没有任何新内容
+OCaml，现在我们已经了解了闭包，但为了完整起见，让我们声明一下
+无论如何。</p>
+<p><strong>语法。</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= x | e1 e2 | fun x -&gt; e
+    | i | b | e1 bop e2
+    | (e1,e2) | fst e1 | snd e2
+    | Left e | Right e
+    | match e with Left x1 -&gt; e1 | Right x2 -&gt; e2
+    | if e1 then e2 else e3
+    | let x = e1 in e2
+</pre></div>
+</div>
+<p><strong>语义。</strong></p>
+<p>我们已经了解了 Core OCaml 的 lambda 演算片段的语义：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, x&gt; ==&gt; v
+  if env(x) = v
+
+&lt;env, e1 e2&gt; ==&gt; v
+  if  &lt;env, e1&gt; ==&gt; (| fun x -&gt; e, defenv |)
+  and &lt;env, e2&gt; ==&gt; v2
+  and &lt;defenv[x -&gt; v2], e&gt; ==&gt; v
+
+&lt;env, fun x -&gt; e&gt; ==&gt; (|fun x -&gt; e, env|)
+</pre></div>
+</div>
+<p>常量的计算忽略了环境：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, i&gt; ==&gt; i
+
+&lt;env, b&gt; ==&gt; b
+</pre></div>
+</div>
+<p>大多数其他语言特性的评估只是使用环境而不是
+改变它：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, e1 bop e2&gt; ==&gt; v
+  if  &lt;env, e1&gt; ==&gt; v1
+  and &lt;env, e2&gt; ==&gt; v2
+  and v is the result of applying the primitive operation bop to v1 and v2
+
+&lt;env, (e1, e2)&gt; ==&gt; (v1, v2)
+  if  &lt;env, e1&gt; ==&gt; v1
+  and &lt;env, e2&gt; ==&gt; v2
+
+&lt;env, fst e&gt; ==&gt; v1
+  if &lt;env, e&gt; ==&gt; (v1, v2)
+
+&lt;env, snd e&gt; ==&gt; v2
+  if &lt;env, e&gt; ==&gt; (v1, v2)
+
+&lt;env, Left e&gt; ==&gt; Left v
+  if &lt;env, e&gt; ==&gt; v
+
+&lt;env, Right e&gt; ==&gt; Right v
+  if &lt;env, e&gt; ==&gt; v
+
+&lt;env, if e1 then e2 else e3&gt; ==&gt; v2
+  if &lt;env, e1&gt; ==&gt; true
+  and &lt;env, e2&gt; ==&gt; v2
+
+&lt;env, if e1 then e2 else e3&gt; ==&gt; v3
+  if &lt;env, e1&gt; ==&gt; false
+  and &lt;env, e3&gt; ==&gt; v3
+</pre></div>
+</div>
+<p>最后，评估结合结构（即匹配
+并让表达式）使用新的绑定扩展环境：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;env, match e with Left x1 -&gt; e1 | Right x2 -&gt; e2&gt; ==&gt; v1
+  if  &lt;env, e&gt; ==&gt; Left v
+  and &lt;env[x1 -&gt; v], e1&gt; ==&gt; v1
+
+&lt;env, match e with Left x1 -&gt; e1 | Right x2 -&gt; e2&gt; ==&gt; v2
+  if  &lt;env, e&gt; ==&gt; Right v
+  and &lt;env[x2 -&gt; v], e2&gt; ==&gt; v2
+
+&lt;env, let x = e1 in e2&gt; ==&gt; v2
+  if  &lt;env, e1&gt; ==&gt; v1
+  and &lt;env[x -&gt; v1], e2&gt; ==&gt; v2
+</pre></div>
+</div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/VZTrEYb6PPk" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters/interp"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="substitution.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">10.3. </span>替换模型</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="typecheck.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">10.5. </span>类型检查</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lambda">10.4.1. 在环境模型中求值 Lambda 演算</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.4.2. 词法作用域与动态作用域</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">10.4.3. 在环境模型中求值 Lambda 演算的第二次尝试</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">10.4.4. 环境模型中 Lambda 演算的实现</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-ocaml">10.4.5. 在环境模型中求值 Core OCaml</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

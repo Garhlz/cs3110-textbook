@@ -1,0 +1,1173 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>10.2. 解析 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/interp/parsing';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="10.3. 替换模型" href="substitution.html" />
+    <link rel="prev" title="10.1. 示例：计算器" href="calculator.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">10. 解释器</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/interp/parsing.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/interp/parsing.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/interp/parsing.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>解析</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.2.1. 词法分析器</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">10.2.2. 解析器</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">10.2.3. 巴科斯-诺尔范式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simpl">10.2.4. 示例：SimPL</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ast">10.2.4.1. AST</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menhir">10.2.4.2. Menhir 解析器</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ocamllex">10.2.4.3. OCamllex 词法分析器</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">10.2.4.4. 生成解析器和词法分析器</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">10.2.4.5. 驱动程序</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">10.2. </span>解析<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<p>你“可以”从头开始编写自己的词法分析器和解析器。但很多
+语言包括自动生成词法分析器和解析器的工具
+来自语言语法的正式描述。祖先
+其中许多工具是 <a class="reference external" href="https://en.wikipedia.org/wiki/Lex_(software)">lex</a> 和 <a class="reference external" href="https://en.wikipedia.org/wiki/Yacc">yacc</a>，它们生成
+分别是词法分析器和解析器； lex 和 yacc 是在
+20 世纪 70 年代为 C 语言开发的。</p>
+<p>作为标准发行版的一部分，OCaml 提供词法分析器和解析器
+名为 <a class="reference external" href="https://ocaml.org/manual/lexyacc.html">ocamllex and ocamlyacc</a> 的生成器。还有一个更
+名为 <a class="reference external" href="http://gallium.inria.fr/~fpottier/menhir/">menhir</a> 的现代解析器生成器可通过 opam 获得；
+Menhir 与 ocamlyacc “90% 兼容”，并显著
+改进了对调试生成的解析器的支持。</p>
+<section id="id2">
+<h2><span class="section-number">10.2.1. </span>词法分析器<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>Lexer 生成器（例如 lex 和 ocamllex）基于以下理论构建：
+确定性有限自动机，通常包含在离散数学或
+计算理论课程。这种自动机接受<em>正则语言</em>，这些语言
+可以用<em>正则表达式</em>来描述。因此，词法分析器生成器的输入
+是描述语言标记的正则表达式的集合。
+输出是用高级语言实现的自动机，例如 C（例如
+lex）或 OCaml（对于 ocamllex）。</p>
+<p>该自动机本身将文件（或字符串）作为输入，并且每个字符
+该文件成为自动机的输入。最终，自动机要么
+<em>识别</em>它收到的字符序列为语言中的有效标记，
+在这种情况下，自动机会输出该标记，并且
+将自身重置为识别下一个标记；要么“拒绝”该序列
+字符作为无效标记。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">10.2.2. </span>解析器<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>诸如 yacc 和 menhir 之类的解析器生成器同样是基于以下理论构建的：
+自动机。但他们使用<em>下推自动机</em>，这就像有限自动机
+还维护一个堆栈，可以在其中压入和弹出符号。堆栈
+使他们能够接受更大类别的语言，这些语言被称为
+<em>上下文无关语言</em>（CFL）。 CFL 的重大改进之一
+正则语言的一个优点是 CFL 可以表达分隔符必须平衡这一思想
+—例如，每个左括号必须由一个匹配的
+右括号。</p>
+<p>正如正则语言可以用特殊符号来表达一样（正则
+表达式），CFL 也可以。 <em>上下文无关语法</em>用于描述 CFL。一个
+上下文无关语法是一组“产生规则”，描述一个符号如何
+可以用其他符号代替。例如，平衡的语言
+括号，其中包括 <code class="docutils literal notranslate"><span class="pre">(())</span></code> 和 <code class="docutils literal notranslate"><span class="pre">()()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">(()())</span></code> 等字符串，但是
+不是诸如 <code class="docutils literal notranslate"><span class="pre">)</span></code> 或 <code class="docutils literal notranslate"><span class="pre">(()</span></code> 之类的字符串，是由以下规则生成的：</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(S \rightarrow (S)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(S \rightarrow SS\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(S \rightarrow \epsilon\)</span></p></li>
+</ul>
+<p>这些规则中出现的符号是 <span class="math notranslate nohighlight">\(S\)</span>、<span class="math notranslate nohighlight">\((\)</span> 和 <span class="math notranslate nohighlight">\()\)</span>。 <span class="math notranslate nohighlight">\(\epsilon\)</span>
+表示空字符串。每个符号要么是<em>非终结符</em>，要么是
+<em>终结符</em>，取决于它是否是所描述语言的标记。
+上例中 <span class="math notranslate nohighlight">\(S\)</span> 是非终结符， ( 和 ) 是终结符。</p>
+<p>在下一节中，我们将研究<em>巴科斯-诺尔范式</em> (BNF)，这是一个标准
+上下文无关语法的符号。解析器生成器的输入通常是
+语言语法的 BNF 描述。解析器生成器的输出
+是一个识别语言语法的程序。作为输入，该程序
+期望词法分析器的输出。作为输出，程序产生一个值
+表示已接受的字符串的 AST 类型。输出的程序
+因此，解析器生成器和词法分析器生成器依赖于另一个生成器
+根据 AST 类型。</p>
+</section>
+<section id="id4">
+<h2><span class="section-number">10.2.3. </span>巴科斯-诺尔范式<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/NQacOvZbbX4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>描述语言语法的标准方法是使用数学
+称为<em>巴科斯-诺尔形式</em> (BNF) 的表示法，以其发明者约翰·巴科斯 (John Backus) 命名
+和彼得·瑙尔。 BNF 有多种变体。在这里，我们不会太挑剔
+关于遵守一种或另一种变体。我们的目标只是有一个合理的
+描述语言语法的好符号。</p>
+<p>BNF 使用一组“推导规则”来描述语言的语法。让我们
+从一个例子开始。这是一种小型语言的 BNF 描述
+仅包含整数和加法的表达式：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= i | e + e
+i ::= &lt;integers&gt;
+</pre></div>
+</div>
+<p>这些规则规定表达式 <code class="docutils literal notranslate"><span class="pre">e</span></code> 要么是一个整数 <code class="docutils literal notranslate"><span class="pre">i</span></code>，要么是两个
+其间出现符号 <code class="docutils literal notranslate"><span class="pre">+</span></code> 的表达式。 “整数”的语法
+这些规则未指定。</p>
+<p>每个规则都有以下形式</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>metavariable ::= symbols | ... | symbols
+</pre></div>
+</div>
+<p><em>元变量</em>是 BNF 规则中使用的变量，而不是
+所描述语言中的变量。规则中出现的 <code class="docutils literal notranslate"><span class="pre">::=</span></code> 和 <code class="docutils literal notranslate"><span class="pre">|</span></code> 是
+<em>元语法</em>：用于描述语言语法的 BNF 语法。<em>符号</em>是
+可以包含元变量（例如 <code class="docutils literal notranslate"><span class="pre">i</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e</span></code>）以及标记的序列
+语言的名称（例如 <code class="docutils literal notranslate"><span class="pre">+</span></code>）。空格与这些规则无关。</p>
+<p>有时我们可能想轻松引用个别事件
+元变量。我们通过在
+元变量。例如，我们可以将上面的第一条规则重写为</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= i | e1 + e2
+</pre></div>
+</div>
+<p>或作为</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= i | e + e&#39;
+</pre></div>
+</div>
+<p>现在我们可以谈论 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 或 <code class="docutils literal notranslate"><span class="pre">e'</span></code> 而不必说“
+<code class="docutils literal notranslate"><span class="pre">+</span></code> 的右侧。</p>
+<p>如果语言本身包含标记 <code class="docutils literal notranslate"><span class="pre">::=</span></code> 或 <code class="docutils literal notranslate"><span class="pre">|</span></code>— 并且
+OCaml确实包含了后者—那么写BNF可以变得有点
+令人困惑。一些 BNF 符号试图通过使用额外的方法来解决这个问题
+用于区分语法和元语法的分隔符。我们会更加放松和
+假设读者能够区分它们。</p>
+</section>
+<section id="simpl">
+<h2><span class="section-number">10.2.4. </span>示例：SimPL<a class="headerlink" href="#simpl" title="Permalink to this heading">#</a></h2>
+<p>作为一个运行示例，我们将使用一种非常简单的编程语言，我们称之为
+SimPL。以下是 BNF 格式的语法：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= x | i | b | e1 bop e2
+    | if e1 then e2 else e3
+    | let x = e1 in e2
+
+bop ::= + | * | &lt;=
+
+x ::= &lt;identifiers&gt;
+
+i ::= &lt;integers&gt;
+
+b ::= true | false
+</pre></div>
+</div>
+<p>显然，这种语言缺少很多东西，尤其是函数。但是
+这足以让我们研究解释器中的重要概念
+不会因大量语言特性而分心。稍后我们将
+考虑 OCaml 的更大片段。</p>
+<p>我们将为 SimPL 开发一个完整的解释器。你可以下载
+此处完成解释：<a href="../../code/simpl.zip">simpl.zip</a>。
+或者，只要跟着我们构建它的每个部分即可。</p>
+<section id="ast">
+<h3><span class="section-number">10.2.4.1. </span>AST<a class="headerlink" href="#ast" title="Permalink to this heading">#</a></h3>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/duTIBuK_fdw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>由于 AST 是解释器中最重要的数据结构，让我们
+先设计一下。我们将此代码放入名为 <code class="docutils literal notranslate"><span class="pre">ast.ml</span></code> 的文件中：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">bop</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">Add</span>
+  <span class="o">|</span> <span class="nc">Mult</span>
+  <span class="o">|</span> <span class="nc">Leq</span>
+
+<span class="k">type</span> <span class="n">expr</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">Var</span> <span class="k">of</span> <span class="kt">string</span>
+  <span class="o">|</span> <span class="nc">Int</span> <span class="k">of</span> <span class="kt">int</span>
+  <span class="o">|</span> <span class="nc">Bool</span> <span class="k">of</span> <span class="kt">bool</span>
+  <span class="o">|</span> <span class="nc">Binop</span> <span class="k">of</span> <span class="n">bop</span> <span class="o">*</span> <span class="n">expr</span> <span class="o">*</span> <span class="n">expr</span>
+  <span class="o">|</span> <span class="nc">Let</span> <span class="k">of</span> <span class="kt">string</span> <span class="o">*</span> <span class="n">expr</span> <span class="o">*</span> <span class="n">expr</span>
+  <span class="o">|</span> <span class="nc">If</span> <span class="k">of</span> <span class="n">expr</span> <span class="o">*</span> <span class="n">expr</span> <span class="o">*</span> <span class="n">expr</span>
+</pre></div>
+</div>
+<p>对于表达式中的每种语法形式都有一个构造函数
+巴纳夫。对于标识符、整数的底层基本语法类，
+和布尔值，我们使用 OCaml 自己的 <code class="docutils literal notranslate"><span class="pre">string</span></code>、<code class="docutils literal notranslate"><span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 类型。</p>
+<p>我们可以不定义 <code class="docutils literal notranslate"><span class="pre">bop</span></code> 类型和单个 <code class="docutils literal notranslate"><span class="pre">Binop</span></code> 构造函数
+为三个二元运算符定义了三个单独的构造函数：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">expr</span> <span class="o">=</span>
+  <span class="o">...</span>
+  <span class="o">|</span> <span class="nc">Add</span> <span class="k">of</span> <span class="n">expr</span> <span class="o">*</span> <span class="n">expr</span>
+  <span class="o">|</span> <span class="nc">Mult</span> <span class="k">of</span> <span class="n">expr</span> <span class="o">*</span> <span class="n">expr</span>
+  <span class="o">|</span> <span class="nc">Leq</span> <span class="k">of</span> <span class="n">expr</span> <span class="o">*</span> <span class="n">expr</span>
+  <span class="o">...</span>
+</pre></div>
+</div>
+<p>但是通过分解 <code class="docutils literal notranslate"><span class="pre">bop</span></code> 类型，我们将能够避免大量代码
+稍后在我们的实现中会出现重复。</p>
+</section>
+<section id="menhir">
+<h3><span class="section-number">10.2.4.2. </span>Menhir 解析器<a class="headerlink" href="#menhir" title="Permalink to this heading">#</a></h3>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/-BBbgVhj66s" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>让我们从解析开始，然后再回到词法分析。我们会把所有的纪念碑
+我们将下面的代码写入名为 <code class="docutils literal notranslate"><span class="pre">parser.mly</span></code> 的文件中。 <code class="docutils literal notranslate"><span class="pre">.mly</span></code> 扩展名表示
+该文件旨在作为 Menhir 的输入。 （“y”暗指 yacc。）这
+文件包含我们要解析的语言的<em>语法定义</em>。
+下面通过示例描述语法定义的语法。请注意，这是
+也许有点奇怪，但那是因为它基于工具（如 yacc）
+是很久以前开发的。 Menhir 将处理该文件并生成一个
+名为 <code class="docutils literal notranslate"><span class="pre">parser.ml</span></code> 的文件作为输出；它包含一个 OCaml 程序来解析
+语言。 （这里的名字 <code class="docutils literal notranslate"><span class="pre">parser</span></code> 没有什么特别的；它只是
+描述性的。）</p>
+<p>语法定义有四个部分：标题、声明、规则和
+拖车。</p>
+<p><strong>标头。</strong> <em>标头</em> 出现在 <code class="docutils literal notranslate"><span class="pre">%{</span></code> 和 <code class="docutils literal notranslate"><span class="pre">%}</span></code> 之间。这是代码
+按字面意思复制到生成的 <code class="docutils literal notranslate"><span class="pre">parser.ml</span></code> 中。这里我们只是用它来打开
+<code class="docutils literal notranslate"><span class="pre">Ast</span></code> 模块，以便稍后在语法定义中，我们可以编写
+类似 <code class="docutils literal notranslate"><span class="pre">Int</span> <span class="pre">i</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">Ast.Int</span> <span class="pre">i</span></code> 的表达式。如果我们愿意的话，我们也可以
+在标头中定义一些 OCaml 函数。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>%{
+open Ast
+%}
+</pre></div>
+</div>
+<p><strong>声明。</strong> <em>声明</em>部分首先说明词汇是什么
+该语言的<em>标记</em>是。以下是 SimPL 的令牌声明：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>%token &lt;int&gt; INT
+%token &lt;string&gt; ID
+%token TRUE
+%token FALSE
+%token LEQ
+%token TIMES
+%token PLUS
+%token LPAREN
+%token RPAREN
+%token LET
+%token EQUALS
+%token IN
+%token IF
+%token THEN
+%token ELSE
+%token EOF
+</pre></div>
+</div>
+<p>其中每一个都只是令牌的描述性名称。到目前为止还没有任何说法
+例如，<code class="docutils literal notranslate"><span class="pre">LPAREN</span></code> 实际上对应于 <code class="docutils literal notranslate"><span class="pre">(</span></code>。当我们
+定义词法分析器。</p>
+<p><code class="docutils literal notranslate"><span class="pre">EOF</span></code> 标记是一个特殊的<em>文件结束</em>标记，当
+它到达字符流的末尾。到那时我们就知道完整的
+程序已被读取。</p>
+<p>带有 <code class="docutils literal notranslate"><span class="pre">&lt;type&gt;</span></code> 注释的标记声明：
+他们将携带一些额外的数据。在 <code class="docutils literal notranslate"><span class="pre">INT</span></code> 的情况下，
+这是一个 OCaml <code class="docutils literal notranslate"><span class="pre">int</span></code>。对于 <code class="docutils literal notranslate"><span class="pre">ID</span></code> 来说，这是一个 OCaml <code class="docutils literal notranslate"><span class="pre">string</span></code>。</p>
+<p>声明令牌后，我们必须提供一些附加信息
+<em>优先级</em>和<em>关联性</em>。以下声明表示 <code class="docutils literal notranslate"><span class="pre">PLUS</span></code> 是
+左关联，<code class="docutils literal notranslate"><span class="pre">IN</span></code> 不关联，并且 <code class="docutils literal notranslate"><span class="pre">PLUS</span></code> 的优先级高于
+<code class="docutils literal notranslate"><span class="pre">IN</span></code> （因为 <code class="docutils literal notranslate"><span class="pre">PLUS</span></code> 出现在 <code class="docutils literal notranslate"><span class="pre">IN</span></code> 之后的一行上）。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>%nonassoc IN
+%nonassoc ELSE
+%left LEQ
+%left PLUS
+%left TIMES
+</pre></div>
+</div>
+<p>因为 <code class="docutils literal notranslate"><span class="pre">PLUS</span></code> 是左关联的，所以 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">2</span> <span class="pre">+</span> <span class="pre">3</span></code> 将解析为 <code class="docutils literal notranslate"><span class="pre">(1</span> <span class="pre">+</span> <span class="pre">2)</span> <span class="pre">+</span> <span class="pre">3</span></code> 并且
+不像<code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">(2</span> <span class="pre">+</span> <span class="pre">3)</span></code>。由于 <code class="docutils literal notranslate"><span class="pre">PLUS</span></code> 的优先级高于 <code class="docutils literal notranslate"><span class="pre">IN</span></code>，因此
+表达式 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">in</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">2</span></code> 将解析为 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">in</span> <span class="pre">(x</span> <span class="pre">+</span> <span class="pre">2)</span></code> 而不是
+<code class="docutils literal notranslate"><span class="pre">(let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">in</span> <span class="pre">x)</span> <span class="pre">+</span> <span class="pre">2</span></code>。其他声明也有类似的效果。</p>
+<p>正确的优先级和关联性声明是其中之一
+开发语法定义中比较棘手的部分。它有助于发展
+增量语法定义，仅添加几个标记（及其
+相关规则，下面讨论）一次到语言。门希尔会让
+你知道当你添加了一个令人困惑的令牌（和规则）时
+你想要的优先级和关联性应该是什么。然后你可以添加
+声明并进行测试以确保你的声明正确。</p>
+<p>声明关联性和优先级后，我们需要声明什么
+起点是解析语言。以下声明表示
+从名为 <code class="docutils literal notranslate"><span class="pre">prog</span></code> 的规则（定义如下）开始。声明还表示
+解析 <code class="docutils literal notranslate"><span class="pre">prog</span></code> 将返回类型为 <code class="docutils literal notranslate"><span class="pre">Ast.expr</span></code> 的 OCaml 值。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>%start &lt;Ast.expr&gt; prog
+</pre></div>
+</div>
+<p>最后，<code class="docutils literal notranslate"><span class="pre">%%</span></code> 结束声明部分。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>%%
+</pre></div>
+</div>
+<p><strong>规则。</strong> <em>rules</em> 部分包含类似于 BNF 的产生式规则，
+尽管在 BNF 中我们会写“::=”，但这些规则只是写“:”。
+规则的格式是</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>name:
+  | production1 { action1 }
+  | production2 { action2 }
+  | ...
+  ;
+</pre></div>
+</div>
+<p><em>产生式</em>是规则匹配的<em>符号</em>序列。一个符号是
+令牌或另一个规则的名称。 <em>action</em> 是 OCaml 值
+如果发生<em>匹配</em>则返回。每个产生式都可以<em>绑定</em>由a所携带的值
+符号并在其操作中使用该值。这也许是最好的理解
+例如，让我们深入探讨一下。</p>
+<p>第一条规则名为 <code class="docutils literal notranslate"><span class="pre">prog</span></code>，只有一个产生式。它说一个
+<code class="docutils literal notranslate"><span class="pre">prog</span></code> 是 <code class="docutils literal notranslate"><span class="pre">expr</span></code> 后跟 <code class="docutils literal notranslate"><span class="pre">EOF</span></code>。第一部分的制作，
+<code class="docutils literal notranslate"><span class="pre">e=expr</span></code>，表示匹配 <code class="docutils literal notranslate"><span class="pre">expr</span></code> 并将结果值绑定到 <code class="docutils literal notranslate"><span class="pre">e</span></code>。
+操作只是说返回该值 <code class="docutils literal notranslate"><span class="pre">e</span></code>。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>prog:
+  | e = expr; EOF { e }
+  ;
+</pre></div>
+</div>
+<p>第二个也是最后一个规则，名为 <code class="docutils literal notranslate"><span class="pre">expr</span></code>，具有所有表达式的产生式
+在 SimPL 中。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>expr:
+  | i = INT { Int i }
+  | x = ID { Var x }
+  | TRUE { Bool true }
+  | FALSE { Bool false }
+  | e1 = expr; LEQ; e2 = expr { Binop (Leq, e1, e2) }
+  | e1 = expr; TIMES; e2 = expr { Binop (Mult, e1, e2) }
+  | e1 = expr; PLUS; e2 = expr { Binop (Add, e1, e2) }
+  | LET; x = ID; EQUALS; e1 = expr; IN; e2 = expr { Let (x, e1, e2) }
+  | IF; e1 = expr; THEN; e2 = expr; ELSE; e3 = expr { If (e1, e2, e3) }
+  | LPAREN; e=expr; RPAREN {e}
+  ;
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>第一个产生式 <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">=</span> <span class="pre">INT</span></code> 表示要匹配 <code class="docutils literal notranslate"><span class="pre">INT</span></code> 令牌，绑定
+将结果 OCaml <code class="docutils literal notranslate"><span class="pre">int</span></code> 值设置为 <code class="docutils literal notranslate"><span class="pre">i</span></code>，并返回 AST 节点 <code class="docutils literal notranslate"><span class="pre">Int</span> <span class="pre">i</span></code>。</p></li>
+<li><p>第二个产生式 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">ID</span></code> 表示要匹配 <code class="docutils literal notranslate"><span class="pre">ID</span></code> 令牌，绑定
+将结果 OCaml <code class="docutils literal notranslate"><span class="pre">string</span></code> 值设置为 <code class="docutils literal notranslate"><span class="pre">x</span></code>，并返回 AST 节点 <code class="docutils literal notranslate"><span class="pre">Var</span> <span class="pre">x</span></code>。</p></li>
+<li><p>第三和第四个产生式匹配 <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> 或 <code class="docutils literal notranslate"><span class="pre">FALSE</span></code> 令牌并返回
+对应的 AST 节点。</p></li>
+<li><p>第五、第六和第七产生式处理二元运算符。对于
+例如， <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">=</span> <span class="pre">expr;</span> <span class="pre">PLUS;</span> <span class="pre">e2</span> <span class="pre">=</span> <span class="pre">expr</span></code> 表示匹配 <code class="docutils literal notranslate"><span class="pre">expr</span></code> 后跟
+<code class="docutils literal notranslate"><span class="pre">PLUS</span></code> 令牌后跟另一个 <code class="docutils literal notranslate"><span class="pre">expr</span></code>。第一个 <code class="docutils literal notranslate"><span class="pre">expr</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 并且
+第二个到<code class="docutils literal notranslate"><span class="pre">e2</span></code>。返回的 AST 节点是 <code class="docutils literal notranslate"><span class="pre">Binop</span> <span class="pre">(Add,</span> <span class="pre">e1,</span> <span class="pre">e2)</span></code>。</p></li>
+<li><p>第八个作品，<code class="docutils literal notranslate"><span class="pre">LET;</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">ID;</span> <span class="pre">EQUALS;</span> <span class="pre">e1</span> <span class="pre">=</span> <span class="pre">expr;</span> <span class="pre">IN;</span> <span class="pre">e2</span> <span class="pre">=</span> <span class="pre">expr</span></code>，说
+匹配 <code class="docutils literal notranslate"><span class="pre">LET</span></code> 令牌，后跟 <code class="docutils literal notranslate"><span class="pre">ID</span></code> 令牌，后跟 <code class="docutils literal notranslate"><span class="pre">EQUALS</span></code> 令牌
+后跟 <code class="docutils literal notranslate"><span class="pre">expr</span></code> ，后跟 <code class="docutils literal notranslate"><span class="pre">IN</span></code> 令牌，后跟另一个 <code class="docutils literal notranslate"><span class="pre">expr</span></code> 。
+<code class="docutils literal notranslate"><span class="pre">ID</span></code> 携带的字符串与 <code class="docutils literal notranslate"><span class="pre">x</span></code> 绑定，两个表达式为
+绑定到 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span></code>。返回的 AST 节点是 <code class="docutils literal notranslate"><span class="pre">Let</span> <span class="pre">(x,</span> <span class="pre">e1,</span> <span class="pre">e2)</span></code>。</p></li>
+<li><p>最后一个作品，<code class="docutils literal notranslate"><span class="pre">LPAREN;</span> <span class="pre">e</span> <span class="pre">=</span> <span class="pre">expr;</span> <span class="pre">RPAREN</span></code> 表示要匹配 <code class="docutils literal notranslate"><span class="pre">LPAREN</span></code>
+令牌后跟 <code class="docutils literal notranslate"><span class="pre">expr</span></code> 后跟 <code class="docutils literal notranslate"><span class="pre">RPAREN</span></code>。表达式已绑定
+到 <code class="docutils literal notranslate"><span class="pre">e</span></code> 并返回。</p></li>
+</ul>
+<p>最终的结果可能会令人惊讶，因为它没有包含在 BNF 中
+我们为 SimPL 编写。 BNF 旨在描述“抽象语法”
+语言，因此它不包括表达式如何实现的具体细节
+用括号分组。但我们一直在写的语法定义确实
+必须描述<em>具体语法</em>，包括括号等细节。</p>
+<p>规则后面还可以有一个 <em>trailer</em> 部分，就像标题一样
+直接复制到输出 <code class="docutils literal notranslate"><span class="pre">parser.ml</span></code> 文件中的 OCaml 代码。</p>
+</section>
+<section id="ocamllex">
+<h3><span class="section-number">10.2.4.3. </span>OCamllex 词法分析器<a class="headerlink" href="#ocamllex" title="Permalink to this heading">#</a></h3>
+<p>现在让我们看看如何使用词法分析器生成器。很多都会有似曾相识的感觉
+来自我们对解析器生成器的讨论。我们将把所有的 ocamllex 代码
+在名为 <code class="docutils literal notranslate"><span class="pre">lexer.mll</span></code> 的文件中写入以下内容。 <code class="docutils literal notranslate"><span class="pre">.mll</span></code> 扩展名表明
+该文件旨在作为 ocamllex 的输入。 （“l”暗示词法分析。）
+文件包含我们想要 lex 的语言的 <em>lexer 定义</em>。门希尔
+将处理该文件并生成一个名为 <code class="docutils literal notranslate"><span class="pre">lexer.ml</span></code> 的文件作为输出；它
+包含一个对该语言进行词法分析的 OCaml 程序。 （没有什么特别的
+关于名字 <code class="docutils literal notranslate"><span class="pre">lexer</span></code> 在这里；这只是描述性的。）</p>
+<p>词法分析器定义由四个部分组成：标头、标识符、规则和
+拖车。</p>
+<p><strong>标头。</strong> <em>标头</em> 出现在 <code class="docutils literal notranslate"><span class="pre">{</span></code> 和 <code class="docutils literal notranslate"><span class="pre">}</span></code> 之间。这是代码
+只需按字面复制到生成的 <code class="docutils literal notranslate"><span class="pre">lexer.ml</span></code> 中即可。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+open Parser
+}
+</pre></div>
+</div>
+<p>在这里，我们打开了 <code class="docutils literal notranslate"><span class="pre">Parser</span></code> 模块，这是 <code class="docutils literal notranslate"><span class="pre">parser.ml</span></code> 中的代码
+由 Menhir 根据 <code class="docutils literal notranslate"><span class="pre">parser.mly</span></code> 制作。我们打开它的原因是为了让我们
+可以使用其中声明的令牌名称，例如 <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>、<code class="docutils literal notranslate"><span class="pre">LET</span></code> 和 <code class="docutils literal notranslate"><span class="pre">INT</span></code>。
+我们的词法分析器定义。否则，我们必须写 <code class="docutils literal notranslate"><span class="pre">Parser.TRUE</span></code> 等。</p>
+<p><strong>标识符。</strong> 词法分析器定义的下一部分包含
+<em>标识符</em>，称为正则表达式。这些将用于
+规则部分，接下来。</p>
+<p>以下是我们将在 SimPL 中使用的标识符：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>let white = [&#39; &#39; &#39;\t&#39;]+
+let digit = [&#39;0&#39;-&#39;9&#39;]
+let int = &#39;-&#39;? digit+
+let letter = [&#39;a&#39;-&#39;z&#39; &#39;A&#39;-&#39;Z&#39;]
+let id = letter+
+</pre></div>
+</div>
+<p>上面的正则表达式适用于空白（空格和制表符）、数字（0
+到 9），整数（非空数字序列，前面可以选择
+减号）、字母（a 到 z 以及 A 到 Z）和 SimPL 变量名称
+（非空字母序列）又名 ids 或“标识符”—尽管我们
+现在这个词有两种不同的含义。</p>
+<p>仅供参考，这些与整数和 OCaml 的定义并不完全相同
+标识符。</p>
+<p>标识符部分实际上不是必需的；而不是在中写入 <code class="docutils literal notranslate"><span class="pre">white</span></code>
+规则我们直接写正则表达式就可以了。但是
+标识符有助于使词法分析器定义更加自文档化。</p>
+<p><strong>规则。</strong> 词法分析器定义的规则部分以以下符号编写：
+也类似于 BNF。规则的形式为</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>rule name =
+  parse
+  | regexp1 { action1 }
+  | regexp2 { action2 }
+  | ...
+</pre></div>
+</div>
+<p>这里，<code class="docutils literal notranslate"><span class="pre">rule</span></code> 和 <code class="docutils literal notranslate"><span class="pre">parse</span></code> 是关键字。生成的词法分析器将尝试
+按照正则表达式的列出顺序进行匹配。当一个
+正则表达式匹配，词法分析器生成由其指定的标记
+<code class="docutils literal notranslate"><span class="pre">action</span></code>。</p>
+<p>这是 SimPL 词法分析器的（唯一）规则：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>rule read =
+  parse
+  | white { read lexbuf }
+  | &quot;true&quot; { TRUE }
+  | &quot;false&quot; { FALSE }
+  | &quot;&lt;=&quot; { LEQ }
+  | &quot;*&quot; { TIMES }
+  | &quot;+&quot; { PLUS }
+  | &quot;(&quot; { LPAREN }
+  | &quot;)&quot; { RPAREN }
+  | &quot;let&quot; { LET }
+  | &quot;=&quot; { EQUALS }
+  | &quot;in&quot; { IN }
+  | &quot;if&quot; { IF }
+  | &quot;then&quot; { THEN }
+  | &quot;else&quot; { ELSE }
+  | id { ID (Lexing.lexeme lexbuf) }
+  | int { INT (int_of_string (Lexing.lexeme lexbuf)) }
+  | eof { EOF }
+</pre></div>
+</div>
+<p>大多数正则表达式和操作都是不言自明的，但有几个
+不是：</p>
+<ul class="simple">
+<li><p>第一个 <code class="docutils literal notranslate"><span class="pre">white</span> <span class="pre">{</span> <span class="pre">read</span> <span class="pre">lexbuf</span> <span class="pre">}</span></code> 意味着如果空格匹配，
+词法分析器应该再次调用 <code class="docutils literal notranslate"><span class="pre">read</span></code> 规则，而不是返回令牌
+并返回任何标记结果。换句话说，空白将被跳过。</p></li>
+<li><p>id 和 int 的两个使用表达式 <code class="docutils literal notranslate"><span class="pre">Lexing.lexeme</span> <span class="pre">lexbuf</span></code>。这调用
+<code class="docutils literal notranslate"><span class="pre">Lexing</span></code> 模块中定义的函数 <code class="docutils literal notranslate"><span class="pre">lexeme</span></code>，并返回字符串
+与正则表达式匹配。例如，在 <code class="docutils literal notranslate"><span class="pre">id</span></code> 规则中，它将
+返回构成变量的大小写字母序列
+名字。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eof</span></code> 正则表达式是一种特殊的正则表达式，它匹配文件末尾
+（或字符串）被词法分析。</p></li>
+</ul>
+<p>请注意，重要的是 <code class="docutils literal notranslate"><span class="pre">id</span></code> 正则表达式几乎出现在
+名单。否则，像 <code class="docutils literal notranslate"><span class="pre">true</span></code> 和 <code class="docutils literal notranslate"><span class="pre">if</span></code> 这样的关键字将被词法为变量
+名称而不是 <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> 和 <code class="docutils literal notranslate"><span class="pre">IF</span></code> 标记。</p>
+</section>
+<section id="id5">
+<h3><span class="section-number">10.2.4.4. </span>生成解析器和词法分析器<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<p>现在我们已经完成了 <code class="docutils literal notranslate"><span class="pre">parser.mly</span></code> 中的解析器和词法分析器定义，并且
+<code class="docutils literal notranslate"><span class="pre">lexer.mll</span></code>，我们可以运行 Menhir 和 ocamllex 来生成解析器和词法分析器
+来自他们。让我们这样组织我们的代码：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- &lt;some root folder&gt;
+  - dune-project
+  - src
+    - ast.ml
+    - dune
+    - lexer.mll
+    - parser.mly
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">src/dune</span></code> 中写入以下内容：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(library
+ (name interp))
+
+(menhir
+ (modules parser))
+
+(ocamllex lexer)
+</pre></div>
+</div>
+<p>这会将整个 <code class="docutils literal notranslate"><span class="pre">src</span></code> 文件夹组织到一个名为 <code class="docutils literal notranslate"><span class="pre">Interp</span></code> 的<em>库</em>中。
+解析器和词法分析器将是模块 <code class="docutils literal notranslate"><span class="pre">Interp.Parser</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Interp.Lexer</span></code>
+库。</p>
+<p>运行 <code class="docutils literal notranslate"><span class="pre">dune</span> <span class="pre">build</span></code> 编译代码，从而生成解析器和词法分析器。如果
+你想查看生成的代码，请在 <code class="docutils literal notranslate"><span class="pre">_build/default/src/</span></code> 中查找
+<code class="docutils literal notranslate"><span class="pre">parser.ml</span></code> 和 <code class="docutils literal notranslate"><span class="pre">lexer.ml</span></code>。</p>
+</section>
+<section id="id6">
+<h3><span class="section-number">10.2.4.5. </span>驱动程序<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<p>最后，我们可以将词法分析器和解析器结合在一起，将字符串转换为字符串
+AST。将此代码放入名为 <code class="docutils literal notranslate"><span class="pre">src/main.ml</span></code> 的文件中：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">Ast</span>
+
+<span class="k">let</span> <span class="n">parse</span> <span class="o">(</span><span class="n">s</span> <span class="o">:</span> <span class="kt">string</span><span class="o">)</span> <span class="o">:</span> <span class="n">expr</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">lexbuf</span> <span class="o">=</span> <span class="nn">Lexing</span><span class="p">.</span><span class="n">from_string</span> <span class="n">s</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">ast</span> <span class="o">=</span> <span class="nn">Parser</span><span class="p">.</span><span class="n">prog</span> <span class="nn">Lexer</span><span class="p">.</span><span class="n">read</span> <span class="n">lexbuf</span> <span class="k">in</span>
+  <span class="n">ast</span>
+</pre></div>
+</div>
+<p>该函数采用字符串 <code class="docutils literal notranslate"><span class="pre">s</span></code> 并使用标准库的 <code class="docutils literal notranslate"><span class="pre">Lexing</span></code> 模块
+从中创建一个<em>词法分析器缓冲区</em>。将该缓冲区视为令牌流。
+然后，该函数使用 <code class="docutils literal notranslate"><span class="pre">Lexer.read</span></code> 将字符串词法分析并解析为 AST
+和<code class="docutils literal notranslate"><span class="pre">Parser.prog</span></code>。函数 <code class="docutils literal notranslate"><span class="pre">Lexer.read</span></code> 对应于名为
+<code class="docutils literal notranslate"><span class="pre">read</span></code> 在我们的词法分析器定义中，函数 <code class="docutils literal notranslate"><span class="pre">Parser.prog</span></code> 对应于名为
+<code class="docutils literal notranslate"><span class="pre">prog</span></code> 在我们的解析器定义中。</p>
+<p>请注意此代码如何在字符串上运行词法分析器；有对应的函数
+<code class="docutils literal notranslate"><span class="pre">from_channel</span></code> 从文件中读取。</p>
+<p>我们现在可以交互地使用 <code class="docutils literal notranslate"><span class="pre">parse</span></code> 来解析一些字符串。  启动乌托普
+并使用以下命令加载 <code class="docutils literal notranslate"><span class="pre">src</span></code> 中声明的库：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>dune<span class="w"> </span>utop<span class="w"> </span>src
+</pre></div>
+</div>
+<p>现在 <code class="docutils literal notranslate"><span class="pre">Interp.Main.parse</span></code> 可供使用：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Main</span><span class="p">.</span><span class="n">parse</span> <span class="s2">&quot;let x = 3110 in x + x&quot;</span><span class="o">;;</span>
+<span class="o">-</span> <span class="o">:</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="n">expr</span> <span class="o">=</span>
+<span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Let</span> <span class="o">(</span><span class="s2">&quot;x&quot;</span><span class="o">,</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Int</span> <span class="mi">3110</span><span class="o">,</span>
+ <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Binop</span> <span class="o">(</span><span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Add</span><span class="o">,</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Var</span> <span class="s2">&quot;x&quot;</span><span class="o">,</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Var</span> <span class="s2">&quot;x&quot;</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>这就完成了 SimPL 的词法分析和解析。</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters/interp"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="calculator.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">10.1. </span>示例：计算器</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="substitution.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">10.3. </span>替换模型</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.2.1. 词法分析器</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">10.2.2. 解析器</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">10.2.3. 巴科斯-诺尔范式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simpl">10.2.4. 示例：SimPL</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ast">10.2.4.1. AST</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menhir">10.2.4.2. Menhir 解析器</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ocamllex">10.2.4.3. OCamllex 词法分析器</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">10.2.4.4. 生成解析器和词法分析器</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">10.2.4.5. 驱动程序</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

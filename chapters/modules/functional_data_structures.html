@@ -1,0 +1,1542 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>5.6. 函数式数据结构 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/modules/functional_data_structures';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5.7. 模块类型限制" href="module_type_constraints.html" />
+    <link rel="prev" title="5.5. 编译单元" href="compilation_units.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">5. 模块化编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/modules/functional_data_structures.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/modules/functional_data_structures.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/modules/functional_data_structures.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/modules/functional_data_structures.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/modules/functional_data_structures.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>函数式数据结构</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.6.1. 列表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.6.2. 堆栈</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option">5.6.3. Option 与异常</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5.6.4. 队列</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">5.6.5. 映射</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">5.6.6. 集合</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">5.6. </span>函数式数据结构<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/CLeXXZDkkCI" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>“函数式数据结构”是一种不利用可变性的数据结构。
+可以用函数式语言构建函数式数据结构
+以及命令式语言。例如，你可以构建
+通过创建 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 相当于 OCaml 的 <code class="docutils literal notranslate"><span class="pre">list</span></code> 类型的 Java
+其字段通过使用而不可变的类
+<code class="docutils literal notranslate"><span class="pre">final</span></code> 关键字。</p>
+<p>函数式数据结构具有<em>持久</em>的属性：更新
+数据结构及其操作之一不会更改现有版本
+的数据结构，而是产生一个新版本。两者都存在并且两者
+仍然可以访问。良好的语言实现将确保任何部分
+未被操作更改的数据结构将被<em>共享</em>
+旧版本和新版本之间。任何发生变化的部分都会
+<em>复制</em>以便旧版本可以保留。与持久数据相反
+结构是一种<em>短暂的</em>数据结构：更改具有破坏性，因此
+任何时候都只有一个版本。持久数据和短暂数据
+结构可以用函数式语言和命令式语言构建。</p>
+<section id="id2">
+<h2><span class="section-number">5.6.1. </span>列表<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>OCaml 中内置的单链接 <code class="docutils literal notranslate"><span class="pre">list</span></code> 数据结构是有效的。我们知道
+因为我们已经了解了如何使用代数数据类型来实现它。这是
+也是持久的，我们可以证明：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">lst</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">];;</span>
+<span class="k">let</span> <span class="n">lst&#39;</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">tl</span> <span class="n">lst</span><span class="o">;;</span>
+<span class="n">lst</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst : int list = [1; 2]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst&#39; : int list = [2]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [1; 2]
+</pre></div>
+</div>
+</div>
+</div>
+<p>获取 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 的尾部不会更改列表。 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 和 <code class="docutils literal notranslate"><span class="pre">lst'</span></code>
+共存而不互相影响。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">5.6.2. </span>堆栈<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/LWmGzSCpvVY" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>我们在本章前面实现了堆栈。这是其中之一的简洁变体
+这些实现中，我们添加了 <code class="docutils literal notranslate"><span class="pre">to_list</span></code> 操作以使其更容易
+查看示例中堆栈的内容：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">exception</span> <span class="nc">Empty</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">to_list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">exception</span> <span class="nc">Empty</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="k">let</span> <span class="n">push</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
+  <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">x</span>
+  <span class="k">let</span> <span class="n">pop</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span> <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span>
+  <span class="k">let</span> <span class="n">size</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span>
+  <span class="k">let</span> <span class="n">to_list</span> <span class="o">=</span> <span class="nn">Fun</span><span class="p">.</span><span class="n">id</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Stack =
+  sig
+    type &#39;a t
+    exception Empty
+    val empty : &#39;a t
+    val is_empty : &#39;a t -&gt; bool
+    val push : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val peek : &#39;a t -&gt; &#39;a
+    val pop : &#39;a t -&gt; &#39;a t
+    val size : &#39;a t -&gt; int
+    val to_list : &#39;a t -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStack : Stack
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>正如上面所看到的，该实现是函数式的，并且也是持久的：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">ListStack</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">s</span> <span class="o">=</span> <span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">1</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">2</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">s&#39;</span> <span class="o">=</span> <span class="n">pop</span> <span class="n">s</span><span class="o">;;</span>
+<span class="n">to_list</span> <span class="n">s</span><span class="o">;;</span>
+<span class="n">to_list</span> <span class="n">s&#39;</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val s : int ListStack.t = &lt;abstr&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val s&#39; : int ListStack.t = &lt;abstr&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [2; 1]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [1]
+</pre></div>
+</div>
+</div>
+</div>
+<p>创建 <code class="docutils literal notranslate"><span class="pre">s'</span></code> 的 <code class="docutils literal notranslate"><span class="pre">pop</span></code> 操作不会更改值 <code class="docutils literal notranslate"><span class="pre">s</span></code>。两者都
+堆栈的版本共存。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Stack</span></code> 模块类型给了我们一个强烈的暗示，即数据结构是
+持久化它为 <code class="docutils literal notranslate"><span class="pre">push</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pop</span></code> 提供的类型：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+</pre></div>
+</div>
+<p>两者都以堆栈作为参数并返回一个新堆栈作为结果。安
+临时数据结构通常不会费心返回堆栈。在Java，
+例如，类似的方法可能具有 <code class="docutils literal notranslate"><span class="pre">void</span></code> 返回类型；相当于
+OCaml 将返回 <code class="docutils literal notranslate"><span class="pre">unit</span></code>。</p>
+</section>
+<section id="option">
+<h2><span class="section-number">5.6.3. </span>Option 与异常<a class="headerlink" href="#option" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/tbMU_pv0p9o" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>到目前为止，我们所有的堆栈实现都会在 <code class="docutils literal notranslate"><span class="pre">peek</span></code> 时引发异常
+或 <code class="docutils literal notranslate"><span class="pre">pop</span></code> 应用于空堆栈。另一种可能性是使用
+<code class="docutils literal notranslate"><span class="pre">option</span></code> 作为返回值。如果输入堆栈为空，则 <code class="docutils literal notranslate"><span class="pre">peek</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">pop</span></code>返回<code class="docutils literal notranslate"><span class="pre">None</span></code>；否则，它们返回 <code class="docutils literal notranslate"><span class="pre">Some</span></code>。</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">option</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="n">option</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">to_list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">exception</span> <span class="nc">Empty</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="k">let</span> <span class="n">push</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
+  <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="nc">None</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="nc">Some</span> <span class="n">x</span>
+  <span class="k">let</span> <span class="n">pop</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="nc">None</span> <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="nc">Some</span> <span class="n">s</span>
+  <span class="k">let</span> <span class="n">size</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span>
+  <span class="k">let</span> <span class="n">to_list</span> <span class="o">=</span> <span class="nn">Fun</span><span class="p">.</span><span class="n">id</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Stack =
+  sig
+    type &#39;a t
+    val empty : &#39;a t
+    val is_empty : &#39;a t -&gt; bool
+    val push : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val peek : &#39;a t -&gt; &#39;a option
+    val pop : &#39;a t -&gt; &#39;a t option
+    val size : &#39;a t -&gt; int
+    val to_list : &#39;a t -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStack : Stack
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>但这使得管道化变得更加困难：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">ListStack</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">1</span> <span class="o">|&gt;</span> <span class="n">pop</span> <span class="o">|&gt;</span> <span class="n">peek</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[5]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">11</span><span class="o">-</span><span class="mi">33</span><span class="p">:</span>
+<span class="mi">1</span> <span class="o">|</span> <span class="n">ListStack</span><span class="o">.</span><span class="p">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">1</span> <span class="o">|&gt;</span> <span class="n">pop</span> <span class="o">|&gt;</span> <span class="n">peek</span><span class="p">)</span>
+               <span class="o">^^^^^^^^^^^^^^^^^^^^^^</span>
+<span class="ne">Error</span>: This expression has type int ListStack.t option
+       <span class="n">but</span> <span class="n">an</span> <span class="n">expression</span> <span class="n">was</span> <span class="n">expected</span> <span class="n">of</span> <span class="nb">type</span> <span class="s1">&#39;a ListStack.t</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>管道的类型在 <code class="docutils literal notranslate"><span class="pre">pop</span></code> 之后立即分解，因为
+现在返回 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">t</span> <span class="pre">option</span></code>，但 <code class="docutils literal notranslate"><span class="pre">peek</span></code> 期望的输入仅仅是
+<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">t</span></code>。</p>
+<p>可以定义一些额外的运算符来帮助恢复能力
+到管道。事实上，这些函数已经在<code class="docutils literal notranslate"><span class="pre">Option</span></code>模块中定义了
+在标准库中，尽管不是作为中缀运算符：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(* Option.map aka fmap *)</span>
+<span class="k">let</span> <span class="o">(</span> <span class="o">&gt;&gt;|</span> <span class="o">)</span> <span class="n">opt</span> <span class="n">f</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">opt</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="nc">None</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="nc">Some</span> <span class="o">(</span><span class="n">f</span> <span class="n">x</span><span class="o">)</span>
+
+<span class="c">(* Option.bind *)</span>
+<span class="k">let</span> <span class="o">(</span> <span class="o">&gt;&gt;=</span> <span class="o">)</span> <span class="n">opt</span> <span class="n">f</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">opt</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="nc">None</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( &gt;&gt;| ) : &#39;a option -&gt; (&#39;a -&gt; &#39;b) -&gt; &#39;b option = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( &gt;&gt;= ) : &#39;a option -&gt; (&#39;a -&gt; &#39;b option) -&gt; &#39;b option = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们可以根据需要使用它们来进行管道传输：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">ListStack</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">1</span> <span class="o">|&gt;</span> <span class="n">pop</span> <span class="o">&gt;&gt;|</span> <span class="n">push</span> <span class="mi">2</span> <span class="o">&gt;&gt;=</span> <span class="n">pop</span> <span class="o">&gt;&gt;|</span> <span class="n">push</span> <span class="mi">3</span> <span class="o">&gt;&gt;|</span> <span class="n">to_list</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list option = Some [3]
+</pre></div>
+</div>
+</div>
+</div>
+<p>但每一步都要想清楚该使用三个运算符中的哪一个，并不太愉快。</p>
+<p>因此，接口设计上存在一种权衡：</p>
+<ul class="simple">
+<li><p>使用 option 可以确保运行时永远不会因为空堆栈而出现意外异常。
+因此程序更加稳健。但方便的管道写法也随之丢失了。</p></li>
+<li><p>使用异常意味着程序员不必编写那么多代码。如果
+他们确信不会发生异常，他们可以省略代码
+处理它。该程序不太健壮，但编写起来更方便。</p></li>
+</ul>
+<p>因此，我们需要在“更早写更多代码（使用 option）”和
+“稍后做更多调试（使用异常）”之间取舍。OCaml 标准库最近
+开始在数据结构中提供两个版本的接口，以便
+客户端可以选择他们想要的使用方式。例如，我们可以
+为 <code class="docutils literal notranslate"><span class="pre">peek</span></code> 和 <code class="docutils literal notranslate"><span class="pre">peek_opt</span></code> 提供 <code class="docutils literal notranslate"><span class="pre">peek</span></code> 和 <code class="docutils literal notranslate"><span class="pre">peek_opt</span></code>，对于 <code class="docutils literal notranslate"><span class="pre">pop</span></code> 也是如此，对于
+我们的堆栈模块：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">exception</span> <span class="nc">Empty</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">peek_opt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">option</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">pop_opt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="n">option</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">to_list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">exception</span> <span class="nc">Empty</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="k">let</span> <span class="n">push</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
+  <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">x</span>
+  <span class="k">let</span> <span class="n">peek_opt</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="nc">None</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="nc">Some</span> <span class="n">x</span>
+  <span class="k">let</span> <span class="n">pop</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span> <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span>
+  <span class="k">let</span> <span class="n">pop_opt</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="nc">None</span> <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="nc">Some</span> <span class="n">s</span>
+  <span class="k">let</span> <span class="n">size</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span>
+  <span class="k">let</span> <span class="n">to_list</span> <span class="o">=</span> <span class="nn">Fun</span><span class="p">.</span><span class="n">id</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Stack =
+  sig
+    type &#39;a t
+    exception Empty
+    val empty : &#39;a t
+    val is_empty : &#39;a t -&gt; bool
+    val push : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val peek : &#39;a t -&gt; &#39;a
+    val peek_opt : &#39;a t -&gt; &#39;a option
+    val pop : &#39;a t -&gt; &#39;a t
+    val pop_opt : &#39;a t -&gt; &#39;a t option
+    val size : &#39;a t -&gt; int
+    val to_list : &#39;a t -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStack : Stack
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>此实现的一个好处是它非常高效。所有的
+除 <code class="docutils literal notranslate"><span class="pre">size</span></code> 之外的操作都是常数时间。我们在本章前面看到
+<code class="docutils literal notranslate"><span class="pre">size</span></code> 也可以设置为恒定时间，但需要一些额外的空间
+— 虽然只是一个常数因子，但更多的是 — 通过缓存的大小
+堆栈在列表中的每个节点。</p>
+</section>
+<section id="id4">
+<h2><span class="section-number">5.6.4. </span>队列<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/rCiBfZO67A4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>队列和堆栈是非常相似的接口。这里我们暂时继续使用异常，
+而不是 option。</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Queue</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="c">(** An [&#39;a t] is a queue whose elements have type [&#39;a]. *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+
+  <span class="c">(** Raised if [front] or [dequeue] is applied to the empty queue. *)</span>
+  <span class="k">exception</span> <span class="nc">Empty</span>
+
+  <span class="c">(** [empty] is the empty queue. *)</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+
+  <span class="c">(** [is_empty q] is whether [q] is empty. *)</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+
+  <span class="c">(** [enqueue x q] is the queue [q] with [x] added to the end. *)</span>
+  <span class="k">val</span> <span class="n">enqueue</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+
+  <span class="c">(** [front q] is the element at the front of the queue. Raises [Empty]</span>
+<span class="c">      if [q] is empty. *)</span>
+  <span class="k">val</span> <span class="n">front</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+
+  <span class="c">(** [dequeue q] is the queue containing all the elements of [q] except the</span>
+<span class="c">      front of [q]. Raises [Empty] if [q] is empty. *)</span>
+  <span class="k">val</span> <span class="n">dequeue</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+
+  <span class="c">(** [size q] is the number of elements in [q]. *)</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+
+  <span class="c">(** [to_list q] is a list containing the elements of [q] in order from</span>
+<span class="c">      front to back. *)</span>
+  <span class="k">val</span> <span class="n">to_list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Queue =
+  sig
+    type &#39;a t
+    exception Empty
+    val empty : &#39;a t
+    val is_empty : &#39;a t -&gt; bool
+    val enqueue : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val front : &#39;a t -&gt; &#39;a
+    val dequeue : &#39;a t -&gt; &#39;a t
+    val size : &#39;a t -&gt; int
+    val to_list : &#39;a t -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>与 <code class="docutils literal notranslate"><span class="pre">peek</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pop</span></code> 类似，请注意 <code class="docutils literal notranslate"><span class="pre">front</span></code> 和 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 如何划分
+获取第一个元素与获取所有其余元素的责任
+元素。</p>
+</div>
+<p>用列表实现队列很容易，就像实现
+堆栈：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListQueue</span> <span class="o">:</span> <span class="nc">Queue</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(** The list [x1; x2; ...; xn] represents the queue with [x1] at its front,</span>
+<span class="c">      followed by [x2], ..., followed by [xn]. *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">exception</span> <span class="nc">Empty</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="k">let</span> <span class="n">enqueue</span> <span class="n">x</span> <span class="n">q</span> <span class="o">=</span> <span class="n">q</span> <span class="o">@</span> <span class="o">[</span><span class="n">x</span><span class="o">]</span>
+  <span class="k">let</span> <span class="n">front</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">x</span>
+  <span class="k">let</span> <span class="n">dequeue</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span> <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="n">q</span> <span class="o">-&gt;</span> <span class="n">q</span>
+  <span class="k">let</span> <span class="n">size</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span>
+  <span class="k">let</span> <span class="n">to_list</span> <span class="o">=</span> <span class="nn">Fun</span><span class="p">.</span><span class="n">id</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListQueue : Queue
+</pre></div>
+</div>
+</div>
+</div>
+<p>但是，尽管很简单，但这种实现并不像我们的那样有效
+基于列表的堆栈。出队是一个恒定时间的操作
+表示，但排队是线性时间操作。那是因为
+<code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 执行单个模式匹配，而 <code class="docutils literal notranslate"><span class="pre">enqueue</span></code> 必须遍历
+整个列表在末尾附加新元素。</p>
+<p>有一个非常聪明的方法可以提高效率。我们可以使用两个列表
+代表单个队列。这种表示法是由罗伯特·梅尔维尔发明的
+他在康奈尔大学的博士论文的一部分（<em>迭代的渐近复杂性
+计算</em>，1981 年 1 月），由 David Gries 教授提供建议。克里斯·冈崎
+（<em>纯函数式数据结构</em>，剑桥大学出版社，1988 年）调用
+这些<em>批量队列</em>。有时你会看到引用了相同的实现
+相当于“用两个堆栈实现队列”。那是因为堆栈和列表
+非常相似（正如我们已经看到的），你可以将 <code class="docutils literal notranslate"><span class="pre">pop</span></code> 重写为
+<code class="docutils literal notranslate"><span class="pre">List.tl</span></code> 等等。</p>
+<p>核心思想有A部分和B部分。A部分是：我们使用两个列表来
+将队列分成两部分，<em>收件箱</em>和<em>发件箱</em>。当新元素出现时
+排队后，我们将它们放入收件箱。最终（我们很快就会知道如何）元素
+从收件箱转移到发件箱。当请求出列时，
+元素从发件箱中删除；或者当请求前面的元素时，我们
+检查发件箱。例如，如果收件箱当前有 <code class="docutils literal notranslate"><span class="pre">[3;</span> <span class="pre">4;</span> <span class="pre">5]</span></code> 并且
+发件箱有 <code class="docutils literal notranslate"><span class="pre">[1;</span> <span class="pre">2]</span></code>，那么前面的元素将是 <code class="docutils literal notranslate"><span class="pre">1</span></code>，即头部
+发件箱。出列将删除该元素并留下发件箱
+只是<code class="docutils literal notranslate"><span class="pre">[2]</span></code>。同样，入队 <code class="docutils literal notranslate"><span class="pre">6</span></code> 将使收件箱变成 <code class="docutils literal notranslate"><span class="pre">[3;</span> <span class="pre">4;</span> <span class="pre">5;</span> <span class="pre">6]</span></code>。</p>
+<p>到目前为止，<code class="docutils literal notranslate"><span class="pre">front</span></code> 和 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> 的效率非常好。我们只需要
+分别取发件箱的头部或尾部，假设它非空。
+这些是恒定时间操作。但<code class="docutils literal notranslate"><span class="pre">enqueue</span></code>的效率仍然是
+不好。这是线性时间，因为我们必须将新元素附加到末尾
+名单。可惜我们必须使用追加运算符，这本质上是
+线性时间。如果我们能使用 cons 就更好了，cons 是常数
+时间。</p>
+<p>所以这是核心思想的 B 部分：让我们以相反的顺序保留收件箱。  对于
+例如，如果我们将 <code class="docutils literal notranslate"><span class="pre">3</span></code> 入队，然后 <code class="docutils literal notranslate"><span class="pre">4</span></code> 然后 <code class="docutils literal notranslate"><span class="pre">5</span></code> 入队，收件箱实际上会
+是 <code class="docutils literal notranslate"><span class="pre">[5;</span> <span class="pre">4;</span> <span class="pre">3]</span></code>，而不是 <code class="docutils literal notranslate"><span class="pre">[3;</span> <span class="pre">4;</span> <span class="pre">5]</span></code>。  然后如果 <code class="docutils literal notranslate"><span class="pre">6</span></code> 接下来入队，我们可以
+将其放在收件箱的开头，即变为 <code class="docutils literal notranslate"><span class="pre">[6;</span> <span class="pre">5;</span> <span class="pre">4;</span> <span class="pre">3]</span></code>。
+因此，由收件箱 <code class="docutils literal notranslate"><span class="pre">i</span></code> 和发件箱 <code class="docutils literal notranslate"><span class="pre">o</span></code> 表示的队列是 <code class="docutils literal notranslate"><span class="pre">o</span> <span class="pre">&#64;</span> <span class="pre">List.rev</span> <span class="pre">i</span></code>。
+因此 <code class="docutils literal notranslate"><span class="pre">enqueue</span></code> 现在可以始终是恒定时间操作。</p>
+<p>但是 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> （和 <code class="docutils literal notranslate"><span class="pre">front</span></code>）呢？它们也是恒定的时间，<strong>只要
+发件箱不为空。</strong> 如果它是空的，我们就有问题了。我们需要转移
+此时收件箱中的任何内容都会发送到发件箱中。  例如，如果
+发件箱为空，收件箱为<code class="docutils literal notranslate"><span class="pre">[6;</span> <span class="pre">5;</span> <span class="pre">4;</span> <span class="pre">3]</span></code>，那么我们需要切换它们
+周围，使发件箱为 <code class="docutils literal notranslate"><span class="pre">[3;</span> <span class="pre">4;</span> <span class="pre">5;</span> <span class="pre">6]</span></code> 并且收件箱为空。  那是
+其实很简单：我们只需颠倒列表即可。</p>
+<p>不幸的是，我们刚刚重新引入了线性时间操作。但与一个
+关键区别：我们不必对每个都进行线性时间反转
+<code class="docutils literal notranslate"><span class="pre">dequeue</span></code>，而对于上面的 <code class="docutils literal notranslate"><span class="pre">ListQueue</span></code>，我们必须执行线性时间追加
+每<code class="docutils literal notranslate"><span class="pre">enqueue</span></code>。相反，我们只需要在极少数情况下做相反的事情
+当发件箱变空时。</p>
+<p>因此，即使在最坏的情况下 <code class="docutils literal notranslate"><span class="pre">dequeue</span></code> （和 <code class="docutils literal notranslate"><span class="pre">front</span></code>）将是线性时间，
+大多数时候他们不会。事实上，在本书后面我们学习的时候
+<em>摊销分析</em>我们将证明，从长远来看，它们可以被理解为
+恒定时间操作。现在，有一个直觉可以支持这一点
+声明：每个单独的元素进入收件箱一次（使用 cons），然后移动到
+发件箱一次（使用模式匹配然后 cons），并离开发件箱一次（使用
+模式匹配）。其中每一个都是恒定时间。所以每个元素只有
+从自己的角度体验恒定时间的操作。</p>
+<p>现在，让我们继续实现这些想法。在实现过程中，我们将
+添加一个想法：发件箱中始终必须有一个元素，除非
+队列为空。换句话说，如果发件箱是空的，我们保证
+收件箱也是。对于批处理队列来说，这个要求不是必需的，但确实如此
+通过减少我们必须检查是否存在的次数来使代码更简单
+列表为空。微小的权衡是，如果队列为空，现在 <code class="docutils literal notranslate"><span class="pre">enqueue</span></code>
+必须直接将元素放入发件箱。不管怎样，这仍然是一个
+恒定时间运行。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">BatchedQueue</span> <span class="o">:</span> <span class="nc">Queue</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(** [{o; i}] represents the queue [o @ List.rev i]. For example,</span>
+<span class="c">      [{o = [1; 2]; i = [5; 4; 3]}] represents the queue [1, 2, 3, 4, 5],</span>
+<span class="c">      where [1] is the front element. To avoid ambiguity about emptiness,</span>
+<span class="c">      whenever only one of the lists is empty, it must be [i]. For example,</span>
+<span class="c">      [{o = [1]; i = []}] is a legal representation, but [{o = []; i = [1]}]</span>
+<span class="c">      is not. This implies that if [o] is empty, [i] must also be empty. *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="o">{</span><span class="n">o</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span><span class="o">;</span> <span class="n">i</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span><span class="o">}</span>
+
+  <span class="k">exception</span> <span class="nc">Empty</span>
+
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">;</span> <span class="n">i</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span>
+
+  <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+    <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+
+  <span class="k">let</span> <span class="n">enqueue</span> <span class="n">x</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span> <span class="o">-&gt;</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="o">[</span><span class="n">x</span><span class="o">];</span> <span class="n">i</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span>
+    <span class="o">|</span> <span class="o">{</span><span class="n">o</span><span class="o">;</span> <span class="n">i</span><span class="o">}</span> <span class="o">-&gt;</span> <span class="o">{</span><span class="n">o</span><span class="o">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">x</span> <span class="o">::</span> <span class="n">i</span><span class="o">}</span>
+
+  <span class="k">let</span> <span class="n">front</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="n">h</span> <span class="o">::</span> <span class="o">_}</span> <span class="o">-&gt;</span> <span class="n">h</span>
+
+  <span class="k">let</span> <span class="n">dequeue</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span>
+    <span class="o">|</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="o">[_];</span> <span class="n">i</span><span class="o">}</span> <span class="o">-&gt;</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">rev</span> <span class="n">i</span><span class="o">;</span> <span class="n">i</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span>
+    <span class="o">|</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="o">_</span> <span class="o">::</span> <span class="n">t</span><span class="o">;</span> <span class="n">i</span><span class="o">}</span> <span class="o">-&gt;</span> <span class="o">{</span><span class="n">o</span> <span class="o">=</span> <span class="n">t</span><span class="o">;</span> <span class="n">i</span><span class="o">}</span>
+
+  <span class="k">let</span> <span class="n">size</span> <span class="o">{</span><span class="n">o</span><span class="o">;</span> <span class="n">i</span><span class="o">}</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="o">(</span><span class="n">length</span> <span class="n">o</span> <span class="o">+</span> <span class="n">length</span> <span class="n">i</span><span class="o">)</span>
+
+  <span class="k">let</span> <span class="n">to_list</span> <span class="o">{</span><span class="n">o</span><span class="o">;</span> <span class="n">i</span><span class="o">}</span> <span class="o">=</span> <span class="n">o</span> <span class="o">@</span> <span class="nn">List</span><span class="p">.</span><span class="n">rev</span> <span class="n">i</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module BatchedQueue : Queue
+</pre></div>
+</div>
+</div>
+</div>
+<p>批处理队列的效率是以可读性为代价的。如果我们比较
+<code class="docutils literal notranslate"><span class="pre">ListQueue</span></code> 和 <code class="docutils literal notranslate"><span class="pre">BatchedQueue</span></code>，希望清楚 <code class="docutils literal notranslate"><span class="pre">ListQueue</span></code> 是一个
+队列数据结构的简单且正确的实现。大概很远
+不太清楚 <code class="docutils literal notranslate"><span class="pre">BatchedQueue</span></code> 是正确的实现。看看如何
+上面写了很多段文字来解释它！</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">5.6.5. </span>映射<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>回想一下，<em>map</em>（又名<em>dictionary</em>）将键绑定到值。这是一个模块
+类型的映射。映射可能支持许多其他操作，但是
+现在这些就足够了。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Map</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="c">(** [(&#39;k, &#39;v) t] is the type of maps that bind keys of type [&#39;k] to</span>
+<span class="c">      values of type [&#39;v]. *)</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+
+  <span class="c">(** [empty] does not bind any keys. *)</span>
+  <span class="k">val</span> <span class="n">empty</span>  <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+
+  <span class="c">(** [insert k v m] is the map that binds [k] to [v], and also contains</span>
+<span class="c">      all the bindings of [m].  If [k] was already bound in [m], that old</span>
+<span class="c">      binding is superseded by the binding to [v] in the returned map. *)</span>
+  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+
+  <span class="c">(** [lookup k m] is the value bound to [k] in [m]. Raises: [Not_found] if [k]</span>
+<span class="c">      is not bound in [m]. *)</span>
+  <span class="k">val</span> <span class="n">lookup</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span>
+
+  <span class="c">(** [bindings m] is an association list containing the same bindings as [m].</span>
+<span class="c">      The keys in the list are guaranteed to be unique. *)</span>
+  <span class="k">val</span> <span class="n">bindings</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Map =
+  sig
+    type (&#39;k, &#39;v) t
+    val empty : (&#39;k, &#39;v) t
+    val insert : &#39;k -&gt; &#39;v -&gt; (&#39;k, &#39;v) t -&gt; (&#39;k, &#39;v) t
+    val lookup : &#39;k -&gt; (&#39;k, &#39;v) t -&gt; &#39;v
+    val bindings : (&#39;k, &#39;v) t -&gt; (&#39;k * &#39;v) list
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>请注意 <code class="docutils literal notranslate"><span class="pre">Map.t</span></code> 如何在两种类型 <code class="docutils literal notranslate"><span class="pre">'k</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'v</span></code> 上进行参数化，这两种类型被编写为
+放在括号中并用逗号分隔。虽然 <code class="docutils literal notranslate"><span class="pre">('k,</span> <span class="pre">'v)</span></code> 可能看起来像
+值对，它不是：它是编写多个类型变量的语法。</p>
+<p>回想一下，关联列表是成对的列表，其中第一个元素
+每对都是一个键，第二个元素是它绑定的值。例如，
+这是一个关联列表，将一些众所周知的名称映射到近似值
+它们的数值：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[(</span><span class="s2">&quot;pi&quot;</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">);</span> <span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="mf">2.718</span><span class="p">);</span> <span class="p">(</span><span class="s2">&quot;phi&quot;</span><span class="p">,</span> <span class="mf">1.618</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>当然，我们可以使用关联列表来实现 <code class="docutils literal notranslate"><span class="pre">Map</span></code> 模块类型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">AssocListMap</span> <span class="o">:</span> <span class="nc">Map</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(** The list [(k1, v1); ...; (kn, vn)] binds key [ki] to value [vi].</span>
+<span class="c">      If a key appears more than once in the list, it is bound to the</span>
+<span class="c">      the left-most occurrence in the list. *)</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">insert</span> <span class="n">k</span> <span class="n">v</span> <span class="n">m</span> <span class="o">=</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">::</span> <span class="n">m</span>
+  <span class="k">let</span> <span class="n">lookup</span> <span class="n">k</span> <span class="n">m</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">assoc</span> <span class="n">k</span> <span class="n">m</span>
+  <span class="k">let</span> <span class="n">keys</span> <span class="n">m</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="o">(</span><span class="n">m</span> <span class="o">|&gt;</span> <span class="n">map</span> <span class="n">fst</span> <span class="o">|&gt;</span> <span class="n">sort_uniq</span> <span class="nn">Stdlib</span><span class="p">.</span><span class="n">compare</span><span class="o">)</span>
+  <span class="k">let</span> <span class="n">bindings</span> <span class="n">m</span> <span class="o">=</span> <span class="n">m</span> <span class="o">|&gt;</span> <span class="n">keys</span> <span class="o">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> <span class="o">(</span><span class="k">fun</span> <span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">lookup</span> <span class="n">k</span> <span class="n">m</span><span class="o">))</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module AssocListMap : Map
+</pre></div>
+</div>
+</div>
+</div>
+<p>映射的这种实现是持久的。例如，添加一个新的
+绑定到下面的映射 <code class="docutils literal notranslate"><span class="pre">m</span></code> 不会改变 <code class="docutils literal notranslate"><span class="pre">m</span></code> 本身：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">AssocListMap</span>
+<span class="k">let</span> <span class="n">m</span> <span class="o">=</span> <span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">insert</span> <span class="s2">&quot;pi&quot;</span> <span class="mi">3</span><span class="o">.</span><span class="mi">14</span> <span class="o">|&gt;</span> <span class="n">insert</span> <span class="s2">&quot;e&quot;</span> <span class="mi">2</span><span class="o">.</span><span class="mi">718</span>
+<span class="k">let</span> <span class="n">m&#39;</span> <span class="o">=</span> <span class="n">m</span> <span class="o">|&gt;</span> <span class="n">insert</span> <span class="s2">&quot;phi&quot;</span> <span class="mi">1</span><span class="o">.</span><span class="mi">618</span>
+<span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="n">bindings</span> <span class="n">m</span>
+<span class="k">let</span> <span class="n">b&#39;</span> <span class="o">=</span> <span class="n">bindings</span> <span class="n">m&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val m : (string, float) AssocListMap.t = &lt;abstr&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val m&#39; : (string, float) AssocListMap.t = &lt;abstr&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val b : (string * float) list = [(&quot;e&quot;, 2.718); (&quot;pi&quot;, 3.14)]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val b&#39; : (string * float) list = [(&quot;e&quot;, 2.718); (&quot;phi&quot;, 1.618); (&quot;pi&quot;, 3.14)]
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">insert</span></code> 操作是恒定时间，这很棒。但是 <code class="docutils literal notranslate"><span class="pre">lookup</span></code>
+操作是线性时间。可以做得比这更好。在后来的一个
+本章，我们将看看如何做得更好。可实现对数时间性能
+具有平衡二叉树，以及诸如恒定时间性能之类的东西
+哈希表。然而，这些都没有实现代码的简单性
+上面。</p>
+<p><code class="docutils literal notranslate"><span class="pre">bindings</span></code> 操作因列表中潜在的重复键而变得复杂。
+它使用 <code class="docutils literal notranslate"><span class="pre">keys</span></code> 辅助函数来提取唯一的键列表
+库函数<code class="docutils literal notranslate"><span class="pre">List.sort_uniq</span></code>的帮助。该函数对输入列表进行排序并
+在此过程中丢弃重复项。它需要一个比较函数作为输入。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果比较函数的参数比较相等，则比较函数必须返回 0
+如果第一个更大，则为正整数；如果第一个更大，则为负整数
+较小。</p>
+</div>
+<p>这里我们使用标准库的比较函数<code class="docutils literal notranslate"><span class="pre">Stdlib.compare</span></code>，它
+其行为与内置比较运算符 <code class="docutils literal notranslate"><span class="pre">=</span></code>、<code class="docutils literal notranslate"><span class="pre">&lt;</span></code>、<code class="docutils literal notranslate"><span class="pre">&gt;</span></code> 基本相同，
+等等。如果你想有一个轻松的想法，自定义比较函数很有用
+重复意味着什么。例如，也许你想忽略
+字符串的大小写，或数字的符号等。</p>
+<p><code class="docutils literal notranslate"><span class="pre">List.sort_uniq</span></code> 的运行时间是线性的，它产生一个线性的
+作为输出的键数。  对于每个键，我们都会进行线性时间查找
+操作。  所以 <code class="docutils literal notranslate"><span class="pre">bindings</span></code> 的总运行时间是 <span class="math notranslate nohighlight">\(O(n \log n) + O(n) \cdot
+O(n)\)</span>, which is <span class="math notranslate nohighlight">\(O(n^2)\)</span>。  我们绝对可以做得更好
+更高级的数据结构。</p>
+<p>实际上，即使有关联，我们也可以进行恒定时间的 <code class="docutils literal notranslate"><span class="pre">bindings</span></code> 操作
+列出，如果我们愿意为线性时间 <code class="docutils literal notranslate"><span class="pre">insert</span></code> 操作付费：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">UniqAssocListMap</span> <span class="o">:</span> <span class="nc">Map</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(** The list [(k1, v1); ...; (kn, vn)] binds key [ki] to value [vi].</span>
+<span class="c">      No duplicate keys may occur. *)</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">insert</span> <span class="n">k</span> <span class="n">v</span> <span class="n">m</span> <span class="o">=</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">::</span> <span class="nn">List</span><span class="p">.</span><span class="n">remove_assoc</span> <span class="n">k</span> <span class="n">m</span>
+  <span class="k">let</span> <span class="n">lookup</span> <span class="n">k</span> <span class="n">m</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">assoc</span> <span class="n">k</span> <span class="n">m</span>
+  <span class="k">let</span> <span class="n">bindings</span> <span class="n">m</span> <span class="o">=</span> <span class="n">m</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module UniqAssocListMap : Map
+</pre></div>
+</div>
+</div>
+</div>
+<p>该实现在插入之前删除 <code class="docutils literal notranslate"><span class="pre">k</span></code> 的任何重复绑定
+一个新的绑定。</p>
+</section>
+<section id="id6">
+<h2><span class="section-number">5.6.6. </span>集合<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>这是集合的模块类型。一组数据还有很多其他操作
+结构可能会提供支持，但目前这些就足够了。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="c">(** [&#39;a t] is the type of sets whose elements are of type [&#39;a]. *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+
+  <span class="c">(** [empty] is the empty set. *)</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+
+  <span class="c">(** [mem x s] is whether [x] is an element of [s]. *)</span>
+  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+
+  <span class="c">(** [add x s] is the set that contains [x] and all the elements of [s]. *)</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+
+  <span class="c">(** [elements s] is a list containing the elements of [s].  No guarantee</span>
+<span class="c">      is made about the ordering of that list, but each element is guaranteed</span>
+<span class="c">      to be unique. *)</span>
+  <span class="k">val</span> <span class="n">elements</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Set =
+  sig
+    type &#39;a t
+    val empty : &#39;a t
+    val mem : &#39;a -&gt; &#39;a t -&gt; bool
+    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val elements : &#39;a t -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>下面是该接口的实现，使用列表来表示集合。
+此实现确保列表永远不包含任何重复元素，
+因为集合本身不：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">UniqListSet</span> <span class="o">:</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span>
+  <span class="k">let</span> <span class="n">add</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span> <span class="k">if</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">s</span> <span class="k">then</span> <span class="n">s</span> <span class="k">else</span> <span class="n">x</span> <span class="o">::</span> <span class="n">s</span>
+  <span class="k">let</span> <span class="n">elements</span> <span class="o">=</span> <span class="nn">Fun</span><span class="p">.</span><span class="n">id</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module UniqListSet : Set
+</pre></div>
+</div>
+</div>
+</div>
+<p>请注意 <code class="docutils literal notranslate"><span class="pre">add</span></code> 如何确保表示形式不包含任何重复项，因此
+<code class="docutils literal notranslate"><span class="pre">elements</span></code> 的实现很容易。当然，这伴随着
+<code class="docutils literal notranslate"><span class="pre">add</span></code> 是线性时间的权衡。</p>
+<p>这是第二个实现，它允许列表中存在重复项：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSet</span> <span class="o">:</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span>
+  <span class="k">let</span> <span class="n">add</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
+  <span class="k">let</span> <span class="n">elements</span> <span class="n">s</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">sort_uniq</span> <span class="nn">Stdlib</span><span class="p">.</span><span class="n">compare</span> <span class="n">s</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSet : Set
+</pre></div>
+</div>
+</div>
+</div>
+<p>在该实现中， <code class="docutils literal notranslate"><span class="pre">add</span></code> 操作现在是恒定时间，并且
+<code class="docutils literal notranslate"><span class="pre">elements</span></code> 操作是线性时间。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/modules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="compilation_units.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">5.5. </span>编译单元</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="module_type_constraints.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">5.7. </span>模块类型限制</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.6.1. 列表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.6.2. 堆栈</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option">5.6.3. Option 与异常</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5.6.4. 队列</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">5.6.5. 映射</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">5.6.6. 集合</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

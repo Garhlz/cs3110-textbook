@@ -1,0 +1,1157 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>9.3. 红黑树 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/ds/rb';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="9.4. 序列" href="sequence.html" />
+    <link rel="prev" title="9.2. 摊销分析" href="amortized.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">9. 数据结构</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/ds/rb.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/ds/rb.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/ds/rb.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/ds/rb.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/ds/rb.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>红黑树</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">9.3.1. 二叉搜索树</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">9.3.2. 红黑树</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">9.3.2.1. 平衡</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">9.3.2.2. 成员查询</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">9.3.2.3. 插入：冈崎算法</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">9.3.2.4. 删除</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bst">9.3.3. 来自 BST 的映射和集合</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">9.3. </span>红黑树<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/uOKHuYloCsI" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>正如我们已经看到的，哈希表是实现映射 ADT 的一种高效数据结构。
+它们提供摊销的、预期的常数时间性能—这是一个微妙的保证，
+因为必须加上“摊销”和“预期”这两个限定词。哈希表还需要可变性来实现。
+作为函数式程序员，我们更愿意尽可能避免可变性。</p>
+<p>那么，让我们研究如何实现函数式映射。最好的数据结构之一是<em>红黑树</em>：
+它是一种平衡二叉搜索树，提供最坏情况下的对数时间性能。
+一方面，它的性能比哈希表稍差（对数时间而非常数时间）；
+另一方面，我们不必再用“摊销”和“预期”这样的词限定性能。
+对数时间即使面对很大的工作负载也仍然非常高效。而且，我们可以避免可变性！</p>
+<section id="id2">
+<h2><span class="section-number">9.3.1. </span>二叉搜索树<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/Xx9V5vrkjJA" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p><strong>二叉搜索树</strong> (BST) 是具有以下内容的二叉树
+表示不变式：</p>
+<blockquote>
+<div><p>对于任何节点 <em>n</em>，<em>n</em> 左子树中的每个节点的值都小于
+<em>n</em> 的值，并且 <em>n</em> 右子树中的每个节点的值都大于
+大于 <em>n</em> 的值。</p>
+</div></blockquote>
+<p>我们称之为<em>BST 不变量</em>。</p>
+<p>下面是在 BST 上实现几个操作的代码：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span> <span class="nc">Node</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">|</span> <span class="nc">Leaf</span>
+
+<span class="c">(** [mem x t] is [true] iff [x] is a member of [t]. *)</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">mem</span> <span class="n">x</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="o">|</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">y</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">)</span> <span class="o">-&gt;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="k">then</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">l</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span> <span class="k">then</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">r</span>
+    <span class="k">else</span> <span class="bp">true</span>
+
+<span class="c">(** [insert x t] is [t] with [x] inserted as a member. *)</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">insert</span> <span class="n">x</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">)</span>
+  <span class="o">|</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">y</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">)</span> <span class="k">as</span> <span class="n">t</span> <span class="o">-&gt;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="k">then</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">y</span><span class="o">,</span> <span class="n">insert</span> <span class="n">x</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">)</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span> <span class="k">then</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">y</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">insert</span> <span class="n">x</span> <span class="n">r</span><span class="o">)</span>
+    <span class="k">else</span> <span class="n">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a tree = Node of &#39;a * &#39;a tree * &#39;a tree | Leaf
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val mem : &#39;a -&gt; &#39;a tree -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert : &#39;a -&gt; &#39;a tree -&gt; &#39;a tree = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>这些操作的运行时间是多少？由于 <code class="docutils literal notranslate"><span class="pre">insert</span></code> 只是一个 <code class="docutils literal notranslate"><span class="pre">mem</span></code>
+通过额外的恒定时间节点创建，我们专注于 <code class="docutils literal notranslate"><span class="pre">mem</span></code> 操作。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/pFUJgaYUH6o" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p><code class="docutils literal notranslate"><span class="pre">mem</span></code>的运行时间为<span class="math notranslate nohighlight">\(O(h)\)</span>，其中<span class="math notranslate nohighlight">\(h\)</span>是树的高度，
+因为每个递归调用都会在树中下降一层。什么是
+最坏情况下树的高度？它发生在一个由 <span class="math notranslate nohighlight">\(n\)</span> 节点组成的树上
+长分支—想象将数字1,2,3,4,5,6,7按顺序添加到
+树。所以 <code class="docutils literal notranslate"><span class="pre">mem</span></code> 最坏情况下的运行时间仍然是 <span class="math notranslate nohighlight">\(O(n)\)</span>，其中 <span class="math notranslate nohighlight">\(n\)</span> 是
+树中的节点数。</p>
+<p>对于允许快速查找的树来说，什么是好的形状？
+一棵“完美二叉树”，其中每个叶子都位于底层，对于其中的节点数量而言，其高度可能最小。
+考虑一下这棵完美的树：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nc">Node</span> <span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="nc">Node</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">),</span> <span class="nc">Node</span> <span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>我们可以这样画它，其中 <code class="docutils literal notranslate"><span class="pre">.</span></code> 表示 <code class="docutils literal notranslate"><span class="pre">Leaf</span></code>，我们描述树的每一层的高度：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                     <span class="n">Height</span>
+        <span class="mi">2</span>              <span class="mi">2</span>
+       <span class="o">/</span> \
+     <span class="mi">1</span>     <span class="mi">3</span>           <span class="mi">1</span>
+    <span class="o">/</span> \   <span class="o">/</span> \
+   <span class="o">.</span>   <span class="o">.</span> <span class="o">.</span>   <span class="o">.</span>         <span class="mi">0</span>
+</pre></div>
+</div>
+<p>完美二叉树中的节点数 <span class="math notranslate nohighlight">\(n\)</span> 与树的高度 <span class="math notranslate nohighlight">\(h\)</span> 呈指数关系。
+（请注意，这里的“节点”具体指的是 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">Leaf</span></code>。）
+特别是 <span class="math notranslate nohighlight">\(n = 2^h - 1\)</span> （这是我们可以通过归纳法证明的事实）。
+因此<span class="math notranslate nohighlight">\(h = \log_2(n+1)\)</span>，即<span class="math notranslate nohighlight">\(O(\log n)\)</span>。
+因此，完美二叉搜索树上的查找操作将以对数时间运行。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/BGkipOJdH3U" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>当然，并不是每棵树都是完美的。
+但如果我们能够使树中所有路径的长度接近对数，那么我们仍然可以获得良好的性能。
+<em>平衡</em>树数据结构的作用是：当添加或删除元素时，树的形状可能会发生变化，以确保路径长度不会增长太长。
+平衡二叉搜索树数据结构的一些示例（按照对路径长度的约束从最强到最弱的顺序排列）包括：</p>
+<ul class="simple">
+<li><p>2-3 棵树（Hopcroft，1970）：所有路径都具有相同的长度。</p></li>
+<li><p>AVL 树（Adelson-Velsky 和 Landis，1962）：最短和最长路径的长度最多相差 1。</p></li>
+<li><p>红黑树（Guibas 和 Sedgewick，1978）：最短和最长路径的长度最多相差两倍。</p></li>
+</ul>
+<p>这些数据结构中的每一个都确保 <span class="math notranslate nohighlight">\(O(\log n)\)</span> 运行时间。
+接下来我们将研究红黑树，它有一个基于代数数据类型和模式匹配的特别好的实现。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">9.3.2. </span>红黑树<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/JzhG0jDxGqg" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>红黑树是比较简单的平衡二叉树数据结构。
+我们将树的每个节点着色为<em>红色</em>或<em>黑色</em>。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">color</span> <span class="o">=</span> <span class="nc">Red</span> <span class="o">|</span> <span class="nc">Black</span>
+<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">rbtree</span> <span class="o">=</span> <span class="nc">Leaf</span> <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="n">color</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">rbtree</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">rbtree</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type color = Red | Black
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a rbtree = Leaf | Node of color * &#39;a * &#39;a rbtree * &#39;a rbtree
+</pre></div>
+</div>
+</div>
+</div>
+<p>请注意，当我们在本次讨论中写“节点”时，我们指的是 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 构造函数； <strong>a <code class="docutils literal notranslate"><span class="pre">Leaf</span></code> 不是节点。</strong>
+我们要求非空树的根节点被涂成黑色。</p>
+<p>除了二叉搜索树表示不变量之外，红黑树还必须满足这些不变量：</p>
+<ol class="arabic simple">
+<li><p><strong>局部不变式：</strong> 任何路径上都不存在两个相邻的红色节点。</p></li>
+<li><p><strong>全局不变式：</strong> 每个“完整路径”（从根到叶子的路径）都具有相同数量的黑色节点。这个数字称为树的“黑高度”。</p></li>
+</ol>
+<p>如果一棵树满足这两个条件，那么该树的每个子树也必须满足这两个条件。
+如果子树违反了任一条件，则整棵树也会违反。</p>
+<section id="id4">
+<h3><span class="section-number">9.3.2.1. </span>平衡<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<p>红黑树不变量确保树保持平衡。
+平衡不一定是完美的——一些完整路径可能比其他完整路径更长——但正如以下定理所述，不平衡不会太严重。</p>
+<p><strong>定理</strong> 红黑树中最长全路径的长度至多是最短全路径长度的两倍。</p>
+<p><em>证明。</em>
+根据全局不变量，最长和最短的完整路径必须具有相同数量的黑色节点 <span class="math notranslate nohighlight">\(b\)</span>，即树的黑色高度。
+（如果最长完整路径或最短完整路径存在联系，则没关系。考虑这些联系中的任何路径。）
+如果最短的节点没有红色节点，则其长度仅为 <span class="math notranslate nohighlight">\(b\)</span>。
+根据局部不变量，通过添加 <span class="math notranslate nohighlight">\(b\)</span> 红色节点，最长的节点至多可以使长度加倍。
+例如，假设最短完整路径是 B-B-B-B-Leaf，其中“B”表示黑色节点。
+其长度为四。
+考虑到树的黑色高度，最长的完整路径是多少？
+这将是一条在每个黑色节点之后添加一个红色节点的路径，即 B-R-B-R-B-R-B-R-Leaf，其中“R”表示红色节点。
+它的长度是八，是最短长度的两倍。 □</p>
+</section>
+<section id="id5">
+<h3><span class="section-number">9.3.2.2. </span>成员查询<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/gDTCRj2-bCU" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>我们检查红黑树中的成员资格的方式与二叉搜索树完全相同：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">mem</span> <span class="n">x</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="o">|</span> <span class="nc">Node</span> <span class="o">(_,</span> <span class="n">y</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">)</span> <span class="o">-&gt;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="k">then</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">l</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span> <span class="k">then</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">r</span>
+    <span class="k">else</span> <span class="bp">true</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val mem : &#39;a -&gt; &#39;a rbtree -&gt; bool = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">mem</span></code> 的效率是多少？
+在最坏的情况下，它会递归到树中最低的叶子，并且找不到元素 <code class="docutils literal notranslate"><span class="pre">x</span></code> ——也就是说，运行时间由树的高度决定。
+红黑树的高度是节点数量的对数，如下定理成立。</p>
+<p><strong>定理。</strong> 具有 <span class="math notranslate nohighlight">\(n\)</span> 节点的红黑树的高度 <span class="math notranslate nohighlight">\(h\)</span> 最多为 <span class="math notranslate nohighlight">\(O(\log n)\)</span>。</p>
+<p><em>证明。</em>
+令 <span class="math notranslate nohighlight">\(b\)</span> 为树的黑色高度，即每条完整路径上黑色节点的数量。
+我们将使用 <span class="math notranslate nohighlight">\(b\)</span> 在以下两个引理中建立 <span class="math notranslate nohighlight">\(h\)</span> 和 <span class="math notranslate nohighlight">\(n\)</span> 之间的关系。</p>
+<p>引理 1：<span class="math notranslate nohighlight">\(h \leq 2b\)</span>。
+考虑长度为 <span class="math notranslate nohighlight">\(h\)</span> 的节点的任何完整路径。
+路径上必须有 <span class="math notranslate nohighlight">\(b\)</span> 黑色节点。
+如果存在一些红色节点，那么正如我们在上面关于平衡的证明中所论证的那样，最多可以有 <span class="math notranslate nohighlight">\(b\)</span> 个。
+因此，该路径的长度最多为 <span class="math notranslate nohighlight">\(2b\)</span>。
+因此，<span class="math notranslate nohighlight">\(h \leq 2b\)</span>。</p>
+<p>引理 2：<span class="math notranslate nohighlight">\(n \geq 2^b - 1\)</span>。
+考虑树中的黑色节点。
+由于每个完整路径必须具有 <span class="math notranslate nohighlight">\(b\)</span> 黑色节点，因此我们可以从这些节点中形成高度为 <span class="math notranslate nohighlight">\(b\)</span> 的完美树。
+（从根开始，它是黑色的。保留它。递归到每个子节点。如果子节点是黑色的，则保留它。如果它是红色的并且没有子节点，则将其丢弃。如果它是红色的并且有子节点，则这些子节点必须是黑色的；任意选择一个来替换红色节点并丢弃另一个黑色子节点。）
+如上所述，完美的树至少有 <span class="math notranslate nohighlight">\(2^b - 1\)</span> 个节点。
+因此，<span class="math notranslate nohighlight">\(n \geq 2^b - 1\)</span>。</p>
+<p>最后：我们可以将引理2重写如下：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+&amp; n \geq 2^b - 1 \\
+&amp; \equiv 2^b \leq n + 1 \\
+&amp; \equiv b \leq \log_2(n + 1) \\
+&amp; \equiv 2b \leq 2 \log_2(n + 1)
+\end{split}\]</div>
+<p>然后利用引理 1，我们可以将该不等式左侧的 <span class="math notranslate nohighlight">\(2b\)</span> 的下界放宽到 <span class="math notranslate nohighlight">\(h\)</span>，从而获得 <span class="math notranslate nohighlight">\(h \leq 2 \log_2(n + 1)\)</span>。
+因此 <span class="math notranslate nohighlight">\(h\)</span> 至多是 <span class="math notranslate nohighlight">\(O(\log n)\)</span>。 □</p>
+</section>
+<section id="id6">
+<h3><span class="section-number">9.3.2.3. </span>插入：冈崎算法<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<p>更有趣的是 <code class="docutils literal notranslate"><span class="pre">insert</span></code> 操作。与
+标准二叉树，我们通过替换搜索找到的叶子来添加一个节点
+程序。但是我们可以给这个节点上什么颜色呢？</p>
+<ul class="simple">
+<li><p>将其涂成黑色可能会增加该路径的黑色高度，从而违反了
+全局不变式。</p></li>
+<li><p>将其着色为红色可能会使其与另一个红色节点相邻，从而违反了
+局部不变量。</p></li>
+</ul>
+<p>所以总的来说，这两种选择都不安全。 Chris Okasaki（<em>纯函数数据
+Structures</em>，1999）给出了一个优雅的算法，通过选择解决问题
+违反局部不变量，然后走上树来修复违规。
+这是它的工作原理。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/dCBAhbIEoYM" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>我们总是将新节点涂成红色以确保全局不变式
+保存下来。如果新节点的父节点已经是黑色，则局部不变式
+没有被侵犯。在这种情况下，我们就完成了插入：有
+没有违规，也不需要修复这棵树。一个常见的案例在
+这种情况发生在新节点的父节点是树的根时，即
+已经被染成黑色了。</p>
+<p>但如果新节点的父节点是红色的，则违反了局部不变式。
+在这种情况下，新节点的父节点不能是树的根（黑色），
+因此新节点有一个祖父母。爷爷奶奶一定是黑人
+因为局部不变量在我们插入新节点之前保持不变。现在我们有
+恢复局部不变量需要做的工作。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/igUOhpGICgA" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>下图显示了可能出现的四种可能的违规行为。其中，
+<code class="docutils literal notranslate"><span class="pre">a</span></code>-<code class="docutils literal notranslate"><span class="pre">d</span></code> 可能是空子树，<code class="docutils literal notranslate"><span class="pre">x</span></code>-<code class="docutils literal notranslate"><span class="pre">z</span></code> 是存储在节点处的值。
+节点颜色用 <code class="docutils literal notranslate"><span class="pre">R</span></code> 和 <code class="docutils literal notranslate"><span class="pre">B</span></code> 指示。我们已经标记了较低的
+两个带有方括号的违规红色节点。当我们开始修复这棵树时
+标记的节点将是我们刚刚插入的新节点。因此它会有
+没有孩子 — 例如，在情况 1 中， <code class="docutils literal notranslate"><span class="pre">a</span></code> 和 <code class="docutils literal notranslate"><span class="pre">b</span></code> 将是叶子。 （稍后
+不过，当我们走上树继续修复时，我们可能会遇到
+标记节点具有非空子树的情况。）</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>           1             2             3             4
+
+           Bz            Bz            Bx            Bx
+          / \           / \           / \           / \
+         Ry  d         Rx  d         a   Rz        a   Ry
+        /  \          / \               /  \          /  \
+     [Rx]  c         a  [Ry]          [Ry]  d        b   [Rz]
+     /  \               /  \          / \                /  \
+    a    b             b    c        b   c              c    d
+</pre></div>
+</div>
+<p>请注意，在每棵树中，我们都仔细标记了值和节点
+这样 BST 不变量可确保以下排序：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>all nodes in a
+ &lt;
+  x
+   &lt;
+    all nodes in b
+     &lt;
+      y
+       &lt;
+        all nodes in c
+         &lt;
+          z
+           &lt;
+            all nodes in d
+</pre></div>
+</div>
+<p>因此，我们可以通过替换来变换树以恢复局部不变量
+上述四种情况中的任何一种：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>         Ry
+        /  \
+      Bx    Bz
+     / \   / \
+    a   b c   d
+</pre></div>
+</div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/D4FJMJUIMSw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>这种转换被一些作者称为“旋转”。将 <code class="docutils literal notranslate"><span class="pre">y</span></code> 视为
+是树的一种轴或中心。所有其他节点和子树
+作为旋转的一部分围绕它移动。冈崎称这种转变为
+<em>平衡</em>操作。将其视为改善树的平衡，就像你
+可以看到上面最终的树的形状与原来的四棵树的比较
+案例。这个平衡函数可以使用模式简单简洁地编写
+匹配，其中四个输入情况中的每一个都映射到相同的输出情况。
+另外，还存在树在本地保持不变的情况。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">balance</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Black</span><span class="o">,</span> <span class="n">z</span><span class="o">,</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Red</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Red</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">),</span> <span class="n">c</span><span class="o">),</span> <span class="n">d</span>
+  <span class="o">|</span> <span class="nc">Black</span><span class="o">,</span> <span class="n">z</span><span class="o">,</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Red</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Red</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">)),</span> <span class="n">d</span>
+  <span class="o">|</span> <span class="nc">Black</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Red</span><span class="o">,</span> <span class="n">z</span><span class="o">,</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Red</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">),</span> <span class="n">d</span><span class="o">)</span>
+  <span class="o">|</span> <span class="nc">Black</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Red</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Red</span><span class="o">,</span> <span class="n">z</span><span class="o">,</span> <span class="n">c</span><span class="o">,</span> <span class="n">d</span><span class="o">))</span> <span class="o">-&gt;</span>
+    <span class="nc">Node</span> <span class="o">(</span><span class="nc">Red</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Black</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">),</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Black</span><span class="o">,</span> <span class="n">z</span><span class="o">,</span> <span class="n">c</span><span class="o">,</span> <span class="n">d</span><span class="o">))</span>
+  <span class="o">|</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">,</span> <span class="n">d</span> <span class="o">-&gt;</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">c</span><span class="o">,</span> <span class="n">d</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val balance : color * &#39;a * &#39;a rbtree * &#39;a rbtree -&gt; &#39;a rbtree = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>为什么旋转（即平衡操作）可以保持 BST 不变式？</em>
+检查上面的数字，让自己相信旋转的树可以确保
+所有节点和子树的正确排序。选择哪些标签
+放置在第一个图中的位置很聪明，并且保证了
+最终树在所有四种情况下都具有相同的标签。</p>
+<p>*为什么旋转会保留全局不变性？*在旋转之前，树
+满足全局不变量。这意味着子树 <code class="docutils literal notranslate"><span class="pre">a</span></code>-<code class="docutils literal notranslate"><span class="pre">d</span></code> 下面
+祖父母都有相同的黑色高度，祖父母加一
+高度。在旋转后的树中，子树都处于同一级别，但现在 <code class="docutils literal notranslate"><span class="pre">x</span></code>
+并 <code class="docutils literal notranslate"><span class="pre">z</span></code> 在该高度上加一。树的整体黑色高度没有
+改变，并且每条路径继续具有相同的黑色高度。</p>
+<p><em>为什么旋转会建立局部不变量？</em> 唯一的局部不变量
+旋转之前树中涉及标记节点的违规。之后
+轮换后，该违规行为已被消除。此外，由于 <code class="docutils literal notranslate"><span class="pre">x</span></code> 和 <code class="docutils literal notranslate"><span class="pre">z</span></code> 是
+旋转后颜色为黑色，它们无法创建新的局部不变量
+违反子树 <code class="docutils literal notranslate"><span class="pre">a</span></code>-<code class="docutils literal notranslate"><span class="pre">d</span></code> 的根（如果有）。然而，该问题的根源
+旋转后的树现在是 <code class="docutils literal notranslate"><span class="pre">y</span></code> 并且颜色为红色。如果该节点有一个父节点—that
+也就是说，如果情况 1-4 中的祖父母不是整个
+tree—那么我们可能刚刚创建了一个新的局部不变违规
+<code class="docutils literal notranslate"><span class="pre">y</span></code> 与其父级之间！</p>
+<p>为了解决可能出现的新违规问题，我们需要继续沿着树向上走
+从 <code class="docutils literal notranslate"><span class="pre">y</span></code> 到根，并修复进一步的局部不变违规。在
+最坏的情况下，该过程会一直级联到树的顶部，并且
+结果产生两个相邻的红色节点，其中之一刚刚成为根。但如果
+发生这种情况时，我们只需将这个新根从红色重新着色为黑色即可。这样就完成了
+恢复局部不变量。它还保留了全局不变量，同时
+将整棵树的总黑色高度增加一个—，即
+插入时黑色高度增加的唯一方法。 <code class="docutils literal notranslate"><span class="pre">insert</span></code> 代码
+使用 <code class="docutils literal notranslate"><span class="pre">balance</span></code> 如下：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">insert</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="k">rec</span> <span class="n">ins</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Red</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">,</span> <span class="nc">Leaf</span><span class="o">)</span>
+    <span class="o">|</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">color</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">as</span> <span class="n">s</span> <span class="o">-&gt;</span>
+      <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="k">then</span> <span class="n">balance</span> <span class="o">(</span><span class="n">color</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">ins</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span>
+      <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span> <span class="k">then</span> <span class="n">balance</span> <span class="o">(</span><span class="n">color</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">ins</span> <span class="n">b</span><span class="o">)</span>
+      <span class="k">else</span> <span class="n">s</span>
+  <span class="k">in</span>
+  <span class="k">match</span> <span class="n">ins</span> <span class="n">s</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">Node</span> <span class="o">(_,</span> <span class="n">y</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Black</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span>
+  <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span> <span class="c">(* guaranteed to be non-empty *)</span>
+    <span class="n">failwith</span> <span class="s2">&quot;RBT insert failed with ins returning leaf&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert : &#39;a -&gt; &#39;a rbtree -&gt; &#39;a rbtree = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">insert</span></code> 完成的工作量是 <span class="math notranslate nohighlight">\(O(\log n)\)</span>。它以 <code class="docutils literal notranslate"><span class="pre">ins</span></code> 向下递归
+树到叶子，这是插入发生的地方，然后调用 <code class="docutils literal notranslate"><span class="pre">balance</span></code>
+备份过程中的每一步。到叶子的路径长度为<span class="math notranslate nohighlight">\(O(\log n)\)</span>，
+因为树已经平衡了。并且，每次调用 <code class="docutils literal notranslate"><span class="pre">balance</span></code> 都是 <span class="math notranslate nohighlight">\(O(1)\)</span>
+工作。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/giSzhfuTMMA" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</section>
+<section id="id7">
+<h3><span class="section-number">9.3.2.4. </span>删除<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h3>
+<p>从红黑树中删除元素是有效的
+类似地。我们从删除 BST 元素开始，然后进行重新平衡。当
+内部（非叶）节点被删除，如果它的数量较少，我们只需将其拼接出来
+多于两个非叶子节点；如果它有两个非叶孩子，我们找到下一个
+树中的值，必须在其右子节点中找到。</p>
+<p>但是，在从红黑树中移除期间平衡树需要考虑
+更多案例。从树中删除黑色元素会产生以下可能性：
+树中的某些路径的黑色节点太少，破坏了全局不变性。</p>
+<p>Germane 和 Might 发明了一种优雅的算法来处理这种重新平衡
+解决方案是创建“双黑”节点，在确定
+黑色高度。欲了解更多信息，请阅读他们的论文：<a class="reference external" href="https://doi.org/10.1017/S0956796814000227"><em>删除：红黑的诅咒
+Tree</em> <em>函数式编程杂志</em></a>，第 24 卷，第 4 期，2014 年 7 月。</p>
+</section>
+</section>
+<section id="bst">
+<h2><span class="section-number">9.3.3. </span>来自 BST 的映射和集合<a class="headerlink" href="#bst" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/B_e8Qr4nl4A" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>使用 BST 来实现映射或集合 ADT 很容易：</p>
+<ul class="simple">
+<li><p>对于映射，只需在每个节点存储一个绑定即可。节点的排序方式为
+键。这些值与顺序无关。</p></li>
+<li><p>对于集合，只需在每个节点存储一个元素即可。节点的排序方式为
+元素。</p></li>
+</ul>
+<p>OCaml 标准库对 <code class="docutils literal notranslate"><span class="pre">Map</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Set</span></code> 模块执行此操作。它使用一个
+平衡 BST 是 AVL 树的变体。 AVL 树是平衡 BST
+路径的高度最多允许变化 1。 OCaml 标准
+库修改了它以允许高度最多变化 2。就像红黑一样
+树，它们实现了最坏情况的对数性能。</p>
+<p>现在我们有了一个函数式映射数据结构，它与我们的映射数据结构相比如何？
+命令式版本，哈希表？</p>
+<ul class="simple">
+<li><p><strong>持久性：</strong> 我们的红黑树是持久性的，但是哈希表是持久性的
+短暂的。</p></li>
+<li><p><strong>性能：</strong> 我们得到保证的最坏情况对数性能
+红黑树，但采用散列表摊销、预期恒定时间。
+考虑到涉及的所有修饰符，这有点难以比较。这也是一个
+持久数据结构通常必须的普遍现象的示例
+与等效的临时数据结构相比，需要支付额外的对数成本。</p></li>
+<li><p><strong>方便：</strong> 我们必须提供平衡二进制的排序函数
+树和哈希表的哈希函数。大多数库都提供了默认值
+为了方便起见，使用哈希函数。但是哈希表的性能确实
+依赖于散列函数真正在桶上随机分配键。如果
+事实并非如此，哈希表性能保证的“预期”部分
+被侵犯。所以便利性是一把双刃剑。</p></li>
+</ul>
+<p>这里没有明显的赢家。由于 OCaml 库同时提供 <code class="docutils literal notranslate"><span class="pre">Map</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code>，你可以选择。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/ds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="amortized.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">9.2. </span>摊销分析</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="sequence.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">9.4. </span>序列</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">9.3.1. 二叉搜索树</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">9.3.2. 红黑树</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">9.3.2.1. 平衡</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">9.3.2.2. 成员查询</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">9.3.2.3. 插入：冈崎算法</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">9.3.2.4. 删除</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bst">9.3.3. 来自 BST 的映射和集合</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

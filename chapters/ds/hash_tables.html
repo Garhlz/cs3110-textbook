@@ -1,0 +1,1688 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>9.1. 哈希表 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/ds/hash_tables';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="9.2. 摊销分析" href="amortized.html" />
+    <link rel="prev" title="9. 数据结构" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">9. 数据结构</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/ds/hash_tables.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/ds/hash_tables.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/ds/hash_tables.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/ds/hash_tables.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/ds/hash_tables.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>哈希表</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">9.1.1. 映射</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">9.1.2. 作为关联列表的映射</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">9.1.3. 作为数组的映射</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">9.1.4. 作为哈希表的映射</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">9.1.4.1. 链式表示</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">9.1.4.2. 调整大小</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">9.1.4.3. 实现</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">9.1.5. 哈希函数</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hashtbl">9.1.6. 标准库 <code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">9.1. </span>哈希表<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<p><em>哈希表</em>是一种广泛使用的数据结构，其性能依赖于可变性。
+与到目前为止我们实现过的其他数据结构相比，哈希表的实现相当复杂。
+我们会慢慢搭建它，以便理解每个部分的需求和用途。</p>
+<section id="id2">
+<h2><span class="section-number">9.1.1. </span>映射<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/hr8SmQK8ld8" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/I5E_BPkE_fE" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>哈希表实现了 <em>map</em> 数据抽象。映射将<em>键</em>绑定到<em>值</em>。
+这种抽象非常有用，以至于它有许多其他名称，其中
+它们是<em>关联数组</em>、<em>字典</em>和<em>符号表</em>。我们会写映射
+抽象地（即数学上；实际上不是 OCaml 语法）为 { <span class="math notranslate nohighlight">\(k_1 : v_1,
+k_2: v_2, \ldots, k_n : v_n\)</span> }。每个 <span class="math notranslate nohighlight">\(k : v\)</span> 都是一个<em>绑定</em>，
+把键 <span class="math notranslate nohighlight">\(k\)</span> 绑定到值 <span class="math notranslate nohighlight">\(v\)</span>。这里有几个例子：</p>
+<ul class="simple">
+<li><p>将课程编号与相关内容绑定的映射：{3110：“Fun”，2110：
+“哦”}。</p></li>
+<li><p>将大学名称与其成立年份绑定的映射：{“哈佛”：1636，
+“普林斯顿大学”：1746，“宾夕法尼亚大学”：1740，“康奈尔大学”：1865}。</p></li>
+</ul>
+<p>绑定的抽象书写顺序并不重要，因此
+第一个示例也可以写为 {2110 : “OO”, 3110 : “Fun”}。这就是为什么我们
+使用大括号—它们暗示绑定形成一个集合，没有隐含顺序。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>正如该符号所示，映射和集合非常相似。数据结构
+可以实现集合也可以实现映射，反之亦然：</p>
+<ul class="simple">
+<li><p>给定一个映射数据结构，我们可以将键视为集合的元素，并且
+只需忽略键绑定的值即可。这无疑浪费了
+空间很小，因为我们永远不需要这些值。</p></li>
+<li><p>给定一个集合数据结构，我们可以将 key–value 对存储为
+元素。搜索元素（因此插入和删除）可能会变得
+更昂贵，因为集合抽象不太可能支持搜索
+自己查找键。</p></li>
+</ul>
+</div>
+<p>这是映射的接口：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Map</span> <span class="o">=</span> <span class="k">sig</span>
+
+  <span class="c">(** [(&#39;k, &#39;v) t] is the type of maps that bind keys of type</span>
+<span class="c">      [&#39;k] to values of type [&#39;v]. *)</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+
+  <span class="c">(** [insert k v m] is the same map as [m], but with an additional</span>
+<span class="c">      binding from [k] to [v].  If [k] was already bound in [m],</span>
+<span class="c">      that binding is replaced by the binding to [v] in the new map. *)</span>
+  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+
+  <span class="c">(** [find k m] is [Some v] if [k] is bound to [v] in [m],</span>
+<span class="c">      and [None] if not. *)</span>
+  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">option</span>
+
+  <span class="c">(** [remove k m] is the same map as [m], but without any binding of [k].</span>
+<span class="c">      If [k] was not bound in [m], then the map is unchanged. *)</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+
+  <span class="c">(** [empty] is the empty map. *)</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+
+  <span class="c">(** [of_list lst] is a map containing the same bindings as</span>
+<span class="c">      association list [lst].</span>
+<span class="c">      Requires: [lst] does not contain any duplicate keys. *)</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+
+  <span class="c">(** [bindings m] is an association list containing the same</span>
+<span class="c">      bindings as [m]. There are no duplicates in the list. *)</span>
+  <span class="k">val</span> <span class="n">bindings</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Map =
+  sig
+    type (&#39;k, &#39;v) t
+    val insert : &#39;k -&gt; &#39;v -&gt; (&#39;k, &#39;v) t -&gt; (&#39;k, &#39;v) t
+    val find : &#39;k -&gt; (&#39;k, &#39;v) t -&gt; &#39;v option
+    val remove : &#39;k -&gt; (&#39;k, &#39;v) t -&gt; (&#39;k, &#39;v) t
+    val empty : (&#39;k, &#39;v) t
+    val of_list : (&#39;k * &#39;v) list -&gt; (&#39;k, &#39;v) t
+    val bindings : (&#39;k, &#39;v) t -&gt; (&#39;k * &#39;v) list
+  end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>接下来，我们将基于以下内容检查映射的三种实现</p>
+<ul class="simple">
+<li><p>关联列表，</p></li>
+<li><p>数组，以及</p></li>
+<li><p>上述两者的组合，称为“链式哈希表”。</p></li>
+</ul>
+<p>每个实现都需要稍微不同的接口，因为
+由底层表示类型产生的约束。在每种情况下
+我们将密切关注 AF、RI 和操作效率。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">9.1.2. </span>作为关联列表的映射<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/6JUcwUgAHl8" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>OCaml 中映射的最简单实现是作为关联列表。我们已经
+到目前为止，已经看到该表示两次了 <a class="reference internal" href="../data/assoc_list.html"><span class="doc std std-doc">[1]</span></a> <a class="reference internal" href="../modules/functional_data_structures.html"><span class="doc std std-doc">[2]</span></a>。这里
+是使用它的 <code class="docutils literal notranslate"><span class="pre">Map</span></code> 的实现：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListMap</span> <span class="o">:</span> <span class="nc">Map</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(** AF: [[(k1, v1); (k2, v2); ...; (kn, vn)]] is the map {k1 : v1, k2 : v2,</span>
+<span class="c">      ..., kn : vn}. If a key appears more than once in the list, then in the</span>
+<span class="c">      map it is bound to the left-most occurrence in the list. For example,</span>
+<span class="c">      [[(k, v1); (k, v2)]] represents {k : v1}. The empty list represents</span>
+<span class="c">      the empty map.</span>
+<span class="c">      RI: none. *)</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+
+  <span class="c">(** Efficiency: O(1). *)</span>
+  <span class="k">let</span> <span class="n">insert</span> <span class="n">k</span> <span class="n">v</span> <span class="n">m</span> <span class="o">=</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">::</span> <span class="n">m</span>
+
+  <span class="c">(** Efficiency: O(n). *)</span>
+  <span class="k">let</span> <span class="n">find</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">assoc_opt</span>
+
+  <span class="c">(** Efficiency: O(n). *)</span>
+  <span class="k">let</span> <span class="n">remove</span> <span class="n">k</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">filter</span> <span class="o">(</span><span class="k">fun</span> <span class="o">(</span><span class="n">k&#39;</span><span class="o">,</span> <span class="o">_)</span> <span class="o">-&gt;</span> <span class="n">k</span> <span class="o">&lt;&gt;</span> <span class="n">k&#39;</span><span class="o">)</span> <span class="n">lst</span>
+
+  <span class="c">(** Efficiency: O(1). *)</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+
+  <span class="c">(** Efficiency: O(1). *)</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">lst</span>
+
+  <span class="c">(** [keys m] is a list of the keys in [m], without</span>
+<span class="c">      any duplicates.</span>
+<span class="c">      Efficiency: O(n log n). *)</span>
+  <span class="k">let</span> <span class="n">keys</span> <span class="n">m</span> <span class="o">=</span> <span class="n">m</span> <span class="o">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> <span class="n">fst</span> <span class="o">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">sort_uniq</span> <span class="nn">Stdlib</span><span class="p">.</span><span class="n">compare</span>
+
+  <span class="c">(** [binding m k] is [(k, v)], where [v] is the value that [k]</span>
+<span class="c">      binds in [m].</span>
+<span class="c">      Requires: [k] is a key in [m].</span>
+<span class="c">      Efficiency: O(n). *)</span>
+  <span class="k">let</span> <span class="n">binding</span> <span class="n">m</span> <span class="n">k</span> <span class="o">=</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="nn">List</span><span class="p">.</span><span class="n">assoc</span> <span class="n">k</span> <span class="n">m</span><span class="o">)</span>
+
+  <span class="c">(** Efficiency: O(n log n) + O(n) * O(n), which is O(n^2). *)</span>
+  <span class="k">let</span> <span class="n">bindings</span> <span class="n">m</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> <span class="o">(</span><span class="n">binding</span> <span class="n">m</span><span class="o">)</span> <span class="o">(</span><span class="n">keys</span> <span class="n">m</span><span class="o">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListMap : Map
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/yZkQhcIM0OA" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/5aZNbVTXmtE" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/bKFfD3oHKTE" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/ek2Obhfx064" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</section>
+<section id="id4">
+<h2><span class="section-number">9.1.3. </span>作为数组的映射<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/cUEN8sFVkS4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p><em>可变映射</em>是其绑定可能发生变化的映射。接口为
+因此，可变映射与不可变映射不同。插入和移除
+因此，可变映射的操作返回 <code class="docutils literal notranslate"><span class="pre">unit</span></code>，因为它们不
+生成一个新的映射，但会改变现有的映射。</p>
+<p>数组可用于表示键为整数的可变映射。一个
+从键到值的绑定是通过使用键作为索引来存储的
+数组，并将绑定存储在该索引处。例如，我们可以使用数组
+将办公室号码映射到其占用者：</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>办公室</p></th>
+<th class="head"><p>居住者</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>459</p></td>
+<td><p>风扇</p></td>
+</tr>
+<tr class="row-odd"><td><p>460</p></td>
+<td><p>格里</p></td>
+</tr>
+<tr class="row-even"><td><p>461</p></td>
+<td><p>克拉克森</p></td>
+</tr>
+<tr class="row-odd"><td><p>462</p></td>
+<td><p>米尔伯格</p></td>
+</tr>
+<tr class="row-even"><td><p>463</p></td>
+<td><p><em>不存在</em></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>这种映射称为“直接地址表”。由于数组有固定的
+大小，实现者现在需要知道客户端对<em>容量</em>的需求
+每当一个
+创建空表。这会导致以下接口：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">DirectAddressMap</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="c">(** [t] is the type of maps that bind keys of type int to values of</span>
+<span class="c">      type [&#39;v]. *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span>
+
+  <span class="c">(** [insert k v m] mutates map [m] to bind [k] to [v]. If [k] was</span>
+<span class="c">      already bound in [m], that binding is replaced by the binding to</span>
+<span class="c">      [v] in the new map. Requires: [k] is in bounds for [m]. *)</span>
+  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+
+  <span class="c">(** [find k m] is [Some v] if [k] is bound to [v] in [m], and [None]</span>
+<span class="c">      if not. Requires: [k] is in bounds for [m]. *)</span>
+  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">option</span>
+
+  <span class="c">(** [remove k m] mutates [m] to remove any binding of [k]. If [k] was</span>
+<span class="c">      not bound in [m], then the map is unchanged. Requires: [k] is in</span>
+<span class="c">      bounds for [m]. *)</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+
+  <span class="c">(** [create c] creates a map with capacity [c]. Keys [0] through [c-1]</span>
+<span class="c">      are _in bounds_ for the map. *)</span>
+  <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span>
+
+  <span class="c">(** [of_list c lst] is a map containing the same bindings as</span>
+<span class="c">      association list [lst] and with capacity [c]. Requires: [lst] does</span>
+<span class="c">      not contain any duplicate keys, and every key in [lst] is in</span>
+<span class="c">      bounds for capacity [c]. *)</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="kt">int</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span>
+
+  <span class="c">(** [bindings m] is an association list containing the same bindings</span>
+<span class="c">      as [m]. There are no duplicate keys in the list. *)</span>
+  <span class="k">val</span> <span class="n">bindings</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="kt">int</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type DirectAddressMap =
+  sig
+    type &#39;v t
+    val insert : int -&gt; &#39;v -&gt; &#39;v t -&gt; unit
+    val find : int -&gt; &#39;v t -&gt; &#39;v option
+    val remove : int -&gt; &#39;v t -&gt; unit
+    val create : int -&gt; &#39;v t
+    val of_list : int -&gt; (int * &#39;v) list -&gt; &#39;v t
+    val bindings : &#39;v t -&gt; (int * &#39;v) list
+  end
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/eDd9i-imDYo" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>这是该接口的实现：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ArrayMap</span> <span class="o">:</span> <span class="nc">DirectAddressMap</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(** AF: [[|Some v0; Some v1; ... |]] represents {0 : v0, 1 : v1, ...}.</span>
+<span class="c">      If element [i] of the array is instead [None], then [i] is not</span>
+<span class="c">      bound in the map.</span>
+<span class="c">      RI: None. *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">option</span> <span class="kt">array</span>
+
+  <span class="c">(** Efficiency: O(1). *)</span>
+  <span class="k">let</span> <span class="n">insert</span> <span class="n">k</span> <span class="n">v</span> <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.(</span><span class="n">k</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="nc">Some</span> <span class="n">v</span>
+
+  <span class="c">(** Efficiency: O(1). *)</span>
+  <span class="k">let</span> <span class="n">find</span> <span class="n">k</span> <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.(</span><span class="n">k</span><span class="o">)</span>
+
+  <span class="c">(** Efficiency: O(1). *)</span>
+  <span class="k">let</span> <span class="n">remove</span> <span class="n">k</span> <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.(</span><span class="n">k</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="nc">None</span>
+
+  <span class="c">(** Efficiency: O(c). *)</span>
+  <span class="k">let</span> <span class="n">create</span> <span class="n">c</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">make</span> <span class="n">c</span> <span class="nc">None</span>
+
+  <span class="c">(** Efficiency: O(c). *)</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">c</span> <span class="n">lst</span> <span class="o">=</span>
+    <span class="c">(* O(c) *)</span>
+    <span class="k">let</span> <span class="n">a</span> <span class="o">=</span> <span class="n">create</span> <span class="n">c</span> <span class="k">in</span>
+    <span class="c">(* O(c) * O(1) = O(c) *)</span>
+    <span class="nn">List</span><span class="p">.</span><span class="n">iter</span> <span class="o">(</span><span class="k">fun</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">insert</span> <span class="n">k</span> <span class="n">v</span> <span class="n">a</span><span class="o">)</span> <span class="n">lst</span><span class="o">;</span>
+    <span class="n">a</span>
+
+  <span class="c">(** Efficiency: O(c). *)</span>
+  <span class="k">let</span> <span class="n">bindings</span> <span class="n">a</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">bs</span> <span class="o">=</span> <span class="n">ref</span> <span class="bp">[]</span> <span class="k">in</span>
+    <span class="c">(* O(1) *)</span>
+    <span class="k">let</span> <span class="n">add_binding</span> <span class="n">k</span> <span class="n">v</span> <span class="o">=</span>
+      <span class="k">match</span> <span class="n">v</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">()</span> <span class="o">|</span> <span class="nc">Some</span> <span class="n">v</span> <span class="o">-&gt;</span> <span class="n">bs</span> <span class="o">:=</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">::</span> <span class="o">!</span><span class="n">bs</span>
+    <span class="k">in</span>
+    <span class="c">(* O(c) *)</span>
+    <span class="nn">Array</span><span class="p">.</span><span class="n">iteri</span> <span class="n">add_binding</span> <span class="n">a</span><span class="o">;</span>
+    <span class="o">!</span><span class="n">bs</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ArrayMap : DirectAddressMap
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>它的效率是非常高的！ <code class="docutils literal notranslate"><span class="pre">insert</span></code>、<code class="docutils literal notranslate"><span class="pre">find</span></code> 和 <code class="docutils literal notranslate"><span class="pre">remove</span></code> 操作是
+恒定时间。但这是以强制键为整数为代价的。
+此外，它们需要是小整数（或者至少是小整数）
+range），否则我们使用的数组将需要很大。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/mrpti_Guevs" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</section>
+<section id="id5">
+<h2><span class="section-number">9.1.4. </span>作为哈希表的映射<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/NyZ07rpq7tk" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>数组提供恒定的时间性能，但有严格的限制
+键。关联列表不会对键施加这些限制，但它们也
+不提供恒定时间性能。有没有一种方法可以两全其美
+世界？是的（或多或少）！ <em>哈希表</em>是解决方案。</p>
+<p>关键思想是我们假设存在一个<em>哈希函数</em> <code class="docutils literal notranslate"><span class="pre">hash</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 可以将任何键转换为非负整数。然后我们可以使用它
+函数来索引数组，就像我们对直接地址表所做的那样。
+当然，我们希望哈希函数本身以恒定的时间运行，否则
+使用它的操作效率不高。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/8IJpySZ5iLM" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>这就导致了下面的接口，其中哈希表的客户端需要
+创建表时传入哈希函数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">TableMap</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="c">(** [(&#39;k, &#39;v) t] is the type of mutable table-based maps that bind</span>
+<span class="c">      keys of type [&#39;k] to values of type [&#39;v]. *)</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+
+  <span class="c">(** [insert k v m] mutates map [m] to bind [k] to [v]. If [k] was</span>
+<span class="c">      already bound in [m], that binding is replaced by the binding to</span>
+<span class="c">      [v]. *)</span>
+  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+
+  <span class="c">(** [find k m] is [Some v] if [m] binds [k] to [v], and [None] if [m]</span>
+<span class="c">      does not bind [k]. *)</span>
+  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">option</span>
+
+  <span class="c">(** [remove k m] mutates [m] to remove any binding of [k]. If [k] was</span>
+<span class="c">      not bound in [m], the map is unchanged. *)</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+
+  <span class="c">(** [create hash c] creates a new table map with capacity [c] that</span>
+<span class="c">      will use [hash] as the function to convert keys to integers.</span>
+<span class="c">      Requires: The output of [hash] is always non-negative, and [hash]</span>
+<span class="c">      runs in constant time. *)</span>
+  <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+
+  <span class="c">(** [bindings m] is an association list containing the same bindings</span>
+<span class="c">      as [m]. *)</span>
+  <span class="k">val</span> <span class="n">bindings</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+
+  <span class="c">(** [of_list hash lst] creates a map with the same bindings as [lst],</span>
+<span class="c">      using [hash] as the hash function. Requires: [lst] does not</span>
+<span class="c">      contain any duplicate keys. *)</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type TableMap =
+  sig
+    type (&#39;k, &#39;v) t
+    val insert : &#39;k -&gt; &#39;v -&gt; (&#39;k, &#39;v) t -&gt; unit
+    val find : &#39;k -&gt; (&#39;k, &#39;v) t -&gt; &#39;v option
+    val remove : &#39;k -&gt; (&#39;k, &#39;v) t -&gt; unit
+    val create : (&#39;k -&gt; int) -&gt; int -&gt; (&#39;k, &#39;v) t
+    val bindings : (&#39;k, &#39;v) t -&gt; (&#39;k * &#39;v) list
+    val of_list : (&#39;k -&gt; int) -&gt; (&#39;k * &#39;v) list -&gt; (&#39;k, &#39;v) t
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>这个想法的一个直接问题是：如果哈希输出不在数组范围内怎么办？
+解决这个问题很容易：如果 <code class="docutils literal notranslate"><span class="pre">a</span></code> 是数组长度，那么计算 <code class="docutils literal notranslate"><span class="pre">(hash</span> <span class="pre">k)</span> <span class="pre">mod</span> <span class="pre">a</span></code>
+就会返回一个在界限之内的索引。</p>
+<p>另一个问题是：如果哈希函数不是<em>单射</em>怎么办？这意味着
+它不是一对一的。那么多个键可能会发生<em>冲突</em>并且需要
+存储在数组中的同一索引处。没关系！我们故意允许这种情况发生。
+但这确实意味着我们需要一个策略来应对按键冲突时的操作。</p>
+<p>有两种众所周知的处理冲突的策略。一是储存
+每个数组索引处有多个绑定。数组元素称为<em>桶</em>。
+通常，存储桶被实现为链表。该策略被称为
+许多名称，包括<em>链式法</em>、<em>封闭寻址</em>和<em>开放散列</em>。我们会
+使用 <strong>chaining</strong> 作为名称。要检查某个元素是否在哈希表中，
+首先对键进行哈希处理以找到要查找的正确存储桶。然后，链接的
+扫描列表以查看是否存在所需的元素。如果链表是
+总之，这个扫描速度非常快。通过散列来添加或删除元素
+找到正确的桶。然后，检查桶中的元素是否存在
+在那里，最后将元素从存储桶中适当地添加或删除
+以链表的通常方式。</p>
+<p>另一种策略是将绑定存储在其正确位置以外的位置
+根据哈希值确定的位置。将新绑定添加到哈希表时
+会产生冲突，插入操作会找到一个空位置
+在数组中放置绑定。这种策略（令人困惑地）被称为
+<em>探测</em>、<em>开放寻址</em>和<em>封闭散列</em>。我们将使用<strong>探测</strong>作为
+名字。查找空位置的一个简单方法是向前搜索
+具有固定步长（通常为 1）的数组索引，寻找未使用的条目；这个
+<em>线性探测</em>策略往往会产生大量元素聚类
+表，导致性能不佳。更好的策略是使用第二个哈希
+计算探测间隔的函数；这个策略称为<em>double
+散列</em>。然而，无论如何实现探测，所需的时间
+随着哈希表填满，搜索或添加元素所需的探测次数会迅速增长。</p>
+<p>在软件实现中，链接通常比探测更受青睐，
+因为用软件实现链表很容易。硬件
+当表的大小固定时，实现经常使用探测
+电路。但一些现代软件实现正在重新审视
+探测的性能优势。</p>
+<section id="id6">
+<h3><span class="section-number">9.1.4.1. </span>链式表示<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/LOWAC3WOl6Q" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>以下是使用链接的哈希表的表示类型：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">hash</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">;</span>
+  <span class="k">mutable</span> <span class="n">size</span> <span class="o">:</span> <span class="kt">int</span><span class="o">;</span>
+  <span class="k">mutable</span> <span class="n">buckets</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="kt">array</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">buckets</span></code> 数组的元素是关联列表，其中存储
+绑定。<code class="docutils literal notranslate"><span class="pre">hash</span></code> 函数用于确定键进入哪个桶。
+<code class="docutils literal notranslate"><span class="pre">size</span></code> 用于跟踪当前的绑定数量
+表，因为通过迭代 <code class="docutils literal notranslate"><span class="pre">buckets</span></code> 进行计算的成本很高。</p>
+<p>以下是 AF 和 RI：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="p">(</span><span class="o">**</span> <span class="n">AF</span><span class="p">:</span>  <span class="n">If</span> <span class="p">[</span><span class="n">buckets</span><span class="p">]</span> <span class="ow">is</span>
+        <span class="p">[</span><span class="o">|</span> <span class="p">[(</span><span class="n">k11</span><span class="p">,</span><span class="n">v11</span><span class="p">);</span> <span class="p">(</span><span class="n">k12</span><span class="p">,</span><span class="n">v12</span><span class="p">);</span> <span class="o">...</span><span class="p">];</span>
+           <span class="p">[(</span><span class="n">k21</span><span class="p">,</span><span class="n">v21</span><span class="p">);</span> <span class="p">(</span><span class="n">k22</span><span class="p">,</span><span class="n">v22</span><span class="p">);</span> <span class="o">...</span><span class="p">];</span>
+           <span class="o">...</span> <span class="o">|</span><span class="p">]</span>
+      <span class="n">that</span> <span class="n">represents</span> <span class="n">the</span> <span class="nb">map</span>
+        <span class="p">{</span><span class="n">k11</span><span class="p">:</span><span class="n">v11</span><span class="p">,</span> <span class="n">k12</span><span class="p">:</span><span class="n">v12</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span>
+         <span class="n">k21</span><span class="p">:</span><span class="n">v21</span><span class="p">,</span> <span class="n">k22</span><span class="p">:</span><span class="n">v22</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span>  <span class="o">...</span><span class="p">}</span><span class="o">.</span>
+      <span class="n">RI</span><span class="p">:</span> <span class="n">No</span> <span class="n">key</span> <span class="n">appears</span> <span class="n">more</span> <span class="n">than</span> <span class="n">once</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">array</span> <span class="p">(</span><span class="n">so</span><span class="p">,</span> <span class="n">no</span>
+        <span class="n">duplicate</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">association</span> <span class="n">lists</span><span class="p">)</span><span class="o">.</span>  <span class="n">All</span> <span class="n">keys</span> <span class="n">are</span>
+        <span class="ow">in</span> <span class="n">the</span> <span class="n">right</span> <span class="n">buckets</span><span class="p">:</span> <span class="k">if</span> <span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">in</span> <span class="p">[</span><span class="n">buckets</span><span class="p">]</span> <span class="n">at</span> <span class="n">index</span>
+        <span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="n">then</span> <span class="p">[</span><span class="nb">hash</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">=</span> <span class="n">b</span><span class="p">]</span><span class="o">.</span> <span class="n">The</span> <span class="n">output</span> <span class="n">of</span> <span class="p">[</span><span class="nb">hash</span><span class="p">]</span> <span class="n">must</span> <span class="n">always</span>
+        <span class="n">be</span> <span class="n">non</span><span class="o">-</span><span class="n">negative</span><span class="o">.</span> <span class="p">[</span><span class="nb">hash</span><span class="p">]</span> <span class="n">must</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">constant</span> <span class="n">time</span><span class="o">.</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>对于这种表示，<code class="docutils literal notranslate"><span class="pre">insert</span></code>、<code class="docutils literal notranslate"><span class="pre">find</span></code> 和 <code class="docutils literal notranslate"><span class="pre">remove</span></code> 的效率是多少
+类型？全部需要</p>
+<ul class="simple">
+<li><p>对键进行哈希（常数时间），</p></li>
+<li><p>索引到适当的存储桶（恒定时间），以及</p></li>
+<li><p>找出键是否已经在关联列表中（线性关系）
+该列表中的元素数量）。</p></li>
+</ul>
+<p>所以哈希表的效率取决于每个元素的数量
+桶。反过来，这取决于哈希函数的分布情况
+所有存储桶中的键。</p>
+<p>一个糟糕的哈希函数，例如常量函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">k</span> <span class="pre">-&gt;</span> <span class="pre">42</span></code>，会导致
+所有键都放入同一个桶中。那么每个操作都将是线性的
+映射中的绑定的 <span class="math notranslate nohighlight">\(n\)</span>— 即 <span class="math notranslate nohighlight">\(O(n)\)</span>。我们绝对不想要
+那个。</p>
+<p>相反，我们需要散列函数或多或少随机地把键分配到各个桶中。
+那么每个桶的预期长度大约是
+一样。如果我们可以安排，平均而言，桶长度是一个常数
+<span class="math notranslate nohighlight">\(L\)</span>，然后 <code class="docutils literal notranslate"><span class="pre">insert</span></code>、<code class="docutils literal notranslate"><span class="pre">find</span></code> 和 <code class="docutils literal notranslate"><span class="pre">remove</span></code> 都会按预期运行
+<span class="math notranslate nohighlight">\(O(L)\)</span>。</p>
+</section>
+<section id="id7">
+<h3><span class="section-number">9.1.4.2. </span>调整大小<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h3>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/mn2pDfusFyY" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>我们怎样才能将桶安排为具有预期的恒定长度？来回答
+那么，让我们考虑一下表中绑定和存储桶的数量。定义
+表的<em>负载系数</em>为</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\mbox{number of bindings}}{\mbox{number of buckets}}
+\]</div>
+<p>因此，具有 20 个绑定和 10 个桶的表的负载因子为 2，
+而具有 10 个绑定和 20 个桶的表的负载因子为 0.5。
+负载因子就是每个桶中的平均绑定数。所以如果我们能够保持
+负载因子恒定，我们可以保持 <span class="math notranslate nohighlight">\(L\)</span> 恒定，从而保持
+（预期）恒定时间的性能。</p>
+<p>为此，请注意绑定的数量不受
+哈希表实现者—但桶的数量是。所以通过改变
+桶的数量，实现者可以改变负载因子。一个常见的
+策略是将负载因子保持在大约 1/2 到 2 之间。然后每个
+桶仅包含几个绑定，因此预期的常数时间性能
+是有保证的。</p>
+<p>但是，实现者无法提前知道到底需要多少桶。
+因此，每当负载因子变得太高时，实现者就必须“调整”桶数组的大小。
+通常，新分配的桶数组大小会让负载因子恢复到大约 1。</p>
+<p>将这两个想法放在一起，如果负载因子达到 2，则有
+绑定数量是表中存储桶的两倍。因此，通过将大小加倍
+数组，我们可以将负载因子恢复为1。同样，如果负载因子
+达到 1/2，那么桶的数量是绑定的两倍，并且减半
+数组的大小会将负载因子恢复为 1。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/BzusuFH1tNw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>调整桶数组的大小使其变大是哈希的一项基本技术
+表。不过，调整其大小以使其变小并不是必需的。只要
+负载因子受上面的常数限制，我们可以实现预期的
+恒定的桶长度。所以并不是所有的实现都会减少
+数组。虽然这样做可以恢复一些空间，但可能不值得
+努力。如果哈希表的大小随时间循环，则尤其如此：
+尽管有时它会变小，但最终它会再次变大。</p>
+<p>不幸的是，调整大小似乎会破坏我们预期的恒定时间
+虽然性能。插入绑定可能会导致负载因子下降
+超过 2，从而导致调整大小。当调整大小时，所有现有的绑定
+必须重新散列并添加到新的存储桶数组中。于是，插入就变成了
+最坏情况线性时间运算！删除也是如此，如果我们调整大小
+当负载因子太低时，数组会变得更小。</p>
+</section>
+<section id="id8">
+<h3><span class="section-number">9.1.4.3. </span>实现<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
+<p>下面的哈希表的实现将我们所有的部分组合在一起
+上面讨论过。</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">HashMap</span> <span class="o">:</span> <span class="nc">TableMap</span> <span class="o">=</span> <span class="k">struct</span>
+
+  <span class="c">(** AF and RI: above. *)</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">hash</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">;</span>
+    <span class="k">mutable</span> <span class="n">size</span> <span class="o">:</span> <span class="kt">int</span><span class="o">;</span>
+    <span class="k">mutable</span> <span class="n">buckets</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="kt">array</span>
+  <span class="o">}</span>
+
+  <span class="c">(** [capacity tab] is the number of buckets in [tab].</span>
+<span class="c">      Efficiency: O(1). *)</span>
+  <span class="k">let</span> <span class="n">capacity</span> <span class="o">{</span><span class="n">buckets</span><span class="o">}</span> <span class="o">=</span>
+    <span class="nn">Array</span><span class="p">.</span><span class="n">length</span> <span class="n">buckets</span>
+
+  <span class="c">(** [load_factor tab] is the load factor of [tab], i.e., the number of</span>
+<span class="c">      bindings divided by the number of buckets. *)</span>
+  <span class="k">let</span> <span class="n">load_factor</span> <span class="n">tab</span> <span class="o">=</span>
+    <span class="n">float_of_int</span> <span class="n">tab</span><span class="o">.</span><span class="n">size</span> <span class="o">/.</span> <span class="n">float_of_int</span> <span class="o">(</span><span class="n">capacity</span> <span class="n">tab</span><span class="o">)</span>
+
+  <span class="c">(** Efficiency: O(n). *)</span>
+  <span class="k">let</span> <span class="n">create</span> <span class="n">hash</span> <span class="n">n</span> <span class="o">=</span>
+    <span class="o">{</span><span class="n">hash</span><span class="o">;</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">buckets</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">make</span> <span class="n">n</span> <span class="bp">[]</span><span class="o">}</span>
+
+  <span class="c">(** [index k tab] is the index at which key [k] should be stored in the</span>
+<span class="c">      buckets of [tab].</span>
+<span class="c">      Efficiency: O(1). *)</span>
+  <span class="k">let</span> <span class="n">index</span> <span class="n">k</span> <span class="n">tab</span> <span class="o">=</span>
+    <span class="o">(</span><span class="n">tab</span><span class="o">.</span><span class="n">hash</span> <span class="n">k</span><span class="o">)</span> <span class="ow">mod</span> <span class="o">(</span><span class="n">capacity</span> <span class="n">tab</span><span class="o">)</span>
+
+  <span class="c">(** [insert_no_resize k v tab] inserts a binding from [k] to [v] in [tab]</span>
+<span class="c">      and does not resize the table, regardless of what happens to the</span>
+<span class="c">      load factor.</span>
+<span class="c">      Efficiency: expected O(L). *)</span>
+  <span class="k">let</span> <span class="n">insert_no_resize</span> <span class="n">k</span> <span class="n">v</span> <span class="n">tab</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="n">index</span> <span class="n">k</span> <span class="n">tab</span> <span class="k">in</span> <span class="c">(* O(1) *)</span>
+    <span class="k">let</span> <span class="n">old_bucket</span> <span class="o">=</span> <span class="n">tab</span><span class="o">.</span><span class="n">buckets</span><span class="o">.(</span><span class="n">b</span><span class="o">)</span> <span class="k">in</span>
+    <span class="n">tab</span><span class="o">.</span><span class="n">buckets</span><span class="o">.(</span><span class="n">b</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span><span class="n">v</span><span class="o">)</span> <span class="o">::</span> <span class="nn">List</span><span class="p">.</span><span class="n">remove_assoc</span> <span class="n">k</span> <span class="n">old_bucket</span><span class="o">;</span> <span class="c">(* O(L) *)</span>
+    <span class="k">if</span> <span class="n">not</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">mem_assoc</span> <span class="n">k</span> <span class="n">old_bucket</span><span class="o">)</span> <span class="k">then</span>
+      <span class="n">tab</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;-</span> <span class="n">tab</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="bp">()</span>
+
+  <span class="c">(** [rehash tab new_capacity] replaces the buckets array of [tab] with a new</span>
+<span class="c">      array of size [new_capacity], and re-inserts all the bindings of [tab]</span>
+<span class="c">      into the new array.  The keys are re-hashed, so the bindings will</span>
+<span class="c">      likely land in different buckets.</span>
+<span class="c">      Efficiency: O(n), where n is the number of bindings. *)</span>
+  <span class="k">let</span> <span class="n">rehash</span> <span class="n">tab</span> <span class="n">new_capacity</span> <span class="o">=</span>
+    <span class="c">(* insert [(k, v)] into [tab] *)</span>
+    <span class="k">let</span> <span class="n">rehash_binding</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">=</span>
+      <span class="n">insert_no_resize</span> <span class="n">k</span> <span class="n">v</span> <span class="n">tab</span>
+    <span class="k">in</span>
+    <span class="c">(* insert all bindings of bucket into [tab] *)</span>
+    <span class="k">let</span> <span class="n">rehash_bucket</span> <span class="n">bucket</span> <span class="o">=</span>
+      <span class="nn">List</span><span class="p">.</span><span class="n">iter</span> <span class="n">rehash_binding</span> <span class="n">bucket</span>
+    <span class="k">in</span>
+    <span class="k">let</span> <span class="n">old_buckets</span> <span class="o">=</span> <span class="n">tab</span><span class="o">.</span><span class="n">buckets</span> <span class="k">in</span>
+    <span class="n">tab</span><span class="o">.</span><span class="n">buckets</span> <span class="o">&lt;-</span> <span class="nn">Array</span><span class="p">.</span><span class="n">make</span> <span class="n">new_capacity</span> <span class="bp">[]</span><span class="o">;</span> <span class="c">(* O(n) *)</span>
+    <span class="n">tab</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;-</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="c">(* [rehash_binding] is called by [rehash_bucket] once for every binding *)</span>
+    <span class="nn">Array</span><span class="p">.</span><span class="n">iter</span> <span class="n">rehash_bucket</span> <span class="n">old_buckets</span> <span class="c">(* expected O(n) *)</span>
+
+  <span class="c">(* [resize_if_needed tab] resizes and rehashes [tab] if the load factor</span>
+<span class="c">     is too big or too small.  Load factors are allowed to range from</span>
+<span class="c">     1/2 to 2. *)</span>
+  <span class="k">let</span> <span class="n">resize_if_needed</span> <span class="n">tab</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">lf</span> <span class="o">=</span> <span class="n">load_factor</span> <span class="n">tab</span> <span class="k">in</span>
+    <span class="k">if</span> <span class="n">lf</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="k">then</span>
+      <span class="n">rehash</span> <span class="n">tab</span> <span class="o">(</span><span class="n">capacity</span> <span class="n">tab</span> <span class="o">*</span> <span class="mi">2</span><span class="o">)</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="n">lf</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span> <span class="k">then</span>
+      <span class="n">rehash</span> <span class="n">tab</span> <span class="o">(</span><span class="n">capacity</span> <span class="n">tab</span> <span class="o">/</span> <span class="mi">2</span><span class="o">)</span>
+    <span class="k">else</span> <span class="bp">()</span>
+
+  <span class="c">(** Efficiency: O(n). *)</span>
+  <span class="k">let</span> <span class="n">insert</span> <span class="n">k</span> <span class="n">v</span> <span class="n">tab</span> <span class="o">=</span>
+    <span class="n">insert_no_resize</span> <span class="n">k</span> <span class="n">v</span> <span class="n">tab</span><span class="o">;</span> <span class="c">(* O(L) *)</span>
+    <span class="n">resize_if_needed</span> <span class="n">tab</span> <span class="c">(* O(n) *)</span>
+
+  <span class="c">(** Efficiency: expected O(L). *)</span>
+  <span class="k">let</span> <span class="n">find</span> <span class="n">k</span> <span class="n">tab</span> <span class="o">=</span>
+    <span class="nn">List</span><span class="p">.</span><span class="n">assoc_opt</span> <span class="n">k</span> <span class="n">tab</span><span class="o">.</span><span class="n">buckets</span><span class="o">.(</span><span class="n">index</span> <span class="n">k</span> <span class="n">tab</span><span class="o">)</span>
+
+  <span class="c">(** [remove_no_resize k tab] removes [k] from [tab] and does not trigger</span>
+<span class="c">      a resize, regardless of what happens to the load factor.</span>
+<span class="c">      Efficiency: expected O(L). *)</span>
+  <span class="k">let</span> <span class="n">remove_no_resize</span> <span class="n">k</span> <span class="n">tab</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="n">index</span> <span class="n">k</span> <span class="n">tab</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="n">old_bucket</span> <span class="o">=</span> <span class="n">tab</span><span class="o">.</span><span class="n">buckets</span><span class="o">.(</span><span class="n">b</span><span class="o">)</span> <span class="k">in</span>
+    <span class="n">tab</span><span class="o">.</span><span class="n">buckets</span><span class="o">.(</span><span class="n">b</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="nn">List</span><span class="p">.</span><span class="n">remove_assoc</span> <span class="n">k</span> <span class="n">tab</span><span class="o">.</span><span class="n">buckets</span><span class="o">.(</span><span class="n">b</span><span class="o">);</span>
+    <span class="k">if</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem_assoc</span> <span class="n">k</span> <span class="n">old_bucket</span> <span class="k">then</span>
+      <span class="n">tab</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;-</span> <span class="n">tab</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="bp">()</span>
+
+  <span class="c">(** Efficiency: O(n). *)</span>
+  <span class="k">let</span> <span class="n">remove</span> <span class="n">k</span> <span class="n">tab</span> <span class="o">=</span>
+    <span class="n">remove_no_resize</span> <span class="n">k</span> <span class="n">tab</span><span class="o">;</span> <span class="c">(* O(L) *)</span>
+    <span class="n">resize_if_needed</span> <span class="n">tab</span> <span class="c">(* O(n) *)</span>
+
+  <span class="c">(** Efficiency: O(n). *)</span>
+  <span class="k">let</span> <span class="n">bindings</span> <span class="n">tab</span> <span class="o">=</span>
+    <span class="nn">Array</span><span class="p">.</span><span class="n">fold_left</span>
+      <span class="o">(</span><span class="k">fun</span> <span class="n">acc</span> <span class="n">bucket</span> <span class="o">-&gt;</span>
+         <span class="nn">List</span><span class="p">.</span><span class="n">fold_left</span>
+           <span class="c">(* 1 cons for every binding, which is O(n) *)</span>
+           <span class="o">(</span><span class="k">fun</span> <span class="n">acc</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span><span class="n">v</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span><span class="n">v</span><span class="o">)</span> <span class="o">::</span> <span class="n">acc</span><span class="o">)</span>
+           <span class="n">acc</span> <span class="n">bucket</span><span class="o">)</span>
+      <span class="bp">[]</span> <span class="n">tab</span><span class="o">.</span><span class="n">buckets</span>
+
+  <span class="c">(** Efficiency: O(n^2). *)</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">hash</span> <span class="n">lst</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">m</span> <span class="o">=</span> <span class="n">create</span> <span class="n">hash</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">length</span> <span class="n">lst</span><span class="o">)</span> <span class="k">in</span>  <span class="c">(* O(n) *)</span>
+    <span class="nn">List</span><span class="p">.</span><span class="n">iter</span> <span class="o">(</span><span class="k">fun</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">insert</span> <span class="n">k</span> <span class="n">v</span> <span class="n">m</span><span class="o">)</span> <span class="n">lst</span><span class="o">;</span> <span class="c">(* n * O(n) is O(n^2) *)</span>
+    <span class="n">m</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module HashMap : TableMap
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/FN-YyNaSkz8" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/Du4SxDJzS6g" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/GKtcy5AfPgc" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/YQUHqv-RXI8" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>可以对 <code class="docutils literal notranslate"><span class="pre">rehash</span></code> 进行优化。当它调用 <code class="docutils literal notranslate"><span class="pre">insert_no_resize</span></code> 时
+重新插入绑定，正在完成额外的工作：没有必要
+插入调用 <code class="docutils literal notranslate"><span class="pre">remove_assoc</span></code> 或 <code class="docutils literal notranslate"><span class="pre">mem_assoc</span></code>，因为我们保证
+绑定不包含重复的键。我们可以省略这项工作。如果哈希
+函数很好，只是节省了我们不断的工作量。但如果
+哈希函数很糟糕并且不能均匀地分配键，这可能是
+重要的优化。</p>
+</section>
+</section>
+<section id="id9">
+<h2><span class="section-number">9.1.5. </span>哈希函数<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/tGktnJWmCy0" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>哈希表是有史以来发明的最有用的数据结构之一。
+不幸的是，它们也是最被滥用的之一。使用哈希构建的代码
+表通常远远达不到可实现的性能。有两个原因
+为此：</p>
+<ul class="simple">
+<li><p>客户端选择较差的哈希函数，这些函数不会随机分配键
+桶。</p></li>
+<li><p>哈希表抽象没有充分指定哈希的要求
+函数，或者使得很难提供好的哈希函数。</p></li>
+</ul>
+<p>显然，一个糟糕的哈希函数可能会破坏我们持续运行的尝试
+时间。许多明显的哈希函数选择都是不好的。例如，如果我们是
+将姓名映射到电话号码，然后将每个姓名散列到其长度将是
+非常糟糕的函数，就像只使用名字的哈希函数一样，或者
+只有姓氏。我们希望我们的哈希函数使用中的所有信息
+键。这是一门艺术。虽然哈希表在以下情况下非常有效
+如果使用得当，那么糟糕的哈希函数常常会被使用，从而破坏性能。</p>
+<p>当哈希函数看起来随机时，哈希表可以很好地工作。如果是为了看的话
+随机的，这意味着对键的任何更改，即使是很小的更改，也应该改变
+桶索引以明显随机的方式。如果我们想象写桶索引
+作为二进制数，对键的微小更改应该会随机翻转其中的位
+桶索引。这称为信息<em>扩散</em>。例如，一位
+对键的更改应导致索引中的每一位以 1/2
+概率。</p>
+<p><strong>客户端与实现者。</strong> 正如我们所描述的，哈希函数是一个单一的
+从键类型映射到桶索引的函数。在实践中，哈希
+函数是<em>两个</em>函数的组合：一个由客户端提供，另一个由
+实现者提供。这是因为实现者不了解
+元素类型，客户端不知道有多少个桶，而且
+实现者可能不相信客户端能够实现扩散。</p>
+<p>客户端函数 <code class="docutils literal notranslate"><span class="pre">hash_c</span></code> 首先将键转换为整数哈希码，
+实现函数 <code class="docutils literal notranslate"><span class="pre">hash_i</span></code> 将哈希码转换为桶
+索引。实际的哈希函数是这两个函数的组合。作为
+哈希表设计者，需要弄清楚客户端哈希函数和
+实现端哈希函数将如何提供扩散。如果客户端
+足够精明，将扩散推到他们身上是有意义的，留下
+哈希表的实现尽可能简单、快速。简单的方法
+实现这一点的方法是将桶索引的计算分成三部分
+步骤。</p>
+<ol class="arabic simple">
+<li><p>序列化：将键转换为包含原始键中所有信息的字节流。
+两个相等的键必须产生相同的结果
+字节流。仅当键实际上是时，两个字节流才应该相等
+相等。如何执行此操作取决于键的形式。如果键是
+字符串，那么字节流就只是
+字符串。</p></li>
+<li><p>扩散：将字节流映射为一个大整数<em>x</em>，其方式为
+导致流中的每个更改显然都会影响 <em>x</em> 的位
+随机的。性能与随机性之间存在权衡（并且
+安全）在这里。</p></li>
+<li><p>压缩：将大整数缩小到范围内
+桶。例如，将哈希桶索引计算为 <em>x</em> mod <em>m</em>。这个
+如果 <em>m</em> 是 2 的幂，则特别便宜。</p></li>
+</ol>
+<p>不幸的是，哈希表的实现很少透露它们的含义。
+假设客户端哈希函数。因此，作为客户端，可能很难知道如何
+从表中获得良好的性能。实现能够向客户端提供的关于桶中键分布的信息越多越好。</p>
+</section>
+<section id="hashtbl">
+<h2><span class="section-number">9.1.6. </span>标准库 <code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code><a class="headerlink" href="#hashtbl" title="Permalink to this heading">#</a></h2>
+<p>虽然知道如何实现哈希表并了解如何实现是很棒的
+这样做使用了可变性，也不需要实现一个
+在你自己的项目中自行构建数据。幸运的是 OCaml 标准
+库确实提供了一个实现哈希表的模块 <code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code>。你
+可以将此模块视为函数式 <code class="docutils literal notranslate"><span class="pre">Map</span></code> 的命令式对应物
+模块。</p>
+<p><strong>哈希函数。</strong> 函数 <code class="docutils literal notranslate"><span class="pre">Hashtbl.hash</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 负责
+用于序列化和扩散。它能够对任何类型的值进行哈希处理。
+这不仅包括整数，还包括字符串、列表、树等等。那么如何
+如果树的长度或树的大小可以是，它是否以恒定的时间运行
+任意大？它只查看预定数量的<em>有意义的节点</em>
+它是散列的结构。默认情况下，该数字为 10。一个有意义的节点
+是整数、浮点数、字符串、字符、布尔值或常量
+构造函数。  当我们散列这些列表时，你可以看到：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Hashtbl</span><span class="p">.</span><span class="n">hash</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">;</span> <span class="mi">4</span><span class="o">;</span> <span class="mi">5</span><span class="o">;</span> <span class="mi">6</span><span class="o">;</span> <span class="mi">7</span><span class="o">;</span> <span class="mi">8</span><span class="o">;</span> <span class="mi">9</span><span class="o">];;</span>
+<span class="nn">Hashtbl</span><span class="p">.</span><span class="n">hash</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">;</span> <span class="mi">4</span><span class="o">;</span> <span class="mi">5</span><span class="o">;</span> <span class="mi">6</span><span class="o">;</span> <span class="mi">7</span><span class="o">;</span> <span class="mi">8</span><span class="o">;</span> <span class="mi">9</span><span class="o">;</span> <span class="mi">10</span><span class="o">];;</span>
+<span class="nn">Hashtbl</span><span class="p">.</span><span class="n">hash</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">;</span> <span class="mi">4</span><span class="o">;</span> <span class="mi">5</span><span class="o">;</span> <span class="mi">6</span><span class="o">;</span> <span class="mi">7</span><span class="o">;</span> <span class="mi">8</span><span class="o">;</span> <span class="mi">9</span><span class="o">;</span> <span class="mi">10</span><span class="o">;</span> <span class="mi">11</span><span class="o">];;</span>
+<span class="nn">Hashtbl</span><span class="p">.</span><span class="n">hash</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">;</span> <span class="mi">4</span><span class="o">;</span> <span class="mi">5</span><span class="o">;</span> <span class="mi">6</span><span class="o">;</span> <span class="mi">7</span><span class="o">;</span> <span class="mi">8</span><span class="o">;</span> <span class="mi">9</span><span class="o">;</span> <span class="mi">10</span><span class="o">;</span> <span class="mi">11</span><span class="o">;</span> <span class="mi">12</span><span class="o">];;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 635296333
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 822221246
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 822221246
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 822221246
+</pre></div>
+</div>
+</div>
+</div>
+<p>当列表超过 10 个元素后，哈希值停止变化。这会
+影响我们如何使用这个内置哈希函数：它不一定
+为大型数据结构提供良好的扩散，这意味着性能可以
+随着冲突变得普遍而退化。为了支持想要散列此类
+结构的客户端，<code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code> 提供了另一个函数 <code class="docutils literal notranslate"><span class="pre">hash_param</span></code>，可以
+配置为检查更多节点。</p>
+<p><strong>哈希表。</strong> 这是哈希表接口的摘要：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Hashtbl</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="o">...</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>表示类型 <code class="docutils literal notranslate"><span class="pre">('a,</span> <span class="pre">'b)</span> <span class="pre">Hashtbl.t</span></code> 将类型 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 的键映射到
+值类型为 <code class="docutils literal notranslate"><span class="pre">'b</span></code>。<code class="docutils literal notranslate"><span class="pre">create</span></code> 函数会用给定容量初始化哈希表，
+正如我们上面的实现所做的那样。但它不要求客户端提供哈希函数，
+而是使用 <code class="docutils literal notranslate"><span class="pre">Hashtbl.hash</span></code>。</p>
+<p>当负载因子超过 2 时，就会发生大小调整。让我们看看会发生什么。首先，
+我们将创建一个表并填充它：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">Hashtbl</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">t</span> <span class="o">=</span> <span class="n">create</span> <span class="mi">16</span><span class="o">;;</span>
+<span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">to</span> <span class="mi">16</span> <span class="k">do</span>
+  <span class="n">add</span> <span class="n">t</span> <span class="n">i</span> <span class="o">(</span><span class="n">string_of_int</span> <span class="n">i</span><span class="o">)</span>
+<span class="k">done</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val t : (&#39;_weak1, &#39;_weak2) Hashtbl.t = &lt;abstr&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们可以使用 <code class="docutils literal notranslate"><span class="pre">Hashtbl.stats</span></code> 查询哈希表，了解绑定在桶中如何分布：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span> <span class="n">t</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : Hashtbl.statistics =
+{num_bindings = 16; num_buckets = 16; max_bucket_length = 3;
+ bucket_histogram = [|6; 5; 4; 1|]}
+</pre></div>
+</div>
+</div>
+</div>
+<p>绑定数和桶数相等，因此负载因子为1。
+桶直方图是一个数组<code class="docutils literal notranslate"><span class="pre">a</span></code>，其中<code class="docutils literal notranslate"><span class="pre">a.(i)</span></code>是大小为<code class="docutils literal notranslate"><span class="pre">i</span></code>的桶的数量。</p>
+<p>让我们将负载因子提高到 2：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">17</span> <span class="k">to</span> <span class="mi">32</span> <span class="k">do</span>
+  <span class="n">add</span> <span class="n">t</span> <span class="n">i</span> <span class="o">(</span><span class="n">string_of_int</span> <span class="n">i</span><span class="o">)</span>
+<span class="k">done</span><span class="o">;;</span>
+<span class="n">stats</span> <span class="n">t</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : Hashtbl.statistics =
+{num_bindings = 32; num_buckets = 16; max_bucket_length = 4;
+ bucket_histogram = [|3; 3; 3; 5; 2|]}
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在再添加一个绑定将触发调整大小，这会使桶的数量加倍：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">add</span> <span class="n">t</span> <span class="mi">33</span> <span class="s2">&quot;33&quot;</span><span class="o">;;</span>
+<span class="n">stats</span> <span class="n">t</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : Hashtbl.statistics =
+{num_bindings = 33; num_buckets = 32; max_bucket_length = 3;
+ bucket_histogram = [|11; 11; 8; 2|]}
+</pre></div>
+</div>
+</div>
+</div>
+<p>但是 <code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code> 不会在删除时实现调整大小：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">to</span> <span class="mi">33</span> <span class="k">do</span>
+  <span class="n">remove</span> <span class="n">t</span> <span class="n">i</span>
+<span class="k">done</span><span class="o">;;</span>
+<span class="n">stats</span> <span class="n">t</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : Hashtbl.statistics =
+{num_bindings = 0; num_buckets = 32; max_bucket_length = 0;
+ bucket_histogram = [|32|]}
+</pre></div>
+</div>
+</div>
+</div>
+<p>尽管所有绑定已被删除，但桶的数量仍然是 32。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Java 的 <code class="docutils literal notranslate"><span class="pre">HashMap</span></code> 有一个默认构造函数 <code class="docutils literal notranslate"><span class="pre">HashMap()</span></code> ，它创建一个空的
+容量为 16 的哈希表，当负载因子超过 0.75 时会调整大小
+而不是 2。因此 Java 哈希表往往具有较短的存储桶长度
+比 OCaml 哈希表短，但也往往会占用更多空间，因为
+空桶。</p>
+</div>
+<p><strong>客户端提供的哈希函数。</strong> 如果 <code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code> 的客户端发现
+默认哈希函数会导致冲突，因此性能不佳，该怎么办？
+这时改用不同的哈希函数是有意义的。为了支持这一点，
+<code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code> 提供类似于 <code class="docutils literal notranslate"><span class="pre">Map</span></code> 的函子接口。函子
+是 <code class="docutils literal notranslate"><span class="pre">Hashtbl.Make</span></code>，它需要以下模块类型的输入：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">HashedType</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">type</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">equal</span> <span class="o">:</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">hash</span> <span class="o">:</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 是表的键类型，两个函数 <code class="docutils literal notranslate"><span class="pre">equal</span></code> 和 <code class="docutils literal notranslate"><span class="pre">hash</span></code>
+说明如何比较键的相等性以及如何对它们进行散列。如果两个键相等
+根据 <code class="docutils literal notranslate"><span class="pre">equal</span></code> 相等，那么根据 <code class="docutils literal notranslate"><span class="pre">hash</span></code>，它们必须具有相同的哈希值。如果
+违反了该要求，哈希表将不再运行
+正确。例如，假设 <code class="docutils literal notranslate"><span class="pre">equal</span> <span class="pre">k1</span> <span class="pre">k2</span></code> 成立，但是
+<code class="docutils literal notranslate"><span class="pre">hash</span> <span class="pre">k1</span> <span class="pre">&lt;&gt;</span> <span class="pre">hash</span> <span class="pre">k2</span></code>。那么 <code class="docutils literal notranslate"><span class="pre">k1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">k2</span></code> 将被存储在不同的桶中。
+因此，如果客户端将 <code class="docutils literal notranslate"><span class="pre">k1</span></code> 的绑定添加到 <code class="docutils literal notranslate"><span class="pre">v</span></code>，然后查找 <code class="docutils literal notranslate"><span class="pre">k2</span></code>，他们会
+无法取回 <code class="docutils literal notranslate"><span class="pre">v</span></code>。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>最后一个要求对于 Java 来说可能听起来很熟悉。在那里，如果你覆盖
+<code class="docutils literal notranslate"><span class="pre">Object.equals()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Object.hashCode()</span></code>，你必须确保二者彼此一致。</p>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/ds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>数据结构</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="amortized.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">9.2. </span>摊销分析</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">9.1.1. 映射</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">9.1.2. 作为关联列表的映射</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">9.1.3. 作为数组的映射</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">9.1.4. 作为哈希表的映射</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">9.1.4.1. 链式表示</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">9.1.4.2. 调整大小</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">9.1.4.3. 实现</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">9.1.5. 哈希函数</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hashtbl">9.1.6. 标准库 <code class="docutils literal notranslate"><span class="pre">Hashtbl</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

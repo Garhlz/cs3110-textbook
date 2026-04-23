@@ -1,0 +1,1321 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>5.8. Include &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/modules/includes';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="5.9. 函子" href="functors.html" />
+    <link rel="prev" title="5.7. 模块类型限制" href="module_type_constraints.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">5. 模块化编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/modules/includes.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/modules/includes.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/modules/includes.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/modules/includes.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/modules/includes.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Include</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">5.8.1. Include 的语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.8.2. 封装和 Include</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#include-open">5.8.3. Include 与 Open</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.8.4. 在多个模块中包含代码</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="include">
+<h1><span class="section-number">5.8. </span>Include<a class="headerlink" href="#include" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/SmG3ChuOLpQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>复制和粘贴代码几乎总是一个坏主意。重复代码会让错误也被重复并扩散。
+那么我们为什么还是这么容易犯这个错误？也许是因为它看起来总是更轻松：
+比起应用抽象原则、抽取通用代码，复制粘贴显得更快也更省事。</p>
+<p>OCaml 模块系统提供了一个名为 <em>include</em> 的简洁特性。
+它像是一种有原则的复制粘贴：快速、易用，但避免了真正的重复。
+它可以解决一些在面向对象语言中通常由<em>继承</em>解决的问题。</p>
+<p>让我们从一个例子开始。回想一下集合作为列表的实现：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">elements</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">ListSet</span> <span class="o">:</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span>
+  <span class="k">let</span> <span class="n">add</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
+  <span class="k">let</span> <span class="n">elements</span> <span class="n">s</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">sort_uniq</span> <span class="nn">Stdlib</span><span class="p">.</span><span class="n">compare</span> <span class="n">s</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Set =
+  sig
+    type &#39;a t
+    val empty : &#39;a t
+    val mem : &#39;a -&gt; &#39;a t -&gt; bool
+    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val elements : &#39;a t -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSet : Set
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>假设我们想添加一个函数 <code class="docutils literal notranslate"><span class="pre">of_list</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">list</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">t</span></code> ，它可以
+从列表中构造一个集合。如果我们能够访问两者的源代码
+<code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Set</span></code>，如果我们被允许修改它，这将不会是
+很难。但是如果它们是我们没有的第三方库怎么办
+源代码？</p>
+<p>在 Java 中，我们可以使用继承来解决这个问题：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">class</span> <span class="nc">ListSet</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">class</span> <span class="nc">ListSetExtended</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">ListSet</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">ofList</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这有助于我们重用代码，因为子类继承了所有的方法
+它的超类。</p>
+<p>OCaml 的 <em>include</em> 与此类似。它让一个模块能够包含另一个模块定义的所有项，
+也让一个模块类型能够包含另一个模块类型给出的所有规格说明。</p>
+<p>下面是我们如何使用 <code class="docutils literal notranslate"><span class="pre">include</span></code> 来解决添加 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 的问题
+<code class="docutils literal notranslate"><span class="pre">ListSet</span></code>：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">include</span> <span class="nc">ListSet</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtended :
+  sig
+    type &#39;a t = &#39;a ListSet.t
+    val empty : &#39;a t
+    val mem : &#39;a -&gt; &#39;a t -&gt; bool
+    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val elements : &#39;a t -&gt; &#39;a list
+    val of_list : &#39;a list -&gt; &#39;a t
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>这段代码表示 <code class="docutils literal notranslate"><span class="pre">ListSetExtended</span></code> 是一个包含所有
+<code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 模块的定义，以及 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 的定义。我们
+不必知道实现 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 的源代码即可实现此目的。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>你可能想知道为什么我们不能简单地实现 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 作为身份
+函数。请参阅下面有关封装的部分以获得答案。</p>
+</div>
+<section id="id1">
+<h2><span class="section-number">5.8.1. </span>Include 的语义<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>包含可以在结构和签名内部使用。当我们包含在里面时
+一个签名，我们必须包含另一个签名。当我们包括在内
+一个结构，我们必须包含另一个结构。</p>
+<p><strong>包含一个结构</strong>实际上只是编写一个语法糖
+模块中定义的每个名称的本地定义。写入 <code class="docutils literal notranslate"><span class="pre">include</span> <span class="pre">ListSet</span></code>
+例如，正如我们上面所做的那样，其效果类似于编写以下内容：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(* BEGIN all the includes *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">t</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">empty</span>
+  <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">mem</span>
+  <span class="k">let</span> <span class="n">add</span> <span class="o">=</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">add</span>
+  <span class="k">let</span> <span class="n">elements</span> <span class="o">=</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">elements</span>
+  <span class="c">(* END all the includes *)</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtended :
+  sig
+    type &#39;a t = &#39;a ListSet.t
+    val empty : &#39;a ListSet.t
+    val mem : &#39;a -&gt; &#39;a ListSet.t -&gt; bool
+    val add : &#39;a -&gt; &#39;a ListSet.t -&gt; &#39;a ListSet.t
+    val elements : &#39;a ListSet.t -&gt; &#39;a list
+    val of_list : &#39;a list -&gt; &#39;a ListSet.t
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>这些实际上都不是复制 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 的源代码。相反，
+<code class="docutils literal notranslate"><span class="pre">include</span></code> 只是在 <code class="docutils literal notranslate"><span class="pre">ListSetExtended</span></code> 中创建一个同名的新定义
+正如 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 中的每个定义。但是如果里面定义的一组名称
+<code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 发生变化时， <code class="docutils literal notranslate"><span class="pre">include</span></code> 将反映该变化，而
+复制粘贴工作不会。</p>
+<p><strong>包括签名</strong>大致相同。例如，我们可以写：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">include</span> <span class="nc">Set</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type SetExtended =
+  sig
+    type &#39;a t
+    val empty : &#39;a t
+    val mem : &#39;a -&gt; &#39;a t -&gt; bool
+    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val elements : &#39;a t -&gt; &#39;a list
+    val of_list : &#39;a list -&gt; &#39;a t
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>这将产生类似于编写以下内容的效果：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="c">(* BEGIN all the includes *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">elements</span>  <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="c">(* END all the includes *)</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type SetExtended =
+  sig
+    type &#39;a t
+    val empty : &#39;a t
+    val mem : &#39;a -&gt; &#39;a t -&gt; bool
+    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val elements : &#39;a t -&gt; &#39;a list
+    val of_list : &#39;a list -&gt; &#39;a t
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>该模块类型适合 <code class="docutils literal notranslate"><span class="pre">ListSetExtended</span></code>：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">:</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">include</span> <span class="nc">ListSet</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtended : SetExtended
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h2><span class="section-number">5.8.2. </span>封装和 Include<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>我们上面提到过，你可能想知道为什么我们不写得更简单一些
+<code class="docutils literal notranslate"><span class="pre">of_list</span></code> 的定义：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">:</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">include</span> <span class="nc">ListSet</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">lst</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[7]&quot;</span><span class="p">,</span> <span class="n">lines</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">39</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span>
+<span class="mi">1</span> <span class="o">|</span> <span class="o">.......................................</span><span class="n">struct</span>
+<span class="mi">2</span> <span class="o">|</span>   <span class="n">include</span> <span class="n">ListSet</span>
+<span class="mi">3</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">lst</span>
+<span class="mi">4</span> <span class="o">|</span> <span class="n">end</span>
+<span class="ne">Error</span>: Signature mismatch:
+       <span class="o">...</span>
+       <span class="n">Values</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+         <span class="n">val</span> <span class="n">of_list</span> <span class="p">:</span> <span class="s1">&#39;a -&gt; &#39;</span><span class="n">a</span>
+       <span class="ow">is</span> <span class="ow">not</span> <span class="n">included</span> <span class="ow">in</span>
+         <span class="n">val</span> <span class="n">of_list</span> <span class="p">:</span> <span class="s1">&#39;a list -&gt; &#39;</span><span class="n">a</span> <span class="n">t</span>
+       <span class="n">The</span> <span class="nb">type</span> <span class="s1">&#39;a list -&gt; &#39;</span><span class="n">a</span> <span class="nb">list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">compatible</span> <span class="k">with</span> <span class="n">the</span> <span class="nb">type</span>
+         <span class="s1">&#39;a list -&gt; &#39;</span><span class="n">a</span> <span class="n">t</span>
+       <span class="n">Type</span> <span class="s1">&#39;a list is not compatible with type &#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="s1">&#39;a ListSet.t</span>
+       <span class="n">File</span> <span class="s2">&quot;[5]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">9</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">31</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
+       <span class="n">File</span> <span class="s2">&quot;[7]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">6</span><span class="o">-</span><span class="mi">13</span><span class="p">:</span> <span class="n">Actual</span> <span class="n">declaration</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>查看该错误消息。  看起来 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 没有权限
+类型。  如果我们尝试添加一些类型注释怎么办？</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">:</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">include</span> <span class="nc">ListSet</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="n">lst</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[8]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">39</span><span class="o">-</span><span class="mi">42</span><span class="p">:</span>
+<span class="mi">3</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">of_list</span> <span class="p">(</span><span class="n">lst</span> <span class="p">:</span> <span class="s1">&#39;a list) : &#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="n">lst</span>
+                                           <span class="o">^^^</span>
+<span class="ne">Error</span>: The value lst has type &#39;a list but an expression was expected of type
+         <span class="s1">&#39;a t = &#39;</span><span class="n">a</span> <span class="n">ListSet</span><span class="o">.</span><span class="n">t</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>啊，现在问题更清楚了：在<code class="docutils literal notranslate"><span class="pre">of_list</span></code>的主体中，<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">t</span></code>的相等性
+并且 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">list</span></code> 未知。在 <code class="docutils literal notranslate"><span class="pre">ListSetExtended</span></code> 中，我们确实知道
+<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">t</span> <span class="pre">=</span> <span class="pre">'a</span> <span class="pre">ListSet.t</span></code>，因为这就是 <code class="docutils literal notranslate"><span class="pre">include</span></code> 给我们的。但事实
+当 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 被密封在模块中时，<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">ListSet.t</span> <span class="pre">=</span> <span class="pre">'a</span> <span class="pre">list</span></code> 被隐藏
+输入 <code class="docutils literal notranslate"><span class="pre">Set</span></code>。因此，包含必须服从封装，就像其余的一样
+模块系统。</p>
+<p>一种解决方法是重写定义，如下所示：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetImpl</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span>
+  <span class="k">let</span> <span class="n">add</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
+  <span class="k">let</span> <span class="n">elements</span> <span class="n">s</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">sort_uniq</span> <span class="nn">Stdlib</span><span class="p">.</span><span class="n">compare</span> <span class="n">s</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">ListSet</span> <span class="o">:</span> <span class="nc">Set</span> <span class="o">=</span> <span class="nc">ListSetImpl</span>
+
+<span class="k">module</span> <span class="k">type</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">sig</span>
+  <span class="k">include</span> <span class="nc">Set</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">ListSetExtendedImpl</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">include</span> <span class="nc">ListSetImpl</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">lst</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">:</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="nc">ListSetExtendedImpl</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetImpl :
+  sig
+    type &#39;a t = &#39;a list
+    val empty : &#39;a list
+    val mem : &#39;a -&gt; &#39;a list -&gt; bool
+    val add : &#39;a -&gt; &#39;a list -&gt; &#39;a list
+    val elements : &#39;a list -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSet : Set
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type SetExtended =
+  sig
+    type &#39;a t
+    val empty : &#39;a t
+    val mem : &#39;a -&gt; &#39;a t -&gt; bool
+    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    val elements : &#39;a t -&gt; &#39;a list
+    val of_list : &#39;a list -&gt; &#39;a t
+  end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtendedImpl :
+  sig
+    type &#39;a t = &#39;a list
+    val empty : &#39;a list
+    val mem : &#39;a -&gt; &#39;a list -&gt; bool
+    val add : &#39;a -&gt; &#39;a list -&gt; &#39;a list
+    val elements : &#39;a list -&gt; &#39;a list
+    val of_list : &#39;a -&gt; &#39;a
+  end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtended : SetExtended
+</pre></div>
+</div>
+</div>
+</div>
+<p>重要的变化是 <code class="docutils literal notranslate"><span class="pre">ListSetImpl</span></code> 没有被密封，所以它的类型 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">t</span></code> 是
+不抽象。当我们将其包含在 <code class="docutils literal notranslate"><span class="pre">ListSetExtended</span></code> 中时，我们就可以利用
+事实上它是 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">list</span></code> 的同义词。</p>
+<p>我们刚才所做的实际上与 Java 处理
+可见性修饰符 <code class="docutils literal notranslate"><span class="pre">public</span></code>、<code class="docutils literal notranslate"><span class="pre">private</span></code> 等。类的“私有版本”
+就像上面的 <code class="docutils literal notranslate"><span class="pre">Impl</span></code> 版本：任何可以看到该版本的人都可以看到
+所有公开的项目（Java 中的字段、OCaml 中的类型），没有任何
+封装。类的“公共版本”就像上面的密封版本：
+任何可以看到该版本的人都被迫将这些项目视为抽象的，因此
+封装的。</p>
+<p>通过这种技术，如果我们想提供其中一个的新实现
+我们也可以这样做：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetExtendedImpl</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">include</span> <span class="nc">ListSetImpl</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
+  <span class="k">let</span> <span class="k">rec</span> <span class="n">elements</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">[]</span>
+    <span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">if</span> <span class="n">mem</span> <span class="n">h</span> <span class="n">t</span> <span class="k">then</span> <span class="n">elements</span> <span class="n">t</span> <span class="k">else</span> <span class="n">h</span> <span class="o">::</span> <span class="n">elements</span> <span class="n">t</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtendedImpl :
+  sig
+    type &#39;a t = &#39;a list
+    val empty : &#39;a list
+    val mem : &#39;a -&gt; &#39;a list -&gt; bool
+    val add : &#39;a -&gt; &#39;a list -&gt; &#39;a list
+    val of_list : &#39;a list -&gt; &#39;a list
+    val elements : &#39;a list -&gt; &#39;a list
+  end
+</pre></div>
+</div>
+</div>
+</div>
+<p>但这是个坏主意。首先，它实际上是一个二次实现
+<code class="docutils literal notranslate"><span class="pre">elements</span></code> 而不是线性。其次，它不会“取代”原来的
+<code class="docutils literal notranslate"><span class="pre">elements</span></code> 的实现。记住模块的语义：所有定义
+按从上到下的顺序进行评估。所以 <code class="docutils literal notranslate"><span class="pre">elements</span></code> 的新定义
+以上要等到评估结束后才能使用。如果有更早的
+函数碰巧使用 <code class="docutils literal notranslate"><span class="pre">elements</span></code> 作为辅助函数，它们会使用
+原始的线性版本，而不是新的二次版本。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>这不同于你在 Java 中可能期待的行为；Java 使用一种语言特性
+调用 <a class="reference external" href="https://en.wikipedia.org/wiki/Dynamic_dispatch">dynamic dispatch</a> 来确定要执行哪个方法实现
+调用。动态调度可以说是面向对象的<em>定义</em>特征
+语言。 OCaml 函数不是方法，并且它们不使用动态
+派遣。</p>
+</div>
+</section>
+<section id="include-open">
+<h2><span class="section-number">5.8.3. </span>Include 与 Open<a class="headerlink" href="#include-open" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/P1-gLiagAK4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p><code class="docutils literal notranslate"><span class="pre">include</span></code> 和 <code class="docutils literal notranslate"><span class="pre">open</span></code> 语句非常相似，但它们有
+对结构的影响略有不同。  考虑这段代码：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">N</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">include</span> <span class="nc">M</span>
+  <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">O</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">open</span> <span class="nc">M</span>
+  <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : sig val x : int end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module N : sig val x : int val y : int end
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module O : sig val y : int end
+</pre></div>
+</div>
+</div>
+</div>
+<p>仔细查看每个结构中包含的值。 <code class="docutils literal notranslate"><span class="pre">N</span></code> 具有 <code class="docutils literal notranslate"><span class="pre">x</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">y</span></code>，而 <code class="docutils literal notranslate"><span class="pre">O</span></code> 只有一个 <code class="docutils literal notranslate"><span class="pre">y</span></code>。原因是 <code class="docutils literal notranslate"><span class="pre">include</span> <span class="pre">M</span></code> 导致所有
+<code class="docutils literal notranslate"><span class="pre">M</span></code> 的定义也包含在 <code class="docutils literal notranslate"><span class="pre">N</span></code> 中，因此 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的定义来自 <code class="docutils literal notranslate"><span class="pre">M</span></code>
+存在于 <code class="docutils literal notranslate"><span class="pre">N</span></code> 中。但 <code class="docutils literal notranslate"><span class="pre">open</span> <span class="pre">M</span></code> 仅使这些定义在
+<code class="docutils literal notranslate"><span class="pre">O</span></code> 的<em>范围</em>；它实际上并没有使它们成为<em>结构</em>的一部分。所以<code class="docutils literal notranslate"><span class="pre">O</span></code>
+不包含 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的定义，即使 <code class="docutils literal notranslate"><span class="pre">x</span></code> 在
+<code class="docutils literal notranslate"><span class="pre">O</span></code> 对 <code class="docutils literal notranslate"><span class="pre">y</span></code> 的定义的评估。</p>
+<p>理解这种差异的隐喻可能是： <code class="docutils literal notranslate"><span class="pre">open</span> <span class="pre">M</span></code> 导入
+<code class="docutils literal notranslate"><span class="pre">M</span></code> 中的定义并使其可供本地使用，但它们
+不出口到外界。而 <code class="docutils literal notranslate"><span class="pre">include</span> <span class="pre">M</span></code> 导入定义
+来自 <code class="docutils literal notranslate"><span class="pre">M</span></code>，使它们可供当地消费，并另外出口
+他们对外面的世界。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">5.8.4. </span>在多个模块中包含代码<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>回想一下，我们还有一个集合的实现，它确保每个元素
+底层列表是唯一的：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">UniqListSet</span> <span class="o">:</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="c">(** All values in the list must be unique. *)</span>
+  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
+  <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span>
+  <span class="k">let</span> <span class="n">add</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span> <span class="k">if</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">s</span> <span class="k">then</span> <span class="n">s</span> <span class="k">else</span> <span class="n">x</span> <span class="o">::</span> <span class="n">s</span>
+  <span class="k">let</span> <span class="n">elements</span> <span class="o">=</span> <span class="nn">Fun</span><span class="p">.</span><span class="n">id</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module UniqListSet : Set
+</pre></div>
+</div>
+</div>
+</div>
+<p>假设我们也想将 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 添加到该模块。一种可能性是
+将该函数从 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 复制并粘贴到 <code class="docutils literal notranslate"><span class="pre">UniqListSet</span></code> 中。但这是很糟糕的
+软件工程。因此，让我们立即把它排除为非解决方案。</p>
+<p>相反，假设我们尝试在任一模块之外定义该函数：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[13]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">34</span><span class="o">-</span><span class="mi">37</span><span class="p">:</span>
+<span class="mi">1</span> <span class="o">|</span> <span class="n">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
+                                      <span class="o">^^^</span>
+<span class="ne">Error</span>: Unbound value add
+</pre></div>
+</div>
+</div>
+</div>
+<p>问题是我们要么需要选择哪个模块的 <code class="docutils literal notranslate"><span class="pre">add</span></code> 和 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 我们
+想要。但一旦我们这样做了，这个函数就只对那个函数有用了
+模块：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">add</span> <span class="n">lst</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">empty</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list : &#39;a list -&gt; &#39;a ListSet.t = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们可以将 <code class="docutils literal notranslate"><span class="pre">add</span></code> 和 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 作为参数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">of_list&#39;</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
+
+<span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list&#39;</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">add</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">empty</span> <span class="n">lst</span>
+<span class="k">let</span> <span class="n">of_list_uniq</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list&#39;</span> <span class="nn">UniqListSet</span><span class="p">.</span><span class="n">add</span> <span class="nn">UniqListSet</span><span class="p">.</span><span class="n">empty</span> <span class="n">lst</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list&#39; : (&#39;a -&gt; &#39;b -&gt; &#39;b) -&gt; &#39;b -&gt; &#39;a list -&gt; &#39;b = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list : &#39;a list -&gt; &#39;a ListSet.t = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list_uniq : &#39;a list -&gt; &#39;a UniqListSet.t = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>但这在几个方面都很烦人。首先我们要记住是哪一个
+要调用的函数名称，而属于这些函数一部分的所有其他操作
+模块具有相同的名称，无论它们位于哪个模块中。
+<code class="docutils literal notranslate"><span class="pre">of_list</span></code> 函数位于任一模块之外，因此打开其中一个模块的客户端
+模块不会自动获得命名这些函数的能力。</p>
+<p>我们尝试使用include来解决这个问题。首先，我们编写一个模块
+包含参数化实现：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">SetOfList</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">let</span> <span class="n">of_list&#39;</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module SetOfList :
+  sig val of_list&#39; : (&#39;a -&gt; &#39;b -&gt; &#39;b) -&gt; &#39;b -&gt; &#39;a list -&gt; &#39;b end
+</pre></div>
+</div>
+</div>
+</div>
+<p>然后我们包含该模块来获取辅助函数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">UniqListSetExtended</span> <span class="o">:</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">include</span> <span class="nc">UniqListSet</span>
+  <span class="k">include</span> <span class="nc">SetOfList</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list&#39;</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">:</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">struct</span>
+  <span class="k">include</span> <span class="nc">ListSet</span>
+  <span class="k">include</span> <span class="nc">SetOfList</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list&#39;</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module UniqListSetExtended : SetExtended
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtended : SetExtended
+</pre></div>
+</div>
+</div>
+</div>
+<p>这可行，但我们只部分成功地实现了代码重用：</p>
+<ul class="simple">
+<li><p>从积极的一面来看，实现 <code class="docutils literal notranslate"><span class="pre">of_list'</span></code> 的代码已被考虑在内
+放入一个位置并在两个结构中重复使用。</p></li>
+<li><p>但不利的一面是，我们仍然必须编写 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 的实现
+在两个模块中。更糟糕的是，这些实现是相同的。所以有
+仍然发生代码重复。</p></li>
+</ul>
+<p>我们可以做得更好吗？是的。接下来我们就到了函子。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/modules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module_type_constraints.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">5.7. </span>模块类型限制</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="functors.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">5.9. </span>函子</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">5.8.1. Include 的语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.8.2. 封装和 Include</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#include-open">5.8.3. Include 与 Open</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.8.4. 在多个模块中包含代码</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1384 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>8.7. 证明正确性 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/correctness/proving_correctness';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="8.8. 结构归纳法" href="structural_induction.html" />
+    <link rel="prev" title="8.6. 使用 QCheck 进行随机测试" href="randomized.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">8. 正确性</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/correctness/proving_correctness.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/correctness/proving_correctness.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/correctness/proving_correctness.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/correctness/proving_correctness.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/correctness/proving_correctness.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>证明正确性</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">8.7.1. 相等</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">8.7.2. 等式推理</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">8.7.3. 自然数归纳法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">8.7.4. 程序作为规范</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">8.7.5. 递归与迭代</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">8.7.6. 终止</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">8.7. </span>证明正确性<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/48GBq4koKPs" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>测试提供正确性的证据，但不能完全保证。即使之后
+广泛的黑盒和玻璃盒测试，也许还有一些测试用例
+程序员未能发明，该测试用例将揭示程序中的错误
+程序。</p>
+<blockquote class="epigraph">
+<div><p>程序测试可用于显示错误的存在，但绝不能显示错误的不存在。</p>
+<p class="attribution">——埃兹格·W·迪杰斯特拉</p>
+</div></blockquote>
+<p>重点不是测试没有用！它可能非常有效。但这是一个
+一种<em>归纳推理</em>，其中证据（即通过测试）
+积累支持结论（即程序的正确性）
+并不能绝对保证该结论的有效性。 （请注意，
+这里的“归纳”一词与证明的含义不同
+称为归纳法的技术。）为了获得这种保证，我们转向<em>演绎
+推理</em>，其中我们从逻辑的前提和规则出发，得出有效的结论
+结论。换句话说，我们证明了程序的正确性。我们的目标，
+接下来，是学习此类正确性证明的一些技术。这些技巧
+由于使用了逻辑形式主义，因此被称为“形式方法”。</p>
+<p><em>正确性</em>在这里意味着程序产生正确的输出
+根据<em>规范</em>。规格通常在
+函数的文档（因此称为“规范注释”）：它们
+描述程序的前提条件和后置条件。后置条件，正如我们
+一直在写它们，其形式为“[f x] 是“…输出的描述
+就输入 [x]…”` 而言。例如，阶乘的规范
+函数可以是：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [fact n] is [n!]. Requires: [n &gt;= 0]. *)</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">fact</span> <span class="n">n</span> <span class="o">=</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>后置条件断言函数的输出之间相等
+以及一些关于输入计算的英文描述。 <em>正式
+verification</em> 是证明函数的实现的任务
+满足其规格。</p>
+<p>等式是我们思考正确性的基本方式之一
+函数式程序。不存在可变状态使得推理成为可能
+直接判断两个表达式是否相等。很难做到
+在命令式语言中，因为这些表达可能有侧面
+改变状态的效果。</p>
+<section id="id2">
+<h2><span class="section-number">8.7.1. </span>相等<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/zjDUrMdVC5U" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>什么时候两个表达式相等？  两个可能的答案是：</p>
+<ul class="simple">
+<li><p>当它们在语法上相同时。</p></li>
+<li><p>当它们在语义上等效时：它们产生相同的值。</p></li>
+</ul>
+<p>例如，<code class="docutils literal notranslate"><span class="pre">42</span></code> 和 <code class="docutils literal notranslate"><span class="pre">41+1</span></code> 是否相等？语法答案会说它们是
+不是，因为它们涉及不同的标记。语义答案会说它们
+是：它们都产生值 <code class="docutils literal notranslate"><span class="pre">42</span></code>。</p>
+<p>那么函数呢：<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">y</span></code> 相等吗？从句法上来说
+他们是不同的。但从语义上讲，它们都产生一个值，即
+恒等函数：当它们应用于输入时，它们都会产生
+相同的输出。即 <code class="docutils literal notranslate"><span class="pre">(fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x)</span> <span class="pre">z</span> <span class="pre">=</span> <span class="pre">z</span></code> 和 <code class="docutils literal notranslate"><span class="pre">(fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">y)</span> <span class="pre">z</span> <span class="pre">=</span> <span class="pre">z</span></code>。如果是的话
+对于所有输入，两个函数产生相同输出的情况，我们将
+考虑函数相等：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>if (forall x, f x = g x), then f = g.
+</pre></div>
+</div>
+<p>函数相等的定义被称为 <em>Axiom of
+数学某些分支的外延性</em>；今后我们会参考它
+简单地说就是“外延性”。</p>
+<p>这里我们将采用语义方法。如果 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 计算结果相同
+值 <code class="docutils literal notranslate"><span class="pre">v</span></code>，然后我们写 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">=</span> <span class="pre">e2</span></code>。我们在数学中使用 <code class="docutils literal notranslate"><span class="pre">=</span></code>
+平等感，不像 OCaml 多态相等运算符。例如，
+我们允许 <code class="docutils literal notranslate"><span class="pre">(fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x)</span> <span class="pre">=</span> <span class="pre">(fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">y)</span></code>，即使 OCaml 的运算符会引发
+异常并拒绝比较函数。</p>
+<p>我们还将限制自己使用类型良好、纯粹的表达式
+（意味着它们没有副作用）和总体（意味着它们没有
+异常或无限循环）。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">8.7.2. </span>等式推理<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/MjpZJA1jIqU" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>考虑这些函数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">twice</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span> <span class="o">(</span><span class="n">f</span> <span class="n">x</span><span class="o">)</span>
+<span class="k">let</span> <span class="n">compose</span> <span class="n">f</span> <span class="n">g</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span> <span class="o">(</span><span class="n">g</span> <span class="n">x</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val twice : (&#39;a -&gt; &#39;a) -&gt; &#39;a -&gt; &#39;a = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val compose : (&#39;a -&gt; &#39;b) -&gt; (&#39;c -&gt; &#39;a) -&gt; &#39;c -&gt; &#39;b = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>从 OCaml 评估规则中我们知道 <code class="docutils literal notranslate"><span class="pre">twice</span> <span class="pre">h</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">h</span> <span class="pre">(h</span> <span class="pre">x)</span></code>，并且
+同样，<code class="docutils literal notranslate"><span class="pre">compose</span> <span class="pre">h</span> <span class="pre">h</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">h</span> <span class="pre">(h</span> <span class="pre">x)</span></code>。因此我们有：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="n">twice</span> <span class="n">h</span> <span class="n">x</span> <span class="o">=</span> <span class="n">h</span> <span class="o">(</span><span class="n">h</span> <span class="n">x</span><span class="o">)</span> <span class="o">=</span> <span class="n">compose</span> <span class="n">h</span> <span class="n">h</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>因此，我们可以得出结论：<code class="docutils literal notranslate"><span class="pre">twice</span> <span class="pre">h</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">compose</span> <span class="pre">h</span> <span class="pre">h</span> <span class="pre">x</span></code>。并由
+外延性我们可以简化这个等式：因为 <code class="docutils literal notranslate"><span class="pre">twice</span> <span class="pre">h</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">compose</span> <span class="pre">h</span> <span class="pre">h</span> <span class="pre">x</span></code>
+对于所有 <code class="docutils literal notranslate"><span class="pre">x</span></code> 都成立，我们可以得出 <code class="docutils literal notranslate"><span class="pre">twice</span> <span class="pre">h</span> <span class="pre">=</span> <span class="pre">compose</span> <span class="pre">h</span> <span class="pre">h</span></code> 的结论。</p>
+<p>另一个例子，假设我们为函数定义一个中缀运算符
+组成：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="o">(</span> <span class="o">&lt;&lt;</span> <span class="o">)</span> <span class="o">=</span> <span class="n">compose</span>
+</pre></div>
+</div>
+<p>然后我们可以使用等式推理来证明组合是关联的：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Theorem: (f &lt;&lt; g) &lt;&lt; h  =  f &lt;&lt; (g &lt;&lt; h)
+
+Proof: By extensionality, we need to show
+  ((f &lt;&lt; g) &lt;&lt; h) x  =  (f &lt;&lt; (g &lt;&lt; h)) x
+for an arbitrary x.
+
+  ((f &lt;&lt; g) &lt;&lt; h) x
+= (f &lt;&lt; g) (h x)
+= f (g (h x))
+
+and
+
+  (f &lt;&lt; (g &lt;&lt; h)) x
+= f ((g &lt;&lt; h) x)
+= f (g (h x))
+
+So ((f &lt;&lt; g) &lt;&lt; h) x = f (g (h x)) = (f &lt;&lt; (g &lt;&lt; h)) x.
+
+QED
+</pre></div>
+</div>
+<p>上述等式证明中的所有步骤均来自评估。
+另一种书写证明的格式将提供关于原因的提示
+每个步骤都是有效的：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  ((f &lt;&lt; g) &lt;&lt; h) x
+=   { evaluation of &lt;&lt; }
+  (f &lt;&lt; g) (h x)
+=   { evaluation of &lt;&lt; }
+  f (g (h x))
+
+and
+
+  (f &lt;&lt; (g &lt;&lt; h)) x
+=   { evaluation of &lt;&lt; }
+  f ((g &lt;&lt; h) x)
+=   { evaluation of &lt;&lt; }
+  f (g (h x))
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h2><span class="section-number">8.7.3. </span>自然数归纳法<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/By4VSmpzuHw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>以下函数对 <code class="docutils literal notranslate"><span class="pre">n</span></code> 之前的非负整数求和：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sumto</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">n</span> <span class="o">+</span> <span class="n">sumto</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sumto : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>你可能还记得，相同的求和可以用封闭形式表示：
+<code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">*</span> <span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1)</span> <span class="pre">/</span> <span class="pre">2</span></code>。为了证明<code class="docutils literal notranslate"><span class="pre">forall</span> <span class="pre">n</span> <span class="pre">&gt;=</span> <span class="pre">0,</span> <span class="pre">sumto</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">n</span> <span class="pre">*</span> <span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1)</span> <span class="pre">/</span> <span class="pre">2</span></code>，我们
+将需要<em>数学归纳法</em>。</p>
+<p>回想一下自然数（即非负整数）的归纳法
+公式如下：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>forall properties P,
+  if P(0),
+  and if forall k, P(k) implies P(k + 1),
+  then forall n, P(n)
+</pre></div>
+</div>
+<p>这就是自然数的“归纳原理”。 <em>基本情况</em>是
+证明 <code class="docutils literal notranslate"><span class="pre">P(0)</span></code>，而<em>归纳案例</em>是证明 <code class="docutils literal notranslate"><span class="pre">P(k</span> <span class="pre">+</span> <span class="pre">1)</span></code> 成立
+在<em>归纳假设</em> <code class="docutils literal notranslate"><span class="pre">P(k)</span></code> 的假设下。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/JRNxlQYOLyw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>我们用归纳法来证明<code class="docutils literal notranslate"><span class="pre">sumto</span></code>的正确性。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Claim: sumto n = n * (n + 1) / 2
+
+Proof: by induction on n.
+P(n) = sumto n = n * (n + 1) / 2
+
+Base case: n = 0
+Show: sumto 0 = 0 * (0 + 1) / 2
+
+  sumto 0
+=   { evaluation }
+  0
+=   { algebra }
+  0 * (0 + 1) / 2
+
+Inductive case: n = k + 1
+Show: sumto (k + 1) = (k + 1) * ((k + 1) + 1) / 2
+IH: sumto k = k * (k + 1) / 2
+
+  sumto (k + 1)
+=   { evaluation }
+  k + 1 + sumto k
+=   { IH }
+  k + 1 + k * (k + 1) / 2
+=   { algebra }
+  (k + 1) * (k + 2) / 2
+
+QED
+</pre></div>
+</div>
+<p>请注意，我们在每种情况下都非常小心地写出我们需要的内容
+显示，并写下归纳假设。展示很重要
+所有这些工作。</p>
+<p>假设我们现在定义：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">sumto_closed</span> <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="o">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sumto_closed : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>那么作为我们之前的主张的推论，通过外延性我们可以得出结论</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sumto_closed = sumto
+</pre></div>
+</div>
+<p>从技术上讲，等式仅包含自然数输入。但自从
+今后我们所有的例子都将针对自然数，而不是整数本身，我们将
+删除说明有关自然数的任何先决条件或限制。</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">8.7.4. </span>程序作为规范<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>我们刚刚证明了有效实现的正确性
+实施效率低下。低效的实现 <code class="docutils literal notranslate"><span class="pre">sumto</span></code> 服务
+作为高效实现的规范，<code class="docutils literal notranslate"><span class="pre">sumto_closed</span></code>。</p>
+<p>这种技术在验证函数式程序时很常见：编写一个明显的
+缺少某些所需属性的正确实现，例如
+效率，然后证明更好的实现与原始实现相同。</p>
+<p>让我们再举一个此类验证的例子。这次，好好利用
+阶乘函数。</p>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/htMNllWnLzg" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>阶乘的简单且明显正确的实现是：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fact</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fact</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fact : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>尾递归实现对于堆栈空间会更有效：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">facti</span> <span class="n">acc</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">acc</span> <span class="k">else</span> <span class="n">facti</span> <span class="o">(</span><span class="n">acc</span> <span class="o">*</span> <span class="n">n</span><span class="o">)</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+
+<span class="k">let</span> <span class="n">fact_tr</span> <span class="n">n</span> <span class="o">=</span> <span class="n">facti</span> <span class="mi">1</span> <span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val facti : int -&gt; int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fact_tr : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>名称 <code class="docutils literal notranslate"><span class="pre">facti</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">i</span></code> 代表<em>迭代</em>。我们称之为迭代
+实现，因为它非常类似于相同的计算方式
+在命令式中使用循环（即迭代构造）来表达
+语言。例如，在 Java 中我们可以这样写：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">facti</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">acc</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+<span class="w">    </span><span class="n">n</span><span class="o">--</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">acc</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">facti</span></code> 的 OCaml 和 Java 实现共享以下功能：</p>
+<ul class="simple">
+<li><p>他们从 <code class="docutils literal notranslate"><span class="pre">1</span></code> 开始 <code class="docutils literal notranslate"><span class="pre">acc</span></code></p></li>
+<li><p>他们检查 <code class="docutils literal notranslate"><span class="pre">n</span></code> 是否为 <code class="docutils literal notranslate"><span class="pre">0</span></code></p></li>
+<li><p>他们将 <code class="docutils literal notranslate"><span class="pre">acc</span></code> 乘以 <code class="docutils literal notranslate"><span class="pre">n</span></code></p></li>
+<li><p>他们递减 <code class="docutils literal notranslate"><span class="pre">n</span></code></p></li>
+<li><p>他们返回累加器 <code class="docutils literal notranslate"><span class="pre">acc</span></code></p></li>
+</ul>
+<p>让我们尝试证明 <code class="docutils literal notranslate"><span class="pre">fact_tr</span></code> 正确实现了与
+<code class="docutils literal notranslate"><span class="pre">fact</span></code>。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Claim: forall n, fact n = fact_tr n
+
+Since fact_tr n = facti 1 n, it suffices to show fact n = facti 1 n.
+
+Proof: by induction on n.
+P(n) = fact n = facti 1 n
+
+Base case: n = 0
+Show: fact 0 = facti 1 0
+
+  fact 0
+=   { evaluation }
+  1
+=   { evaluation }
+  facti 1 0
+
+Inductive case: n = k + 1
+Show: fact (k + 1) = facti 1 (k + 1)
+IH: fact k = facti 1 k
+
+  fact (k + 1)
+=   { evaluation }
+  (k + 1) * fact k
+=   { IH }
+  (k + 1) * facti 1 k
+
+  facti 1 (k + 1)
+=   { evaluation }
+  facti (1 * (k + 1)) k
+=   { evaluation }
+  facti (k + 1) k
+
+Unfortunately, we&#39;re stuck.  Neither side of what we want to show
+can be manipulated any further.
+
+ABORT
+</pre></div>
+</div>
+<p>我们知道 <code class="docutils literal notranslate"><span class="pre">facti</span> <span class="pre">(k</span> <span class="pre">+</span> <span class="pre">1)</span> <span class="pre">k</span></code> 和 <code class="docutils literal notranslate"><span class="pre">(k</span> <span class="pre">+</span> <span class="pre">1)</span> <span class="pre">*</span> <span class="pre">facti</span> <span class="pre">1</span> <span class="pre">k</span></code> 应该产生相同的结果
+值。但 IH 只允许我们使用 <code class="docutils literal notranslate"><span class="pre">1</span></code> 作为 <code class="docutils literal notranslate"><span class="pre">facti</span></code> 的第二个参数，
+而不是像 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">+</span> <span class="pre">1</span></code> 这样的更大的参数。所以我们的证明在那一刻就误入歧途了
+我们用的是IH。我们需要一个更强的归纳假设！</p>
+<p>因此，让我们加强我们的主张。而不是表明
+<code class="docutils literal notranslate"><span class="pre">fact</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">facti</span> <span class="pre">1</span> <span class="pre">n</span></code>，我们将尝试显示<code class="docutils literal notranslate"><span class="pre">forall</span> <span class="pre">p,</span> <span class="pre">p</span> <span class="pre">*</span> <span class="pre">fact</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">facti</span> <span class="pre">p</span> <span class="pre">n</span></code>。那
+将 <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">+</span> <span class="pre">1</span></code> 概括为任意数量 <code class="docutils literal notranslate"><span class="pre">p</span></code>。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Claim: forall n, forall p . p * fact n = facti p n
+
+Proof: by induction on n.
+P(n) = forall p, p * fact n = facti p n
+
+Base case:  n = 0
+Show: forall p,  p * fact 0 = facti p 0
+
+  p * fact 0
+=   { evaluation and algebra }
+  p
+=   { evaluation }
+  facti p 0
+
+Inductive case: n = k + 1
+Show: forall p,  p * fact (k + 1) = facti p (k + 1)
+IH: forall p,  p * fact k = facti p k
+
+  p * fact (k + 1)
+=   { evaluation }
+  p * (k + 1) * fact k
+=   { IH, instantiating its p as p * (k + 1) }
+  facti (p * (k + 1)) k
+
+  facti p (k + 1)
+=   { evaluation }
+  facti (p * (k + 1)) k
+
+QED
+
+Claim: forall n, fact n = fact_tr n
+
+Proof:
+
+  fact n
+=   { algebra }
+  1 * fact n
+=   { previous claim }
+  facti 1 n
+=   { evaluation }
+  fact_tr n
+
+QED
+</pre></div>
+</div>
+<p>这就完成了我们的证明，即高效的尾递归函数 <code class="docutils literal notranslate"><span class="pre">fact_tr</span></code> 是
+相当于简单的递归函数 <code class="docutils literal notranslate"><span class="pre">fact</span></code>。本质上我们已经证明了
+使用 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 作为其规范的 <code class="docutils literal notranslate"><span class="pre">fact_tr</span></code> 的正确性。</p>
+</section>
+<section id="id6">
+<h2><span class="section-number">8.7.5. </span>递归与迭代<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>我们添加了一个累加器作为额外参数，以使阶乘函数为
+尾递归。这是我们以前见过的伎俩。让我们抽象一下，看看如何
+一般情况下做。</p>
+<p>假设我们有一个整数的递归函数：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">f_r</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">i</span> <span class="k">else</span> <span class="n">op</span> <span class="n">n</span> <span class="o">(</span><span class="n">f_r</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>这里，<code class="docutils literal notranslate"><span class="pre">f_r</span></code>中的<code class="docutils literal notranslate"><span class="pre">r</span></code>意味着<code class="docutils literal notranslate"><span class="pre">f_r</span></code>是一个递归函数。
+<code class="docutils literal notranslate"><span class="pre">i</span></code> 和 <code class="docutils literal notranslate"><span class="pre">op</span></code> 是函数的一部分，应该被替换为
+一些具体值 <code class="docutils literal notranslate"><span class="pre">i</span></code> 和运算符 <code class="docutils literal notranslate"><span class="pre">op</span></code>。例如，阶乘
+函数，我们有：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="n">f_r</span> <span class="o">=</span> <span class="n">fact</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">op</span> <span class="o">=</span> <span class="o">(</span> <span class="o">*</span> <span class="o">)</span>
+</pre></div>
+</div>
+<p>这样的函数可以通过如下重写来使其成为尾递归：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">f_i</span> <span class="n">acc</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">acc</span>
+  <span class="k">else</span> <span class="n">f_i</span> <span class="o">(</span><span class="n">op</span> <span class="n">acc</span> <span class="n">n</span><span class="o">)</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+
+<span class="k">let</span> <span class="n">f_tr</span> <span class="o">=</span> <span class="n">f_i</span> <span class="n">i</span>
+</pre></div>
+</div>
+<p>这里，<code class="docutils literal notranslate"><span class="pre">f_i</span></code>中的<code class="docutils literal notranslate"><span class="pre">i</span></code>意味着<code class="docutils literal notranslate"><span class="pre">f_i</span></code>是一个迭代函数，
+<code class="docutils literal notranslate"><span class="pre">i</span></code> 和 <code class="docutils literal notranslate"><span class="pre">op</span></code> 与函数的递归版本中的相同。对于
+例如，对于阶乘我们有：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="n">f_i</span> <span class="o">=</span> <span class="n">fact_i</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">op</span> <span class="o">=</span> <span class="o">(</span> <span class="o">*</span> <span class="o">)</span>
+<span class="n">f_tr</span> <span class="o">=</span> <span class="n">fact_tr</span>
+</pre></div>
+</div>
+<p>我们可以证明 <code class="docutils literal notranslate"><span class="pre">f_r</span></code> 和 <code class="docutils literal notranslate"><span class="pre">f_tr</span></code> 计算相同的函数。证明过程中，
+接下来，我们将发现 <code class="docutils literal notranslate"><span class="pre">i</span></code> 和 <code class="docutils literal notranslate"><span class="pre">op</span></code> 必须满足的某些条件才能使
+尾递归的转换是正确的。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Theorem: f_r = f_tr
+
+Proof:  By extensionality, it suffices to show that forall n, f_r n = f_tr n.
+
+As in the previous proof for fact, we will need a strengthened induction
+hypothesis. So we first prove this lemma, which quantifies over all accumulators
+that could be input to f_i, rather than only i:
+
+  Lemma: forall n, forall acc, op acc (f_r n) = f_i acc n
+
+  Proof of Lemma: by induction on n.
+  P(n) = forall acc, op acc (f_r n) = f_i acc n
+
+  Base: n = 0
+  Show: forall acc, op acc (f_r 0) = f_i acc 0
+
+    op acc (f_r 0)
+  =   { evaluation }
+    op acc i
+  =   { if we assume forall x, op x i = x }
+    acc
+
+    f_i acc 0
+  =   { evaluation }
+    acc
+
+  Inductive case: n = k + 1
+  Show: forall acc, op acc (f_r (k + 1)) = f_i acc (k + 1)
+  IH: forall acc, op acc (f_r k) = f_i acc k
+
+    op acc (f_r (k + 1))
+  =   { evaluation }
+    op acc (op (k + 1) (f_r k))
+  =   { if we assume forall x y z, op x (op y z) = op (op x y) z }
+    op (op acc (k + 1)) (f_r k)
+
+    f_i acc (k + 1)
+  =   { evaluation }
+    f_i (op acc (k + 1)) k
+  =   { IH, instantiating acc as op acc (k + 1)}
+    op (op acc (k + 1)) (f_r k)
+
+  QED
+
+The proof then follows almost immediately from the lemma:
+
+  f_r n
+=   { if we assume forall x, op i x = x }
+  op i (f_r n)
+=   { lemma, instantiating acc as i }
+  f_i i n
+=   { evaluation }
+  f_tr n
+
+QED
+</pre></div>
+</div>
+<p>在此过程中，我们对 i 和 op 做出了三个假设：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">forall</span> <span class="pre">x,</span> <span class="pre">op</span> <span class="pre">x</span> <span class="pre">i</span> <span class="pre">=</span> <span class="pre">x</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">op</span> <span class="pre">x</span> <span class="pre">(op</span> <span class="pre">y</span> <span class="pre">z)</span> <span class="pre">=</span> <span class="pre">op</span> <span class="pre">(op</span> <span class="pre">x</span> <span class="pre">y)</span> <span class="pre">z</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">forall</span> <span class="pre">x,</span> <span class="pre">op</span> <span class="pre">i</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">x</span></code></p></li>
+</ol>
+<p>第一个和第三个表示 <code class="docutils literal notranslate"><span class="pre">i</span></code> 是 <code class="docutils literal notranslate"><span class="pre">op</span></code> 的<em>身份</em>：在左侧使用它
+或者右侧保留另一个参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 不变。第二个说 <code class="docutils literal notranslate"><span class="pre">op</span></code>
+是<em>关联</em>。这两个假设都适用于我们在
+阶乘函数：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">op</span></code> 是乘法，具有结合律。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">i</span></code> 是 <code class="docutils literal notranslate"><span class="pre">1</span></code>，它是乘法的恒等式：乘以 1 个叶子
+另一个参数不变。</p></li>
+</ul>
+<p>因此，我们从递归函数到尾递归函数的转换是有效的：
+只要递归调用中应用的运算符是结合的，并且值
+基本情况中返回的是该操作员的身份。</p>
+<p>回到<code class="docutils literal notranslate"><span class="pre">sumto</span></code>函数，我们可以应用刚刚证明的定理
+立即得到尾递归版本：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sumto_r</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">n</span> <span class="o">+</span> <span class="n">sumto_r</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sumto_r : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>这里，运算符是加法，具有结合性；且基本情况为零，
+这是加法的恒等式。因此我们的定理适用，我们可以使用
+它甚至无需考虑即可生成尾递归版本：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sumto_i</span> <span class="n">acc</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">acc</span> <span class="k">else</span> <span class="n">sumto_i</span> <span class="o">(</span><span class="n">acc</span> <span class="o">+</span> <span class="n">n</span><span class="o">)</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+
+<span class="k">let</span> <span class="n">sumto_tr</span> <span class="o">=</span> <span class="n">sumto_i</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sumto_i : int -&gt; int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sumto_tr : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>由于我们的定理，我们已经知道 <code class="docutils literal notranslate"><span class="pre">sumto_tr</span></code> 是正确的。</p>
+</section>
+<section id="id7">
+<h2><span class="section-number">8.7.6. </span>终止<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/Xy7GTfEfIK4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>有时程序的正确性进一步分为：</p>
+<ul class="simple">
+<li><p><strong>部分正确</strong>：意味着<em>如果</em>一个程序终止，那么它的
+输出正确；和</p></li>
+<li><p><strong>完全正确</strong>：意味着程序<em>确实</em>终止，<em>并且</em>其
+输出正确。</p></li>
+</ul>
+<p>因此，完全正确性是部分正确性和
+终止。到目前为止，我们已经证明了部分正确性。</p>
+<p>证明程序终止是很困难的。确实，这是不可能的
+算法这样做的一般原则是：计算机无法精确地决定是否
+程序将终止。 （有关更多详细信息，请参阅“停机问题”。）但是，
+聪明的人有时能做到这一点。</p>
+<p>有一个简单的启发式可以用来证明递归函数
+终止：</p>
+<ul class="simple">
+<li><p>所有递归调用都在“较小”的输入上，并且</p></li>
+<li><p>所有基本情况都将终止。</p></li>
+</ul>
+<p>例如，考虑阶乘函数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fact</span> <span class="n">n</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">1</span>
+  <span class="k">else</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fact</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fact : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>基本情况 <code class="docutils literal notranslate"><span class="pre">1</span></code> 显然已终止。递归调用在<code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">-</span> <span class="pre">1</span></code>上，
+这是比原始 <code class="docutils literal notranslate"><span class="pre">n</span></code> 更小的输入。所以 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 总是终止（如
+只要其输入是自然数）。</p>
+<p>同样的推理也适用于我们上面讨论的所有其他函数。</p>
+<p>为了使这一点更加精确，我们需要了解“变小”意味着什么。
+假设我们在输入上有一个二元关系 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 。尽管有符号，这
+关系不必是整数上的小于关系——尽管这会
+为 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 工作。还假设永远不可能创建无限
+使用此关系的元素的序列 <code class="docutils literal notranslate"><span class="pre">x0</span> <span class="pre">&gt;</span> <span class="pre">x1</span> <span class="pre">&gt;</span> <span class="pre">x2</span> <span class="pre">&gt;</span> <span class="pre">x3</span> <span class="pre">...</span></code> 。 （哪里的
+当然<code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;</span> <span class="pre">b</span></code>当且仅当<code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">&lt;</span> <span class="pre">a</span></code>。）也就是说，不存在无限
+元素的降序链：一旦选择起始元素 <code class="docutils literal notranslate"><span class="pre">x0</span></code>，就可以
+根据你面前的 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 关系，只有有限数量的“血统”
+触底并触及基本情况。 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 的这一属性使其成为<em>有充分根据的
+关系</em>。</p>
+<p>因此，如果所有递归调用都针对元素，则递归函数将终止
+根据 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 较小。为什么？因为只能有有限的
+达到基本情况之前的调用次数，并且基本情况必须终止。</p>
+<p>通常的 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 关系在自然数上是有充分根据的，因为
+最终任何链都必须达到 0 的基本情况。但这并不是有充分根据的
+在整数上，它可能会变得越来越小：<code class="docutils literal notranslate"><span class="pre">-1</span> <span class="pre">&gt;</span> <span class="pre">-2</span> <span class="pre">&gt;</span> <span class="pre">-3</span> <span class="pre">&gt;</span> <span class="pre">...</span></code>。</p>
+<p>这是一个有趣的函数，通常的 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 关系不足以满足要求
+证明终止：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">ack</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">n</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="o">|</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">ack</span> <span class="o">(</span><span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>
+  <span class="o">|</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">n</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">ack</span> <span class="o">(</span><span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">ack</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ack : int * int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>这称为<em>阿克曼函数</em>。它的增长速度比任何指数都快
+函数。尝试运行 <code class="docutils literal notranslate"><span class="pre">ack</span> <span class="pre">(1,</span> <span class="pre">1)</span></code>、<code class="docutils literal notranslate"><span class="pre">ack</span> <span class="pre">(2,</span> <span class="pre">1)</span></code>、<code class="docutils literal notranslate"><span class="pre">ack</span> <span class="pre">(3,</span> <span class="pre">1)</span></code>，然后运行 <code class="docutils literal notranslate"><span class="pre">ack</span> <span class="pre">(4,</span> <span class="pre">1)</span></code> 来了解一下。这也是一个著名的函数示例，可以
+使用 <code class="docutils literal notranslate"><span class="pre">while</span></code> 循环实现，但不能使用 <code class="docutils literal notranslate"><span class="pre">for</span></code> 循环实现。尽管如此，它确实
+终止。</p>
+<p>为了证明这一点，基本情况很简单：当输入为 <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">_)</span></code> 时，函数
+终止。但在其他情况下，它会进行递归调用，我们需要定义
+适当的 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 关系。事实证明，“字典顺序”是对的
+作品。如果满足以下条件，则定义 <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b)</span> <span class="pre">&lt;</span> <span class="pre">(c,</span> <span class="pre">d)</span></code>：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&lt;</span> <span class="pre">c</span></code>，或</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">c</span></code> 和 <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">&lt;</span> <span class="pre">d</span></code>。</p></li>
+</ul>
+<p>这两种情况下的 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 顺序是自然数上常见的 <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 顺序。</p>
+<p>在第一个递归调用中，<code class="docutils literal notranslate"><span class="pre">(m</span> <span class="pre">-</span> <span class="pre">1,</span> <span class="pre">1)</span> <span class="pre">&lt;</span> <span class="pre">(m,</span> <span class="pre">0)</span></code> 由第一种情况
+<code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 的定义，因为 <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">-</span> <span class="pre">1</span> <span class="pre">&lt;</span> <span class="pre">m</span></code>。在嵌套递归调用中
+<code class="docutils literal notranslate"><span class="pre">ack</span> <span class="pre">(m</span> <span class="pre">-</span> <span class="pre">1,</span> <span class="pre">ack</span> <span class="pre">(m,</span> <span class="pre">n</span> <span class="pre">-</span> <span class="pre">1))</span></code>，两种情况都需要：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n</span> <span class="pre">-</span> <span class="pre">1)</span> <span class="pre">&lt;</span> <span class="pre">(m,</span> <span class="pre">n)</span></code> 因为 <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">=</span> <span class="pre">m</span></code> 和 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">-</span> <span class="pre">1</span> <span class="pre">&lt;</span> <span class="pre">n</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(m</span> <span class="pre">-</span> <span class="pre">1,</span> <span class="pre">_)</span> <span class="pre">&lt;</span> <span class="pre">(m,</span> <span class="pre">n)</span></code> 因为 <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">-</span> <span class="pre">1</span> <span class="pre">&lt;</span> <span class="pre">m</span></code>。</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/correctness"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="randomized.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">8.6. </span>使用 QCheck 进行随机测试</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="structural_induction.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">8.8. </span>结构归纳法</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">8.7.1. 相等</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">8.7.2. 等式推理</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">8.7.3. 自然数归纳法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">8.7.4. 程序作为规范</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">8.7.5. 递归与迭代</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">8.7.6. 终止</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

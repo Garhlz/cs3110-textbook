@@ -1,0 +1,1995 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>6.1. Ref &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/mut/refs';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="6.2. 可变字段" href="mutable_fields.html" />
+    <link rel="prev" title="6. 可变性" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">6. 可变性</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../adv/curry-howard.html">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/mut/refs.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/mut/refs.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/mut/refs.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/mut/refs.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/mut/refs.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Ref</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">6.1.1. 混叠</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.1.2. 语法和语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.1.3. 效果排序</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">6.1.4. 示例：可变计数器</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">6.1.5. 示例：指针</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rec">6.1.6. 示例：不带 Rec 的递归</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">6.1.7. 弱类型变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">6.1.8. 物理相等</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">6.1.9. 示例：单链表</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="ref">
+<h1><span class="section-number">6.1. </span>Ref<a class="headerlink" href="#ref" title="Permalink to this heading">#</a></h1>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/R0tGac0jaEQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p><em>ref</em> 就像命令式语言中的指针或引用。它是一个
+内存中的位置，其内容可能会改变。参考也称为<em>参考单元</em>，
+这个想法是记忆中有一个可以改变的细胞。</p>
+<p>这是创建 ref、从其内部获取值、更改的示例
+其内容，并观察变化的内容：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">0</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val x : int ref = {contents = 0}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="n">x</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">:=</span> <span class="mi">1</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="n">x</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 1
+</pre></div>
+</div>
+</div>
+</div>
+<p>第一个短语 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">ref</span> <span class="pre">0</span></code> 使用 <code class="docutils literal notranslate"><span class="pre">ref</span></code> 关键字创建引用。
+这是内存中的一个位置，其内容被初始化为 <code class="docutils literal notranslate"><span class="pre">0</span></code>。想想
+位置本身作为地址—例如，0x3110bae0—甚至
+尽管无法在 OCaml 程序中写下这样的地址。
+关键字 <code class="docutils literal notranslate"><span class="pre">ref</span></code> 是导致内存位置被分配的原因
+已初始化。</p>
+<p>OCaml 响应的第一部分 <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">x</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">ref</span></code> 表明 <code class="docutils literal notranslate"><span class="pre">x</span></code>
+是一个类型为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">ref</span></code> 的变量。我们这里有一个新的类型构造函数。很多
+就像 <code class="docutils literal notranslate"><span class="pre">list</span></code> 和 <code class="docutils literal notranslate"><span class="pre">option</span></code> 是类型构造函数一样，<code class="docutils literal notranslate"><span class="pre">ref</span></code> 也是如此。 A <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">ref</span></code>，对于任何
+类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 是对保证包含
+类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的值。像往常一样，我们应该从右到左读取类型：<code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">ref</span></code>
+表示对 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的引用。响应的第二部分向我们展示了
+内存位置的内容。事实上，内容已被初始化为
+<code class="docutils literal notranslate"><span class="pre">0</span></code>。</p>
+<p>第二个短语 <code class="docutils literal notranslate"><span class="pre">!x</span></code> 取消引用 <code class="docutils literal notranslate"><span class="pre">x</span></code> 并返回内存的内容
+位置。请注意，<code class="docutils literal notranslate"><span class="pre">!</span></code> 是 OCaml 中的解引用运算符，而不是布尔值
+否定。</p>
+<p>第三个短语 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">:=</span> <span class="pre">1</span></code> 是一个赋值。它将内容 <code class="docutils literal notranslate"><span class="pre">x</span></code> 更改为
+<code class="docutils literal notranslate"><span class="pre">1</span></code>。请注意， <code class="docutils literal notranslate"><span class="pre">x</span></code> 本身仍然指向相同的位置（即地址）
+记忆。记忆是可变的；变量绑定则不然。改变的是
+内容。 OCaml 的响应只是 <code class="docutils literal notranslate"><span class="pre">()</span></code>，这意味着该赋值
+发生了—，很像打印函数返回<code class="docutils literal notranslate"><span class="pre">()</span></code>来表明
+打印确实发生了。</p>
+<p>第四个短语 <code class="docutils literal notranslate"><span class="pre">!x</span></code> 再次取消引用 <code class="docutils literal notranslate"><span class="pre">x</span></code> 以证明内容
+内存位置确实发生了变化。</p>
+<section id="id1">
+<h2><span class="section-number">6.1.1. </span>混叠<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/pt06BxGhjDQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>现在我们有了引用，我们就有了<em>别名</em>：两个引用可以指向同一个
+内存位置，因此通过一个位置进行更新会导致另一个位置也被更新。
+例如，</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">42</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">42</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="o">;;</span>
+<span class="n">x</span> <span class="o">:=</span> <span class="mi">43</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">w</span> <span class="o">=</span> <span class="o">!</span><span class="n">y</span> <span class="o">+</span> <span class="o">!</span><span class="n">z</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val x : int ref = {contents = 42}
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val y : int ref = {contents = 42}
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val z : int ref = {contents = 42}
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val w : int = 85
+</pre></div>
+</div>
+</div>
+</div>
+<p>执行该代码的结果是 <code class="docutils literal notranslate"><span class="pre">w</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">85</span></code>，因为
+<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">z</span> <span class="pre">=</span> <span class="pre">x</span></code> 导致 <code class="docutils literal notranslate"><span class="pre">z</span></code> 和 <code class="docutils literal notranslate"><span class="pre">x</span></code> 成为别名，因此将 <code class="docutils literal notranslate"><span class="pre">x</span></code> 更新为 <code class="docutils literal notranslate"><span class="pre">43</span></code>
+还会导致 <code class="docutils literal notranslate"><span class="pre">z</span></code> 变为 <code class="docutils literal notranslate"><span class="pre">43</span></code>。</p>
+</section>
+<section id="id2">
+<h2><span class="section-number">6.1.2. </span>语法和语义<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/ByV1N3hDgSw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>refs 的语义基于内存中的<em>位置</em>。地点就是价值
+可以传递给函数并从函数返回。但与其他价值观不同
+（例如，整数、变体），无法直接将位置写入
+OCaml 程序。这与 C 等语言不同，在 C 语言中，程序员可以
+直接写入内存地址并对指针进行运算。 C程序员
+想要那种低级访问权限来执行诸如与硬件交互之类的事情
+和构建操作系统。高级程序员愿意放弃
+它以获得<em>内存安全</em>。这是一个很难定义的术语，但根据
+<a class="reference external" href="http://www.pl-enthusiast.net/2014/07/21/memory-safety/">Hicks 2014</a> 直观上意味着</p>
+<ul class="simple">
+<li><p>指针仅以定义其合法内存的安全方式创建
+地区，</p></li>
+<li><p>仅当指针指向其分配的内存时才可以取消引用
+地区，</p></li>
+<li><p>该区域（仍然）是确定的。</p></li>
+</ul>
+<p><strong>语法。</strong></p>
+<ul class="simple">
+<li><p>参考创建：<code class="docutils literal notranslate"><span class="pre">ref</span> <span class="pre">e</span></code></p></li>
+<li><p>参考分配：<code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:=</span> <span class="pre">e2</span></code></p></li>
+<li><p>取消引用：<code class="docutils literal notranslate"><span class="pre">!e</span></code></p></li>
+</ul>
+<p><strong>动态语义。</strong></p>
+<ul class="simple">
+<li><p>要评估 <code class="docutils literal notranslate"><span class="pre">ref</span> <span class="pre">e</span></code>，</p>
+<ul>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">e</span></code> 计算为值 <code class="docutils literal notranslate"><span class="pre">v</span></code></p></li>
+<li><p>在内存中分配一个新位置 <code class="docutils literal notranslate"><span class="pre">loc</span></code> 来保存 <code class="docutils literal notranslate"><span class="pre">v</span></code></p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">v</span></code> 存储在 <code class="docutils literal notranslate"><span class="pre">loc</span></code> 中</p></li>
+<li><p>返回<code class="docutils literal notranslate"><span class="pre">loc</span></code></p></li>
+</ul>
+</li>
+<li><p>要评估 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:=</span> <span class="pre">e2</span></code>，</p>
+<ul>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 计算为值 <code class="docutils literal notranslate"><span class="pre">v</span></code>，将 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 计算为位置 <code class="docutils literal notranslate"><span class="pre">loc</span></code>。</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">v</span></code> 存储在 <code class="docutils literal notranslate"><span class="pre">loc</span></code> 中。</p></li>
+<li><p>返回<code class="docutils literal notranslate"><span class="pre">()</span></code>，即单位。</p></li>
+</ul>
+</li>
+<li><p>要评估 <code class="docutils literal notranslate"><span class="pre">!e</span></code>，</p>
+<ul>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">e</span></code> 评估为位置 <code class="docutils literal notranslate"><span class="pre">loc</span></code>。</p></li>
+<li><p>返回 <code class="docutils literal notranslate"><span class="pre">loc</span></code> 的内容。</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>静态语义。</strong></p>
+<p>我们有一个新的类型构造函数 <code class="docutils literal notranslate"><span class="pre">ref</span></code>，这样 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">ref</span></code> 是任何类型的类型
+<code class="docutils literal notranslate"><span class="pre">t</span></code>。请注意，<code class="docutils literal notranslate"><span class="pre">ref</span></code> 关键字有两种使用方式：作为类型构造函数，以及
+作为构造 refs 的表达式。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ref</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">ref</span></code> 如果 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:=</span> <span class="pre">e2</span> <span class="pre">:</span> <span class="pre">unit</span></code> 如果 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">ref</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">t</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">!e</span> <span class="pre">:</span> <span class="pre">t</span></code> 如果 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">ref</span></code>。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2><span class="section-number">6.1.3. </span>效果排序<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/aj0bpOyv7Gs" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>分号运算符用于对效果进行排序，例如改变引用。我们已经
+以前在打印时看到过分号。现在我们正在学习
+可变性，是时候正式对待它了。</p>
+<ul class="simple">
+<li><p><strong>语法：</strong> <code class="docutils literal notranslate"><span class="pre">e1;</span> <span class="pre">e2</span></code></p></li>
+<li><p><strong>动态语义：</strong> 评估 <code class="docutils literal notranslate"><span class="pre">e1;</span> <span class="pre">e2</span></code>，</p>
+<ul>
+<li><p>首先将 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 计算为值 <code class="docutils literal notranslate"><span class="pre">v1</span></code>。</p></li>
+<li><p>然后将 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 计算为值 <code class="docutils literal notranslate"><span class="pre">v2</span></code>。</p></li>
+<li><p>返回 <code class="docutils literal notranslate"><span class="pre">v2</span></code>。  （<code class="docutils literal notranslate"><span class="pre">v1</span></code> 根本没有使用。）</p></li>
+<li><p>如果序列中有多个表达式，例如 <code class="docutils literal notranslate"><span class="pre">e1;</span> <span class="pre">e2;</span> <span class="pre">...;</span> <span class="pre">en</span></code>，
+然后按从左到右的顺序评估每个，仅返回 <code class="docutils literal notranslate"><span class="pre">vn</span></code>。</p></li>
+</ul>
+</li>
+<li><p><strong>静态语义：</strong> <code class="docutils literal notranslate"><span class="pre">e1;</span> <span class="pre">e2</span> <span class="pre">:</span> <span class="pre">t</span></code> 如果 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">unit</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">t</span></code>。同样，
+<code class="docutils literal notranslate"><span class="pre">e1;</span> <span class="pre">e2;</span> <span class="pre">...;</span> <span class="pre">en</span> <span class="pre">:</span> <span class="pre">t</span></code> if <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">unit</span></code>, <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">unit</span></code>, …（即所有表达式
+除了 <code class="docutils literal notranslate"><span class="pre">en</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">unit</span></code>) 和 <code class="docutils literal notranslate"><span class="pre">en</span> <span class="pre">:</span> <span class="pre">t</span></code> 之外。</p></li>
+</ul>
+<p>分号的输入规则旨在防止程序员犯错误。对于
+例如，编写 <code class="docutils literal notranslate"><span class="pre">2+3;</span> <span class="pre">7</span></code> 的程序员可能无意：没有
+评估 <code class="docutils literal notranslate"><span class="pre">2+3</span></code> 的原因，然后丢弃结果并返回 <code class="docutils literal notranslate"><span class="pre">7</span></code>。
+如果你违反此特定的键入规则，编译器将向你发出警告。</p>
+<p>要消除警告（如果你确定这就是你需要做的），有一个
+标准库中的函数 <code class="docutils literal notranslate"><span class="pre">ignore</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">unit</span></code> 。使用它，
+<code class="docutils literal notranslate"><span class="pre">ignore(2+3);</span> <span class="pre">7</span></code> 将在没有警告的情况下编译。当然，你可以编写代码
+<code class="docutils literal notranslate"><span class="pre">ignore</span></code> 你自己：<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">ignore</span> <span class="pre">_</span> <span class="pre">=</span> <span class="pre">()</span></code>。</p>
+</section>
+<section id="id4">
+<h2><span class="section-number">6.1.4. </span>示例：可变计数器<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/o5wFQvCRJsc" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>这是实现<em>计数器</em>的代码。每次调用 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 时，
+比上次多返回 1 个。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">counter</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">0</span>
+
+<span class="k">let</span> <span class="n">next_val</span> <span class="o">=</span>
+  <span class="k">fun</span> <span class="bp">()</span> <span class="o">-&gt;</span>
+    <span class="n">counter</span> <span class="o">:=</span> <span class="o">!</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="o">!</span><span class="n">counter</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val counter : int ref = {contents = 0}
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val next_val : unit -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">next_val</span> <span class="bp">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">next_val</span> <span class="bp">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">next_val</span> <span class="bp">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 3
+</pre></div>
+</div>
+</div>
+</div>
+<p>在<code class="docutils literal notranslate"><span class="pre">next_val</span></code>的实现中，有两个表达式，用
+分号。第一个表达式 <code class="docutils literal notranslate"><span class="pre">counter</span> <span class="pre">:=</span> <span class="pre">!counter</span> <span class="pre">+</span> <span class="pre">1</span></code> 是一个赋值
+使 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 增加 1。第二个表达式 <code class="docutils literal notranslate"><span class="pre">!counter</span></code> 返回
+<code class="docutils literal notranslate"><span class="pre">counter</span></code> 新增加的内容。</p>
+<p><code class="docutils literal notranslate"><span class="pre">next_val</span></code> 函数很不寻常，因为每次我们调用它时，它都会返回一个
+不同的价值。这与我们现有的任何函数都非常不同
+到目前为止，我们自己实现的始终是“确定性的”：
+给定输入，它们总是产生相同的输出。另一方面，一些
+函数是<em>不确定的</em>：函数的每次调用都可能产生
+尽管接收相同的输入，但输出不同。在标准库中，
+例如， <code class="docutils literal notranslate"><span class="pre">Random</span></code> 模块中的函数是不确定的，如下所示
+<code class="docutils literal notranslate"><span class="pre">Stdlib.read_line</span></code>，读取用户的输入。这并非巧合
+这些恰好是使用可变函数来实现的。</p>
+<p>我们可以通过几种方式改进我们的计数器。首先，有一个库
+函数 <code class="docutils literal notranslate"><span class="pre">incr</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">ref</span> <span class="pre">-&gt;</span> <span class="pre">unit</span></code> 将 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">ref</span></code> 加 1。因此它是
+就像 C 家族中许多语言所熟悉的 <code class="docutils literal notranslate"><span class="pre">++</span></code> 运算符一样。
+使用它，我们可以写 <code class="docutils literal notranslate"><span class="pre">incr</span> <span class="pre">counter</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">counter</span> <span class="pre">:=</span> <span class="pre">!counter</span> <span class="pre">+</span> <span class="pre">1</span></code>。
+（还有一个减 1 的 <code class="docutils literal notranslate"><span class="pre">decr</span></code> 函数。）</p>
+<p>其次，我们当前对计数器进行编码的方式将 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 变量公开给
+外面的世界。也许我们更愿意隐藏它，以便 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 的客户
+不能直接改变它。我们可以通过在范围内嵌套 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 来做到这一点
+<code class="docutils literal notranslate"><span class="pre">next_val</span></code> 的：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">next_val</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">counter</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">0</span> <span class="k">in</span>
+  <span class="k">fun</span> <span class="bp">()</span> <span class="o">-&gt;</span>
+    <span class="n">incr</span> <span class="n">counter</span><span class="o">;</span>
+    <span class="o">!</span><span class="n">counter</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val next_val : unit -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 位于 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 内部的范围内，但在该范围之外无法访问
+范围。</p>
+<p>之前我们给出let表达式的动态语义时，我们谈到
+替代。考虑 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 定义的一种方法如下。</p>
+<ul>
+<li><p>首先，计算表达式 <code class="docutils literal notranslate"><span class="pre">ref</span> <span class="pre">0</span></code>。返回位置 <code class="docutils literal notranslate"><span class="pre">loc</span></code>，
+这是内存中的地址。该地址的内容被初始化为
+<code class="docutils literal notranslate"><span class="pre">0</span></code>。</p></li>
+<li><p>其次，在 let 表达式主体中出现 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 的任何地方，我们
+替换它的位置。所以我们得到：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>fun () -&gt; incr loc; !loc
+</pre></div>
+</div>
+</li>
+<li><p>第三，该匿名函数绑定到 <code class="docutils literal notranslate"><span class="pre">next_val</span></code>。</p></li>
+</ul>
+<p>因此，每当调用 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 时，它都会递增并返回该内容
+一个内存位置 <code class="docutils literal notranslate"><span class="pre">loc</span></code>。</p>
+<p>现在想象一下我们编写了以下（损坏的）代码：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">next_val_broken</span> <span class="o">=</span> <span class="k">fun</span> <span class="bp">()</span> <span class="o">-&gt;</span>
+  <span class="k">let</span> <span class="n">counter</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">0</span> <span class="k">in</span>
+  <span class="n">incr</span> <span class="n">counter</span><span class="o">;</span>
+  <span class="o">!</span><span class="n">counter</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val next_val_broken : unit -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>只是有一点不同： <code class="docutils literal notranslate"><span class="pre">counter</span></code> 的绑定发生在
+<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">()</span> <span class="pre">-&gt;</span></code> 而不是之前。  但这有很大的不同：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">next_val_broken</span> <span class="bp">()</span><span class="o">;;</span>
+<span class="n">next_val_broken</span> <span class="bp">()</span><span class="o">;;</span>
+<span class="n">next_val_broken</span> <span class="bp">()</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 1
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 1
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 1
+</pre></div>
+</div>
+</div>
+</div>
+<p>每次我们调用 <code class="docutils literal notranslate"><span class="pre">next_val_broken</span></code> 时，它都会返回 <code class="docutils literal notranslate"><span class="pre">1</span></code>：我们不再有
+柜台。这里出了什么问题？</p>
+<p>问题是每次调用 <code class="docutils literal notranslate"><span class="pre">next_val_broken</span></code> 时，它首先要做的就是
+所做的是将 <code class="docutils literal notranslate"><span class="pre">ref</span> <span class="pre">0</span></code> 评估为初始化为 <code class="docutils literal notranslate"><span class="pre">0</span></code> 的新位置。那
+然后位置递增到 <code class="docutils literal notranslate"><span class="pre">1</span></code>，并返回 <code class="docutils literal notranslate"><span class="pre">1</span></code>。 <em>每次</em>致电
+<code class="docutils literal notranslate"><span class="pre">next_val_broken</span></code> 因此分配一个新的引用单元，而 <code class="docutils literal notranslate"><span class="pre">next_val</span></code>
+仅分配<em>一个</em>新的参考单元。</p>
+</section>
+<section id="id5">
+<h2><span class="section-number">6.1.5. </span>示例：指针<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>在像 C 这样的语言中，指针结合了两个特性：它们可以为空，并且它们
+可以改变。 （Java 有一个类似的对象引用结构，但是
+这个术语在我们的 OCaml 上下文中很令人困惑，因为“引用”目前意味着引用
+细胞。所以我们将坚持使用“指针”这个词。）让我们使用以下代码来编写指针
+OCaml 参考单元。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">ref</span> <span class="n">option</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a pointer = &#39;a ref option
+</pre></div>
+</div>
+</div>
+</div>
+<p>像往常一样，从右到左阅读该类型。它的 <code class="docutils literal notranslate"><span class="pre">option</span></code> 部分编码了事实
+指针可能为空。我们使用 <code class="docutils literal notranslate"><span class="pre">None</span></code> 来表示这种可能性。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">null</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span> <span class="o">=</span> <span class="nc">None</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val null : &#39;a pointer = None
+</pre></div>
+</div>
+</div>
+</div>
+<p>类型的 <code class="docutils literal notranslate"><span class="pre">ref</span></code> 部分编码了内容是可变的这一事实。我们
+可以创建一个辅助函数来分配和初始化新的内容
+指针：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">malloc</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span> <span class="o">=</span> <span class="nc">Some</span> <span class="o">(</span><span class="n">ref</span> <span class="n">x</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val malloc : &#39;a -&gt; &#39;a pointer = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在我们可以创建一个指向我们喜欢的任何值的指针：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="n">malloc</span> <span class="mi">42</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val p : int pointer = Some {contents = 42}
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>解引用</em>指针是 C 中的 <code class="docutils literal notranslate"><span class="pre">*</span></code> 前缀运算符。它返回
+指针的内容，如果指针为 null，则引发异常：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">exception</span> <span class="nc">Segfault</span>
+
+<span class="k">let</span> <span class="n">deref</span> <span class="o">(</span><span class="n">ptr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">ptr</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Segfault</span> <span class="o">|</span> <span class="nc">Some</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="o">!</span><span class="n">r</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>exception Segfault
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val deref : &#39;a pointer -&gt; &#39;a = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">deref</span> <span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 42
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">deref</span> <span class="n">null</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: Segfault.
+<span class="n">Raised</span> <span class="n">at</span> <span class="n">deref</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[17]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">4</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">25</span><span class="o">-</span><span class="mi">39</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[19]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">10</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们甚至可以引入我们自己的 OCaml 运算符来取消引用。我们必须把
+不过，在其前面添加 <code class="docutils literal notranslate"><span class="pre">~</span></code> 使其解析为前缀运算符。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="o">(</span> <span class="o">~*</span> <span class="o">)</span> <span class="o">=</span> <span class="n">deref</span><span class="o">;;</span>
+<span class="o">~*</span><span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( ~* ) : &#39;a pointer -&gt; &#39;a = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 42
+</pre></div>
+</div>
+</div>
+</div>
+<p>在 C 中，通过指针进行的赋值被写为 <code class="docutils literal notranslate"><span class="pre">*p</span> <span class="pre">=</span> <span class="pre">x</span></code>。  这改变了
+<code class="docutils literal notranslate"><span class="pre">p</span></code> 指向的内存，使其包含 <code class="docutils literal notranslate"><span class="pre">x</span></code>。  我们可以编码
+该运算符如下：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">assign</span> <span class="o">(</span><span class="n">ptr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span><span class="o">)</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">ptr</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Segfault</span> <span class="o">|</span> <span class="nc">Some</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="n">r</span> <span class="o">:=</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val assign : &#39;a pointer -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">assign</span> <span class="n">p</span> <span class="mi">2</span><span class="o">;</span>
+<span class="n">deref</span> <span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">assign</span> <span class="n">null</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: Segfault.
+<span class="n">Raised</span> <span class="n">at</span> <span class="n">assign</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[21]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">25</span><span class="o">-</span><span class="mi">39</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[23]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">13</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>同样，我们可以为此引入我们自己的 OCaml 运算符，尽管这很难
+选择一个涉及 <code class="docutils literal notranslate"><span class="pre">*</span></code> 和 <code class="docutils literal notranslate"><span class="pre">=</span></code> 的好符号，这样不会被误解为
+涉及乘法：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="o">(</span> <span class="o">=*</span> <span class="o">)</span> <span class="o">=</span> <span class="n">assign</span><span class="o">;;</span>
+<span class="n">p</span> <span class="o">=*</span> <span class="mi">3</span><span class="o">;;</span>
+<span class="o">~*</span><span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( =* ) : &#39;a pointer -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 3
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们不能做的一件事就是将指针视为整数。 C 允许，
+包括获取变量的地址，从而启用<em>指针算术</em>。
+这对于提高效率很有好处，但也很糟糕，因为它会导致各种问题
+程序错误和安全漏洞。</p>
+<div class="admonition-evil-secret admonition">
+<p class="admonition-title">Evil Secret</p>
+<p>好吧，我们刚才所说的实际上并不正确，但这很危险
+你根本不应该依赖的知识。有一个未文档化的
+函数 <code class="docutils literal notranslate"><span class="pre">Obj.magic</span></code> 我们可以用来获取引用的内存地址：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">address</span> <span class="o">(</span><span class="n">ptr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span><span class="o">)</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">ptr</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="mi">0</span> <span class="o">|</span> <span class="nc">Some</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="nn">Obj</span><span class="p">.</span><span class="n">magic</span> <span class="n">r</span>
+
+<span class="k">let</span> <span class="o">(</span> <span class="o">~&amp;</span> <span class="o">)</span> <span class="o">=</span> <span class="n">address</span>
+</pre></div>
+</div>
+<p>但你必须保证自己永远不会使用该函数，因为它
+完全规避了 OCaml 类型系统的安全性。如果出现以下情况，则一切皆废
+你做的。</p>
+</div>
+<p>这些指针编码都不属于 OCaml 标准库的一部分，因为你
+不需要它。你可以根据需要自行使用 refs 和 options。
+我们上面所做的编码并不是特别惯用。我们这样做的原因
+是为了说明 OCaml refs 和 C 指针之间的关系
+（相当于 Java 参考）。</p>
+</section>
+<section id="rec">
+<h2><span class="section-number">6.1.6. </span>示例：不带 Rec 的递归<a class="headerlink" href="#rec" title="Permalink to this heading">#</a></h2>
+<p>这是一个可以通过 refs 实现的巧妙技巧：我们可以构建递归函数
+无需使用关键字 <code class="docutils literal notranslate"><span class="pre">rec</span></code>。  假设我们要定义一个递归
+诸如 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 之类的函数，我们通常会这样写：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fact_rec</span> <span class="n">n</span> <span class="o">=</span> <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fact_rec</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fact_rec : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们希望在不使用 <code class="docutils literal notranslate"><span class="pre">rec</span></code> 的情况下定义该函数。  我们可以从
+定义对函数的明显不正确版本的引用：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">fact0</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">0</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fact0 : (int -&gt; int) ref = {contents = &lt;fun&gt;}
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">fact0</span></code> 不正确的方式实际上是无关紧要的。我们只需要它
+有正确的类型。我们也可以使用 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span></code> 代替
+<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">0</span></code>。</p>
+<p>此时，<code class="docutils literal notranslate"><span class="pre">fact0</span></code> 显然不计算阶乘函数。
+例如，<span class="math notranslate nohighlight">\(5!\)</span> 应该是 120，但这不是 <code class="docutils literal notranslate"><span class="pre">fact0</span></code> 计算的：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="n">fact0</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 5
+</pre></div>
+</div>
+</div>
+</div>
+<p>接下来，我们照常写 <code class="docutils literal notranslate"><span class="pre">fact</span></code>，但不写 <code class="docutils literal notranslate"><span class="pre">rec</span></code>。在我们需要的地方
+进行递归调用，我们改为调用存储在 <code class="docutils literal notranslate"><span class="pre">fact0</span></code> 中的函数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">fact</span> <span class="n">n</span> <span class="o">=</span> <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">n</span> <span class="o">*</span> <span class="o">!</span><span class="n">fact0</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fact : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 实际上得到了 <code class="docutils literal notranslate"><span class="pre">0</span></code> 的正确答案，但没有得到 <code class="docutils literal notranslate"><span class="pre">5</span></code> 的正确答案：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">fact</span> <span class="mi">0</span><span class="o">;;</span>
+<span class="n">fact</span> <span class="mi">5</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 1
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 20
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">5</span></code> 不正确的原因是递归调用实际上并不是
+到正确的函数。  我们希望递归调用转到 <code class="docutils literal notranslate"><span class="pre">fact</span></code>，而不是
+<code class="docutils literal notranslate"><span class="pre">fact0</span></code>。  **所以这是技巧：**我们将 <code class="docutils literal notranslate"><span class="pre">fact0</span></code> 突变为指向 <code class="docutils literal notranslate"><span class="pre">fact</span></code>：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">fact0</span> <span class="o">:=</span> <span class="n">fact</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在，当 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 进行递归调用并取消引用 <code class="docutils literal notranslate"><span class="pre">fact0</span></code> 时，它得到
+回到自己！  这使得计算正确：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">fact</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 120
+</pre></div>
+</div>
+</div>
+</div>
+<p>抽象一点，这就是我们所做的。我们从一个函数开始
+递归：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="o">...</span> <span class="n">f</span> <span class="n">y</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>我们将其重写如下：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">f0</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">)</span>
+
+<span class="k">let</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="o">...</span> <span class="o">!</span><span class="n">f0</span> <span class="n">y</span> <span class="o">...</span>
+
+<span class="n">f0</span> <span class="o">:=</span> <span class="n">f</span>
+</pre></div>
+</div>
+<p>现在 <code class="docutils literal notranslate"><span class="pre">f</span></code> 将计算与我们定义的版本中相同的结果
+与 <code class="docutils literal notranslate"><span class="pre">rec</span></code> 一起使用。</p>
+<p>这里发生的事情有时被称为“打递归结”：我们更新
+对 <code class="docutils literal notranslate"><span class="pre">f0</span></code> 的引用指向 <code class="docutils literal notranslate"><span class="pre">f</span></code>，这样当 <code class="docutils literal notranslate"><span class="pre">f</span></code> 取消引用 <code class="docutils literal notranslate"><span class="pre">f0</span></code> 时，它
+自己回来了。我们让 <code class="docutils literal notranslate"><span class="pre">f0</span></code> 指向的初始函数（在本例中
+身份函数）并不重要；它只是作为占位符
+直到我们喜结连理。</p>
+</section>
+<section id="id6">
+<h2><span class="section-number">6.1.7. </span>弱类型变量<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>也许你已经尝试过使用恒等函数来定义 <code class="docutils literal notranslate"><span class="pre">fact0</span></code>，
+正如我们上面提到的。  如果是这样，你就会遇到这个相当令人困惑的问题
+输出：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">fact0</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fact0 : (&#39;_weak1 -&gt; &#39;_weak1) ref = {contents = &lt;fun&gt;}
+</pre></div>
+</div>
+</div>
+</div>
+<p>恒等函数 <code class="docutils literal notranslate"><span class="pre">'_weak1</span> <span class="pre">-&gt;</span> <span class="pre">'_weak1</span></code> 这个奇怪的类型是什么？为什么
+这不是通常的<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code>吗？</p>
+<p>答案与多态性之间特别棘手的相互作用有关
+和可变性。在后面关于解释器的章节中，我们将学习如何输入
+推理是有效的，那时我们将能够解释这个问题
+细节。简而言之，允许该引用使用 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型将导致
+由于类型错误，程序在运行时崩溃的可能性。</p>
+<p>现在，这样考虑：虽然存储在引用单元格中的<em>值</em>是
+允许更改，但该值的<em>类型</em>则不允许。如果 OCaml 给出
+<code class="docutils literal notranslate"><span class="pre">ref</span> <span class="pre">(fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x)</span></code> 类型 <code class="docutils literal notranslate"><span class="pre">('a</span> <span class="pre">-&gt;</span> <span class="pre">'a)</span> <span class="pre">ref</span></code>，那么该单元可以首先存储
+<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 但稍后存储
+<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">s</span> <span class="pre">^</span> <span class="pre">&quot;!&quot;</span> <span class="pre">:</span> <span class="pre">string</span> <span class="pre">-&gt;</span> <span class="pre">string</span></code>。这就是类型上的改变
+这是不允许的。</p>
+<p>因此 OCaml 使用<em>弱类型变量</em>来代表未知但非多态
+类型。这些变量始终以 <code class="docutils literal notranslate"><span class="pre">_weak</span></code> 开头。本质上，类型推断
+因为这些还没有完成。一旦你给 OCaml 足够的信息，它
+将完成类型推断并将弱类型变量替换为实际类型变量
+类型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="n">fact0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : &#39;_weak1 -&gt; &#39;_weak1 = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="n">fact0</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="n">fact0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int -&gt; int = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>将 <code class="docutils literal notranslate"><span class="pre">!fact0</span></code> 应用到 <code class="docutils literal notranslate"><span class="pre">1</span></code> 后，OCaml 现在知道该函数
+意味着类型为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。所以从那时起，那就是唯一的类型
+可以使用它。例如，它不能应用于字符串。</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="n">fact0</span> <span class="s2">&quot;camel&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[36]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">7</span><span class="o">-</span><span class="mi">14</span><span class="p">:</span>
+<span class="mi">1</span> <span class="o">|</span> <span class="o">!</span>fact0<span class="w"> </span><span class="s2">&quot;camel&quot;</span>
+           <span class="o">^^^^^^^</span>
+<span class="ne">Error</span>: This constant has type string but an expression was expected of type
+         <span class="nb">int</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>如果你现在想了解有关弱类型变量的更多信息，请查看
+位于 Jacques 的 <a class="reference external" href="https://caml.inria.fr/pub/papers/garrigue-value_restriction-fiwflp04.pdf"><em>Relaxing the value restriction</em></a> 的第 2 部分
+Garrigue，或 OCaml 手册的 <a class="reference external" href="https://ocaml.org/manual/polymorphism.html">这一节</a>。</p>
+</section>
+<section id="id7">
+<h2><span class="section-number">6.1.8. </span>物理相等<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<p>OCaml 有两个相等运算符：物理相等和结构相等。
+<code class="docutils literal notranslate"><span class="pre">Stdlib.(==)</span></code> 的 <a class="reference external" href="https://ocaml.org/api/Stdlib.html">documentation</a> 解释了物理平等：</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">==</span> <span class="pre">e2</span></code> 测试 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 的物理相等性。关于可变类型，例如
+作为引用、数组、字节序列、具有可变字段和对象的记录
+对于可变实例变量，<code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">==</span> <span class="pre">e2</span></code> 是 <code class="docutils literal notranslate"><span class="pre">true</span></code> 当且仅当物理
+<code class="docutils literal notranslate"><span class="pre">e1</span></code> 的修改也会影响 <code class="docutils literal notranslate"><span class="pre">e2</span></code>。在非可变类型上，行为
+<code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">==</span> <span class="pre">)</span></code> 取决于实现；但是，可以保证
+<code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">==</span> <span class="pre">e2</span></code> 意味着 <code class="docutils literal notranslate"><span class="pre">compare</span> <span class="pre">e1</span> <span class="pre">e2</span> <span class="pre">=</span> <span class="pre">0</span></code>。</p>
+</div></blockquote>
+<p>一种解释可能是仅在比较引用时才应使用 <code class="docutils literal notranslate"><span class="pre">==</span></code>
+（以及其他可变数据类型）以查看它们是否指向相同的位置
+记忆。否则，请勿使用 <code class="docutils literal notranslate"><span class="pre">==</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Stdlib.(=)</span></code> 的文档中也解释了结构相等性：</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">=</span> <span class="pre">e2</span></code> 测试 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 的结构相等性。可变结构
+（例如引用和数组）当且仅当它们的当前内容相等
+即使两个可变对象不相同，结构上也是相等的
+物理对象。函数值之间的相等引发 <code class="docutils literal notranslate"><span class="pre">Invalid_argument</span></code>。
+循环数据结构之间的相等可能不会终止。</p>
+</div></blockquote>
+<p>结构平等通常是你想要测试的。对于参考，它检查
+内存位置的内容是否相等，无论是否
+它们是同一个位置。</p>
+<p>物理平等的否定是<code class="docutils literal notranslate"><span class="pre">!=</span></code>，结构平等的否定
+平等是 <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code>。这可能很难记住。</p>
+<p>下面是一些涉及 equals 和 refs 的例子来说明区别
+结构平等 (<code class="docutils literal notranslate"><span class="pre">=</span></code>) 和物理平等 (<code class="docutils literal notranslate"><span class="pre">==</span></code>) 之间：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">r1</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">42</span>
+<span class="k">let</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">42</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val r1 : int ref = {contents = 42}
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val r2 : int ref = {contents = 42}
+</pre></div>
+</div>
+</div>
+</div>
+<p>一个 ref 在物理上等于它自己，但不等于另一个不同的 ref
+在内存中的位置：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">r1</span> <span class="o">==</span> <span class="n">r1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : bool = true
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">r1</span> <span class="o">==</span> <span class="n">r2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : bool = false
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">r1</span> <span class="o">!=</span> <span class="n">r2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : bool = true
+</pre></div>
+</div>
+</div>
+</div>
+<p>位于内存中不同位置但存储结构不同的两个引用
+相同的值本身在结构上是相同的：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">r1</span> <span class="o">=</span> <span class="n">r1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : bool = true
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">r1</span> <span class="o">=</span> <span class="n">r2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : bool = true
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">r1</span> <span class="o">&lt;&gt;</span> <span class="n">r2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : bool = false
+</pre></div>
+</div>
+</div>
+</div>
+<p>存储结构上不相等值的两个引用本身在结构上
+不平等：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">ref</span> <span class="mi">42</span> <span class="o">&lt;&gt;</span> <span class="n">ref</span> <span class="mi">43</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : bool = true
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id8">
+<h2><span class="section-number">6.1.9. </span>示例：单链表<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h2>
+<p>OCaml 的内置单链表是函数式的，而不是命令式的。但我们可以
+当然，使用 refs 编写命令式单链表。 （我们也可以使用
+我们上面发明的指针，但这只会使代码更加复杂。）</p>
+<p>我们首先为包含值的列表的节点定义类型 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">node</span></code>
+类型为 <code class="docutils literal notranslate"><span class="pre">'a</span></code>。  节点的 <code class="docutils literal notranslate"><span class="pre">next</span></code> 字段本身就是另一个列表。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** An [&#39;a node] is a node of a mutable singly-linked list. It contains a value</span>
+<span class="c">    of type [&#39;a] and a link to the [next] node. *)</span>
+<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span> <span class="n">next</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">;</span> <span class="n">value</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">}</span>
+
+<span class="c">(** An [&#39;a mlist] is a mutable singly-linked list with elements of type [&#39;a].</span>
+<span class="c">    The [option] represents the possibility that the list is empty.</span>
+<span class="c">    RI: The list does not contain any cycles. *)</span>
+<span class="k">and</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span> <span class="n">ref</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a node = { next : &#39;a mlist; value : &#39;a; }
+and &#39;a mlist = &#39;a node option ref
+</pre></div>
+</div>
+</div>
+</div>
+<p>要创建一个空列表，我们只需返回 <code class="docutils literal notranslate"><span class="pre">None</span></code> 的引用：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [empty ()] is an empty singly-linked list. *)</span>
+<span class="k">let</span> <span class="n">empty</span> <span class="bp">()</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; &#39;a mlist = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>请注意 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 的类型：它现在不再是一个值，而是一个函数。这个
+是创建可变数据结构的典型函数。在这最后
+部分，我们将回到为什么 <code class="docutils literal notranslate"><span class="pre">empty</span></code> <em>必须</em> 是一个函数。</p>
+<p>插入新的第一个元素只需要创建一个新节点，从
+它到原始列表，并改变列表：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [insert_first lst v] mutates mlist [lst] by inserting value [v] as the</span>
+<span class="c">    first value in the list. *)</span>
+<span class="k">let</span> <span class="n">insert_first</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
+  <span class="n">lst</span> <span class="o">:=</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">next</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">!</span><span class="n">lst</span><span class="o">;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">v</span> <span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert_first : &#39;a mlist -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>再次注意 <code class="docutils literal notranslate"><span class="pre">insert_first</span></code> 的类型。它不是返回 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mlist</span></code>，而是返回
+返回 <code class="docutils literal notranslate"><span class="pre">unit</span></code>。这也是修改可变数据的典型函数
+结构。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 和 <code class="docutils literal notranslate"><span class="pre">insert_first</span></code> 中，使用 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 使函数更加丰富
+就像命令式语言中的等价物一样。空的构造函数
+例如，Java 中的 list 可能不带任何参数（相当于
+采取 <code class="docutils literal notranslate"><span class="pre">unit</span></code>)。 Java 链表的 <code class="docutils literal notranslate"><span class="pre">insert_first</span></code> 操作可能
+返回<code class="docutils literal notranslate"><span class="pre">void</span></code>，相当于返回<code class="docutils literal notranslate"><span class="pre">unit</span></code>。</p>
+<p>最后，这是一个从我们新的可变列表到
+OCaml 的内置列表：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [to_list lst] is an OCaml list containing the same values as [lst]</span>
+<span class="c">    in the same order. Not tail recursive. *)</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">to_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="o">!</span><span class="n">lst</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">[]</span> <span class="o">|</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">next</span><span class="o">;</span> <span class="n">value</span> <span class="o">}</span> <span class="o">-&gt;</span> <span class="n">value</span> <span class="o">::</span> <span class="n">to_list</span> <span class="n">next</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val to_list : &#39;a mlist -&gt; &#39;a list = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在我们可以看到实际的可变性：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">lst0</span> <span class="o">=</span> <span class="n">empty</span> <span class="bp">()</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">lst1</span> <span class="o">=</span> <span class="n">lst0</span><span class="o">;;</span>
+<span class="n">insert_first</span> <span class="n">lst0</span> <span class="mi">1</span><span class="o">;;</span>
+<span class="n">to_list</span> <span class="n">lst1</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst0 : &#39;_weak2 mlist = {contents = None}
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst1 : &#39;_weak2 mlist = {contents = None}
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [1]
+</pre></div>
+</div>
+</div>
+</div>
+<p>对 <code class="docutils literal notranslate"><span class="pre">lst0</span></code> 的更改会改变 <code class="docutils literal notranslate"><span class="pre">lst1</span></code>，因为它们是别名。</p>
+<p>**<code class="docutils literal notranslate"><span class="pre">empty</span></code>的类型。**回到<code class="docutils literal notranslate"><span class="pre">empty</span></code>，为什么它一定是函数呢？它
+看起来我们可以更简单地定义它，如下所示：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;_weak3 option ref = {contents = None}
+</pre></div>
+</div>
+</div>
+</div>
+<p>但现在只有一个<em>一个</em> 引用被创建，因此只有一个
+曾经存在过的列表：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">lst2</span> <span class="o">=</span> <span class="n">empty</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">lst3</span> <span class="o">=</span> <span class="n">empty</span><span class="o">;;</span>
+<span class="n">insert_first</span> <span class="n">lst2</span> <span class="mi">2</span><span class="o">;;</span>
+<span class="n">insert_first</span> <span class="n">lst3</span> <span class="mi">3</span><span class="o">;;</span>
+<span class="n">to_list</span> <span class="n">lst2</span><span class="o">;;</span>
+<span class="n">to_list</span> <span class="n">lst3</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst2 : &#39;_weak3 option ref = {contents = None}
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst3 : &#39;_weak3 option ref = {contents = None}
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [3; 2]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [3; 2]
+</pre></div>
+</div>
+</div>
+</div>
+<p>请注意突变如何影响两个列表，因为它们都是别名
+对于同一个参考。</p>
+<p>通过正确地使 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 成为一个函数，我们保证新的引用是
+每次创建空列表时都会返回。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">empty</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; &#39;a option ref = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>该函数采用什么参数实际上并不重要，因为它会
+永远不要使用它。  原则上我们可以将其定义为以下任何一个：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">empty</span> <span class="o">_</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
+<span class="k">let</span> <span class="n">empty</span> <span class="o">(</span><span class="n">b</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
+<span class="k">let</span> <span class="n">empty</span> <span class="o">(</span><span class="n">n</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
+<span class="c">(* etc. *)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;a -&gt; &#39;b option ref = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : bool -&gt; &#39;a option ref = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : int -&gt; &#39;a option ref = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>但我们更喜欢 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 作为参数类型的原因是为了向
+客户端将不会使用参数值。毕竟有
+该函数对单位值没有什么有趣的作用。另一种方式
+想想看，输入类型为 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 的函数就像
+不带参数的命令式语言中的函数或方法。对于
+例如，在 Java 中，链表类可以有一个不带任何参数的构造函数
+参数并创建一个空列表：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">LinkedList</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="cm">/** Returns an empty list. */</span>
+<span class="w">  </span><span class="n">LinkedList</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>可变值。</strong> 在 <code class="docutils literal notranslate"><span class="pre">mlist</span></code> 中，列表的节点是可变的，但是
+价值观不是。  如果我们希望这些值也是可变的，我们可以使
+他们也参考了：</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span> <span class="n">next</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">;</span> <span class="n">value</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">ref</span> <span class="o">}</span>
+<span class="k">and</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span> <span class="n">ref</span>
+
+<span class="k">let</span> <span class="n">empty</span> <span class="bp">()</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
+
+<span class="k">let</span> <span class="n">insert_first</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
+  <span class="n">lst</span> <span class="o">:=</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">next</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">!</span><span class="n">lst</span><span class="o">;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">ref</span> <span class="n">v</span> <span class="o">}</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span class="n">set</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">n</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="o">(!</span><span class="n">lst</span><span class="o">,</span> <span class="n">n</span><span class="o">)</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">None</span><span class="o">,</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">invalid_arg</span> <span class="s2">&quot;out of bounds&quot;</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">value</span> <span class="o">},</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="n">value</span> <span class="o">:=</span> <span class="n">v</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">next</span> <span class="o">},</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">set</span> <span class="n">next</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="n">v</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span class="n">to_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="o">!</span><span class="n">lst</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">[]</span> <span class="o">|</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">next</span><span class="o">;</span> <span class="n">value</span> <span class="o">}</span> <span class="o">-&gt;</span> <span class="o">!</span><span class="n">value</span> <span class="o">::</span> <span class="n">to_list</span> <span class="n">next</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a node = { next : &#39;a mlist; value : &#39;a ref; }
+and &#39;a mlist = &#39;a node option ref
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; &#39;a mlist = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert_first : &#39;a mlist -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val set : &#39;a mlist -&gt; int -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val to_list : &#39;a mlist -&gt; &#39;a list = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>现在，如果我们想更改值，则不必创建新节点，
+我们可以直接改变节点中的值：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">empty</span> <span class="bp">()</span><span class="o">;;</span>
+<span class="n">insert_first</span> <span class="n">lst</span> <span class="mi">42</span><span class="o">;;</span>
+<span class="n">insert_first</span> <span class="n">lst</span> <span class="mi">41</span><span class="o">;;</span>
+<span class="n">to_list</span> <span class="n">lst</span><span class="o">;;</span>
+<span class="n">set</span> <span class="n">lst</span> <span class="mi">1</span> <span class="mi">43</span><span class="o">;;</span>
+<span class="n">to_list</span> <span class="n">lst</span><span class="o">;;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst : &#39;_weak4 mlist = {contents = None}
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [41; 42]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int list = [41; 43]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/mut"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>可变性</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="mutable_fields.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title"><span class="section-number">6.2. </span>可变字段</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">6.1.1. 混叠</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.1.2. 语法和语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.1.3. 效果排序</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">6.1.4. 示例：可变计数器</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">6.1.5. 示例：指针</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rec">6.1.6. 示例：不带 Rec 的递归</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">6.1.7. 弱类型变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">6.1.8. 物理相等</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">6.1.9. 示例：单链表</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

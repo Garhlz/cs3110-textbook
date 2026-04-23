@@ -1,0 +1,1315 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Curry-Howard 对应 &#8212; OCaml 编程：正确、高效、优美</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/adv/curry-howard';</script>
+    <link rel="shortcut icon" href="../../_static/op.png"/>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="Big-Oh 记号" href="../appendix/bigoh.html" />
+    <link rel="prev" title="10.8. 练习" href="../interp/exercises.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Using this book as part of a course? Please <a style="color:white" href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let us know</a>!</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../cover.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/op_title.png" class="logo__image only-light" alt="OCaml 编程：正确、高效、优美 - Home"/>
+    <script>document.write(`<img src="../../_static/op_title.png" class="logo__image only-dark" alt="OCaml 编程：正确、高效、优美 - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">前言</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface/about.html">关于本书</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface/install.html">安装 OCaml</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">导论</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../intro/intro.html">1. 通过 OCaml 更好地编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/past.html">1.1. OCaml 的过去</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/present.html">1.2. OCaml 的现在</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/future.html">1.3. 展望未来</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/3110.html">1.4. CS 3110 简史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../basics/intro.html">2. OCaml 基础知识</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basics/toplevel.html">2.1. OCaml 顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/compiling.html">2.2. 编译 OCaml 程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/expressions.html">2.3. 表达式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/functions.html">2.4. 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/documentation.html">2.5. 文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/printing.html">2.6. 打印</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/debugging.html">2.7. 调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/summary.html">2.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basics/exercises.html">2.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">OCaml 编程</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/intro.html">3. 数据和类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/lists.html">3.1. 列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/variants.html">3.2. 变体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/ounit.html">3.3. 使用 OUnit 进行单元测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/records_tuples.html">3.4. 记录和元组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/pattern_matching_advanced.html">3.5. 高级模式匹配</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/type_synonym.html">3.6. 类型同义词</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/options.html">3.7. 选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/assoc_list.html">3.8. 关联列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/algebraic_data_types.html">3.9. 代数数据类型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exceptions.html">3.10. 异常</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/trees.html">3.11. 示例：树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/nats.html">3.12. 示例：自然数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/summary.html">3.13. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/exercises.html">3.14. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../hop/intro.html">4. 高阶编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hop/higher_order.html">4.1. 高阶函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/map.html">4.2. Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/filter.html">4.3. Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/fold.html">4.4. Fold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/beyond_lists.html">4.5. 超越列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/pipelining.html">4.6. 流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/currying.html">4.7. 柯里化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/summary.html">4.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hop/exercises.html">4.9. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modules/intro.html">5. 模块化编程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_systems.html">5.1. 模块系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/modules.html">5.2. 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/toplevel.html">5.3. 模块和顶层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mut/intro.html">6. 可变性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mut/refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/mutable_fields.html">6.2. 可变字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/arrays.html">6.3. 数组和循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/summary.html">6.4. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mut/exercises.html">6.5. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../conc/intro.html">7. 并发</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../conc/concurrency.html">7.1. 并发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/promises.html">7.2. Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_promises.html">7.3. 实现 Promise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/io_promises.html">7.4. 异步输入和输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/callbacks.html">7.5. 回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/impl_callbacks.html">7.6. 实现回调</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/full_promises_impl.html">7.7. 完整的 Promise 实现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/monads.html">7.8. 单子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/summary.html">7.9. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conc/exercises.html">7.10. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">正确性与效率</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../correctness/intro.html">8. 正确性</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/specifications.html">8.1. 规格说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/function_docs.html">8.2. 函数文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/module_docs.html">8.3. 模块文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/test_debug.html">8.4. 测试与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/black_glass_box.html">8.5. 黑盒测试与玻璃盒测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/randomized.html">8.6. 使用 QCheck 进行随机测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/proving_correctness.html">8.7. 证明正确性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/structural_induction.html">8.8. 结构归纳法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/eq_spec.html">8.9. 等式规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/summary.html">8.10. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../correctness/exercises.html">8.11. 练习</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ds/intro.html">9. 数据结构</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ds/hash_tables.html">9.1. 哈希表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/amortized.html">9.2. 摊销分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/rb.html">9.3. 红黑树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/sequence.html">9.4. 序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/memoization.html">9.5. 记忆化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/parrays.html">9.6. 持久数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/twothree.html">9.7. 2-3 树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/summary.html">9.8. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ds/exercises.html">9.9. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">语言实现</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../interp/intro.html">10. 解释器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../interp/calculator.html">10.1. 示例：计算器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/parsing.html">10.2. 解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/substitution.html">10.3. 替换模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/environment.html">10.4. 环境模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/typecheck.html">10.5. 类型检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/inference.html">10.6. 类型推断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/summary.html">10.7. 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interp/exercises.html">10.8. 练习</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">补遗</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Curry-Howard 对应</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/bigoh.html">Big-Oh 记号</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/vm.html">虚拟机</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/cs3110/textbook/main?urlpath=tree/src/chapters/adv/curry-howard.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/edit/main/src/chapters/adv/curry-howard.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cs3110/textbook/issues/new?title=Issue%20on%20page%20%2Fchapters/adv/curry-howard.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/adv/curry-howard.ipynb" target="_blank"
+   class="btn btn-sm btn-download-notebook-button dropdown-item"
+   title="下载笔记本文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="../../_sources/chapters/adv/curry-howard.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Curry-Howard 对应</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">用证据计算</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">对应关系</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">类型对应于命题</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">程序对应于证明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">求值对应于化简</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">这一切意味着什么</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">练习</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="curry-howard">
+<h1>Curry-Howard 对应<a class="headerlink" href="#curry-howard" title="Permalink to this heading">#</a></h1>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><em>lagniappe</em> 是一份小而意想不到的礼物 — 一点“额外的东西”。
+请享受这一小章，其中包含最美丽的内容之一
+整本书中最优美的结果之一。本章基于论文
+<a class="reference external" href="http://homepages.inf.ed.ac.uk/wadler/papers/propositions-as-types/propositions-as-types.pdf">Propositions as Types</a> 作者：菲利普·瓦德勒。你可以观看有趣的节目
+另外，Wadler 教授的 <a class="reference external" href="https://www.youtube.com/watch?v=aeRVdYN6fE8">recorded lecture</a>
+下面我们的讲座。</p>
+</div>
+<div class="container16x9"><iframe src="https://www.youtube.com/embed/GdcOy6zVFC4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<p>正如我们很久以前观察到的，OCaml 是 ML 家族中的一种语言，而 ML 是
+最初设计为定理的 <u>m</u>eta <u>l</u>anguage
+证明器—即一个旨在帮助证明和检查
+逻辑公式的证明。在构造证明时，最好是
+确保你只能证明真实的公式，以确保你不会做出
+不正确的论据等</p>
+<p>我们的梦想是拥有一个可以判定任意逻辑公式真假的计算机程序。
+对于某些公式，这是可能的。但是，20 世纪初的突破性结果之一是：
+一般来说，计算机程序<em>无法</em>做到这一点。Alonzo Church 和 Alan
+图灵在 1936 年独立地证明了这一点。丘奇使用 <em>lambda 演算</em> 作为
+计算机模型；图灵使用了我们现在所说的“图灵机”。
+<em>丘奇-图灵论题</em>是一个假设，它认为 lambda 演算和图灵机
+都形式化了“计算”这一非正式概念。</p>
+<p>我们不会专注于那个不可能的任务，而是专注于
+证明与程序之间的关系。事实证明，二者以一种令人惊讶的方式深刻相连。</p>
+<section id="id1">
+<h2>用证据计算<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>我们习惯使用 OCaml 程序来操作数据，例如整数和
+变体和函数。这些数据值总是被键入：在编译时，
+OCaml 推断（或程序员注释）表达式的类型。对于
+例如，<code class="docutils literal notranslate"><span class="pre">3110</span> <span class="pre">:</span> <span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">[]</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">list</span></code>。我们很久以前就学会了把它们读作
+“<code class="docutils literal notranslate"><span class="pre">3110</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">int</span></code>”，“<code class="docutils literal notranslate"><span class="pre">[]</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">list</span></code>”。</p>
+<p>现在让我们尝试不同的读法。不要读作“具有类型”，而读作“是……的证据”。
+因此，<code class="docutils literal notranslate"><span class="pre">3110</span></code> 是 <code class="docutils literal notranslate"><span class="pre">int</span></code> 的证据。这意味着什么？可以把类型想成一组值。
+因此，<code class="docutils literal notranslate"><span class="pre">3110</span></code> 是类型 <code class="docutils literal notranslate"><span class="pre">int</span></code> 非空的证据。
+同样，<code class="docutils literal notranslate"><span class="pre">[]</span></code> 是类型 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">list</span></code> 不为空的证据。我们说
+如果类型不为空，我们说这个类型是<em>有居住元的</em>。</p>
+<p>有空类型吗？ OCaml 中实际上有一个，尽管我们从未有过
+之前提到的理由。可以定义一个没有的变体类型
+构造函数：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">empty</span> <span class="o">=</span> <span class="o">|</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type empty = |
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们可以将该类型称为任何我们想要的名称，而不是 <code class="docutils literal notranslate"><span class="pre">empty</span></code>；的
+特殊语法只是编写 <code class="docutils literal notranslate"><span class="pre">|</span></code> 而不是实际的构造函数。 （注意，
+该语法可能会给一些编辑带来一些麻烦。你可能需要把
+后面加双分号以确保格式正确。）这是不可能的
+构造一个 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 类型的值，正是因为它没有构造函数。所以，
+<code class="docutils literal notranslate"><span class="pre">empty</span></code> 没有居住元。</p>
+<p>根据我们基于证据的新解读，我们可以将函数视为方法
+操纵和转换证据—就像我们已经习惯的那样
+将函数视为操纵和转换数据的方法。例如，
+以下函数构造和析构对：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">pair</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span>
+<span class="k">let</span> <span class="n">fst</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span> <span class="o">=</span> <span class="n">x</span>
+<span class="k">let</span> <span class="n">snd</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span> <span class="o">=</span> <span class="n">y</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val pair : &#39;a -&gt; &#39;b -&gt; &#39;a * &#39;b = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fst : &#39;a * &#39;b -&gt; &#39;a = &lt;fun&gt;
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val snd : &#39;a * &#39;b -&gt; &#39;b = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们可以将 <code class="docutils literal notranslate"><span class="pre">pair</span></code> 视为一个接受 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 证据的函数，并且
+<code class="docutils literal notranslate"><span class="pre">'b</span></code> 的证据，并返回 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">*</span> <span class="pre">'b</span></code> 的证据。后一份证据
+是包含各个证据的 <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> 对，
+<code class="docutils literal notranslate"><span class="pre">x</span></code> 和 <code class="docutils literal notranslate"><span class="pre">y</span></code>。类似地， <code class="docutils literal notranslate"><span class="pre">fst</span></code> 和 <code class="docutils literal notranslate"><span class="pre">snd</span></code> 提取各个部分
+二者的证据。因此，</p>
+<ul class="simple">
+<li><p>如果你有 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 的证据和 <code class="docutils literal notranslate"><span class="pre">'b</span></code> 的证据，你可以出示证据
+对于 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'b</span></code>。</p></li>
+<li><p>如果你有 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'b</span></code> 的证据，那么你可以提供以下证据：
+<code class="docutils literal notranslate"><span class="pre">'a</span></code>.</p></li>
+<li><p>如果你有 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'b</span></code> 的证据，那么你可以提供以下证据：
+<code class="docutils literal notranslate"><span class="pre">'b</span></code>.</p></li>
+</ul>
+<p>在学习证明时（例如，在离散数学课上），你已经学到：
+为了证明两个陈述都成立，需要分别证明每个陈述成立。
+也就是说，要证明 A 和 B 的合取，
+你必须证明 A 并证明 B。同样，如果你有
+A 和 B 的合取，则可以得出 A 成立，并且可以得出 B 成立
+成立。  我们可以将这些推理模式写成逻辑公式，使用
+<code class="docutils literal notranslate"><span class="pre">/\</span></code> 表示合取，<code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> 表示蕴涵：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A -&gt; B -&gt; A /\ B
+A /\ B -&gt; A
+A /\ B -&gt; B
+</pre></div>
+</div>
+<p>证明是证据的一种形式：它们是关于真理的逻辑论证
+的一份声明。因此，这些公式的另一种解读是：</p>
+<ul class="simple">
+<li><p>如果你有A的证据和B的证据，你就可以出示证据
+对于 A 和 B。</p></li>
+<li><p>如果你有 A 和 B 的证据，那么你就可以提供 A 的证据。</p></li>
+<li><p>如果你有A和B的证据，那么你就可以提供B的证据。</p></li>
+</ul>
+<p>请注意，我们现在给程序和证明赋予了相同的读法。
+它们都是操纵和转换证据的方式。事实上，仔细
+比较 <code class="docutils literal notranslate"><span class="pre">pair</span></code>、<code class="docutils literal notranslate"><span class="pre">fst</span></code> 和 <code class="docutils literal notranslate"><span class="pre">snd</span></code> 的类型与逻辑公式
+描述有效的推理模式：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>val pair : &#39;a -&gt; &#39;b -&gt; &#39;a * &#39;b         A -&gt; B -&gt; A /\ B
+val fst : &#39;a * &#39;b -&gt; &#39;a                A /\ B -&gt; A
+val snd : &#39;a * &#39;b -&gt; &#39;b                A /\ B -&gt; B
+</pre></div>
+</div>
+<p>如果将 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 替换为 A，将 <code class="docutils literal notranslate"><span class="pre">'b</span></code> 替换为 B，将 <code class="docutils literal notranslate"><span class="pre">*</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">/\</span></code>，则 **
+程序与公式相同！**</p>
+</section>
+<section id="id2">
+<h2>对应关系<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>我们刚刚发现的是，带有证据的计算对应于
+构建有效的逻辑证明。这种对应并不只是这三个特定程序的偶然现象。
+相反，这是一个深刻现象，
+连接编程和逻辑领域。它的各个方面已经
+被许多领域的许多人发现。因此，它有很多名字。一
+常用名称是<em>库里-霍华德对应关系</em>，以逻辑学家 Haskell
+Curry（函数式编程语言 Haskell 就是以他的名字命名的）和
+William Howard 命名。这个对应关系将编程中的思想与
+逻辑：</p>
+<ul class="simple">
+<li><p>类型对应于逻辑公式（又名<em>命题</em>）。</p></li>
+<li><p>程序对应于逻辑证明。</p></li>
+<li><p>求值对应于证明的化简。</p></li>
+</ul>
+<p>我们已经看过其中的前两个对应。我们的类型
+三个小程序对应于公式，以及程序本身
+对应于涉及连词的证明中进行的推理。我们还没有
+还没看到第三个；我们稍后会。</p>
+<p>让我们深入研究每个对应，以更全面地欣赏它们。</p>
+</section>
+<section id="id3">
+<h2>类型对应于命题<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>在<em>命题逻辑</em>中，公式是用原子命题创建的，
+否定、合取、析取和蕴含。下面的BNF描述了
+命题逻辑公式：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>p ::= atom
+    | ~ p      (* negation *)
+    | p /\ p   (* conjunction *)
+    | p \/ p   (* disjunction *)
+    | p -&gt; p   (* implication *)
+
+atom ::= &lt;identifiers&gt;
+</pre></div>
+</div>
+<p>例如，<code class="docutils literal notranslate"><span class="pre">raining</span> <span class="pre">/\</span> <span class="pre">snowing</span> <span class="pre">/\</span> <span class="pre">cold</span></code> 是一个命题，表明它是
+同时下雨、下雪和寒冷（这种天气条件称为
+<a class="reference external" href="https://www.urbandictionary.com/define.php?term=Ithacating"><em>Ithacating</em></a>)。一个原子命题可能适用于世界，或者
+不。有两个不同的原子命题，写为 <code class="docutils literal notranslate"><span class="pre">true</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">false</span></code>，分别是始终保持和从不保持。</p>
+<p>所有这些<em>连接词</em>（之所以这样称呼，是因为它们将公式连接在一起）
+函数式程序类型的对应关系。</p>
+<p><strong>连词。</strong> 我们已经看到 <code class="docutils literal notranslate"><span class="pre">/\</span></code> 连接词对应于
+<code class="docutils literal notranslate"><span class="pre">*</span></code> 类型构造函数。命题 <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">/\</span> <span class="pre">B</span></code> 断言 <code class="docutils literal notranslate"><span class="pre">A</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">B</span></code>。 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">*</span> <span class="pre">b</span></code> 类型的 OCaml 值包含 <code class="docutils literal notranslate"><span class="pre">a</span></code> 和 <code class="docutils literal notranslate"><span class="pre">b</span></code> 类型的值。
+因此，<code class="docutils literal notranslate"><span class="pre">/\</span></code> 和 <code class="docutils literal notranslate"><span class="pre">*</span></code> 都对应于配对或产品的概念。</p>
+<p><strong>蕴涵。</strong> 蕴含连接词 <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> 对应于函数
+类型构造函数 <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code>。命题 <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">-&gt;</span> <span class="pre">B</span></code> 断言如果你能证明
+<code class="docutils literal notranslate"><span class="pre">A</span></code> 成立，那么你可以证明 <code class="docutils literal notranslate"><span class="pre">B</span></code> 成立。换句话说，假设 <code class="docutils literal notranslate"><span class="pre">A</span></code>，
+你可以得出 <code class="docutils literal notranslate"><span class="pre">B</span></code> 的结论。从某种意义上说，这意味着你可以将 <code class="docutils literal notranslate"><span class="pre">A</span></code> 转换为 <code class="docutils literal notranslate"><span class="pre">B</span></code>。
+<code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">b</span></code> 类型的 OCaml 值更清楚地表达了这个想法。这样的值
+是一个将 <code class="docutils literal notranslate"><span class="pre">a</span></code> 类型的值转换为 <code class="docutils literal notranslate"><span class="pre">b</span></code> 类型的值的函数。
+因此，如果你可以证明 <code class="docutils literal notranslate"><span class="pre">a</span></code> 有居住元（通过展示该类型的值），
+你也可以证明 <code class="docutils literal notranslate"><span class="pre">b</span></code> 有居住元（通过把 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">b</span></code> 类型的函数应用到它）。
+所以，<code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> 对应的是变换的思想。</p>
+<p><strong>析取。</strong> 析取连接词 <code class="docutils literal notranslate"><span class="pre">\/</span></code> 对应的概念
+在 OCaml 中较难简洁表达。命题 <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">\/</span> <span class="pre">B</span></code>
+断言你可以证明 <code class="docutils literal notranslate"><span class="pre">A</span></code> 成立或 <code class="docutils literal notranslate"><span class="pre">B</span></code> 成立。让我们把它进一步加强为：
+除了证明其中<em>一个</em>成立之外，你还必须
+指定你要显示的<em>哪一个</em>。为什么这很重要？</p>
+<p>假设我们正在研究“孪生素数猜想”的证明，这是一个尚未解决的问题
+问题指出存在无限多个孪生素数（素数形式为
+<span class="math notranslate nohighlight">\(n\)</span> 和 <span class="math notranslate nohighlight">\(n+2\)</span>，例如 3 和 5，或 5 和 7)。让原子命题<code class="docutils literal notranslate"><span class="pre">TP</span></code>
+表示有无穷多个孪生素数。那么命题
+<code class="docutils literal notranslate"><span class="pre">TP</span> <span class="pre">\/</span> <span class="pre">~</span> <span class="pre">TP</span></code> 似乎是合理的：要么有无限多个孪生素数，要么
+没有。我们甚至不需要弄清楚如何证明这个猜想！
+但如果我们将 <code class="docutils literal notranslate"><span class="pre">\/</span></code> 的含义加强为我们必须说明<em>哪个</em>
+两边（左或右）成立，那么我们要么必须给出证明，要么
+反驳猜想。目前没有人知道如何做到这一点。所以我们可以
+不能证明 <code class="docutils literal notranslate"><span class="pre">TP</span> <span class="pre">\/</span> <span class="pre">~</span> <span class="pre">TP</span></code>。</p>
+<p>从今以后，我们将使用 <code class="docutils literal notranslate"><span class="pre">\/</span></code>，并要求必须确定
+我们正在给出左侧或右侧命题的证明。因此，我们不能
+对于任何命题 <code class="docutils literal notranslate"><span class="pre">p</span></code> 必然得出 <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">\/</span> <span class="pre">~</span> <span class="pre">p</span></code> 的结论：是否重要
+我们能否自己证明 <code class="docutils literal notranslate"><span class="pre">p</span></code> 或 <code class="docutils literal notranslate"><span class="pre">~</span> <span class="pre">p</span></code>。从技术上讲，这使得我们的
+命题逻辑是<em>构造性的</em>而不是<em>经典的</em>。在构造性
+逻辑中，我们必须构造各个命题的证明。经典
+逻辑（理解 <code class="docutils literal notranslate"><span class="pre">\/</span></code> 的传统方式）不需要这样做。</p>
+<p>回到析取和变体之间的对应关系，考虑这个
+变体类型：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">disj</span> <span class="o">=</span> <span class="nc">Left</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Right</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">b</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type (&#39;a, &#39;b) disj = Left of &#39;a | Right of &#39;b
+</pre></div>
+</div>
+</div>
+</div>
+<p>该类型的值 <code class="docutils literal notranslate"><span class="pre">v</span></code> 可以是 <code class="docutils literal notranslate"><span class="pre">Left</span> <span class="pre">a</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">:</span> <span class="pre">'a</span></code>；或 <code class="docutils literal notranslate"><span class="pre">Right</span> <span class="pre">b</span></code>，其中
+<code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">:</span> <span class="pre">'b</span></code>。也就是说，<code class="docutils literal notranslate"><span class="pre">v</span></code> 标明 (i) 它使用的是左构造函数
+还是右构造函数，并且 (ii) 它恰好包含一个
+类型为 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 或 <code class="docutils literal notranslate"><span class="pre">'b</span></code>— 的子值，而不是这两种类型的两个子值，
+这就是 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">*</span> <span class="pre">'b</span></code> 。</p>
+<p>因此，（构造性）析取连接词 <code class="docutils literal notranslate"><span class="pre">\/</span></code> 对应于 <code class="docutils literal notranslate"><span class="pre">disj</span></code>
+类型构造函数。命题 <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">\/</span> <span class="pre">B</span></code> 断言 <code class="docutils literal notranslate"><span class="pre">A</span></code> 或 <code class="docutils literal notranslate"><span class="pre">B</span></code> 成立
+以及它是哪一个，左还是右。类型为 <code class="docutils literal notranslate"><span class="pre">('a,</span> <span class="pre">'b)</span> <span class="pre">disj</span></code> 的 OCaml 值
+类似地包含 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 或 <code class="docutils literal notranslate"><span class="pre">'b</span></code> 类型的值以及标识
+（使用 <code class="docutils literal notranslate"><span class="pre">Left</span></code> 或 <code class="docutils literal notranslate"><span class="pre">Right</span></code> 构造函数）它是哪一个。 <code class="docutils literal notranslate"><span class="pre">\/</span></code> 和 <code class="docutils literal notranslate"><span class="pre">disj</span></code>
+因此对应于并集的思想。</p>
+<p><strong>真与假。</strong> 原子命题 <code class="docutils literal notranslate"><span class="pre">true</span></code> 是唯一的命题
+保证始终保持。 OCaml 中有很多类型总是
+有居住元，但其中最简单的是 <code class="docutils literal notranslate"><span class="pre">unit</span></code>：有一个值 <code class="docutils literal notranslate"><span class="pre">()</span></code> 属于
+<code class="docutils literal notranslate"><span class="pre">unit</span></code>。因此命题 <code class="docutils literal notranslate"><span class="pre">true</span></code>（最自然地）对应于类型 <code class="docutils literal notranslate"><span class="pre">unit</span></code>。</p>
+<p>同样，原子命题 <code class="docutils literal notranslate"><span class="pre">false</span></code> 是唯一的命题
+保证永远不成立。它对应于我们之前引入的 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 类型
+早些时候，它没有构造函数。 （该类型的其他名称可能包括
+<code class="docutils literal notranslate"><span class="pre">zero</span></code> 或 <code class="docutils literal notranslate"><span class="pre">void</span></code>，但我们将坚持使用 <code class="docutils literal notranslate"><span class="pre">empty</span></code>。）</p>
+<p>我们应该解决 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 的一个微妙之处。类型没有
+构造函数，但仍然可以编写具有类型的表达式
+<code class="docutils literal notranslate"><span class="pre">empty</span></code>。这是一种方法：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">loop</span> <span class="n">x</span> <span class="o">=</span> <span class="n">loop</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val loop : &#39;a -&gt; &#39;b = &lt;fun&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在，如果你在 utop 中输入此代码，你将不会得到任何响应：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">e</span> <span class="o">:</span> <span class="n">empty</span> <span class="o">=</span> <span class="n">loop</span> <span class="bp">()</span>
+</pre></div>
+</div>
+<p>该表达式类型检查成功，然后进入无限循环。所以，
+永远不会产生任何 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 类型的值，即使
+表达式具有该类型。</p>
+<p>这是另一种方法：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">e</span> <span class="o">:</span> <span class="n">empty</span> <span class="o">=</span> <span class="n">failwith</span> <span class="s2">&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: Failure &quot;&quot;.
+<span class="n">Raised</span> <span class="n">at</span> <span class="n">Stdlib</span><span class="o">.</span><span class="n">failwith</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;stdlib.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">29</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">17</span><span class="o">-</span><span class="mi">33</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[5]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">16</span><span class="o">-</span><span class="mi">27</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>同样，表达式类型检查，但它永远不会生成类型的实际值
+<code class="docutils literal notranslate"><span class="pre">empty</span></code>。相反，这次产生了异常。</p>
+<p>所以类型 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 没有居住元，即使有一些表达式具有该类型。
+但是，<strong>如果我们要求程序是全的</strong>，就可以排除那些表达式。
+这意味着排除会引发异常或进入无限循环的程序。
+事实上，当我们开始讨论形式化方法时，我们确实提出了这个要求，并将继续假设它。</p>
+<p><strong>否定。</strong> 这个连接词是最棘手的。让我们考虑否定
+实际上是语法糖。特别地，我们假设命题
+公式 <code class="docutils literal notranslate"><span class="pre">~</span> <span class="pre">p</span></code> 实际上意味着这个公式：<code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">-&gt;</span> <span class="pre">false</span></code>。为什么？
+公式 <code class="docutils literal notranslate"><span class="pre">~</span> <span class="pre">p</span></code> 应该意味着 <code class="docutils literal notranslate"><span class="pre">p</span></code> 不成立。因此，如果 <code class="docutils literal notranslate"><span class="pre">p</span></code> <em>确实</em>成立，那么它
+会导致矛盾。因此，给定 <code class="docutils literal notranslate"><span class="pre">p</span></code>，我们可以得出 <code class="docutils literal notranslate"><span class="pre">false</span></code> 的结论。这个
+是理解构造逻辑中否定的标准方式。</p>
+<p>鉴于这种语法糖，<code class="docutils literal notranslate"><span class="pre">~</span> <span class="pre">p</span></code> 因此对应于一个函数类型，其
+返回类型为 <code class="docutils literal notranslate"><span class="pre">empty</span></code>。这样的函数永远不会真正返回。鉴于我们的
+持续假设程序是全的，这必定意味着不可能
+甚至调用该函数。因此，不可能构造出
+函数的输入类型。因此否定对应于以下想法
+不可能，或者矛盾。</p>
+<p><strong>作为类型的命题。</strong> 我们现在创建了以下对应关系
+使我们能够将命题视为类型：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/\</span></code> 和 <code class="docutils literal notranslate"><span class="pre">*</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">\/</span></code> 和 <code class="docutils literal notranslate"><span class="pre">disj</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">true</span></code> 和 <code class="docutils literal notranslate"><span class="pre">unit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">false</span></code> 和 <code class="docutils literal notranslate"><span class="pre">empty</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">~</span></code> 和 <code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">false</span></code></p></li>
+</ul>
+<p>但这只是库里-霍华德对应关系的第一层。它还会更深入……</p>
+</section>
+<section id="id4">
+<h2>程序对应于证明<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>我们已经看到，程序和证明都是操纵和改造的方式
+证据。事实上，每个程序<strong>都是</strong>该程序类型的证明
+有居住元，因为类型检查器必须验证程序的类型是否正确。</p>
+<p>然而，类型检查的细节导致了更引人注目的结果
+程序和证明之间的对应关系。让我们将注意力限制在
+仅涉及合取和蕴涵的程序和证明，或者同等地，
+对和函数。（其他命题连接词也可以纳入进来，但需要额外工作。）</p>
+<p><strong>类型检查规则。</strong> 对于类型检查，我们给出了许多<em>规则</em>来定义何时
+程序类型良好。以下是变量、函数和对的规则：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{x : t, ...} |- x : t
+</pre></div>
+</div>
+<p>变量具有环境为它指定的类型。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- fun x -&gt; e : t -&gt; t&#39;
+if env[x -&gt; t] |- e : t&#39;
+</pre></div>
+</div>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">e</span></code> 在 a 中具有类型 <code class="docutils literal notranslate"><span class="pre">t'</span></code>，则匿名函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">t'</span></code>
+静态环境扩展为将 <code class="docutils literal notranslate"><span class="pre">x</span></code> 绑定到类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- e1 e2 : t&#39;
+if env |- e1 : t -&gt; t&#39;
+and env |- e2 : t
+</pre></div>
+</div>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">t'</span></code> 并且 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 具有类型，则应用程序 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">e2</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">t'</span></code>
+类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- (e1, e2) : t1 * t2
+if env |- e1 : t1
+and env |- e2 : t2
+</pre></div>
+</div>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">t1</span></code> 并且 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 具有类型，则 <code class="docutils literal notranslate"><span class="pre">(e1,</span> <span class="pre">e2)</span></code> 对具有类型 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">*</span> <span class="pre">t2</span></code>
+类型 <code class="docutils literal notranslate"><span class="pre">t2</span></code>。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- fst e : t1
+if env |- e : t1 * t2
+
+env |- snd e : t2
+if env |- e : t1 * t2
+</pre></div>
+</div>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">e</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">*</span> <span class="pre">t2</span></code>，则 <code class="docutils literal notranslate"><span class="pre">fst</span> <span class="pre">e</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">t1</span></code>，并且 <code class="docutils literal notranslate"><span class="pre">snd</span> <span class="pre">e</span></code> 具有类型
+<code class="docutils literal notranslate"><span class="pre">t2</span></code>。</p>
+<p><strong>证明树。</strong> 表达这些规则的另一种方式是绘制<em>证明
+显示规则的递归应用的树</em>。这是那些证明树：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---------------------
+{x : t, ...} |- x : t
+
+
+   env[x -&gt; t1] |- e2 : t2
+-----------------------------
+env |- fun x -&gt; e2 : t1 -&gt; t2
+
+
+env |- fun x -&gt; e2 : t1 -&gt; t2        env |- e1 : t1
+---------------------------------------------------
+          env |- (fun x -&gt; e2) e1 : t2
+
+
+env |- e1 : t1         env |- e2 : t2
+-------------------------------------
+     env |- (e1, e2) : t1 * t2
+
+
+env |- e : t1 * t2
+------------------
+env |- fst e : t1
+
+
+env |- e : t1 * t2
+------------------
+env |- snd e : t2
+</pre></div>
+</div>
+<p><strong>从逻辑上看证明树。</strong> 让我们重写每个证明树以消除
+程序，只留下类型。同时，我们使用
+命题作为类型对应将类型重写为命题：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------
+env, p |- p
+
+
+ env, p1 |- p2
+---------------
+env |- p1 -&gt; p2
+
+
+env |- p1 -&gt; p2     env |- p1
+-----------------------------
+        env |- p2
+
+
+env |- p1      env |- p2
+------------------------
+    env |- p1 /\ p2
+
+
+env |- p1 /\ p2
+---------------
+   env |- p1
+
+
+env |- p1 /\ p2
+---------------
+   env |- p2
+</pre></div>
+</div>
+<p>现在，每条规则都可以被解读为逻辑推理的有效形式。每当我们
+写 <code class="docutils literal notranslate"><span class="pre">env</span> <span class="pre">|-</span> <span class="pre">t</span></code>，意味着“根据 <code class="docutils literal notranslate"><span class="pre">env</span></code> 中的假设，我们可以得出结论
+<code class="docutils literal notranslate"><span class="pre">p</span></code> 成立”。像往常一样，规则意味着从该线上方的所有前提出发，
+线下结论成立。</p>
+<p><strong>证明和程序。</strong> 现在考虑以下证明树，显示
+程序类型的推导：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>------------------------           ------------------------
+{p : a * b} |- p : a * b           {p : a * b} |- p : a * b
+------------------------           ------------------------
+{p : a * b} |- snd p : b           {p : a * b} |- fst p : a
+-----------------------------------------------------------
+        {p : a * b} |- (snd p, fst p) : b * a
+     ----------------------------------------------
+     {} |- fun p -&gt; (snd p, fst p) : a * b -&gt; b * a
+</pre></div>
+</div>
+<p>该程序表明你可以交换一对组件，因此
+交换涉及的类型。</p>
+<p>如果我们删除程序，只留下类型，然后重写它们
+作为命题，我们得到这个证明树：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>----------------           ----------------
+a /\ b |- a /\ b           a /\ b |- a /\ b
+----------------           ----------------
+  a /\ b |- b                a /\ b |- a
+-------------------------------------------
+              a /\ b |- b /\ a
+           ----------------------
+           {} |- a /\ b -&gt; b /\ a
+</pre></div>
+</div>
+<p>这是命题逻辑的有效证明树。这表明你可以
+交换连词的两边。</p>
+<p>我们从这两个证明树中看到的是：<strong>程序就是证明</strong>。一个
+类型良好的程序对应于逻辑命题的证明。它显示
+如何用证据进行计算，在本例中将 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">/\</span> <span class="pre">b</span></code> 的证明转换为
+<code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">/\</span> <span class="pre">a</span></code> 的证明。</p>
+<p><strong>程序就是证明。</strong> 我们现在创建了以下对应关系
+使我们能够将程序作为证明来阅读：</p>
+<ul class="simple">
+<li><p>程序 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code> 对应于类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 所对应的逻辑公式的证明。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">|-</span> <span class="pre">t</span></code> 的证明树对应于 <code class="docutils literal notranslate"><span class="pre">{}</span> <span class="pre">|-</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code> 的证明树。</p></li>
+<li><p>给程序定型的证明规则对应于证明命题的规则。</p></li>
+</ul>
+<p>但这只是库里-霍华德对应关系的第二层。它还会更深入……</p>
+</section>
+<section id="id5">
+<h2>求值对应于化简<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>我们将仅简要处理这一部分对应。考虑
+以下程序：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="n">fst</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>该程序当然会求值为 <code class="docutils literal notranslate"><span class="pre">a</span></code>。</p>
+<p>接下来，考虑该程序的类型推导。  变量 <code class="docutils literal notranslate"><span class="pre">a</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">b</span></code> 必须绑定到程序静态环境中的某些类型
+类型检查。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>------------------------         -------------------------
+{a : t, b : t&#39;} |- a : t         {a : t, b : t&#39;} |- b : t&#39;
+----------------------------------------------------------
+         {a : t, b : t&#39;} |- (a, b) : t * t&#39;
+         ----------------------------------
+         {a : t, b : t&#39;} |- fst (a, b) : t
+</pre></div>
+</div>
+<p>根据程序即证明的对应关系，删除证明树中的程序、只保留命题，
+我们得到这个证明树：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------            -----------
+t, t&#39; |-  t            t, t&#39; |- t&#39;
+----------------------------------
+         t, t&#39; |- t /\ t&#39;
+         ----------------
+            t, t&#39; |- t
+</pre></div>
+</div>
+<p>然而，有一个更简单的证明树，具有相同的结论：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>----------
+t, t&#39; |- t
+</pre></div>
+</div>
+<p>换句话说，如果 <code class="docutils literal notranslate"><span class="pre">t</span></code> 已经是一个假设，我们不需要绕道先证明 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">/\</span> <span class="pre">t'</span></code>
+再证明 <code class="docutils literal notranslate"><span class="pre">t</span></code>。我们可以直接得出 <code class="docutils literal notranslate"><span class="pre">t</span></code>。</p>
+<p>同样，有一个更简单的类型推导对应于相同的
+更简单的证明：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>------------------------
+{a : t, b : t&#39;} |- a : t
+</pre></div>
+</div>
+<p>请注意，这个类型推导针对的是程序 <code class="docutils literal notranslate"><span class="pre">a</span></code>，而它正是更大的程序
+<code class="docutils literal notranslate"><span class="pre">fst</span> <span class="pre">(a,</span> <span class="pre">b)</span></code> 的求值结果。</p>
+<p>因此，程序的求值会导致证明树化简，而化简后的证明树实际上是
+（通过程序即证明的对应关系）同一命题的更简单证明。
+<strong>因此，求值对应于证明化简。</strong> 这就是库里-霍华德对应关系的最终层次。</p>
+</section>
+<section id="id6">
+<h2>这一切意味着什么<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>逻辑是人类探究的一个基本方面。  它指导我们推理
+世界，在得出有效的推论时，在推论什么是必须真实的与什么是真实的时
+一定是假的。  各个领域的逻辑和论证训练—
+学科—是高等教育最重要的部分之一。</p>
+<p>柯里-霍华德对应关系表明逻辑和计算是
+以一种深刻甚至神秘的方式从根本上联系在一起。基本建筑
+逻辑构建块（命题、证明）对应于基本的
+计算构建块（类型、函数式程序）。计算本身，
+也就是表达式的求值或化简，对应于证明的化简。
+因此，计算机执行的任务，与人类试图以尽可能好的方式给出证明的任务相通。</p>
+<p>因此，计算与推理有着内在的联系。而函数式
+编程是人类探究的基本组成部分。</p>
+<p>是否有更好的理由来学习函数式编程？</p>
+</section>
+<section id="id7">
+<h2>练习<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<p>Solutions to most exercises are <a href="https://github.com/cs3110/textbook-solutions">available</a>.
+We are happy to add or correct solutions. Please make contributions through GitHub.</p>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: propositions as types [★★]</strong></p>
+<p>对于以下每个命题，写出其相应的类型
+在 OCaml 中。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">true</span> <span class="pre">-&gt;</span> <span class="pre">p</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">/\</span> <span class="pre">(q</span> <span class="pre">/\</span> <span class="pre">r)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(p</span> <span class="pre">\/</span> <span class="pre">q)</span> <span class="pre">\/</span> <span class="pre">r</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">false</span> <span class="pre">-&gt;</span> <span class="pre">p</span></code></p></li>
+</ul>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: programs as proofs [★★★]</strong></p>
+<p>对于以下每个命题，确定其对应的类型
+OCaml，然后编写一个 OCaml <code class="docutils literal notranslate"><span class="pre">let</span></code> 定义来给出该类型的程序。你的
+程序证明该类型是 <em>inhabited</em>，也就是存在一个该类型的值。
+这也证明了对应命题成立。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">/\</span> <span class="pre">q</span> <span class="pre">-&gt;</span> <span class="pre">q</span> <span class="pre">/\</span> <span class="pre">p</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">\/</span> <span class="pre">q</span> <span class="pre">-&gt;</span> <span class="pre">q</span> <span class="pre">\/</span> <span class="pre">p</span></code></p></li>
+</ul>
+<!--------------------------------------------------------------------------->
+<hr class="docutils" />
+<p><strong>Exercise: evaluation as simplification [★★★]</strong></p>
+<p>考虑以下 OCaml 程序：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="n">snd</span> <span class="o">((</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">,</span> <span class="n">x</span><span class="o">)</span> <span class="o">(</span><span class="n">fst</span> <span class="n">x</span><span class="o">))</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>该程序的类型是什么？</p></li>
+<li><p>该类型对应的命题是什么？</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(1,2)</span></code> 在小步语义中将如何求值？</p></li>
+<li><p>该求值建议对 <code class="docutils literal notranslate"><span class="pre">f</span></code> 进行怎样的简化实现？（或者
+也许有几个，但其中一个可能是最简单的？）</p></li>
+<li><p>你的简化后的 <code class="docutils literal notranslate"><span class="pre">f</span></code> 仍然具有与原始类型相同的类型吗？（它
+应该。）</p></li>
+</ul>
+<p>你的简化 <code class="docutils literal notranslate"><span class="pre">f</span></code> 和原始 <code class="docutils literal notranslate"><span class="pre">f</span></code> 都是相同的证明
+命题，但求值可以帮助你产生更简单的证明。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "cs3110/textbook",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ocaml-jupyter"
+        },
+        kernelOptions: {
+            name: "ocaml-jupyter",
+            path: "./chapters/adv"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ocaml-jupyter'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../interp/exercises.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title"><span class="section-number">10.8. </span>练习</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../appendix/bigoh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">Big-Oh 记号</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">用证据计算</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">对应关系</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">类型对应于命题</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">程序对应于证明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">求值对应于化简</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">这一切意味着什么</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">练习</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Michael R. Clarkson et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
