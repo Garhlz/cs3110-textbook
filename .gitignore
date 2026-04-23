@@ -10,5 +10,12 @@
 # Book specific
 playground
 
+# Translation tooling
+.translation-cache.json
+translation-failures.log
+zh-cn/_build/
+
 # Opam switch
 _opam/
+
+.codex

@@ -1,0 +1,213 @@
+# CS3110 教科书中文翻译术语表
+
+# 术语管理说明
+# 本术语表用于指导中英混用的一致性。
+# 使用规则详见每条说明。
+
+## OCaml 核心概念（保持英文）
+
+ocaml: OCaml
+ocaml-jupyter: OCaml (Jupyter 内核)
+utop: utop
+toplevel: 顶层
+repl: REPL
+keyword: 关键字
+operator: 运算符
+
+## 类型系统（混用）
+
+type: 类型
+type_inference: 类型推断
+type_annotation: 类型注解
+type_alias: 类型别名
+type_signature: 类型签名
+static_semantics: 静态语义
+dynamic_semantics: 动态语义
+well_typed: 类型良好的 / 良型的
+polymorphism: 多态性
+polymorphic: 多态的 / 参数多态的
+generics: 泛型
+
+## 函数和值（混用）
+
+expression: 表达式
+definition: 定义
+value: 值
+function: 函数
+method: 方法
+argument: 参数 / 实参（函数调用时）
+parameter: 参数 / 形参（函数定义时）
+lambda: lambda / λ
+recursive: 递归的
+recursion: 递归
+tail_recursion: 尾递归
+closure: 闭包
+higher_order_function: 高阶函数
+first_class_citizen: 一等公民
+
+## 数据结构（优先翻译）
+
+list: 列表
+tuple: 元组
+record: 记录
+variant: 变体
+option: option 类型 / 可选类型
+algebraic_data_type: 代数数据类型
+constructor: 构造器 / 构造子
+pattern_matching: 模式匹配
+destructuring: 解构
+
+## 模块系统（混用）
+
+module: 模块
+signature: 签名 / 模块签名
+functor: functor（函子）
+abstraction: 抽象
+encapsulation: 封装
+
+## 高级特性（混用，首次出现可标注）
+
+monad: monad（单子）
+promise: Promise
+callback: 回调
+continuation: 延续 / 连续
+concurrency: 并发
+concurrent: 并发的
+mutation: 变化 / 可变性
+mutable: 可变的
+immutable: 不可变的
+side_effect: 副作用
+pure_function: 纯函数
+
+## 规格说明和测试（优先翻译）
+
+specification: 规格说明 / 说明书
+precondition: 前置条件
+postcondition: 后置条件
+invariant: 不变量
+test: 测试
+unit_test: 单元测试
+ounit: OUnit
+assertion: 断言
+testcase: 测试用例
+
+## 编译和构建（混用）
+
+compiler: 编译器
+interpreter: 解释器
+parser: 解析器 / 语法分析器
+lexer: 词法分析器
+compiled: 编译的
+interpreted: 解释的
+runtime: 运行时
+execution: 执行
+
+## 库和工具（保持英文或说明）
+
+jupyter_book: Jupyter Book
+myst_markdown: MyST Markdown
+jupytext: Jupytext
+markdown: Markdown
+fenced_code: 代码围栏
+code_cell: 代码单元
+admonition: 提示块 / 警告块
+front_matter: Front matter（YAML 头）
+
+## 正确性分析（混用）
+
+correctness: 正确性
+proof: 证明
+induction: 归纳法
+structural_induction: 结构归纳法
+black_box_testing: 黑盒测试
+glass_box_testing: 玻璃盒测试（即白盒测试）
+equivalence_class: 等价类
+randomized_testing: 随机测试
+
+## 性能和数据结构（优先翻译）
+
+data_structure: 数据结构
+algorithm: 算法
+complexity: 复杂度
+time_complexity: 时间复杂度
+space_complexity: 空间复杂度
+big_o: 大 O 记号 / O 记号
+amortized: 摊销的
+amortized_analysis: 摊销分析
+hash_table: 哈希表
+hash_function: 哈希函数
+red_black_tree: 红黑树
+balanced_tree: 平衡树
+search_tree: 搜索树
+persistent_data_structure: 持久化数据结构 / 不可变数据结构
+
+## 解释器和语言设计（混用）
+
+interpreter_project: 解释器项目
+parser_combinator: 解析器组合子
+abstract_syntax_tree: 抽象语法树 (AST)
+concrete_syntax: 具体语法
+abstract_syntax: 抽象语法
+semantic_analysis: 语义分析
+type_checking: 类型检查
+scope: 作用域
+binding: 绑定
+variable: 变量
+environment: 环境
+
+## 常用编程术语（优先翻译）
+
+variable: 变量
+constant: 常数 / 常量
+literal: 字面值
+comment: 注释
+whitespace: 空白符
+indentation: 缩进
+debugging: 调试
+error: 错误
+exception: 异常
+exception_handling: 异常处理
+
+## 教学和文档用语（优先翻译）
+
+chapter: 章
+section: 节 / 小节
+exercise: 习题 / 练习
+example: 例子 / 示例
+note: 注意
+warning: 警告
+important: 重要
+tip: 提示
+epigraph: 题词 / 引言
+
+## 使用建议
+
+### 规则 1: 第一次出现规则
+- 对于重要术语首次出现时，可使用"英文（中文）"格式
+- 例：`functor（函子）`、`monad（单子）`
+- 后续出现优先使用英文，避免与数学概念混淆
+
+### 规则 2: 技术对象保留英文
+- OCaml 内置类型、函数、模块名保留英文
+- 例：`List.map`, `Array.length`, `Hashtbl`
+- 对 fold、map 等高阶函数的讲解可中文化，但函数名保留
+
+### 规则 3: 上下文判断
+- `argument` vs `parameter`：
+  - 函数**定义**时的参数用"形参"
+  - 函数**调用**时的参数用"实参"
+  - 如果原文未严格区分，统一用"参数"
+  
+### 规则 4: 列表项和表格统一
+- 若同一列表/表格中出现相同概念，必须术语统一
+- 例如不能同时出现"数据类型"和"类型"指代同一概念
+
+### 规则 5: 章节标题和目录
+- 章节名、习题名应保持原样或统一中文
+- 不可在同一书中出现"Functions"和"函数"混用的情况
+
+---
+
+**最后更新**：2026-04-22  
+**版本**：1.0 (初稿)  
+**维护者**：翻译润色小组

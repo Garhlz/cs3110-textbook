@@ -1,0 +1,63 @@
+title: OCaml 编程：正确、高效、优美
+author: Michael R. Clarkson et al.
+copyright: '2026'
+logo: op_title.png
+only_build_toc_files: true
+sphinx:
+  config:
+    language: zh_CN
+    html_extra_path:
+    - assets
+    html_favicon: op.png
+execute:
+  execute_notebooks: cache
+latex:
+  latex_documents:
+    targetname: book.tex
+repository:
+  url: https://github.com/cs3110/textbook
+  path_to_book: src
+  branch: main
+launch_buttons:
+  thebe: true
+  binderhub_url: https://mybinder.org
+html:
+  favicon: favicon.ico
+  home_page_in_navbar: false
+  use_issues_button: true
+  use_repository_button: true
+  use_edit_page_button: true
+  comments:
+    hypothesis: true
+  announcement: Using this book as part of a course? Please <a style="color:white"
+    href="https://docs.google.com/forms/d/e/1FAIpQLSfEW65AJPBnk732zZZM9CFpWMobWUkym6Nf-pgslRqqwoWYIA/viewform?usp=preview">let
+    us know</a>!
+parse:
+  myst_substitutions:
+    video_embed: <div class="container16x9"><iframe src="https://www.youtube.com/embed/%%VID%%"
+      class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer;
+      autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+    ex: '---
+
+      **Exercise: %%_NAME%% [%%STARS%%]**
+
+      '
+    ex1: '{{ ex | replace("%%STARS%%", "&starf;") | replace("%%_NAME%%", "%%NAME%%")}}'
+    ex2: '{{ ex | replace("%%STARS%%", "&starf;&starf;") | replace("%%_NAME%%", "%%NAME%%")}}'
+    ex3: '{{ ex | replace("%%STARS%%", "&starf;&starf;&starf;") | replace("%%_NAME%%",
+      "%%NAME%%")}}'
+    ex4: '{{ ex | replace("%%STARS%%", "&starf;&starf;&starf;&starf;") | replace("%%_NAME%%",
+      "%%NAME%%")}}'
+    solutions: 'Solutions to most exercises are <a href="https://github.com/cs3110/textbook-solutions">available</a>.
+
+      We are happy to add or correct solutions. Please make contributions through
+      GitHub.
+
+      '
+    code_link: <a href="../../code/%%NAME%%">%%NAME%%</a>
+  myst_enable_extensions:
+  - amsmath
+  - colon_fence
+  - dollarmath
+  - linkify
+  - substitution

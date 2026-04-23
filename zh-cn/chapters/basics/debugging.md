@@ -1,0 +1,241 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  formats: md:myst
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.10.3
+kernelspec:
+  display_name: OCaml
+  language: OCaml
+  name: ocaml-jupyter
+---
+
+# 调试
+
+当其他一切都失败时，调试是最后的手段。让我们来看一个
+退后一步，思考调试*之前*发生的所有事情。
+
+## 防御 Bug
+
+根据
+[Rob Miller](https://stellar.mit.edu/S/course/6/fa08/6.005/courseMaterial/topics/topic3/lectureNotes/Debugging/Debugging.pdf)，
+针对错误有四种防御措施：
+
+1.  **针对 bug 的第一道防线就是让它们变得不可能。**
+
+通过选择用语言编程可以消除所有类型的错误
+    保证*[内存
+    安全](http://www.pl-enthusiast.net/2014/07/21/memory-safety/)*（没有
+    除非通过*指针*（或引用），否则可以访问部分内存
+    这对该内存区域有效）和*[类型
+    安全](http://www.pl-enthusiast.net/2014/08/05/type-safety/)*（没有
+    值可以以与其类型不一致的方式使用）。 OCaml 类型
+    例如，系统可以防止程序出现缓冲区溢出和无意义的情况
+    操作（例如向浮点数添加布尔值），而 C 类型系统
+    没有。
+
+2.  **针对错误的第二种防御方法是使用发现错误的工具。**
+
+有自动源代码分析工具，例如
+    [FindBugs](http://findbugs.sourceforge.net/)，可以找到很多常见的
+    Java 程序中的各种错误，以及
+    [SLAM](http://research.microsoft.com/en-us/projects/slam/)，用于
+    查找设备驱动程序中的错误。 CS 的子领域称为“形式方法”
+    研究如何用数学来指定和验证程序，即如何
+    证明程序没有错误。我们稍后将研究验证
+    当然。
+
+*社交方法*例如代码审查和结对编程也很有用
+    用于查找错误的工具。 IBM 在 20 世纪 70 年代至 90 年代的研究表明
+    代码审查非常有效。在一项研究中（Jones，1991），代码
+    检查发现 65% 的已知编码错误和 25% 的已知编码错误
+    文档错误，而测试只发现 20% 的编码错误
+    并且没有任何文档错误。
+
+3.  **针对错误的第三种防御措施是让它们立即可见。**
+
+错误出现得越早，诊断和修复就越容易。如果
+    相反，计算会继续越过错误点，然后进一步
+    计算可能会掩盖故障真正发生的位置。 *断言*中
+    源代码使程序“快速失败”和“大声失败”，从而导致错误
+    立即出现，程序员确切地知道源代码中的位置
+    代码看看。
+
+4.  **针对错误的第四种防御措施是广泛的测试。**
+
+如何知道一段代码是否存在特定的错误？编写测试
+    这会暴露错误，然后确认你的代码不会失败
+    测试。 *单元测试*针对相对较小的代码片段，例如
+    单独的函数或模块，同时编写尤其重要
+    开发该代码的时间。这些测试的运行应该是自动化的，
+    这样，如果你破解了密码，你就能尽快发现。
+    （这又是防御措施 3 的体现。）
+
+当所有这些防御措施都失败后，程序员被迫求助于
+调试。
+
+## 如何调试
+
+所以你发现了一个错误。接下来怎么办？
+
+1.  **将 bug 提炼成一个小测试用例。** 调试是一项艰苦的工作，但是
+测试用例越小，你就越有可能将注意力集中在
+    bug 潜伏的那段代码。花费在这个蒸馏上的时间可以
+    因此可以节省时间，因为你不必重新阅读大量代码。
+    在获得一个小测试用例之前不要继续调试！
+
+2.  **采用科学方法。** 提出关于错误原因的假设
+正在发生。你甚至可以在笔记本上写下这个假设，就好像
+    你在化学实验室里，在自己的头脑中澄清并跟踪
+    你已经考虑过哪些假设。接下来，设计一个实验
+    肯定或否定该假设。运行你的实验并记录结果。
+    根据你所学到的知识，重新阐述你的假设。继续直到
+    你已经理性、科学地确定了错误的原因。
+
+3.  **修复错误。** 修复可能只是对拼写错误的简单更正。或者它可能
+揭示导致你做出重大更改的设计缺陷。考虑是否
+    你可能需要将修复应用到代码库中的其他位置 - 例如
+    例如，这是复制和粘贴错误吗？如果是这样，你是否需要重构你的
+    代码？
+
+4.  **将小测试用例永久添加到你的测试套件中。**你不会
+希望该错误重新回到你的代码库中。所以请跟踪那个小
+    通过将其作为单元测试的一部分来测试用例。这样，任何时候你
+    进行未来的更改，你将自动防范同样的情况
+    错误。重复运行从以前的错误中提取的测试是一部分
+    *回归测试*。
+
+## 在 OCaml 中调试
+
+这里有一些关于如何调试&mdash;如果你被迫这样做&mdash;的提示
+OCaml。
+
+- **打印语句。** 插入打印语句以确定 a 的值
+变量。假设你想知道下面的 `x` 的值是什么
+  函数：
+
+  ```ocaml
+  let inc x = x + 1
+  ```
+
+只需添加以下行即可打印该值：
+
+  ```ocaml
+  let inc x =
+    let () = print_int x in
+    x + 1
+  ```
+
+- **函数跟踪。** 假设你想查看递归调用的*跟踪*
+并返回一个函数。使用 `#trace` 指令：
+
+  ```ocaml
+  # let rec fib x = if x <= 1 then 1 else fib (x - 1) + fib (x - 2);;
+  # #trace fib;;
+  ```
+
+如果你求值 `fib 2`，你现在将看到以下输出：
+
+  ```text
+  fib <-- 2
+  fib <-- 0
+  fib --> 1
+  fib <-- 1
+  fib --> 1
+  fib --> 2
+  ```
+
+要停止跟踪，请使用 `#untrace` 指令。
+
+- **调试器。** OCaml 有一个调试工具 `ocamldebug`。你可以找到一个
+[tutorial](https://ocaml.org/learn/tutorials/debug.html#The-OCaml-debugger) 开启
+  OCaml 网站。除非你使用 Emacs 作为编辑器，否则你将
+  可能会发现这个工具比插入打印更难使用
+  声明。
+
+## 防御性编程
+
+正如我们在调试部分前面讨论的那样，针对错误的一种防御措施是
+使任何错误（或错误）立即可见。这个想法与想法相联系
+的先决条件。
+
+考虑 `random_int` 的规范：
+```ocaml
+(** [random_int bound] is a random integer between 0 (inclusive)
+    and [bound] (exclusive).  Requires: [bound] is greater than 0
+    and less than 2^30. *)
+```
+
+如果 `random_int` 的客户端传递了违反了 `bound` 的值
+“Requires”子句，如`-1`，`random_int`的实现可以自由
+做任何事。当客户违反规定时，一切都将失败
+前提条件。
+
+但对 `random_int` 来说最有帮助的事情就是立即暴露
+前提条件被违反的事实。毕竟，客户很可能
+并没有“故意”违反它。
+
+因此 `random_int` 的实现者最好检查是否
+违反前提条件，如果是，则引发异常。这是三个
+这种*防御性编程的可能性：*
+
+```ocaml
+(* possibility 1 *)
+let random_int bound =
+  assert (bound > 0 && bound < 1 lsl 30);
+  (* proceed with the implementation of the function *)
+
+(* possibility 2 *)
+let random_int bound =
+  if not (bound > 0 && bound < 1 lsl 30)
+  then invalid_arg "bound";
+  (* proceed with the implementation of the function *)
+
+(* possibility 3 *)
+let random_int bound =
+  if not (bound > 0 && bound < 1 lsl 30)
+  then failwith "bound";
+  (* proceed with the implementation of the function *)
+```
+
+第二种可能性可能对客户来说信息最丰富，因为
+它使用内置函数 `invalid_arg` 来引发命名良好的异常
+`Invalid_argument`。事实上，这正是标准库的内容
+这个函数的实现确实如此。
+
+当你尝试调试你的系统时，第一种可能性可能最有用
+自己的代码，而不是选择向客户端公开失败的断言。
+
+第三种可能性与第二种的不同之处仅在于名称 (`Failure`)
+引发的异常。它可能在以下情况下有用：
+前提条件不仅仅涉及一个无效参数。
+
+在此示例中，检查前提条件的计算成本很低。在其他方面
+在某些情况下，它可能需要大量计算，因此函数的实现者
+可能宁愿不检查前提条件，或者只检查一些便宜的
+对其进行近似。
+
+有时程序员会不必要地担心防御性编程太
+昂贵&mdash;无论是最初实现检查所需的时间，
+还是检查断言时付出的运行时成本。这些担忧常常是错误的。
+社会为修复软件故障付出的时间和金钱成本表明，
+我们完全承受得起运行速度稍慢一些的程序。
+
+最后，实现者甚至可能选择消除前提条件并
+将其重述为后置条件：
+```ocaml
+(** [random_int bound] is a random integer between 0 (inclusive)
+    and [bound] (exclusive).  Raises: [Invalid_argument "bound"]
+    unless [bound] is greater than 0 and less than 2^30. *)
+```
+现在，当 `bound` 太大或太小时时，不再可以自由地做任何事情，
+`random_int` 必须引发异常。对于这个函数来说，这可能是
+最好的选择。
+
+在本课程中，我们不会强迫你进行防御性编程。但如果
+你很精明，无论如何你都会开始（或继续）这样做。少量的
+你花在编码此类防御上的时间将为你节省数小时的调试时间，
+让你成为一个更有生产力的程序员。
