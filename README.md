@@ -23,14 +23,27 @@ python scripts/check_translation_structure.py
 python scripts/check_markdown_refs.py
 ```
 
-To build the book, first create and activate the textbook environment described
-in `BUILDING.md`, then run:
+To build the book with the original Conda workflow, first create and activate
+the textbook environment described in `BUILDING.md`, then run:
 
 ```bash
 make html
 ```
 
 The Chinese edition HTML output is generated under `zh-cn/_build/html/`.
+
+If you prefer `uv` instead of Conda, create a local virtual environment and
+install the pinned build dependencies, then build with the existing OPAM switch:
+
+```bash
+uv venv .venv
+uv pip install --python .venv/bin/python -r requirements.txt
+OPAMSWITCH=textbook .venv/bin/jupyter-book build zh-cn
+```
+
+Note that this repository currently expects `jupyter-book==0.15.1`. Newer
+Jupyter Book releases use a different toolchain and may fail to build this repo
+without additional Node/NPM setup.
 
 ## 中文版说明
 
@@ -61,3 +74,15 @@ make html BOOK=zh-cn
 ```
 
 生成的静态网页位于 `zh-cn/_build/html/`。
+
+如果你不再使用 Conda，也可以改用 `uv`：
+
+```bash
+uv venv .venv
+uv pip install --python .venv/bin/python -r requirements.txt
+OPAMSWITCH=textbook .venv/bin/jupyter-book build zh-cn
+```
+
+注意：这个仓库当前实际依赖 `jupyter-book==0.15.1`。如果直接安装较新的
+Jupyter Book 版本，会切换到不同的构建链路，并可能额外要求 Node / npm，
+从而导致构建失败。

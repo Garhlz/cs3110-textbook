@@ -20,6 +20,18 @@ Manual option:
 - Run `conda activate textbook` to activate the environment **every time** you
   want to work on the textbook.
 
+# How to Create a uv Textbook Environment
+
+If you prefer `uv` instead of Conda, you can use a local virtual environment
+for the Python build dependencies:
+
+- Run `uv venv .venv` in the repository root.
+- Run `uv pip install --python .venv/bin/python -r requirements.txt`.
+- Use `./.venv/bin/jupyter-book` in place of the `jupyter-book` executable.
+
+This repository currently expects `jupyter-book==0.15.1`. Newer Jupyter Book
+releases use a different toolchain and may require additional Node/NPM setup.
+
 # How to Create the OCaml Jupyter Kernel
 
 - Create an OPAM switch for the textbook, e.g., `opam switch create textbook ocaml-base-compiler.5.3.0`. Ideally the compiler version for the switch should be the same as the compiler version specified in the preface's student-facing install instructions.
@@ -36,6 +48,8 @@ Manual option:
   and independent of the name of the switch in the current semester.
 - Make sure you've already done the above Conda environment install and have
   that environment active.
+- If you are using `uv` instead of Conda, make sure the `uv` environment has
+  been created and the Python-side Jupyter packages are installed there.
 - Run `jupyter kernelspec install --user --name ocaml-jupyter "$(opam var share)/jupyter"`
 - If your `~/.ocamlinit` contains `#use "topfind";;`, then considering
   surrounding it with these assignment statements:
@@ -51,6 +65,10 @@ Manual option:
 # How to Build the Textbook
 
 - Run `make html` or just `make` to build the HTML version.
+- To build with the `uv` environment instead of Conda, run
+  `OPAMSWITCH=textbook .venv/bin/jupyter-book build src`.
+- To build the Chinese edition with `uv`, run
+  `OPAMSWITCH=textbook .venv/bin/jupyter-book build zh-cn`.
 - Run `make view` (currently supported on Mac only) to conveniently open the
   generated HTML in your browser. That works for most proof reading, though
   not all features will work correctly because the book is not being served

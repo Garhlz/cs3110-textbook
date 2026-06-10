@@ -1,8 +1,8 @@
 # 总结
 
-语法和语义是学习编程语言的强大范式。在学习 OCaml 的特性时，我们会仔细写下每个特性的语法和语义。我们已经看到，表达同一语义概念（即同一计算）可以有多种语法形式。
+语法和语义是学习编程语言的一种强有力的方法。在学习 OCaml 各项特性的过程中，我们始终仔细记录它们的语法和语义。我们已经看到，同一个语义概念，也就是同一种计算，往往可以用多种不同的语法来表达。
 
-函数应用的语义是 OCaml 和函数式编程的核心，我们将在整个课程中多次回顾这一话题，以加深理解。
+函数应用的语义，是 OCaml 乃至函数式编程的核心。接下来整门课程中，我们都会反复回到这个主题上，不断加深理解。
 
 ## 术语与概念
 
@@ -22,10 +22,10 @@
 * 函数定义
 * 标识符
 * 习语
-* if 表达式
+* `if` 表达式
 * lambda 表达式
-* let 定义
-* let 表达式
+* `let` 定义
+* `let` 表达式
 * 库
 * 元变量
 * 相互递归
@@ -48,6 +48,6 @@
 * *Introduction to Objective Caml*，第 3 章
 * *OCaml from the Very Beginning*，第 2 章
 * *Real World OCaml*，第 2 章
-* [*Tail Recursion, The Musical*][tr]：以 JavaScript 为背景、配合可爱 8-bit 动画和迪士尼歌曲讲解尾调用优化！
+* [*Tail Recursion, The Musical*][tr]：在 JavaScript 的背景下，用可爱的 8-bit 动画和迪士尼歌曲解释尾调用优化。
 
-[tr]: https://www.youtube.com/watch\?v\=-PX0BV9hGZY
+[tr]: https://www.youtube.com/watch?v=-PX0BV9hGZY
