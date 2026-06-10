@@ -187,7 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">2. OCaml 基础知识</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">2. OCaml 基础</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="toplevel.html">2.1. OCaml 顶层</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">2.2. 编译 OCaml 程序</a></li>
 <li class="toctree-l2"><a class="reference internal" href="expressions.html">2.3. 表达式</a></li>
@@ -596,7 +596,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bug">2.7.1. 防御 Bug</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bug">2.7.1. 对抗 Bug 的防线</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2.7.2. 如何调试</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ocaml">2.7.3. 在 OCaml 中调试</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">2.7.4. 防御性编程</a></li>
@@ -613,123 +613,58 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">2.7. </span>调试<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>当其他一切都失败时，调试是最后的手段。让我们来看一个
-退后一步，思考调试<em>之前</em>发生的所有事情。</p>
+<p>当其他一切办法都失效时，调试才是最后的手段。先退一步，想一想那些发生在<em>调试之前</em>的事情。</p>
 <section id="bug">
-<h2><span class="section-number">2.7.1. </span>防御 Bug<a class="headerlink" href="#bug" title="Permalink to this heading">#</a></h2>
-<p>根据
-<a class="reference external" href="https://stellar.mit.edu/S/course/6/fa08/6.005/courseMaterial/topics/topic3/lectureNotes/Debugging/Debugging.pdf">Rob Miller</a>，
-针对错误有四种防御措施：</p>
-<ol class="arabic simple">
-<li><p><strong>针对 bug 的第一道防线就是让它们变得不可能。</strong></p></li>
+<h2><span class="section-number">2.7.1. </span>对抗 Bug 的防线<a class="headerlink" href="#bug" title="Permalink to this heading">#</a></h2>
+<p>根据 <a class="reference external" href="https://stellar.mit.edu/S/course/6/fa08/6.005/courseMaterial/topics/topic3/lectureNotes/Debugging/Debugging.pdf">Rob Miller</a> 的说法，对抗 bug 有四道防线：</p>
+<ol class="arabic">
+<li><p><strong>第一道防线，是让 bug 根本不可能出现。</strong></p>
+<p>如果你选择使用那些能够保证*<a class="reference external" href="http://www.pl-enthusiast.net/2014/07/21/memory-safety/">内存安全</a><em>和</em><a class="reference external" href="http://www.pl-enthusiast.net/2014/08/05/type-safety/">类型安全</a><em>的语言来编程，那么整类整类的 bug 都可以被消除。所谓内存安全，是指除非通过对应该内存区域有效的</em>指针*（或引用），否则程序不能访问那块内存；所谓类型安全，是指一个值不能以与其类型不一致的方式被使用。举例来说，OCaml 的类型系统能防止缓冲区溢出以及一些毫无意义的操作（例如把布尔值和浮点数相加），而 C 的类型系统则做不到这一点。</p>
+</li>
+<li><p><strong>第二道防线，是使用能够发现 bug 的工具。</strong></p>
+<p>有一些自动化的源代码分析工具，例如 <a class="reference external" href="http://findbugs.sourceforge.net/">FindBugs</a>，它能发现 Java 程序中许多常见类型的 bug；还有 <a class="reference external" href="http://research.microsoft.com/en-us/projects/slam/">SLAM</a>，它被用来发现设备驱动程序中的 bug。计算机科学中有一个分支叫做<em>形式化方法</em>（formal methods），研究的是如何用数学手段来规定和验证程序，也就是如何证明程序没有 bug。我们会在这门课后面学习验证相关内容。</p>
+<p>代码评审、结对编程这类<em>社会性方法</em>（social methods）也是发现 bug 的有用工具。IBM 在 20 世纪 70 到 90 年代的一些研究表明，代码评审可能非常有效。其中一项研究（Jones, 1991）显示，代码检查找出了 65% 的已知编码错误和 25% 的已知文档错误，而测试只找出了 20% 的编码错误，对文档错误则一个也没发现。</p>
+</li>
+<li><p><strong>第三道防线，是让 bug 立刻暴露出来。</strong></p>
+<p>bug 越早显现出来，就越容易诊断和修复。反过来，如果程序在 bug 出现之后还继续往下执行，那么后续的计算反而可能掩盖真正出错的位置。源代码中的<em>断言</em>（assertion）可以让程序“尽早失败”“大声失败”，使 bug 立刻显现出来，从而让程序员明确知道应当回到源代码的哪里去排查。</p>
+</li>
+<li><p><strong>第四道防线，是充分测试。</strong></p>
+<p>你怎么知道一段代码是否包含某个特定 bug？写出能够暴露该 bug 的测试，然后确认你的代码不会在这些测试上失败。对于比较小的代码单元，例如单个函数或模块，<em>单元测试</em>尤其应该和开发同步进行。这些测试还应该自动运行，这样一旦你改坏了代码，就能尽快发现。（说到底，这其实又回到了第三道防线。）</p>
+</li>
 </ol>
-<p>通过选择用语言编程可以消除所有类型的错误
-保证*<a class="reference external" href="http://www.pl-enthusiast.net/2014/07/21/memory-safety/">内存
-安全</a><em>（没有
-除非通过</em>指针*（或引用），否则可以访问部分内存
-这对该内存区域有效）和*<a class="reference external" href="http://www.pl-enthusiast.net/2014/08/05/type-safety/">类型
-安全</a>*（没有
-值可以以与其类型不一致的方式使用）。 OCaml 类型
-例如，系统可以防止程序出现缓冲区溢出和无意义的情况
-操作（例如向浮点数添加布尔值），而 C 类型系统
-没有。</p>
-<ol class="arabic simple" start="2">
-<li><p><strong>针对错误的第二种防御方法是使用发现错误的工具。</strong></p></li>
-</ol>
-<p>有自动源代码分析工具，例如
-<a class="reference external" href="http://findbugs.sourceforge.net/">FindBugs</a>，可以找到很多常见的
-Java 程序中的各种错误，以及
-<a class="reference external" href="http://research.microsoft.com/en-us/projects/slam/">SLAM</a>，用于
-查找设备驱动程序中的错误。 CS 的子领域称为“形式方法”
-研究如何用数学来指定和验证程序，即如何
-证明程序没有错误。我们稍后将研究验证
-当然。</p>
-<p><em>社交方法</em>例如代码审查和结对编程也很有用
-用于查找错误的工具。 IBM 在 20 世纪 70 年代至 90 年代的研究表明
-代码审查非常有效。在一项研究中（Jones，1991），代码
-检查发现 65% 的已知编码错误和 25% 的已知编码错误
-文档错误，而测试只发现 20% 的编码错误
-并且没有任何文档错误。</p>
-<ol class="arabic simple" start="3">
-<li><p><strong>针对错误的第三种防御措施是让它们立即可见。</strong></p></li>
-</ol>
-<p>错误出现得越早，诊断和修复就越容易。如果
-相反，计算会继续越过错误点，然后进一步
-计算可能会掩盖故障真正发生的位置。 <em>断言</em>中
-源代码使程序“快速失败”和“大声失败”，从而导致错误
-立即出现，程序员确切地知道源代码中的位置
-代码看看。</p>
-<ol class="arabic simple" start="4">
-<li><p><strong>针对错误的第四种防御措施是广泛的测试。</strong></p></li>
-</ol>
-<p>如何知道一段代码是否存在特定的错误？编写测试
-这会暴露错误，然后确认你的代码不会失败
-测试。 <em>单元测试</em>针对相对较小的代码片段，例如
-单独的函数或模块，同时编写尤其重要
-开发该代码的时间。这些测试的运行应该是自动化的，
-这样，如果你破解了密码，你就能尽快发现。
-（这又是防御措施 3 的体现。）</p>
-<p>当所有这些防御措施都失败后，程序员被迫求助于
-调试。</p>
+<p>当前面这些防线全都失守之后，程序员才不得不诉诸调试。</p>
 </section>
 <section id="id2">
 <h2><span class="section-number">2.7.2. </span>如何调试<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>所以你发现了一个错误。接下来怎么办？</p>
+<p>假设你已经发现了一个 bug。接下来该怎么办？</p>
 <ol class="arabic simple">
-<li><p><strong>将 bug 提炼成一个小测试用例。</strong> 调试是一项艰苦的工作，但是
-测试用例越小，你就越有可能将注意力集中在
-bug 潜伏的那段代码。花费在这个蒸馏上的时间可以
-因此可以节省时间，因为你不必重新阅读大量代码。
-在获得一个小测试用例之前不要继续调试！</p></li>
-<li><p><strong>采用科学方法。</strong> 提出关于错误原因的假设
-正在发生。你甚至可以在笔记本上写下这个假设，就好像
-你在化学实验室里，在自己的头脑中澄清并跟踪
-你已经考虑过哪些假设。接下来，设计一个实验
-肯定或否定该假设。运行你的实验并记录结果。
-根据你所学到的知识，重新阐述你的假设。继续直到
-你已经理性、科学地确定了错误的原因。</p></li>
-<li><p><strong>修复错误。</strong> 修复可能只是对拼写错误的简单更正。或者它可能
-揭示导致你做出重大更改的设计缺陷。考虑是否
-你可能需要将修复应用到代码库中的其他位置 - 例如
-例如，这是复制和粘贴错误吗？如果是这样，你是否需要重构你的
-代码？</p></li>
-<li><p>**将小测试用例永久添加到你的测试套件中。**你不会
-希望该错误重新回到你的代码库中。所以请跟踪那个小
-通过将其作为单元测试的一部分来测试用例。这样，任何时候你
-进行未来的更改，你将自动防范同样的情况
-错误。重复运行从以前的错误中提取的测试是一部分
-<em>回归测试</em>。</p></li>
+<li><p><strong>把 bug 提炼成一个小型测试用例。</strong> 调试很费力，而测试用例越小，你就越可能把注意力集中在 bug 藏身的那段代码上。花时间做这一步提炼，往往反而能节省时间，因为你不必反复重读大量代码。在你拿到一个足够小的测试用例之前，不要继续调试。</p></li>
+<li><p><strong>采用科学方法。</strong> 针对 bug 为什么会发生，提出一个假设。你甚至可以像在化学实验室里那样，把这个假设写在笔记本上，既帮助自己理清思路，也方便记录哪些假设已经考虑过。接下来，设计一个实验来验证或否定这个假设。运行实验并记录结果。根据学到的新信息，重新调整你的假设。就这样持续下去，直到你以理性、科学的方式确定 bug 的根本原因。</p></li>
+<li><p><strong>修复 bug。</strong> 修复可能只是改正一个简单的笔误；也可能暴露出某个设计缺陷，迫使你做较大的改动。还要考虑是否需要把这个修复应用到代码库中的其他地方，例如：这会不会其实是一次复制粘贴导致的错误？如果是，你是否需要重构代码？</p></li>
+<li><p><strong>把这个小测试用例永久加入测试套件。</strong> 你当然不希望这个 bug 再次悄悄回到代码库里。所以，应该把刚才提炼出来的小测试用例保留下来，作为单元测试的一部分。这样一来，你以后每次修改代码时，都会自动防范同一个 bug 再度出现。反复运行从历史 bug 中提炼出的测试，就是<em>回归测试</em>（regression testing）的一部分。</p></li>
 </ol>
 </section>
 <section id="ocaml">
 <h2><span class="section-number">2.7.3. </span>在 OCaml 中调试<a class="headerlink" href="#ocaml" title="Permalink to this heading">#</a></h2>
-<p>这里有一些关于如何调试—如果你被迫这样做—的提示
-OCaml。</p>
+<p>下面是一些在 OCaml 中调试的技巧，前提是你真的已经不得不走到这一步了。</p>
 <ul>
-<li><p><strong>打印语句。</strong> 插入打印语句以确定 a 的值
-变量。假设你想知道下面的 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的值是什么
-函数：</p>
+<li><p><strong>打印语句。</strong> 插入打印语句来确认某个变量的值。假设你想知道下面这个函数中 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的值：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">inc</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 </pre></div>
 </div>
-</li>
-</ul>
-<p>只需添加以下行即可打印该值：</p>
+<p>那么只要加上一行打印它的代码即可：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">inc</span> <span class="n">x</span> <span class="o">=</span>
   <span class="k">let</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">print_int</span> <span class="n">x</span> <span class="k">in</span>
   <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 </pre></div>
 </div>
-<ul>
-<li><p><strong>函数跟踪。</strong> 假设你想查看递归调用的<em>跟踪</em>
-并返回一个函数。使用 <code class="docutils literal notranslate"><span class="pre">#trace</span></code> 指令：</p>
+</li>
+<li><p><strong>函数跟踪。</strong> 假设你想看一个函数递归调用与返回的<em>轨迹</em>（trace），可以使用 <code class="docutils literal notranslate"><span class="pre">#trace</span></code> 指令：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="k">rec</span> <span class="n">fib</span> <span class="n">x</span> <span class="o">=</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">fib</span> <span class="o">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">fib</span> <span class="o">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">2</span><span class="o">);;</span>
 <span class="o">#</span> <span class="o">#</span><span class="n">trace</span> <span class="n">fib</span><span class="o">;;</span>
 </pre></div>
 </div>
-</li>
-</ul>
-<p>如果你求值 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">2</span></code>，你现在将看到以下输出：</p>
+<p>如果你对 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">2</span></code> 求值，就会看到如下输出：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fib &lt;-- 2
 fib &lt;-- 0
 fib --&gt; 1
@@ -738,36 +673,23 @@ fib --&gt; 1
 fib --&gt; 2
 </pre></div>
 </div>
-<p>要停止跟踪，请使用 <code class="docutils literal notranslate"><span class="pre">#untrace</span></code> 指令。</p>
-<ul class="simple">
-<li><p><strong>调试器。</strong> OCaml 有一个调试工具 <code class="docutils literal notranslate"><span class="pre">ocamldebug</span></code>。你可以找到一个
-<a class="reference external" href="https://ocaml.org/learn/tutorials/debug.html#The-OCaml-debugger">tutorial</a> 开启
-OCaml 网站。除非你使用 Emacs 作为编辑器，否则你将
-可能会发现这个工具比插入打印更难使用
-声明。</p></li>
+<p>若要停止跟踪，可以使用 <code class="docutils literal notranslate"><span class="pre">#untrace</span></code> 指令。</p>
+</li>
+<li><p><strong>调试器。</strong> OCaml 自带一个调试工具 <code class="docutils literal notranslate"><span class="pre">ocamldebug</span></code>。你可以在 OCaml 官网找到它的 <a class="reference external" href="https://ocaml.org/learn/tutorials/debug.html#The-OCaml-debugger">教程</a>。除非你使用 Emacs 作为编辑器，否则你大概率会觉得这个工具还不如直接插入打印语句来得顺手。</p></li>
 </ul>
 </section>
 <section id="id3">
 <h2><span class="section-number">2.7.4. </span>防御性编程<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
-<p>正如我们在调试部分前面讨论的那样，针对错误的一种防御措施是
-使任何错误（或错误）立即可见。这个想法与想法相联系
-的先决条件。</p>
-<p>考虑 <code class="docutils literal notranslate"><span class="pre">random_int</span></code> 的规范：</p>
+<p>正如我们前面在调试部分提到的那样，对抗 bug 的一种方式，是让任何 bug（或错误）都能立刻显现出来。这和前置条件的思想密切相关。</p>
+<p>考虑 <code class="docutils literal notranslate"><span class="pre">random_int</span></code> 的下面这条规格说明：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [random_int bound] is a random integer between 0 (inclusive)</span>
 <span class="c">    and [bound] (exclusive).  Requires: [bound] is greater than 0</span>
 <span class="c">    and less than 2^30. *)</span>
 </pre></div>
 </div>
-<p>如果 <code class="docutils literal notranslate"><span class="pre">random_int</span></code> 的客户端传递了违反了 <code class="docutils literal notranslate"><span class="pre">bound</span></code> 的值
-“Requires”子句，如<code class="docutils literal notranslate"><span class="pre">-1</span></code>，<code class="docutils literal notranslate"><span class="pre">random_int</span></code>的实现可以自由
-做任何事。当客户违反规定时，一切都将失败
-前提条件。</p>
-<p>但对 <code class="docutils literal notranslate"><span class="pre">random_int</span></code> 来说最有帮助的事情就是立即暴露
-前提条件被违反的事实。毕竟，客户很可能
-并没有“故意”违反它。</p>
-<p>因此 <code class="docutils literal notranslate"><span class="pre">random_int</span></code> 的实现者最好检查是否
-违反前提条件，如果是，则引发异常。这是三个
-这种<em>防御性编程的可能性：</em></p>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">random_int</span></code> 的调用者传入了一个违反 <code class="docutils literal notranslate"><span class="pre">Requires</span></code> 子句的 <code class="docutils literal notranslate"><span class="pre">bound</span></code> 值，例如 <code class="docutils literal notranslate"><span class="pre">-1</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">random_int</span></code> 的实现理论上就可以“为所欲为”。一旦调用者违背了前置条件，就不能再对函数行为作任何保证。</p>
+<p>但对 <code class="docutils literal notranslate"><span class="pre">random_int</span></code> 来说，最有帮助的做法其实是立即暴露“前置条件被破坏了”这一事实。毕竟，调用者大概率并不是<em>故意</em>要违反它。</p>
+<p>因此，<code class="docutils literal notranslate"><span class="pre">random_int</span></code> 的实现者最好检查前置条件是否被违反；如果违反了，就抛出异常。下面是三种这种<em>防御性编程</em>的写法：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(* possibility 1 *)</span>
 <span class="k">let</span> <span class="n">random_int</span> <span class="n">bound</span> <span class="o">=</span>
   <span class="k">assert</span> <span class="o">(</span><span class="n">bound</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">bound</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">lsl</span> <span class="mi">30</span><span class="o">);</span>
@@ -786,38 +708,19 @@ OCaml 网站。除非你使用 Emacs 作为编辑器，否则你将
   <span class="c">(* proceed with the implementation of the function *)</span>
 </pre></div>
 </div>
-<p>第二种可能性可能对客户来说信息最丰富，因为
-它使用内置函数 <code class="docutils literal notranslate"><span class="pre">invalid_arg</span></code> 来引发命名良好的异常
-<code class="docutils literal notranslate"><span class="pre">Invalid_argument</span></code>。事实上，这正是标准库的内容
-这个函数的实现确实如此。</p>
-<p>当你尝试调试你的系统时，第一种可能性可能最有用
-自己的代码，而不是选择向客户端公开失败的断言。</p>
-<p>第三种可能性与第二种的不同之处仅在于名称 (<code class="docutils literal notranslate"><span class="pre">Failure</span></code>)
-引发的异常。它可能在以下情况下有用：
-前提条件不仅仅涉及一个无效参数。</p>
-<p>在此示例中，检查前提条件的计算成本很低。在其他方面
-在某些情况下，它可能需要大量计算，因此函数的实现者
-可能宁愿不检查前提条件，或者只检查一些便宜的
-对其进行近似。</p>
-<p>有时程序员会不必要地担心防御性编程太
-昂贵—无论是最初实现检查所需的时间，
-还是检查断言时付出的运行时成本。这些担忧常常是错误的。
-社会为修复软件故障付出的时间和金钱成本表明，
-我们完全承受得起运行速度稍慢一些的程序。</p>
-<p>最后，实现者甚至可能选择消除前提条件并
-将其重述为后置条件：</p>
+<p>第二种写法对调用者来说大概最有信息量，因为它使用内置函数 <code class="docutils literal notranslate"><span class="pre">invalid_arg</span></code> 抛出了一个名字很明确的异常 <code class="docutils literal notranslate"><span class="pre">Invalid_argument</span></code>。事实上，这正是标准库中这个函数的实现方式。</p>
+<p>第一种写法更适合你在调试自己的代码时使用，而不是把断言失败直接暴露给调用者。</p>
+<p>第三种写法和第二种的区别，只在于所抛出的异常名字不同：它抛出的是 <code class="docutils literal notranslate"><span class="pre">Failure</span></code>。当某个前置条件不止涉及一个无效参数时，这种写法有时会更合适。</p>
+<p>在这个例子里，检查前置条件的计算成本很低。但在别的场景中，前置条件检查可能代价高昂，因此函数实现者也可能选择不检查，或者只检查一个成本较低的近似条件。</p>
+<p>有时程序员会过度担心防御性编程太昂贵，不管是实现这些检查本身所花的时间，还是运行时做断言检查所增加的成本。这种担忧往往并不成立。社会为了修复软件缺陷所付出的时间和金钱，已经足以说明：哪怕程序因此运行得稍微慢一点，我们也完全承担得起。</p>
+<p>最后，实现者甚至可能选择彻底取消前置条件，转而把它改写成后置条件：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [random_int bound] is a random integer between 0 (inclusive)</span>
 <span class="c">    and [bound] (exclusive).  Raises: [Invalid_argument &quot;bound&quot;]</span>
 <span class="c">    unless [bound] is greater than 0 and less than 2^30. *)</span>
 </pre></div>
 </div>
-<p>现在，当 <code class="docutils literal notranslate"><span class="pre">bound</span></code> 太大或太小时时，不再可以自由地做任何事情，
-<code class="docutils literal notranslate"><span class="pre">random_int</span></code> 必须引发异常。对于这个函数来说，这可能是
-最好的选择。</p>
-<p>在本课程中，我们不会强迫你进行防御性编程。但如果
-你很精明，无论如何你都会开始（或继续）这样做。少量的
-你花在编码此类防御上的时间将为你节省数小时的调试时间，
-让你成为一个更有生产力的程序员。</p>
+<p>这样一来，当 <code class="docutils literal notranslate"><span class="pre">bound</span></code> 太大或太小时，<code class="docutils literal notranslate"><span class="pre">random_int</span></code> 就不再是“想做什么都行”，而是必须抛出异常。对这个函数来说，这大概是更好的选择。</p>
+<p>在这门课里，我们不会强制你采用防御性编程。但如果你够老练，你大概会主动开始这样做，或者继续这样做。你在编写这些防线时投入的那一点点时间，往往会在后面的调试中帮你节省数小时，让你成为更高效的程序员。</p>
 </section>
 </section>
 
@@ -885,7 +788,7 @@ OCaml 网站。除非你使用 Emacs 作为编辑器，否则你将
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bug">2.7.1. 防御 Bug</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bug">2.7.1. 对抗 Bug 的防线</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2.7.2. 如何调试</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ocaml">2.7.3. 在 OCaml 中调试</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">2.7.4. 防御性编程</a></li>

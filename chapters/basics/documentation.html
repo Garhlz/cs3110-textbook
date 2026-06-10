@@ -187,7 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">2. OCaml 基础知识</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">2. OCaml 基础</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="toplevel.html">2.1. OCaml 顶层</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">2.2. 编译 OCaml 程序</a></li>
 <li class="toctree-l2"><a class="reference internal" href="expressions.html">2.3. 表达式</a></li>
@@ -530,9 +530,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2.5.1. 如何记录</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">2.5.2. 记录什么</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">2.5.3. 前提条件和后置条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2.5.1. 如何写文档</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">2.5.2. 写什么文档</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">2.5.3. 前置条件与后置条件</a></li>
 </ul>
             </nav>
         </div>
@@ -546,57 +546,38 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">2.5. </span>文档<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>OCaml 提供了一个名为 OCamldoc 的工具，其工作方式与 Java 的 Javadoc 工具非常相似：
-它从源代码中提取特殊格式的注释并将其呈现为
-HTML，使程序员可以轻松阅读文档。</p>
+<p>OCaml 提供了一个名为 OCamldoc 的工具，它的工作方式很像 Java 的 Javadoc：从源代码中提取特定格式的注释，并将其渲染成 HTML，方便程序员阅读文档。</p>
 <section id="id2">
-<h2><span class="section-number">2.5.1. </span>如何记录<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>以下是 OCamldoc 注释的示例：</p>
+<h2><span class="section-number">2.5.1. </span>如何写文档<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>下面是一个 OCamldoc 注释的例子：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [sum lst] is the sum of the elements of [lst]. *)</span>
 <span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">lst</span> <span class="o">=</span> <span class="o">...</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>双星号会让注释被识别为 OCamldoc
-注释。</p></li>
-<li><p>注释部分周围的方括号意味着这些部分应该
-在 HTML 中呈现为 <code class="docutils literal notranslate"><span class="pre">typewriter</span> <span class="pre">font</span></code> 而不是常规字体。</p></li>
+<li><p>双星号会让这条注释被识别为 OCamldoc 注释。</p></li>
+<li><p>注释中带方括号的部分，在 HTML 中会以 <code class="docutils literal notranslate"><span class="pre">typewriter</span> <span class="pre">font</span></code> 而不是普通字体显示。</p></li>
 </ul>
-<p>与 Javadoc 一样，OCamldoc 支持<em>文档标签</em>，例如 <code class="docutils literal notranslate"><span class="pre">&#64;author</span></code>，
-<code class="docutils literal notranslate"><span class="pre">&#64;deprecated</span></code>、<code class="docutils literal notranslate"><span class="pre">&#64;param</span></code>、<code class="docutils literal notranslate"><span class="pre">&#64;return</span></code> 等</p>
-<p>有关 OCamldoc 注释中可能的全部标记，请参阅
-<a class="reference external" href="https://ocaml.org/manual/ocamldoc.html">OCamldoc 手册</a>。
-但我们在这里介绍的内容对于你将要阅读的大多数文档来说已经足够了
-需要编写的内容来说已经足够了。</p>
+<p>和 Javadoc 一样，OCamldoc 也支持<em>文档标签</em>（documentation tags），例如 <code class="docutils literal notranslate"><span class="pre">&#64;author</span></code>、<code class="docutils literal notranslate"><span class="pre">&#64;deprecated</span></code>、<code class="docutils literal notranslate"><span class="pre">&#64;param</span></code>、<code class="docutils literal notranslate"><span class="pre">&#64;return</span></code> 等。</p>
+<p>关于 OCamldoc 注释中可用的完整标记语法，可以参考 <a class="reference external" href="https://ocaml.org/manual/ocamldoc.html">OCamldoc 手册</a>。不过，这里介绍的内容已经足够覆盖你大多数时候需要编写的文档了。</p>
 </section>
 <section id="id3">
-<h2><span class="section-number">2.5.2. </span>记录什么<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
-<p>我们在本书中喜欢的文档风格类似于 OCaml 的文档风格
-标准库：简洁且声明式。作为一个例子，让我们回顾一下
-<code class="docutils literal notranslate"><span class="pre">sum</span></code> 的文档：</p>
+<h2><span class="section-number">2.5.2. </span>写什么文档<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>本书所偏好的文档风格，和 OCaml 标准库很接近：简洁、声明式。还是以 <code class="docutils literal notranslate"><span class="pre">sum</span></code> 为例：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [sum lst] is the sum of the elements of [lst]. *)</span>
 <span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">lst</span> <span class="o">=</span> <span class="o">...</span>
 </pre></div>
 </div>
-<p>该注释以 <code class="docutils literal notranslate"><span class="pre">sum</span> <span class="pre">lst</span></code> 开头，这是函数应用到参数的示例。
-该注释接着使用 “is” 一词，从而以声明式方式描述应用的结果。
-（也可以使用 “returns” 一词，但 “is” 强调了
-函数的数学本质
-函数。）该描述使用参数名称 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 来解释
-结果。</p>
-<p>请注意，无需添加标签来冗余描述参数或
-返回值，就像 Javadoc 经常做的那样。所有需要说的
-已经说过了。我们强烈反对如下文档：</p>
+<p>这条注释以 <code class="docutils literal notranslate"><span class="pre">sum</span> <span class="pre">lst</span></code> 开头，这是一个把函数应用到参数上的示例。接着用 <code class="docutils literal notranslate"><span class="pre">is</span></code> 来声明式地说明这个应用的结果。（当然也可以用 <code class="docutils literal notranslate"><span class="pre">returns</span></code>，但 <code class="docutils literal notranslate"><span class="pre">is</span></code> 更能体现函数的数学意味。）在这段描述里，参数名 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 被直接拿来解释结果。</p>
+<p>注意，这里完全不需要像 Javadoc 那样，再额外加标签去重复描述参数和返回值。需要说的信息其实已经都说完了。我们非常不推荐下面这种写法：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** Sum a list.</span>
 <span class="c">    @param lst The list to be summed.</span>
 <span class="c">    @return The sum of the list. *)</span>
 <span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">lst</span> <span class="o">=</span> <span class="o">...</span>
 </pre></div>
 </div>
-<p>这份糟糕的文档需要三行不必要的难以阅读的行来说明
-与清晰的单行版本相同。</p>
-<p>有一种方法可以改进我们目前拥有的文档，那就是
-明确说明空列表会发生什么：</p>
+<p>这份糟糕的文档用了三行、而且并不好读，只是表达了那条清晰的一行版本已经表达过的同样内容。</p>
+<p>如果想进一步改进已有的文档，一个办法是把空列表的情况也明确写出来：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [sum lst] is the sum of the elements of [lst].</span>
 <span class="c">    The sum of an empty list is 0. *)</span>
 <span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">lst</span> <span class="o">=</span> <span class="o">...</span>
@@ -604,8 +585,8 @@ HTML，使程序员可以轻松阅读文档。</p>
 </div>
 </section>
 <section id="id4">
-<h2><span class="section-number">2.5.3. </span>前提条件和后置条件<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
-<p>以下是一些以我们喜欢的风格撰写的注释示例。</p>
+<h2><span class="section-number">2.5.3. </span>前置条件与后置条件<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>下面再看几个符合我们偏好风格的注释示例：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [lowercase_ascii c] is the lowercase ASCII equivalent of</span>
 <span class="c">    character [c]. *)</span>
 
@@ -618,39 +599,17 @@ HTML，使程序员可以轻松阅读文档。</p>
 <span class="c">    and less than 2^30. *)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">index</span></code> 的文档指定该函数引发异常，如下所示
-以及该异常是什么以及引发该异常的条件。 （我们
-将在下一章中更详细地介绍异常。）
-<code class="docutils literal notranslate"><span class="pre">random_int</span></code> 指定函数的参数必须满足条件。</p>
-<p>在之前的课程中，你接触过<em>先决条件</em>和
-<em>后置条件</em>。前提条件是在某些事情发生之前必须为真的事情
-代码片段；后置条件则是在代码执行之后必须为真的性质。</p>
-<p><code class="docutils literal notranslate"><span class="pre">random_int</span></code> 文档中的上述“Requires”子句是一种
-前提条件。它说 <code class="docutils literal notranslate"><span class="pre">random_int</span></code> 函数的客户端是
-负责保证 <code class="docutils literal notranslate"><span class="pre">bound</span></code> 的值。同样，
-同一文档的第一句话是一种后置条件。它
-保证函数返回值的某些内容。</p>
-<p><code class="docutils literal notranslate"><span class="pre">index</span></code> 文档中的“Raises”子句是另一种
-后置条件。它保证该函数引发异常。
-请注意，该子句不是先决条件，即使它陈述了一个条件
-输入项。</p>
-<p>请注意，这些示例都没有一个“Requires”子句来说明什么
-关于输入的类型。如果你来自动态类型语言，
-就像 Python 一样，这可能会令人惊讶。 Python 程序员经常记录
-关于函数输入类型的前提条件。 OCaml 程序员，
-然而，不这样做。这是因为编译器本身会进行类型检查
-确保永远不会将错误类型的值传递给函数。考虑
-<code class="docutils literal notranslate"><span class="pre">lowercase_ascii</span></code> 再次：尽管英文注释有助于识别
-<code class="docutils literal notranslate"><span class="pre">c</span></code> 的类型给读者，注释没有声明“Requires”子句，例如
-这个：</p>
+<p><code class="docutils literal notranslate"><span class="pre">index</span></code> 的文档说明了这个函数会抛出异常，也说明了异常是什么，以及在什么条件下会抛出。（我们会在下一章更详细地讨论异常。）<code class="docutils literal notranslate"><span class="pre">random_int</span></code> 的文档则说明了该函数参数必须满足某个条件。</p>
+<p>在之前的课程里，你应该已经接触过<em>前置条件</em>（precondition）和<em>后置条件</em>（postcondition）的概念。前置条件是某段代码执行之前必须为真的条件；后置条件则是代码执行之后必须为真的条件。</p>
+<p><code class="docutils literal notranslate"><span class="pre">random_int</span></code> 文档中的 <code class="docutils literal notranslate"><span class="pre">Requires</span></code> 子句就是一种前置条件。它表示：<code class="docutils literal notranslate"><span class="pre">random_int</span></code> 的调用者有责任保证 <code class="docutils literal notranslate"><span class="pre">bound</span></code> 的值满足这个条件。相应地，同一条文档中的第一句话则是一种后置条件，它保证了函数返回值具有什么性质。</p>
+<p><code class="docutils literal notranslate"><span class="pre">index</span></code> 文档中的 <code class="docutils literal notranslate"><span class="pre">Raises</span></code> 子句则是另一种后置条件。它保证了该函数会抛出某个异常。注意，尽管这个子句用输入条件来表述，但它并不是前置条件。</p>
+<p>还要注意，这几个例子里都没有写“某个输入必须是什么类型”这样的 <code class="docutils literal notranslate"><span class="pre">Requires</span></code> 子句。如果你来自 Python 这类动态类型语言，这可能会让你有点意外。Python 程序员经常会把“函数参数必须是什么类型”写成前置条件；但 OCaml 程序员通常不会这么做。原因在于：编译器自己就会完成类型检查，保证你不会把错误类型的值传给函数。</p>
+<p>再看 <code class="docutils literal notranslate"><span class="pre">lowercase_ascii</span></code>。虽然英文注释本身已经有助于读者看出 <code class="docutils literal notranslate"><span class="pre">c</span></code> 的类型，但它并不会再额外写出像下面这样的 <code class="docutils literal notranslate"><span class="pre">Requires</span></code> 子句：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [lowercase_ascii c] is the lowercase ASCII equivalent of [c].</span>
 <span class="c">    Requires: [c] is a character. *)</span>
 </pre></div>
 </div>
-<p>对于 OCaml 程序员来说，这样的注释读起来非常不惯用，他们会
-阅读该注释并感到困惑，也许会想：“当然 <code class="docutils literal notranslate"><span class="pre">c</span></code> 是一个
-字符；编译器会保证这一点。写这句话的人到底想表达什么？
-他们遗漏了什么，还是我遗漏了什么？”</p>
+<p>对于 OCaml 程序员来说，这种注释显得非常不符合习惯。他们读到时很可能会疑惑：“<code class="docutils literal notranslate"><span class="pre">c</span></code> 当然是字符啊，编译器本来就会保证这一点。写这句话的人到底真正想表达什么？是他漏了什么，还是我漏了什么？”</p>
 </section>
 </section>
 
@@ -718,9 +677,9 @@ HTML，使程序员可以轻松阅读文档。</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2.5.1. 如何记录</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">2.5.2. 记录什么</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">2.5.3. 前提条件和后置条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2.5.1. 如何写文档</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">2.5.2. 写什么文档</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">2.5.3. 前置条件与后置条件</a></li>
 </ul>
   </nav></div>
 

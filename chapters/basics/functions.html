@@ -189,7 +189,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">2. OCaml 基础知识</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">2. OCaml 基础</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="toplevel.html">2.1. OCaml 顶层</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">2.2. 编译 OCaml 程序</a></li>
 <li class="toctree-l2"><a class="reference internal" href="expressions.html">2.3. 表达式</a></li>
@@ -603,10 +603,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">2.4.3. 函数应用</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">2.4.4. 管道</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">2.4.5. 多态函数</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">2.4.6. 带标签和可选参数</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">2.4.6. 带标签参数与可选参数</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">2.4.7. 部分应用</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">2.4.8. 函数结合性</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">2.4.9. 作为函数的运算符</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">2.4.8. 函数的结合性</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">2.4.9. 把运算符当作函数</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">2.4.10. 尾递归</a></li>
 </ul>
             </nav>
@@ -621,42 +621,32 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">2.4. </span>函数<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>由于 OCaml 是一种函数式语言，所以关于函数有很多要学的内容。让我们开始吧。</p>
+<p>既然 OCaml 是一门函数式语言，那么关于函数自然有很多内容要讲。现在就开始。</p>
 <div class="admonition important">
 <p class="admonition-title">重要</p>
-<p>方法和函数不是同一个概念。方法是对象的一个组件，它隐式地有一个接收器，通常用关键字 <code class="docutils literal notranslate"><span class="pre">this</span></code> 或 <code class="docutils literal notranslate"><span class="pre">self</span></code> 访问。OCaml 的函数不是方法：它们不是对象的组件，也没有接收器。</p>
-<p>有人可能会说所有方法都是函数，但不是所有函数都是方法。有些人甚至会进一步区分函数和过程。过程是指那些不返回有意义值的函数，比如 Java 中的 <code class="docutils literal notranslate"><span class="pre">void</span></code> 返回类型或 Python 中的 <code class="docutils literal notranslate"><span class="pre">None</span></code> 返回值。</p>
-<p>所以如果你来自面向对象的背景，请注意术语。<strong>这里的一切严格来说都是函数，不是方法。</strong></p>
+<p>方法（method）和函数（function）不是同一个概念。方法是对象的组成部分，并且它隐含地带有一个接收者（receiver），通常通过 <code class="docutils literal notranslate"><span class="pre">this</span></code> 或 <code class="docutils literal notranslate"><span class="pre">self</span></code> 这样的关键字来访问。OCaml 的函数不是方法：它们不是对象的组成部分，也没有接收者。</p>
+<p>有些人会说，所有方法都是函数，但不是所有函数都是方法。也有人会进一步区分函数和过程（procedure）：所谓过程，是那些不会返回任何有意义值的函数，例如 Java 中返回 <code class="docutils literal notranslate"><span class="pre">void</span></code> 的函数，或 Python 中返回 <code class="docutils literal notranslate"><span class="pre">None</span></code> 的函数。</p>
+<p>所以，如果你来自面向对象背景，请务必注意术语。<strong>本节里讨论的严格来说都是函数，不是方法。</strong></p>
 </div>
 <section id="id2">
 <h2><span class="section-number">2.4.1. </span>函数定义<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/vCxIlagS7kA" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>下面的代码</p>
+<p>下面这段代码</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">42</span>
 </pre></div>
 </div>
-<p>其中有一个表达式 (<code class="docutils literal notranslate"><span class="pre">42</span></code>)，但它本身不是表达式。相反，它是一个
-<em>定义</em>。定义会把值绑定到名称；在这个例子中，值 <code class="docutils literal notranslate"><span class="pre">42</span></code>
-被绑定到名称 <code class="docutils literal notranslate"><span class="pre">x</span></code>。OCaml 手册描述了
-<a class="reference external" href="https://ocaml.org/manual/modules.html">定义</a>（参见该页面上第三个主要分组，标题为“<em>definition</em>”），
-但该手册页主要还是供参考，而不是用来学习。
-定义不是表达式，表达式也不是定义 — 它们是不同的语法类别。</p>
-<p>现在，让我们关注一种特定类型的定义，<em>函数
-定义</em>。非递归函数的定义如下：</p>
+<p>其中确实包含了一个表达式（<code class="docutils literal notranslate"><span class="pre">42</span></code>），但它本身不是表达式，而是一个<em>定义</em>（definition）。定义会把值绑定到名字上；在这里，就是把值 <code class="docutils literal notranslate"><span class="pre">42</span></code> 绑定到名字 <code class="docutils literal notranslate"><span class="pre">x</span></code>。OCaml 手册对<a class="reference external" href="https://ocaml.org/manual/modules.html">定义</a>有所说明（参见该页中标题为 <code class="docutils literal notranslate"><span class="pre">definition</span></code> 的第三个大分组），不过和前面一样，那一页主要是参考资料，而不是学习材料。定义不是表达式，表达式也不是定义，它们属于不同的语法类别。</p>
+<p>现在，我们先聚焦于一种特殊的定义：<em>函数定义</em>。非递归函数的定义形式如下：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="o">...</span>
 </pre></div>
 </div>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/_x82qitu2R8" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>递归函数的定义如下：</p>
+<p>递归函数的定义形式如下：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="o">...</span>
 </pre></div>
 </div>
-<p>区别只是 <code class="docutils literal notranslate"><span class="pre">rec</span></code> 关键字。这可能有点令人惊讶
-你必须明确地添加一个关键字来使函数递归，因为大多数
-语言默认认为它们是。 OCaml 没有做出这样的假设，
-不过。 （Scheme 语言家族也没有。）</p>
-<p>最著名的递归函数之一是阶乘函数。在 OCaml 中，
-可以写成如下：</p>
+<p>两者的区别只在于关键字 <code class="docutils literal notranslate"><span class="pre">rec</span></code>。这一点可能多少有些令人意外，因为在大多数语言里，函数默认就可以递归调用自己，而你不用额外写一个关键字。不过 OCaml 并不作这种假设。（Scheme 语言家族也不这样。）</p>
+<p>最著名的递归函数之一是阶乘函数。在 OCaml 中，它可以写成这样：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [fact n] is [n!].</span>
@@ -671,17 +661,9 @@ document.write(`
 </div>
 </div>
 </div>
-<p>我们在函数上方提供了规范注释来记录
-函数的前置条件 (<code class="docutils literal notranslate"><span class="pre">Requires</span></code>) 和后置条件 (<code class="docutils literal notranslate"><span class="pre">is</span></code>)。</p>
-<p>请注意，和许多语言一样，OCaml 整数不是“数学意义上”的整数，
-而是受固定比特数限制。<a class="reference external" href="https://ocaml.org/manual/values.html#sss:values:integer">手册</a>规定，（有符号）整数至少有
-31 位，但也可能更宽。随着体系结构的发展，这个大小也在增长。
-在当前实现中，OCaml 整数是 63 位。因此，如果你用足够大的输入做测试，
-可能会开始看到奇怪的结果。问题出在机器算术，而不是 OCaml。
-（感兴趣的读者可能会问：为什么是 31 或 63，而不是 32 或 64？
-OCaml 垃圾收集器需要区分整数和指针。因此，它们的运行时表示会借用一位，
-用来标记一个机器字是整数还是指针。）</p>
-<p>这是另一个递归函数：</p>
+<p>我们在函数上方写了规格注释，用来记录这个函数的前置条件（<code class="docutils literal notranslate"><span class="pre">Requires</span></code>）和后置条件（<code class="docutils literal notranslate"><span class="pre">is</span></code>）。</p>
+<p>要注意的是，和许多语言一样，OCaml 的整数并不是“数学意义上的整数”，而是受限于固定比特宽度。<a class="reference external" href="https://ocaml.org/manual/values.html#sss:values:integer">手册</a>规定，（有符号）整数至少有 31 位，但也可能更宽。随着体系结构的发展，这个大小也在增大。在当前实现中，OCaml 的整数是 63 位的。所以如果你用足够大的输入测试，可能会开始看到一些奇怪结果。问题不在 OCaml，而在机器算术本身。（有兴趣的读者也许会问：为什么是 31 或 63，而不是 32 或 64？这是因为 OCaml 的垃圾回收器需要区分整数和指针，因此运行时表示会借走一位，用来标记一个机器字是整数还是指针。）</p>
+<p>下面是另一个递归函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [pow x y] is [x] to the power of [y].</span>
@@ -696,42 +678,26 @@ OCaml 垃圾收集器需要区分整数和指针。因此，它们的运行时�
 </div>
 </div>
 </div>
-<p>请注意，我们不必在这两个函数中写出任何类型：OCaml
-编译器会自动为我们推断它们。编译器用算法解决这个<em>类型推断</em>问题，
-但我们也可以自己推断。它就像一个可以靠推理能力解开的谜题：</p>
+<p>注意，在这两个函数里我们都没有写出类型：OCaml 编译器会自动替我们推断出来。编译器通过算法来解决这个<em>类型推断</em>问题，但我们自己其实也可以推出来。这有点像一则依靠推理来解开的谜题：</p>
 <ul class="simple">
-<li><p>由于 <code class="docutils literal notranslate"><span class="pre">if</span></code> 表达式可以在 <code class="docutils literal notranslate"><span class="pre">then</span></code> 分支中返回 <code class="docutils literal notranslate"><span class="pre">1</span></code>，根据 <code class="docutils literal notranslate"><span class="pre">if</span></code> 的类型规则，
-整个 <code class="docutils literal notranslate"><span class="pre">if</span></code> 表达式的类型是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p></li>
-<li><p>由于 <code class="docutils literal notranslate"><span class="pre">if</span></code> 表达式的类型是 <code class="docutils literal notranslate"><span class="pre">int</span></code>，该函数的返回类型也必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p></li>
-<li><p>由于 <code class="docutils literal notranslate"><span class="pre">y</span></code> 使用相等运算符与 <code class="docutils literal notranslate"><span class="pre">0</span></code> 比较，<code class="docutils literal notranslate"><span class="pre">y</span></code> 必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p></li>
-<li><p>由于 <code class="docutils literal notranslate"><span class="pre">x</span></code> 使用 <code class="docutils literal notranslate"><span class="pre">*</span></code> 运算符与另一个表达式相乘，<code class="docutils literal notranslate"><span class="pre">x</span></code> 必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p></li>
+<li><p>由于 <code class="docutils literal notranslate"><span class="pre">if</span></code> 表达式在 <code class="docutils literal notranslate"><span class="pre">then</span></code> 分支中会返回 <code class="docutils literal notranslate"><span class="pre">1</span></code>，根据 <code class="docutils literal notranslate"><span class="pre">if</span></code> 的类型规则，整个 <code class="docutils literal notranslate"><span class="pre">if</span></code> 表达式的类型就是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p></li>
+<li><p>既然这个 <code class="docutils literal notranslate"><span class="pre">if</span></code> 表达式的类型是 <code class="docutils literal notranslate"><span class="pre">int</span></code>，那么函数的返回类型也必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p></li>
+<li><p>由于 <code class="docutils literal notranslate"><span class="pre">y</span></code> 用相等运算符和 <code class="docutils literal notranslate"><span class="pre">0</span></code> 比较，所以 <code class="docutils literal notranslate"><span class="pre">y</span></code> 必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p></li>
+<li><p>由于 <code class="docutils literal notranslate"><span class="pre">x</span></code> 用 <code class="docutils literal notranslate"><span class="pre">*</span></code> 和另一个表达式相乘，所以 <code class="docutils literal notranslate"><span class="pre">x</span></code> 也必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p></li>
 </ul>
-<p>如果我们出于某种原因想写下类型，我们可以这样做：</p>
+<p>如果出于某种原因我们想把类型写出来，也可以这样写：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">pow</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">(</span><span class="n">y</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">=</span> <span class="o">...</span>
 </pre></div>
 </div>
-<p>当我们为 <code class="docutils literal notranslate"><span class="pre">x</span></code> 编写<em>类型注释</em>时，括号是必需的
-<code class="docutils literal notranslate"><span class="pre">y</span></code>。我们通常会省略这些注释，因为这样更简单
-编译器推断它们。有时你会想要明确地
-写下类型。一个特别有用的时间是当你从以下位置收到类型错误时
-你不明白的编译器。显式注释类型会有所帮助
-调试此类错误消息。</p>
+<p>给 <code class="docutils literal notranslate"><span class="pre">x</span></code> 和 <code class="docutils literal notranslate"><span class="pre">y</span></code> 写<em>类型注解</em>时，括号是必须的。通常我们会省略这些注解，因为让编译器自己推断会更简单。不过有时你也会想显式写出类型。特别有用的一种场景，是当编译器给出你看不懂的类型错误时。显式标注类型往往有助于调试这类错误信息。</p>
 <p><strong>语法。</strong>
-函数定义的语法：</p>
+函数定义的语法是：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">f</span> <span class="n">x1</span> <span class="n">x2</span> <span class="o">...</span> <span class="n">xn</span> <span class="o">=</span> <span class="n">e</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">f</span></code> 是一个元变量，指示用作函数的标识符
-名字。这些标识符必须以小写字母开头。剩余的
-可以在手册中找到<a class="reference external" href="https://ocaml.org/manual/lex.html#lowercase-ident">小写标识符的规则</a>。
-名称 <code class="docutils literal notranslate"><span class="pre">x1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">xn</span></code> 是指示参数标识符的元变量。这些
-遵循与函数标识符相同的规则。如果出现以下情况，则需要关键字 <code class="docutils literal notranslate"><span class="pre">rec</span></code>
-<code class="docutils literal notranslate"><span class="pre">f</span></code> 是一个递归函数；否则可以省略。</p>
-<p>请注意，函数定义的语法实际上比
-OCaml 真正允许的。我们将详细了解一些增强语法
-在接下来的几周内定义函数。但就目前而言，这简化了
-版本将帮助我们集中注意力。</p>
-<p>可以使用 <code class="docutils literal notranslate"><span class="pre">and</span></code> 关键字定义相互递归函数：</p>
+<p>其中，<code class="docutils literal notranslate"><span class="pre">f</span></code> 是一个元变量，表示用作函数名的标识符。这些标识符必须以小写字母开头。关于小写标识符的其余<a class="reference external" href="https://ocaml.org/manual/lex.html#lowercase-ident">规则</a>，可以在手册中查到。名字 <code class="docutils literal notranslate"><span class="pre">x1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">xn</span></code> 也是元变量，表示参数标识符，它们遵循和函数标识符相同的规则。如果 <code class="docutils literal notranslate"><span class="pre">f</span></code> 是递归函数，就必须写关键字 <code class="docutils literal notranslate"><span class="pre">rec</span></code>；否则可以省略。</p>
+<p>注意，这里给出的函数定义语法其实是经过简化的，比 OCaml 实际允许的写法更少一些。接下来几周，我们会学习更多函数定义的扩展语法。不过现在先用这个简化版本，有助于把注意力集中在核心概念上。</p>
+<p>相互递归函数可以使用关键字 <code class="docutils literal notranslate"><span class="pre">and</span></code> 来定义：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">f</span> <span class="n">x1</span> <span class="o">...</span> <span class="n">xn</span> <span class="o">=</span> <span class="n">e1</span>
 <span class="k">and</span> <span class="n">g</span> <span class="n">y1</span> <span class="o">...</span> <span class="n">yn</span> <span class="o">=</span> <span class="n">e2</span>
 </pre></div>
@@ -765,35 +731,19 @@ val odd : int -&gt; bool = &lt;fun&gt;
 <span class="n">t1</span> <span class="o">-&gt;</span> <span class="o">...</span> <span class="o">-&gt;</span> <span class="n">tn</span> <span class="o">-&gt;</span> <span class="n">u</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">t</span></code> 和 <code class="docutils literal notranslate"><span class="pre">u</span></code> 是指示类型的元变量。类型 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code> 是以下类型
-接受 <code class="docutils literal notranslate"><span class="pre">t</span></code> 类型的输入并返回 <code class="docutils literal notranslate"><span class="pre">u</span></code> 类型的输出的函数。我们
-可以将 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code> 视为采用两个输入的函数类型，
-第一个类型为 <code class="docutils literal notranslate"><span class="pre">t1</span></code> ，第二个类型为 <code class="docutils literal notranslate"><span class="pre">t2</span></code> ，并返回输出
-输入 <code class="docutils literal notranslate"><span class="pre">u</span></code>。对于采用 <code class="docutils literal notranslate"><span class="pre">n</span></code> 参数的函数也是如此。</p>
-<p><strong>动态语义。</strong> 函数定义没有动态语义。
-没有什么可以评价的。 OCaml 只是记录名称 <code class="docutils literal notranslate"><span class="pre">f</span></code> 被绑定
-具有给定参数 <code class="docutils literal notranslate"><span class="pre">x1..xn</span></code> 和给定主体 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的函数。仅
-以后应用这个函数的时候，会不会做一些评估呢？</p>
-<p><strong>静态语义。</strong> 函数定义的静态语义：</p>
+<p>这里的 <code class="docutils literal notranslate"><span class="pre">t</span></code> 和 <code class="docutils literal notranslate"><span class="pre">u</span></code> 是表示类型的元变量。类型 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code> 表示一个函数：它接受一个 <code class="docutils literal notranslate"><span class="pre">t</span></code> 类型的输入，并返回一个 <code class="docutils literal notranslate"><span class="pre">u</span></code> 类型的输出。类似地，<code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code> 可以理解为：一个函数接受两个输入，第一个类型是 <code class="docutils literal notranslate"><span class="pre">t1</span></code>，第二个类型是 <code class="docutils literal notranslate"><span class="pre">t2</span></code>，并返回一个类型为 <code class="docutils literal notranslate"><span class="pre">u</span></code> 的结果。更一般地，也可以扩展到接受 <code class="docutils literal notranslate"><span class="pre">n</span></code> 个参数的函数。</p>
+<p><strong>动态语义。</strong> 函数定义本身没有动态语义，因为这里并没有什么需要求值的东西。OCaml 只是记录下：名字 <code class="docutils literal notranslate"><span class="pre">f</span></code> 绑定到了一个具有参数 <code class="docutils literal notranslate"><span class="pre">x1..xn</span></code> 和函数体 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的函数上。真正发生求值，是在这个函数之后被应用的时候。</p>
+<p><strong>静态语义。</strong> 函数定义的静态语义是：</p>
 <ul class="simple">
-<li><p>对于非递归函数：如果假设 <code class="docutils literal notranslate"><span class="pre">x1</span> <span class="pre">:</span> <span class="pre">t1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">:</span> <span class="pre">t2</span></code> 和 …
-和 <code class="docutils literal notranslate"><span class="pre">xn</span> <span class="pre">:</span> <span class="pre">tn</span></code>，我们可以得出 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">u</span></code> 的结论，那么
-<code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">:</span> <span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">tn</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code>。</p></li>
-<li><p>对于递归函数：如果假设 <code class="docutils literal notranslate"><span class="pre">x1</span> <span class="pre">:</span> <span class="pre">t1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">:</span> <span class="pre">t2</span></code> 以及 …
-和 <code class="docutils literal notranslate"><span class="pre">xn</span> <span class="pre">:</span> <span class="pre">tn</span></code> 和 <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">:</span> <span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">tn</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code>，我们可以得出结论：
-<code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">u</span></code>，然后<code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">:</span> <span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">tn</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code>。</p></li>
+<li><p>对于非递归函数：如果在假设 <code class="docutils literal notranslate"><span class="pre">x1</span> <span class="pre">:</span> <span class="pre">t1</span></code>、<code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">:</span> <span class="pre">t2</span></code>、…、<code class="docutils literal notranslate"><span class="pre">xn</span> <span class="pre">:</span> <span class="pre">tn</span></code> 的前提下，可以推出 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">u</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">:</span> <span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">tn</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code>。</p></li>
+<li><p>对于递归函数：如果在假设 <code class="docutils literal notranslate"><span class="pre">x1</span> <span class="pre">:</span> <span class="pre">t1</span></code>、<code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">:</span> <span class="pre">t2</span></code>、…、<code class="docutils literal notranslate"><span class="pre">xn</span> <span class="pre">:</span> <span class="pre">tn</span></code>，以及 <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">:</span> <span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">tn</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code> 的前提下，可以推出 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">u</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">:</span> <span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">tn</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code>。</p></li>
 </ul>
-<p>请注意递归函数的类型检查规则如何假设
-函数标识符 <code class="docutils literal notranslate"><span class="pre">f</span></code> 具有特定类型，然后检查是否
-在该假设下，函数体的类型是正确的。这是因为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 是
-在函数体本身的范围内（就像参数在范围内一样）。</p>
+<p>注意递归函数的类型检查规则是怎样工作的：它先假设函数标识符 <code class="docutils literal notranslate"><span class="pre">f</span></code> 具有某个特定类型，再去检查函数体在该假设下是否类型正确。这是因为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 自己就在函数体的作用域中（就像参数也在作用域中一样）。</p>
 </section>
 <section id="id3">
 <h2><span class="section-number">2.4.2. </span>匿名函数<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/JwoIIrj0bcM" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>我们已经知道我们可以拥有不与名称绑定的值。
-例如，可以在顶层输入整数 <code class="docutils literal notranslate"><span class="pre">42</span></code>，而无需
-给它一个名字：</p>
+<p>我们已经知道，值不一定非要绑定到某个名字上。比如，整数 <code class="docutils literal notranslate"><span class="pre">42</span></code> 就可以直接在顶层里输入，而不用先给它取名字：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="mi">42</span>
@@ -806,7 +756,7 @@ val odd : int -&gt; bool = &lt;fun&gt;
 </div>
 </div>
 </div>
-<p>或者我们可以将它绑定到一个名称：</p>
+<p>当然，我们也可以把它绑定到一个名字上：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">42</span>
@@ -819,11 +769,10 @@ val odd : int -&gt; bool = &lt;fun&gt;
 </div>
 </div>
 </div>
-<p>同样，OCaml 函数不必有名称；他们可能是<em>匿名</em>。
-例如，下面是一个增加其输入的匿名函数：
-<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">1</span></code>。这里，<code class="docutils literal notranslate"><span class="pre">fun</span></code>是一个关键字，表示匿名函数，<code class="docutils literal notranslate"><span class="pre">x</span></code>
-是参数，<code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> 将参数与主体分开。</p>
-<p>现在我们有两种编写增量函数的方法：</p>
+<p>同样地，OCaml 的函数也不一定非得有名字；它们可以是<em>匿名的</em>。例如，下面就是一个把输入加一的匿名函数：</p>
+<p><code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">1</span></code></p>
+<p>其中，<code class="docutils literal notranslate"><span class="pre">fun</span></code> 是表示匿名函数的关键字，<code class="docutils literal notranslate"><span class="pre">x</span></code> 是参数，而 <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> 用来分隔参数和函数体。</p>
+<p>现在我们有两种写法来定义“加一函数”：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">inc</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
@@ -840,80 +789,48 @@ val odd : int -&gt; bool = &lt;fun&gt;
 </div>
 </div>
 </div>
-<p>它们在语法上不同，但在语义上等效。也就是说，即使
-尽管它们涉及不同的关键字并将一些标识符放在不同的位置
-地方，它们的意思是一样的。</p>
+<p>这两种写法在语法上不同，但在语义上是等价的。也就是说，虽然它们使用了不同关键字，也把一些标识符放在了不同的位置，但表达的意思完全一样。</p>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/zHHCD7MOjmw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>匿名函数也称为 <em>lambda 表达式</em>，该术语来自
-<em>lambda 演算</em>，它是相同计算的数学模型
-感觉图灵机是一种计算模型。在 lambda 演算中，
-<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code> 将写为 <span class="math notranslate nohighlight">\(\lambda x . e\)</span>。 <span class="math notranslate nohighlight">\(\lambda\)</span> 表示
-匿名函数。</p>
-<p>现在似乎有点神秘，为什么我们需要这样的函数
-没有名字。不用担心;我们稍后会在课程中看到它们的良好用途，
-尤其是当我们学习所谓的“高阶编程”时。特别是，我们
-通常会创建匿名函数并将它们作为输入传递给其他函数。</p>
+<p>匿名函数也叫 <em>lambda 表达式</em>。这个术语来自 <em>lambda calculus</em>（lambda 演算），它是一种计算的数学模型，就像图灵机也是一种计算模型一样。在 lambda 演算中，<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code> 会写作 <span class="math notranslate nohighlight">\(\lambda x . e\)</span>。其中的 <span class="math notranslate nohighlight">\(\lambda\)</span> 就表示匿名函数。</p>
+<p>现在你可能会觉得有点奇怪：为什么我们需要没有名字的函数？先不用担心。后面的课程里我们会看到它们的很多好用途，尤其是在学习所谓的“高阶编程”时。特别是，我们经常会创建匿名函数，并把它们作为输入传给其他函数。</p>
 <p><strong>语法。</strong></p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">fun</span> <span class="n">x1</span> <span class="o">...</span> <span class="n">xn</span> <span class="o">-&gt;</span> <span class="n">e</span>
 </pre></div>
 </div>
 <p><strong>静态语义。</strong></p>
 <ul class="simple">
-<li><p>如果假设
-<code class="docutils literal notranslate"><span class="pre">x1</span> <span class="pre">:</span> <span class="pre">t1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">:</span> <span class="pre">t2</span></code> 以及 … 和 <code class="docutils literal notranslate"><span class="pre">xn</span> <span class="pre">:</span> <span class="pre">tn</span></code>，我们可以得出结论 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">u</span></code>，
-然后<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x1</span> <span class="pre">...</span> <span class="pre">xn</span> <span class="pre">-&gt;</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">tn</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code>。</p></li>
+<li><p>如果在假设 <code class="docutils literal notranslate"><span class="pre">x1</span> <span class="pre">:</span> <span class="pre">t1</span></code>、<code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">:</span> <span class="pre">t2</span></code>、…、<code class="docutils literal notranslate"><span class="pre">xn</span> <span class="pre">:</span> <span class="pre">tn</span></code> 的前提下，可以推出 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">u</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x1</span> <span class="pre">...</span> <span class="pre">xn</span> <span class="pre">-&gt;</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">tn</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code>。</p></li>
 </ul>
-<p><strong>动态语义。</strong> 匿名函数已经是一个值。没有
-要执行的计算。</p>
+<p><strong>动态语义。</strong> 匿名函数本身已经是一个值，因此没有进一步需要执行的计算。</p>
 </section>
 <section id="id4">
 <h2><span class="section-number">2.4.3. </span>函数应用<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/fgCTDhXAYnQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>与以下内容相比，这里我们介绍了函数应用程序的稍微简化的语法
-OCaml 实际允许的内容。</p>
+<p>这里我们讲的是一个经过适度简化的函数应用语法，比 OCaml 实际允许的写法稍简单一些。</p>
 <p><strong>语法。</strong></p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="n">e0</span> <span class="n">e1</span> <span class="n">e2</span> <span class="o">...</span> <span class="n">en</span>
 </pre></div>
 </div>
-<p>第一个表达式 <code class="docutils literal notranslate"><span class="pre">e0</span></code> 是函数，它应用于参数 <code class="docutils literal notranslate"><span class="pre">e1</span></code>
-通过<code class="docutils literal notranslate"><span class="pre">en</span></code>。请注意，参数周围不需要括号
-指示函数应用程序，因为它们是 C 系列语言中的，
-包括Java。</p>
+<p>第一个表达式 <code class="docutils literal notranslate"><span class="pre">e0</span></code> 是函数，它被应用到参数 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">en</span></code> 上。注意，与包括 Java 在内的 C 家族语言不同，在 OCaml 中表示函数应用时，不需要额外用括号把参数包起来。</p>
 <p><strong>静态语义。</strong></p>
 <ul class="simple">
-<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">:</span> <span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">tn</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t1</span></code> 和 … 和 <code class="docutils literal notranslate"><span class="pre">en</span> <span class="pre">:</span> <span class="pre">tn</span></code>
-然后<code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">e1</span> <span class="pre">...</span> <span class="pre">en</span> <span class="pre">:</span> <span class="pre">u</span></code>。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">:</span> <span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">...</span> <span class="pre">-&gt;</span> <span class="pre">tn</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code>，并且 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t1</span></code>、…、<code class="docutils literal notranslate"><span class="pre">en</span> <span class="pre">:</span> <span class="pre">tn</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">e1</span> <span class="pre">...</span> <span class="pre">en</span> <span class="pre">:</span> <span class="pre">u</span></code>。</p></li>
 </ul>
 <p><strong>动态语义。</strong></p>
-<p>要评估 <code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">e1</span> <span class="pre">...</span> <span class="pre">en</span></code>：</p>
-<ol class="arabic simple">
-<li><p>将 <code class="docutils literal notranslate"><span class="pre">e0</span></code> 评估为函数。同时评估参数表达式 <code class="docutils literal notranslate"><span class="pre">e1</span></code>
-从 <code class="docutils literal notranslate"><span class="pre">en</span></code> 到值 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">vn</span></code>。</p></li>
+<p>对 <code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">e1</span> <span class="pre">...</span> <span class="pre">en</span></code> 求值时：</p>
+<ol class="arabic">
+<li><p>先把 <code class="docutils literal notranslate"><span class="pre">e0</span></code> 求值成一个函数；同时把参数表达式 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">en</span></code> 也分别求值成 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">vn</span></code>。</p>
+<p>对于 <code class="docutils literal notranslate"><span class="pre">e0</span></code> 而言，结果可能是一个匿名函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x1</span> <span class="pre">...</span> <span class="pre">xn</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code>，也可能是某个名字 <code class="docutils literal notranslate"><span class="pre">f</span></code>。在后一种情况下，我们需要找到 <code class="docutils literal notranslate"><span class="pre">f</span></code> 的定义，并且可以假定它的形式是 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">rec</span> <span class="pre">f</span> <span class="pre">x1</span> <span class="pre">...</span> <span class="pre">xn</span> <span class="pre">=</span> <span class="pre">e</span></code>。不管是哪种情况，现在我们都已经知道了参数名 <code class="docutils literal notranslate"><span class="pre">x1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">xn</span></code>，以及函数体 <code class="docutils literal notranslate"><span class="pre">e</span></code>。</p>
+</li>
+<li><p>用每个值 <code class="docutils literal notranslate"><span class="pre">vi</span></code> 去替换函数体 <code class="docutils literal notranslate"><span class="pre">e</span></code> 中对应的参数名 <code class="docutils literal notranslate"><span class="pre">xi</span></code>，从而得到一个新的表达式 <code class="docutils literal notranslate"><span class="pre">e'</span></code>。</p></li>
+<li><p>再把 <code class="docutils literal notranslate"><span class="pre">e'</span></code> 求值为某个值 <code class="docutils literal notranslate"><span class="pre">v</span></code>，这就是 <code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">e1</span> <span class="pre">...</span> <span class="pre">en</span></code> 的求值结果。</p></li>
 </ol>
-<p>对于 <code class="docutils literal notranslate"><span class="pre">e0</span></code>，结果可能是一个匿名函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x1</span> <span class="pre">...</span> <span class="pre">xn</span> <span class="pre">-&gt;</span>&#160;&#160;&#160; <span class="pre">e</span></code> or a name <code class="docutils literal notranslate"><span class="pre">f</span></code>. In the latter case, we need to find the definition of <code class="docutils literal notranslate"><span class="pre">f</span></code>,
-我们可以假设其形式为 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">rec</span> <span class="pre">f</span> <span class="pre">x1</span> <span class="pre">...</span> <span class="pre">xn</span> <span class="pre">=</span>&#160;&#160;&#160; <span class="pre">e</span></code>.  Either way, we now know the argument names <code class="docutils literal notranslate"><span class="pre">x1</span></code> through <code class="docutils literal notranslate"><span class="pre">xn</span></code> 和
-主体<code class="docutils literal notranslate"><span class="pre">e</span></code>。</p>
-<ol class="arabic simple" start="2">
-<li><p>将每个值 <code class="docutils literal notranslate"><span class="pre">vi</span></code> 替换为相应的参数名称 <code class="docutils literal notranslate"><span class="pre">xi</span></code>
-函数体 <code class="docutils literal notranslate"><span class="pre">e</span></code> 。该替换会产生新的表达式 <code class="docutils literal notranslate"><span class="pre">e'</span></code>。</p></li>
-<li><p>将 <code class="docutils literal notranslate"><span class="pre">e'</span></code> 评估为值 <code class="docutils literal notranslate"><span class="pre">v</span></code>，这是评估的结果
-<code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">e1</span> <span class="pre">...</span> <span class="pre">en</span></code>。</p></li>
-</ol>
-<p>如果将这些评估规则与 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式的规则进行比较，你
-会注意到它们都涉及替换。这并非偶然。事实上，
-程序中出现 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">e1</span> <span class="pre">in</span> <span class="pre">e2</span></code> 的任何地方，我们都可以将其替换为
-<code class="docutils literal notranslate"><span class="pre">(fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e2)</span> <span class="pre">e1</span></code>。它们在语法上不同，但在语义上不同
-等价。本质上，<code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式只是匿名的语法糖
-函数应用。</p>
+<p>如果你把这些求值规则和 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式的规则比较一下，就会发现它们都依赖于“替换”这件事。这并不是巧合。事实上，程序中任何一个 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">e1</span> <span class="pre">in</span> <span class="pre">e2</span></code>，我们都可以把它替换成 <code class="docutils literal notranslate"><span class="pre">(fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e2)</span> <span class="pre">e1</span></code>。它们语法不同，但语义等价。从本质上说，<code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式只是匿名函数应用的语法糖。</p>
 </section>
 <section id="id5">
 <h2><span class="section-number">2.4.4. </span>管道<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/arS9kEqCFEU" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>OCaml 中有一个内置的中缀运算符用于函数应用，称为
-<em>管道</em>运算符，写作 <code class="docutils literal notranslate"><span class="pre">|&gt;</span></code>。想象一下，描绘一个三角形指向
-到右边。这个比喻是，值通过管道发送
-从左到右。例如，假设我们有增量函数 <code class="docutils literal notranslate"><span class="pre">inc</span></code> 来自
-上面还有一个函数 <code class="docutils literal notranslate"><span class="pre">square</span></code> 对其输入进行平方：</p>
+<p>OCaml 内建了一个用于函数应用的中缀运算符，叫做<em>管道运算符</em>（pipeline operator），写作 <code class="docutils literal notranslate"><span class="pre">|&gt;</span></code>。你可以把它想象成一个朝右的三角形。这个隐喻的意思是：值会沿着管道从左向右流动。比如，假设我们已经有上面那个加一函数 <code class="docutils literal notranslate"><span class="pre">inc</span></code>，另外再定义一个把输入平方的函数 <code class="docutils literal notranslate"><span class="pre">square</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">square</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
@@ -926,7 +843,7 @@ OCaml 实际允许的内容。</p>
 </div>
 </div>
 </div>
-<p>以下是对 <code class="docutils literal notranslate"><span class="pre">6</span></code> 进行平方的两种等效方法：</p>
+<p>下面是两种等价的“把 5 先加一，再平方”的写法：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">square</span> <span class="o">(</span><span class="n">inc</span> <span class="mi">5</span><span class="o">);;</span>
@@ -943,13 +860,7 @@ OCaml 实际允许的内容。</p>
 </div>
 </div>
 </div>
-<p>后者使用管道运算符通过<code class="docutils literal notranslate"><span class="pre">inc</span></code>函数发送<code class="docutils literal notranslate"><span class="pre">5</span></code>，
-然后通过 <code class="docutils literal notranslate"><span class="pre">square</span></code> 函数发送结果。这是一个不错的，
-在 OCaml 中表达计算的惯用方式。前一种方式可以说是
-不太优雅：它涉及编写额外的括号并需要读者的
-眼睛会跳来跳去，而不是从左到右线性移动。后者
-当应用的函数数量增加时，方式会很好地扩展，而
-前一种方式需要越来越多的括号：</p>
+<p>后一种写法使用管道运算符，让 <code class="docutils literal notranslate"><span class="pre">5</span></code> 先经过 <code class="docutils literal notranslate"><span class="pre">inc</span></code>，再把结果送进 <code class="docutils literal notranslate"><span class="pre">square</span></code>。这是一种很好、也很符合 OCaml 习惯的表达方式。前一种写法则相对没那么优雅：它需要额外的括号，也要求读者的视线在表达式之间来回跳跃，而不是从左到右线性阅读。随着需要应用的函数越来越多，后一种写法也更容易扩展；前一种写法则会堆出越来越多的括号：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="mi">5</span> <span class="o">|&gt;</span> <span class="n">inc</span> <span class="o">|&gt;</span> <span class="n">square</span> <span class="o">|&gt;</span> <span class="n">inc</span> <span class="o">|&gt;</span> <span class="n">inc</span> <span class="o">|&gt;</span> <span class="n">square</span><span class="o">;;</span>
@@ -966,18 +877,13 @@ OCaml 实际允许的内容。</p>
 </div>
 </div>
 </div>
-<p>一开始可能会感觉很奇怪，但是尝试在你自己的中使用管道运算符
-下次当你发现自己正在编写一大串函数时，请编写代码
-应用程序。</p>
-<p>由于 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">|&gt;</span> <span class="pre">e2</span></code> 只是 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">e1</span></code> 的另一种写法，所以我们不需要声明
-<code class="docutils literal notranslate"><span class="pre">|&gt;</span></code> 的语义：它与函数应用程序相同。这两个
-程序是语法不同但是表达式的另一个例子
-语义上等价。</p>
+<p>一开始你可能会觉得这种写法有点奇怪，但下次当你发现自己正在写一长串函数应用时，不妨试着用一用管道运算符。</p>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">|&gt;</span> <span class="pre">e2</span></code> 其实只是 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">e1</span></code> 的另一种写法，所以我们无需单独给出 <code class="docutils literal notranslate"><span class="pre">|&gt;</span></code> 的语义：它和普通函数应用完全相同。这两种程序又是一个“语法不同但语义等价”的例子。</p>
 </section>
 <section id="id6">
 <h2><span class="section-number">2.4.5. </span>多态函数<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/UWmxYBEKzN8" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p><em>identity</em> 函数是简单返回其输入的函数：</p>
+<p><em>恒等函数</em>（identity function）就是那个把输入原样返回的函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
@@ -990,7 +896,7 @@ OCaml 实际允许的内容。</p>
 </div>
 </div>
 </div>
-<p>或者等效地作为匿名函数：</p>
+<p>或者等价地，写成匿名函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span>
@@ -1003,11 +909,8 @@ OCaml 实际允许的内容。</p>
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">'a</span></code> 是一个<em>类型变量</em>：它代表未知类型，就像
-常规变量代表未知值。类型变量总是以 a 开头
-单引号。常用的类型变量包括<code class="docutils literal notranslate"><span class="pre">'a</span></code>、<code class="docutils literal notranslate"><span class="pre">'b</span></code>和<code class="docutils literal notranslate"><span class="pre">'c</span></code>，其中
-OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
-<p>我们可以将恒等函数应用于我们喜欢的任何类型的值：</p>
+<p>这里的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 是一个<em>类型变量</em>：它表示某个未知类型，就像普通变量表示某个未知值一样。类型变量总是以单引号开头。常见的类型变量有 <code class="docutils literal notranslate"><span class="pre">'a</span></code>、<code class="docutils literal notranslate"><span class="pre">'b</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'c</span></code>，OCaml 程序员通常会把它们念成希腊字母：alpha、beta、gamma。</p>
+<p>我们可以把恒等函数应用到任何类型的值上：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">id</span> <span class="mi">42</span><span class="o">;;</span>
@@ -1028,11 +931,8 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>因为你可以将 <code class="docutils literal notranslate"><span class="pre">id</span></code> 应用于多种类型的值，所以它是一个<em>多态</em>
-函数：它可以应用于多种（<em>poly</em>）形式（<em>morph</em>）。</p>
-<p>通过手动类型注释，可以给出更具限制性的类型
-多态函数而不是编译器自动推断的类型。
-例如：</p>
+<p>正因为 <code class="docutils literal notranslate"><span class="pre">id</span></code> 可以作用于多种类型的值，所以它是一个<em>多态</em>（polymorphic）函数：它可以作用于多种（poly）形式（morph）。</p>
+<p>通过手动添加类型注解，我们可以把一个多态函数限制为比编译器自动推断出的更窄的类型。例如：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id_int</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">x</span>
@@ -1045,8 +945,7 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>除了两个手动类型注释之外，该函数与 <code class="docutils literal notranslate"><span class="pre">id</span></code> 相同。
-因此，我们不能像 <code class="docutils literal notranslate"><span class="pre">id</span></code> 那样将 <code class="docutils literal notranslate"><span class="pre">id_int</span></code> 应用于 <code class="docutils literal notranslate"><span class="pre">bool</span></code>：</p>
+<p>除了两个手写的类型注解外，这个函数和 <code class="docutils literal notranslate"><span class="pre">id</span></code> 是一样的。但正因为有了这些注解，我们就不能像对 <code class="docutils literal notranslate"><span class="pre">id</span></code> 那样，把 <code class="docutils literal notranslate"><span class="pre">id_int</span></code> 应用到一个 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 上：</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">id_int</span> <span class="bp">true</span>
@@ -1063,7 +962,7 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">id_int</span></code> 的另一种书写方式是 <code class="docutils literal notranslate"><span class="pre">id</span></code>：</p>
+<p>另一种写 <code class="docutils literal notranslate"><span class="pre">id_int</span></code> 的方式是直接基于 <code class="docutils literal notranslate"><span class="pre">id</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id_int&#39;</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">id</span>
@@ -1076,23 +975,9 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>实际上，我们采用了 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型的值，并将其绑定到一个名称，该名称的名称
-类型被手动指定为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。你可能会问，为什么会这样
-工作？毕竟他们不是同一类型。</p>
-<p>考虑这个问题的一种方法是从<strong>行为的角度来看。</strong> <code class="docutils literal notranslate"><span class="pre">id_int</span></code> 的类型
-指定其行为的一方面：给定 <code class="docutils literal notranslate"><span class="pre">int</span></code> 作为输入，它承诺
-产生 <code class="docutils literal notranslate"><span class="pre">int</span></code> 作为输出。事实证明 <code class="docutils literal notranslate"><span class="pre">id</span></code> 也做出了同样的承诺：
-给定 <code class="docutils literal notranslate"><span class="pre">int</span></code> 作为输入，它也会返回 <code class="docutils literal notranslate"><span class="pre">int</span></code> 作为输出。现在 <code class="docutils literal notranslate"><span class="pre">id</span></code> 也
-做出更多承诺，例如：给定 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 作为输入，它将返回
-<code class="docutils literal notranslate"><span class="pre">bool</span></code> 作为输出。因此，通过将 <code class="docutils literal notranslate"><span class="pre">id</span></code> 绑定到更严格的类型 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>，我们
-我们只是丢弃了所有这些与当前需求无关的额外承诺。
-当然，这会丢失信息，但至少不会违背承诺。
-因此，当我们需要一个 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 类型的函数时，
-使用 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型的函数总是安全的。</p>
-<p>反之则不然。如果我们需要一个 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型的函数但尝试过
-使用 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 类型的函数，一旦有人
-传递了另一种类型的输入，例如 <code class="docutils literal notranslate"><span class="pre">bool</span></code>。为了防止这种麻烦，OCaml
-使用以下代码做了一些可能令人惊讶的事情：</p>
+<p>从效果上说，我们拿到了一个类型为 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 的值，并把它绑定到了一个手动指定为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 的名字上。你可能会问：这为什么可行？毕竟这两个类型并不一样。</p>
+<p>一种理解方式是从<strong>行为</strong>（behavior）的角度来看。<code class="docutils literal notranslate"><span class="pre">id_int</span></code> 的类型规定了它行为的一个方面：给它一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 作为输入，它承诺会返回一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 作为输出。而 <code class="docutils literal notranslate"><span class="pre">id</span></code> 其实也能作出同样的承诺：给它一个 <code class="docutils literal notranslate"><span class="pre">int</span></code>，它也会返回一个 <code class="docutils literal notranslate"><span class="pre">int</span></code>。当然，<code class="docutils literal notranslate"><span class="pre">id</span></code> 还能作出更多承诺，比如给它一个 <code class="docutils literal notranslate"><span class="pre">bool</span></code>，它会返回一个 <code class="docutils literal notranslate"><span class="pre">bool</span></code>。所以，当我们把 <code class="docutils literal notranslate"><span class="pre">id</span></code> 绑定到更严格的类型 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 上时，只不过是把这些当前无关的额外承诺丢掉了而已。这样虽然丢失了信息，但至少不会违背承诺。因此，当我们需要一个 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 类型的函数时，使用一个 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型的函数始终是安全的。</p>
+<p>反过来则不成立。如果我们需要的是一个 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型的函数，却试图拿一个 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 类型的函数来顶替，那么只要有人传入了别的类型，比如 <code class="docutils literal notranslate"><span class="pre">bool</span></code>，问题就会立刻暴露出来。为了防止这种情况，OCaml 在下面这段代码上会做一件可能有点出人意料的事：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id&#39;</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
@@ -1105,11 +990,7 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>函数 <code class="docutils literal notranslate"><span class="pre">id'</span></code> 实际上是增量函数，而不是恒等函数。所以
-向其传递 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 或 <code class="docutils literal notranslate"><span class="pre">string</span></code> 或一些复杂的数据结构是不安全的；
-<code class="docutils literal notranslate"><span class="pre">+</span></code> 唯一可以安全操作的数据是整数。因此 OCaml
-<em>实例化</em>类型变量 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 到 <code class="docutils literal notranslate"><span class="pre">int</span></code>，从而阻止我们
-将 <code class="docutils literal notranslate"><span class="pre">id'</span></code> 应用于非整数：</p>
+<p>函数 <code class="docutils literal notranslate"><span class="pre">id'</span></code> 实际上并不是恒等函数，而是“加一函数”。因此，给它传 <code class="docutils literal notranslate"><span class="pre">bool</span></code>、<code class="docutils literal notranslate"><span class="pre">string</span></code> 或某个复杂数据结构都不安全；<code class="docutils literal notranslate"><span class="pre">+</span></code> 能安全处理的只有整数。所以 OCaml 会把类型变量 <code class="docutils literal notranslate"><span class="pre">'a</span></code> <em>实例化</em>为 <code class="docutils literal notranslate"><span class="pre">int</span></code>，从而阻止我们把 <code class="docutils literal notranslate"><span class="pre">id'</span></code> 应用于非整数：</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">id&#39;</span> <span class="bp">true</span>
@@ -1126,11 +1007,7 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>这引导我们采用另一种更机械的方式来思考这一切
-<strong>应用</strong>的角度。这里指的是函数如何
-应用于参数：当求值应用 <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">5</span></code> 时，参数
-<code class="docutils literal notranslate"><span class="pre">x</span></code> <em>实例化</em>值为 <code class="docutils literal notranslate"><span class="pre">5</span></code>。同样，<code class="docutils literal notranslate"><span class="pre">id</span></code> 类型中的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 是
-在该应用程序中使用类型 <code class="docutils literal notranslate"><span class="pre">int</span></code> 进行实例化。所以如果我们写</p>
+<p>这就引出了另一种、更机械的理解方式，也就是从<strong>应用</strong>（application）的角度来思考。这里说的“应用”，就是函数应用于参数时的那种应用：当我们对 <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">5</span></code> 求值时，参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 被值 <code class="docutils literal notranslate"><span class="pre">5</span></code> <em>实例化</em>。同样地，<code class="docutils literal notranslate"><span class="pre">id</span></code> 类型里的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 也在这个应用过程中被类型 <code class="docutils literal notranslate"><span class="pre">int</span></code> 实例化。所以，当我们写下</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id_int&#39;</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">id</span>
@@ -1143,22 +1020,12 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>事实上，我们正在用 <code class="docutils literal notranslate"><span class="pre">int</span></code> 类型实例化 <code class="docutils literal notranslate"><span class="pre">id</span></code> 类型中的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 。
-就像没有办法“取消应用”函数一样。例如，给定 <code class="docutils literal notranslate"><span class="pre">5</span></code>，
-我们无法倒推出 <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">5</span></code>；同样，我们也无法取消这次类型
-实例化并将 <code class="docutils literal notranslate"><span class="pre">int</span></code> 更改回 <code class="docutils literal notranslate"><span class="pre">'a</span></code>。</p>
-<p>为了准确起见，假设我们有一个 <code class="docutils literal notranslate"><span class="pre">let</span></code> 定义[或表达式]：</p>
+<p>实际上就是把 <code class="docutils literal notranslate"><span class="pre">id</span></code> 类型中的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 实例化成了 <code class="docutils literal notranslate"><span class="pre">int</span></code>。而且，就像我们没法“反向取消”一个函数应用一样，例如给定 <code class="docutils literal notranslate"><span class="pre">5</span></code>，我们没法倒推出它来自 <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">5</span></code>；同样，我们也没法撤销这次类型实例化，把 <code class="docutils literal notranslate"><span class="pre">int</span></code> 再变回 <code class="docutils literal notranslate"><span class="pre">'a</span></code>。</p>
+<p>更精确地说，假设我们有一个 <code class="docutils literal notranslate"><span class="pre">let</span></code> 定义（或表达式）：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">e</span> <span class="o">[</span><span class="k">in</span> <span class="n">e&#39;</span><span class="o">]</span>
 </pre></div>
 </div>
-<p>并且 OCaml 推断 <code class="docutils literal notranslate"><span class="pre">x</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>，其中包括一些类型变量 <code class="docutils literal notranslate"><span class="pre">'a</span></code>，
-<code class="docutils literal notranslate"><span class="pre">'b</span></code> 等。然后我们就可以实例化这些类型变量。我们可以做
-通过将函数应用于揭示类型的参数
-实例化应该是（如 <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">5</span></code> 中）或通过类型注释（如
-<code class="docutils literal notranslate"><span class="pre">id_int'</span></code>)，等等。但我们必须与
-实例化。例如，我们不能采用 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型的函数
-并在类型 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">string</span></code> 处实例化它，因为实例化
-<code class="docutils literal notranslate"><span class="pre">'a</span></code> 在它发生的两个地方都不是同一类型：</p>
+<p>而且 OCaml 为 <code class="docutils literal notranslate"><span class="pre">x</span></code> 推断出了某个类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>，其中包含一些类型变量 <code class="docutils literal notranslate"><span class="pre">'a</span></code>、<code class="docutils literal notranslate"><span class="pre">'b</span></code> 等。那么这些类型变量是允许被实例化的。我们可以通过把函数应用到某些参数上来暴露出应当如何实例化（例如 <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">5</span></code>），也可以通过类型注解来实例化（例如 <code class="docutils literal notranslate"><span class="pre">id_int'</span></code>），等等。不过这种实例化必须保持一致。比如，我们不能把一个类型为 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 的函数实例化为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">string</span></code>，因为 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 在它两次出现的位置上就不再是同一个类型了：</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">first</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">;;</span>
@@ -1186,13 +1053,8 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </section>
 <section id="id7">
-<h2><span class="section-number">2.4.6. </span>带标签和可选参数<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
-<p>函数的类型和名称通常可以让你很好地了解函数的
-参数应该是什么。但是，对于具有多个参数的函数（尤其是
-相同类型的参数），给它们贴上标签会很有用。例如，你
-可能会猜测函数 <code class="docutils literal notranslate"><span class="pre">String.sub</span></code> 返回给定的子字符串
-字符串（你是对的）。你可以输入 <code class="docutils literal notranslate"><span class="pre">String.sub</span></code> 来查找它
-类型：</p>
+<h2><span class="section-number">2.4.6. </span>带标签参数与可选参数<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<p>函数的类型和名字通常已经能让你大致猜出它的参数含义。不过，对于参数很多的函数，尤其是多个参数类型相同的情况，给参数加上标签会更有帮助。例如，你也许会猜 <code class="docutils literal notranslate"><span class="pre">String.sub</span></code> 这个函数是从给定字符串中取出一个子串，而这个猜测确实是对的。你可以在顶层里输入 <code class="docutils literal notranslate"><span class="pre">String.sub</span></code> 来查看它的类型：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">String</span><span class="p">.</span><span class="n">sub</span><span class="o">;;</span>
@@ -1205,10 +1067,8 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>但从类型上并不清楚如何使用—你被迫咨询
-文档。</p>
-<p>OCaml 支持函数的标记参数。你可以声明这种
-使用以下语法的函数：</p>
+<p>但仅从类型本身并不能清楚看出应当怎样使用它，你仍然得去查文档。</p>
+<p>OCaml 支持带标签参数。你可以用下面的语法来声明这种函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">f</span> <span class="o">~</span><span class="n">name1</span><span class="o">:</span><span class="n">arg1</span> <span class="o">~</span><span class="n">name2</span><span class="o">:</span><span class="n">arg2</span> <span class="o">=</span> <span class="n">arg1</span> <span class="o">+</span> <span class="n">arg2</span><span class="o">;;</span>
@@ -1221,26 +1081,21 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>可以通过按任一顺序传递带标签的参数来调用此函数：</p>
+<p>调用这个函数时，可以按任意顺序传入带标签的参数：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">~</span><span class="n">name2</span><span class="o">:</span><span class="mi">3</span> <span class="o">~</span><span class="n">name1</span><span class="o">:</span><span class="mi">4</span>
 </pre></div>
 </div>
-<p>参数的标签通常与其变量名称相同。OCaml
-提供了这种情况的简写。以下是等效的：</p>
+<p>参数标签通常和对应变量名相同。针对这种情况，OCaml 提供了简写。下面两种写法是等价的：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">f</span> <span class="o">~</span><span class="n">name1</span><span class="o">:</span><span class="n">name1</span> <span class="o">~</span><span class="n">name2</span><span class="o">:</span><span class="n">name2</span> <span class="o">=</span> <span class="n">name1</span> <span class="o">+</span> <span class="n">name2</span>
 <span class="k">let</span> <span class="n">f</span> <span class="o">~</span><span class="n">name1</span> <span class="o">~</span><span class="n">name2</span> <span class="o">=</span> <span class="n">name1</span> <span class="o">+</span> <span class="n">name2</span>
 </pre></div>
 </div>
-<p>是否使用带标签的参数很大程度上取决于品味。它们传达了额外的
-信息，但它们也会给类型带来混乱。</p>
-<p>为其编写带标签参数和显式类型注释的语法
-它是：</p>
+<p>是否使用带标签参数，很大程度上属于风格选择。它们能提供额外信息，但也会让类型签名显得更繁琐。</p>
+<p>如果既想写带标签参数，又想给它加上显式类型注解，语法如下：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">let</span> <span class="n">f</span> <span class="o">~</span><span class="n">name1</span><span class="p">:(</span><span class="n">arg1</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">~</span><span class="n">name2</span><span class="p">:(</span><span class="n">arg2</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">=</span> <span class="n">arg1</span> <span class="o">+</span> <span class="n">arg2</span>
 </pre></div>
 </div>
-<p>也可以使一些参数可选。当调用时没有
-可选参数，将提供默认值。要声明这样一个函数，
-使用以下语法：</p>
+<p>还可以把某些参数设为可选参数。调用时如果省略了这个参数，就会自动使用默认值。声明这种函数时，使用下面的语法：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">f</span> <span class="o">?</span><span class="n">name</span><span class="o">:(</span><span class="n">arg1</span><span class="o">=</span><span class="mi">8</span><span class="o">)</span> <span class="n">arg2</span> <span class="o">=</span> <span class="n">arg1</span> <span class="o">+</span> <span class="n">arg2</span>
@@ -1253,7 +1108,7 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>然后你可以应用带或不带参数的函数：</p>
+<p>之后你既可以带参数调用它，也可以不带：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">~</span><span class="n">name</span><span class="o">:</span><span class="mi">2</span> <span class="mi">7</span>
@@ -1282,7 +1137,7 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 <section id="id8">
 <h2><span class="section-number">2.4.7. </span>部分应用<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/85xVK0wmDTw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>我们可以定义一个加法函数如下：</p>
+<p>我们可以这样定义一个加法函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
@@ -1295,7 +1150,7 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>这是一个相当相似的函数：</p>
+<p>下面这个函数和它很相似：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">addx</span> <span class="n">x</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
@@ -1308,12 +1163,8 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>函数 <code class="docutils literal notranslate"><span class="pre">addx</span></code> 将整数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 作为输入并返回类型为 <em>function</em> 的函数
-<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 会将 <code class="docutils literal notranslate"><span class="pre">x</span></code> 添加到传递给它的任何内容中。</p>
-<p><code class="docutils literal notranslate"><span class="pre">addx</span></code> 的类型是 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。 <code class="docutils literal notranslate"><span class="pre">add</span></code> 的类型也是
-<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。所以从它们的类型来看，它们是相同的
-函数。但 <code class="docutils literal notranslate"><span class="pre">addx</span></code> 的形式暗示了一些有趣的事情：我们可以应用它
-一个参数。</p>
+<p>函数 <code class="docutils literal notranslate"><span class="pre">addx</span></code> 接受一个整数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 作为输入，并返回一个类型为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 的<em>函数</em>，它会把 <code class="docutils literal notranslate"><span class="pre">x</span></code> 加到传给它的任何值上。</p>
+<p><code class="docutils literal notranslate"><span class="pre">addx</span></code> 的类型是 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。<code class="docutils literal notranslate"><span class="pre">add</span></code> 的类型也是 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。所以从类型的角度看，它们是同一种函数。但 <code class="docutils literal notranslate"><span class="pre">addx</span></code> 的写法暗示了一个有趣的事实：我们可以只给它传一个参数。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add5</span> <span class="o">=</span> <span class="n">addx</span> <span class="mi">5</span>
@@ -1338,7 +1189,7 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>事实证明，使用 <code class="docutils literal notranslate"><span class="pre">add</span></code> 也可以完成同样的事情：</p>
+<p>而事实证明，对 <code class="docutils literal notranslate"><span class="pre">add</span></code> 也同样可以这么做：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add5</span> <span class="o">=</span> <span class="n">add</span> <span class="mi">5</span>
@@ -1363,26 +1214,19 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>我们刚刚所做的称为<em>部分应用</em>：我们部分应用了
-函数 <code class="docutils literal notranslate"><span class="pre">add</span></code> 到一个参数，即使你通常认为它是一个
-多参数函数。这是有效的，因为以下三个函数是
-<em>语法不同</em>但<em>语义等价</em>。也就是说，它们是
-表达相同计算的不同方式：</p>
+<p>我们刚才做的事情叫做<em>部分应用</em>（partial application）：我们只给函数 <code class="docutils literal notranslate"><span class="pre">add</span></code> 提供了一个参数，尽管通常我们会把它视为一个多参数函数。之所以可行，是因为下面这三个函数<em>语法不同</em>，但<em>语义等价</em>。也就是说，它们只是表达同一计算的不同写法：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 <span class="k">let</span> <span class="n">add</span> <span class="n">x</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 <span class="k">let</span> <span class="n">add</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">)</span>
 </pre></div>
 </div>
-<p>所以 <code class="docutils literal notranslate"><span class="pre">add</span></code> 实际上是一个接受参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 并返回一个函数的函数
-<code class="docutils literal notranslate"><span class="pre">(fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y)</span></code>。这引导我们发现一个深刻的真理……</p>
+<p>所以 <code class="docutils literal notranslate"><span class="pre">add</span></code> 本质上是一个接受参数 <code class="docutils literal notranslate"><span class="pre">x</span></code>、并返回另一个函数 <code class="docutils literal notranslate"><span class="pre">(fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y)</span></code> 的函数。这就引出了一个相当深刻的事实。</p>
 </section>
 <section id="id9">
-<h2><span class="section-number">2.4.8. </span>函数结合性<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h2>
-<p>你准备好接受真相了吗？  深吸一口气。  这里…</p>
-<p><strong>每个 OCaml 函数只接受一个参数。</strong></p>
-<p>为什么？考虑 <code class="docutils literal notranslate"><span class="pre">add</span></code>：虽然我们可以将其写为 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">add</span> <span class="pre">x</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code>，但我们知道
-这在语义上等同于 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">add</span> <span class="pre">=</span> <span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">(fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y)</span></code>。并且在
-一般，</p>
+<h2><span class="section-number">2.4.8. </span>函数的结合性<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h2>
+<p>准备好面对真相了吗？深呼吸一下。来了：</p>
+<p><strong>每个 OCaml 函数都只接受一个参数。</strong></p>
+<p>为什么？拿 <code class="docutils literal notranslate"><span class="pre">add</span></code> 来说，虽然我们写的是 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">add</span> <span class="pre">x</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code>，但我们已经知道它在语义上等价于 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">add</span> <span class="pre">=</span> <span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">(fun</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y)</span></code>。更一般地，</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">f</span> <span class="n">x1</span> <span class="n">x2</span> <span class="o">...</span> <span class="n">xn</span> <span class="o">=</span> <span class="n">e</span>
 </pre></div>
 </div>
@@ -1394,39 +1238,30 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
           <span class="o">(</span><span class="k">fun</span> <span class="n">xn</span> <span class="o">-&gt;</span> <span class="n">e</span><span class="o">)...))</span>
 </pre></div>
 </div>
-<p>因此，即使你将 <code class="docutils literal notranslate"><span class="pre">f</span></code> 视为采用 <code class="docutils literal notranslate"><span class="pre">n</span></code> 参数的函数，
-实际上，它是一个带有 1 个参数并返回一个函数的函数。</p>
-<p>这种函数的类型</p>
+<p>所以，尽管你会把 <code class="docutils literal notranslate"><span class="pre">f</span></code> 视为一个接受 <code class="docutils literal notranslate"><span class="pre">n</span></code> 个参数的函数，但从本质上说，它是一个接受 1 个参数、并返回另一个函数的函数。</p>
+<p>像这样一个函数的类型：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span> <span class="o">-&gt;</span> <span class="n">t2</span> <span class="o">-&gt;</span> <span class="n">t3</span> <span class="o">-&gt;</span> <span class="n">t4</span>
 </pre></div>
 </div>
-<p>真正的意思是一样的</p>
+<p>真正的含义其实和下面一样：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">t2</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">t3</span> <span class="o">-&gt;</span> <span class="n">t4</span><span class="o">))</span>
 </pre></div>
 </div>
-<p>也就是说，函数类型是<em>右关联的</em>：有隐式括号
-围绕函数类型，从右到左。这里的直觉是一个函数
-接受一个参数并返回一个新函数，该函数期望剩余的
-论据。</p>
-<p>另一方面，函数应用是<em>左关联</em>：
-是函数应用程序周围的隐式括号，从左到右。
-所以</p>
+<p>也就是说，函数类型是<em>右结合</em>（right associative）的：函数类型外面隐含着从右向左配对的括号。直观地说，一个函数先接受一个参数，然后返回一个还在等待其余参数的新函数。</p>
+<p>而函数应用则是<em>左结合</em>（left associative）的：函数应用外面隐含着从左向右配对的括号。因此：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="n">e1</span> <span class="n">e2</span> <span class="n">e3</span> <span class="n">e4</span>
 </pre></div>
 </div>
-<p>真正的意思是一样的</p>
+<p>真正的含义其实是：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">((</span><span class="n">e1</span> <span class="n">e2</span><span class="o">)</span> <span class="n">e3</span><span class="o">)</span> <span class="n">e4</span>
 </pre></div>
 </div>
-<p>这里的直觉是最左边的表达式抓住下一个
-其右侧的表达式作为其单个参数。</p>
+<p>这里的直觉是：最左边的表达式会抓取它右边紧邻的那个表达式，作为自己的单个参数。</p>
 </section>
 <section id="id10">
-<h2><span class="section-number">2.4.9. </span>作为函数的运算符<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">2.4.9. </span>把运算符当作函数<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/OVKOx8UiwxM" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>加法运算符 <code class="docutils literal notranslate"><span class="pre">+</span></code> 的类型为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。一般是这样写的
-<em>中缀</em>，例如 <code class="docutils literal notranslate"><span class="pre">3</span> <span class="pre">+</span> <span class="pre">4</span></code>。通过在它周围加上括号，我们可以将其变成
-<em>前缀</em>运算符：</p>
+<p>加法运算符 <code class="docutils literal notranslate"><span class="pre">+</span></code> 的类型是 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。通常我们把它写成<em>中缀</em>形式，例如 <code class="docutils literal notranslate"><span class="pre">3</span> <span class="pre">+</span> <span class="pre">4</span></code>。如果给它加上括号，我们就能把它变成<em>前缀</em>运算符：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">(</span> <span class="o">+</span> <span class="o">)</span>
@@ -1475,23 +1310,18 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>相同的技术适用于任何内置运算符。</p>
-<p>通常这些空格是不必要的。我们可以写 <code class="docutils literal notranslate"><span class="pre">(+)</span></code> 或 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code>，但它是
-最好包括它们。当心乘法，它<em>必须</em>写成
-<code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">*</span> <span class="pre">)</span></code>，因为 <code class="docutils literal notranslate"><span class="pre">(*)</span></code> 将被解析为注释的开始。</p>
-<p>我们甚至可以定义自己的新中缀运算符，例如：</p>
+<p>同样的技巧适用于任何内建运算符。</p>
+<p>通常来说，这些空格其实不是必须的。我们既可以写 <code class="docutils literal notranslate"><span class="pre">(+)</span></code>，也可以写 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code>，但最好还是保留空格。乘法运算符尤其要当心，它<em>必须</em>写成 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">*</span> <span class="pre">)</span></code>，因为 <code class="docutils literal notranslate"><span class="pre">(*)</span></code> 会被解析为注释的开头。</p>
+<p>我们甚至还可以自己定义新的中缀运算符，例如：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="o">(</span> <span class="o">^^</span> <span class="o">)</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">max</span> <span class="n">x</span> <span class="n">y</span>
 </pre></div>
 </div>
-<p>现在 <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">^^</span> <span class="pre">3</span></code> 的计算结果为 <code class="docutils literal notranslate"><span class="pre">3</span></code>。</p>
-<p>标点符号可用于创建中缀运算符的规则不是
-必然是直观的。这些运算符的相对优先级也不是
-将被解析。所以要小心这种用法。</p>
+<p>这样一来，<code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">^^</span> <span class="pre">3</span></code> 的结果就是 <code class="docutils literal notranslate"><span class="pre">3</span></code>。</p>
+<p>不过，哪些标点符号可以用来构造中缀运算符，这套规则并不总是直观；这类运算符的优先级规则也同样不那么直观。所以用法上还是要谨慎。</p>
 </section>
 <section id="id11">
 <h2><span class="section-number">2.4.10. </span>尾递归<a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h2>
-<p>考虑以下看似无趣的函数，它从 1 计数到
-<code class="docutils literal notranslate"><span class="pre">n</span></code>：</p>
+<p>来看一个表面上没什么意思的函数。它从 1 一直“数到” <code class="docutils literal notranslate"><span class="pre">n</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [count n] is [n], computed by adding 1 to itself [n] times.  That is,</span>
@@ -1533,27 +1363,13 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>但尝试数到 1,000,000 时，你会收到以下错误：</p>
+<p>但如果尝试数到 1,000,000，就会得到下面这个错误：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Stack overflow during evaluation (looping recursion?).
 </pre></div>
 </div>
 <p>这是怎么回事？</p>
-<p>**调用堆栈。**问题是<em>调用堆栈</em>的大小有限。你
-可能在你的一门入门编程课程中学到了最
-语言通过堆栈实现函数调用。该堆栈包含一个元素
-对于每个已开始但尚未完成的函数调用。每个
-元素存储诸如局部变量值之类的信息
-当前正在执行函数中的指令。当评估
-一个函数体调用另一个函数，在调用时推送一个新元素
-堆栈，并在被调用函数完成时弹出。</p>
-<p>堆栈的大小通常受到操作系统的限制。所以如果
-堆栈空间不足，无法进行另一个函数调用。
-通常这不会发生，因为没有理由做那么多
-返回之前连续的函数调用。如果确实发生这种情况，
-操作系统有充分的理由让该程序停止：它可能
-正在耗尽整个系统上<em>所有</em>可用的内存
-计算机，从而损害同一计算机上运行的其他程序。 <code class="docutils literal notranslate"><span class="pre">count</span></code>
-函数不太可能做到这一点，但这个函数会：</p>
+<p><strong>调用栈。</strong> 问题在于，<em>调用栈</em>（call stack）的大小是有限的。你大概在入门编程课里学过，大多数语言都用栈来实现函数调用。栈里每一个元素都对应一个“已经开始、但还没完成”的函数调用。每个元素记录了局部变量的值、函数当前执行到哪条指令等信息。当一个函数体在求值过程中调用另一个函数时，就会有一个新的元素被压入调用栈；而被调用函数执行完毕后，这个元素又会弹出。</p>
+<p>栈的大小通常受操作系统限制。因此，一旦栈空间耗尽，就无法再进行新的函数调用。正常情况下这不会发生，因为通常没有理由在返回之前连续进行那么多层函数调用。但一旦真的发生，操作系统让程序停止其实是合理的：否则它可能会不断吞噬整台计算机上的可用内存，从而影响同机运行的其他程序。<code class="docutils literal notranslate"><span class="pre">count</span></code> 函数本身不太可能造成这种后果，但下面这个函数就可能：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">count_forever</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">count_forever</span> <span class="n">n</span>
@@ -1566,19 +1382,9 @@ OCaml 程序员通常用希腊语发音：alpha、beta 和 gamma。</p>
 </div>
 </div>
 </div>
-<p>所以操作系统为了安全起见限制了调用栈的大小。这意味着
-最终 <code class="docutils literal notranslate"><span class="pre">count</span></code> 将在足够大的输入上耗尽堆栈空间。通知
-这种选择如何真正独立于编程语言。所以这个也一样
-问题可能并且确实发生在 OCaml 以外的语言中，包括 Python 和
-Java。你只是不太可能看到它在那里显现，因为你
-可能从来没有用这些语言编写过那么多的递归函数。</p>
-<p><strong>尾递归。</strong> 这个问题有一个解决方案，在
-<a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/800179.810196">Guy Steele 1977 年关于 LISP 的论文</a>。解决方案，<em>尾调用
-优化</em>，需要程序员和开发人员之间的一些合作
-编译器。程序员对该函数进行了一些重写，
-然后编译器会注意到并应用优化。让我们看看它是如何工作的。</p>
-<p>假设递归函数 <code class="docutils literal notranslate"><span class="pre">f</span></code> 调用自身然后返回结果
-那个递归调用。我们的 <code class="docutils literal notranslate"><span class="pre">count</span></code> 函数<em>不</em>这样做：</p>
+<p>所以，出于安全考虑，操作系统会限制调用栈的大小。这就意味着：对于足够大的输入，<code class="docutils literal notranslate"><span class="pre">count</span></code> 最终一定会把栈耗尽。注意，这个问题其实和具体的编程语言关系不大，因此它不仅会出现在 OCaml 中，也会出现在 Python、Java 等其他语言里。只是你可能不太容易在那里见到，因为你大概没有在那些语言里写过这么多递归函数。</p>
+<p><strong>尾递归。</strong> 这个问题有一个解决方案，最早见于 <a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/800179.810196">Guy Steele 1977 年关于 LISP 的论文</a>。这个解决方案叫做<em>尾调用优化</em>（tail-call optimization），它需要程序员和编译器之间做一点配合。程序员先对函数做一些改写，编译器识别出这种改写后，再施加优化。下面来看看它是如何工作的。</p>
+<p>假设一个递归函数 <code class="docutils literal notranslate"><span class="pre">f</span></code> 调用了它自己，然后直接返回这次递归调用的结果。我们的 <code class="docutils literal notranslate"><span class="pre">count</span></code> 函数<em>并不是</em>这样：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">count</span> <span class="n">n</span> <span class="o">=</span>
@@ -1592,11 +1398,8 @@ Java。你只是不太可能看到它在那里显现，因为你
 </div>
 </div>
 </div>
-<p>相反，在递归调用 <code class="docutils literal notranslate"><span class="pre">count</span> <span class="pre">(n</span> <span class="pre">-</span> <span class="pre">1)</span></code> 之后，进行计算
-剩余：计算机仍然需要将 <code class="docutils literal notranslate"><span class="pre">1</span></code> 添加到该调用的结果中。</p>
-<p>但我们作为程序员可以重写 <code class="docutils literal notranslate"><span class="pre">count</span></code> 函数，使其<em>不</em>
-递归调用后需要进行任何额外的计算。诀窍是
-创建带有额外参数的辅助函数：</p>
+<p>因为在递归调用 <code class="docutils literal notranslate"><span class="pre">count</span> <span class="pre">(n</span> <span class="pre">-</span> <span class="pre">1)</span></code> 之后，还有额外计算要做：计算机仍然需要把 <code class="docutils literal notranslate"><span class="pre">1</span></code> 加到那个调用的结果上。</p>
+<p>但我们作为程序员，可以把 <code class="docutils literal notranslate"><span class="pre">count</span></code> 改写成一种形式，让它在递归调用之后<em>不再需要</em>额外计算。诀窍是写一个多带一个参数的辅助函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">count_aux</span> <span class="n">n</span> <span class="n">acc</span> <span class="o">=</span>
@@ -1615,27 +1418,10 @@ Java。你只是不太可能看到它在那里显现，因为你
 </div>
 </div>
 </div>
-<p>函数 <code class="docutils literal notranslate"><span class="pre">count_aux</span></code> 与我们原来的 <code class="docutils literal notranslate"><span class="pre">count</span></code> 几乎相同，但它增加了一个
-名为 <code class="docutils literal notranslate"><span class="pre">acc</span></code> 的额外参数，这是惯用的，代表“累加器”。
-这个想法是我们想要从函数返回的值是缓慢的，
-每个递归调用，都在其中累积。 “剩余计算量”
-—添加 1— 现在发生在递归调用<em>之前</em>
-<em>之后</em>。  当递归的基本情况最终到达时，函数
-现在返回 <code class="docutils literal notranslate"><span class="pre">acc</span></code>，其中已累积答案。</p>
-<p>但原始的基本情况 0 仍然需要存在于代码中的某个地方。
-确实如此，因为 <code class="docutils literal notranslate"><span class="pre">acc</span></code> 的原始值被传递给 <code class="docutils literal notranslate"><span class="pre">count_aux</span></code>。
-现在 <code class="docutils literal notranslate"><span class="pre">count_tr</span></code> （我们很快就会明白为什么名字是“tr”）可以工作了
-作为我们原来的 <code class="docutils literal notranslate"><span class="pre">count</span></code> 的替代品。</p>
-<p>至此我们就完成了程序员的职责，但是大概
-不清楚我们为什么要做出这样的努力。毕竟 <code class="docutils literal notranslate"><span class="pre">count_aux</span></code> 仍然会调用
-本身像 <code class="docutils literal notranslate"><span class="pre">count</span></code> 那样递归了太多次，最终溢出了
-堆栈。</p>
-<p>这就是编译器的责任发挥作用的地方。一个好的编译器（以及
-OCaml 编译器这样就很好）可以注意到 <em>tail 中何时有递归调用
-位置</em>，这是一种技术方式，表示“不再需要计算”
-返回后完成”。对 <code class="docutils literal notranslate"><span class="pre">count_aux</span></code> 的递归调用位于尾部位置；
-对 <code class="docutils literal notranslate"><span class="pre">count</span></code> 的递归调用不是。它们再次出现，以便你进行比较
-他们：</p>
+<p>函数 <code class="docutils literal notranslate"><span class="pre">count_aux</span></code> 和原来的 <code class="docutils literal notranslate"><span class="pre">count</span></code> 几乎一样，只不过多了一个名为 <code class="docutils literal notranslate"><span class="pre">acc</span></code> 的参数。这是个惯用命名，表示“累加器”（accumulator）。它的思路是：我们最终希望函数返回的值，会随着每一次递归调用逐步累积到这个参数里。原本“剩余的计算”也就是“加 1”这件事，现在发生在递归调用<em>之前</em>，而不是<em>之后</em>。等递归最终触达基本情况时，函数直接返回 <code class="docutils literal notranslate"><span class="pre">acc</span></code>，因为答案已经累积好了。</p>
+<p>不过，原来基本情况返回的 <code class="docutils literal notranslate"><span class="pre">0</span></code> 仍然得以某种形式出现在代码里。它确实还在，只不过变成了传给 <code class="docutils literal notranslate"><span class="pre">count_aux</span></code> 的初始累加器值。现在，<code class="docutils literal notranslate"><span class="pre">count_tr</span></code>（我们马上会解释名字里的 <code class="docutils literal notranslate"><span class="pre">tr</span></code>）就可以作为原始 <code class="docutils literal notranslate"><span class="pre">count</span></code> 的替代实现。</p>
+<p>到这里为止，程序员这一边的工作就做完了。但你可能仍然会困惑：这么做到底有什么用？毕竟 <code class="docutils literal notranslate"><span class="pre">count_aux</span></code> 还是会像 <code class="docutils literal notranslate"><span class="pre">count</span></code> 一样递归调用自己很多次，最后不也还是会栈溢出吗？</p>
+<p>这时就轮到编译器的职责了。一个好的编译器（OCaml 编译器在这方面就很好）能够识别出某次递归调用是否处于<em>尾位置</em>（tail position）。这是一种技术说法，意思是：“这个调用返回之后，不再有其他计算要做了。”<code class="docutils literal notranslate"><span class="pre">count_aux</span></code> 中的递归调用就在尾位置；<code class="docutils literal notranslate"><span class="pre">count</span></code> 中的递归调用则不在。把它们放在一起再看一遍：</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">count</span> <span class="n">n</span> <span class="o">=</span>
@@ -1647,21 +1433,8 @@ OCaml 编译器这样就很好）可以注意到 <em>tail 中何时有递归调�
 </div>
 </div>
 </div>
-<p>这就是尾部位置很重要的原因： **尾部位置的递归调用并不重要
-需要一个新的堆栈框架。它可以只重用现有的堆栈框架。**那就是
-因为现有的堆栈框架中没有任何东西可以使用了！没有
-计算尚未完成，因此没有局部变量或下一条指令
-执行等不再重要。这些内存都不需要被读取
-再次，因为该调用实际上已经完成。所以与其浪费
-通过分配另一个堆栈帧的空间，编译器“回收”使用的空间
-通过前一帧。</p>
-<p>这就是<em>尾调用优化</em>。它甚至可以应用于超出范围的情况
-递归函数（如果调用函数的堆栈帧适当兼容）
-与被叫方。而且，这是一件大事。尾调用优化减少了
-堆栈空间要求从线性到恒定。而 <code class="docutils literal notranslate"><span class="pre">count</span></code> 需要 <span class="math notranslate nohighlight">\(O(n)\)</span>
-堆栈帧，<code class="docutils literal notranslate"><span class="pre">count_aux</span></code> 只需要 <span class="math notranslate nohighlight">\(O(1)\)</span>，因为相同的帧会被重用
-每次递归调用都会一遍又一遍。这实际上意味着 <code class="docutils literal notranslate"><span class="pre">count_tr</span></code>
-可以数到 1,000,000：</p>
+<p>尾位置之所以重要，是因为：<strong>处于尾位置的递归调用，不需要新的栈帧；它可以直接复用现有的栈帧。</strong> 原因在于，现有栈帧里已经没有任何“以后还会用到”的信息了。既然没有剩余计算，那么局部变量、下一条待执行指令之类的信息都已经不再重要。这部分内存今后也不会再被读取，因为这一层调用实际上已经等同于结束了。所以，与其再分配一个新的栈帧浪费空间，编译器会直接“回收利用”前一个栈帧所占的空间。</p>
+<p>这就是<em>尾调用优化</em>。它甚至不仅能用于递归函数；只要调用者的栈帧和被调用者足够兼容，这种优化在其他场景下也成立。而且，这个优化非常重要。它把栈空间需求从线性降到了常数级。原来的 <code class="docutils literal notranslate"><span class="pre">count</span></code> 需要 <span class="math notranslate nohighlight">\(O(n)\)</span> 个栈帧，而 <code class="docutils literal notranslate"><span class="pre">count_aux</span></code> 只需要 <span class="math notranslate nohighlight">\(O(1)\)</span>，因为每次递归都在反复复用同一个栈帧。这也意味着 <code class="docutils literal notranslate"><span class="pre">count_tr</span></code> 真的可以数到 1,000,000：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">count_tr</span> <span class="mi">1_000_000</span>
@@ -1674,37 +1447,17 @@ OCaml 编译器这样就很好）可以注意到 <em>tail 中何时有递归调�
 </div>
 </div>
 </div>
-<p>最后，为什么我们将这个函数命名为<code class="docutils literal notranslate"><span class="pre">count_tr</span></code>？ “tr”代表<em>tail
-递归</em>。尾递归函数是一种递归函数，其递归函数
-调用全部位于尾部位置。换句话说，它是一个函数（除非
-还有其他病症）不会耗尽堆栈。</p>
-<p>**尾递归的重要性。**有时是函数式程序员的新手
-过于关注它。如果你只关心写初稿
-对于函数来说，你可能不需要担心尾递归。这是
-如果需要的话，稍后可以很容易地使其尾递归，只需添加一个
-累加器参数。或者也许你应该重新思考你是如何设计的
-函数。以 <code class="docutils literal notranslate"><span class="pre">count</span></code> 为例：这有点愚蠢。但稍后我们会看到
-一些并不愚蠢的例子，例如迭代包含数千个的列表
-元素。</p>
-<p>编译器支持优化非常重要。否则，
-作为程序员，你对代码所做的转换没有任何区别。确实，
-大多数编译器都支持它，至少作为一个选项。 Java 是一个值得注意的
-例外。</p>
-<p><strong>尾递归的秘诀。</strong> 简而言之，这就是我们如何创建一个函数
-是尾递归：</p>
+<p>最后，为什么这个函数叫 <code class="docutils literal notranslate"><span class="pre">count_tr</span></code>？这里的 <code class="docutils literal notranslate"><span class="pre">tr</span></code> 就是 <em>tail recursive</em> 的缩写。尾递归函数指的是：它所有递归调用都处在尾位置。换句话说，它是一种不会把栈耗尽的递归函数，除非程序中还存在其他异常情况。</p>
+<p><strong>尾递归的重要性。</strong> 初学函数式编程的人有时会过度执着于尾递归。如果你现在只是在写某个函数的第一版实现，其实通常没必要一开始就为尾递归操心。真有需要的话，往后加一个累加器参数，往往就很容易把它改成尾递归。或者，也许你应该重新审视函数本身的设计。比如 <code class="docutils literal notranslate"><span class="pre">count</span></code> 这个例子，其实本来就有点傻。不过后面我们会见到一些并不傻的例子，比如遍历含有成千上万个元素的列表。</p>
+<p>同样重要的是：编译器必须支持这种优化。否则你作为程序员对代码做的这些变换根本不会带来任何实际收益。事实上，大多数编译器都支持尾调用优化，至少会把它作为一个可选项。Java 是一个比较著名的例外。</p>
+<p><strong>尾递归的配方。</strong> 简单概括一下，把一个函数改写成尾递归的大致步骤是：</p>
 <ol class="arabic simple">
-<li><p>将函数更改为辅助函数。添加一个额外的参数：
-累加器，通常命名为 <code class="docutils literal notranslate"><span class="pre">acc</span></code>。</p></li>
-<li><p>编写调用帮助器的函数的新“主”版本。它通过了
-原始基本情况的返回值作为初始值
-累加器。</p></li>
-<li><p>更改辅助函数以返回基本情况下的累加器。</p></li>
-<li><p>更改辅助函数的递归大小写。它现在需要做额外的事情
-在递归调用之前处理累加器参数。这是唯一的
-这一步需要很多独创性。</p></li>
+<li><p>把原函数改写成一个辅助函数，并加上一个额外参数：累加器，通常命名为 <code class="docutils literal notranslate"><span class="pre">acc</span></code>。</p></li>
+<li><p>再写一个新的“主函数”版本，负责调用辅助函数，并把原始基本情况的返回值作为累加器的初始值传进去。</p></li>
+<li><p>修改辅助函数，让它在基本情况时直接返回累加器。</p></li>
+<li><p>修改辅助函数的递归分支，让递归调用前就先把额外工作体现在累加器参数上。这一步往往最需要技巧。</p></li>
 </ol>
-<p><strong>示例：阶乘。</strong> 让我们将此阶乘函数转换为
-尾递归：</p>
+<p><strong>一个例子：阶乘。</strong> 下面把这个阶乘函数改写成尾递归形式：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [fact n] is [n] factorial. *)</span>
@@ -1719,24 +1472,23 @@ OCaml 编译器这样就很好）可以注意到 <em>tail 中何时有递归调�
 </div>
 </div>
 </div>
-<p>首先，我们更改它的名称并添加一个累加器参数：</p>
+<p>第一步，改名并加上累加器参数：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fact_aux</span> <span class="n">n</span> <span class="n">acc</span> <span class="o">=</span> <span class="o">...</span>
 </pre></div>
 </div>
-<p>其次，我们编写一个新的“main”函数，用原始函数调用助手
-作为累加器的基本情况：</p>
+<p>第二步，写一个新的“主函数”，用原来的基本情况返回值来初始化累加器：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">fact_tr</span> <span class="n">n</span> <span class="o">=</span> <span class="n">fact_aux</span> <span class="n">n</span> <span class="mi">1</span>
 </pre></div>
 </div>
-<p>第三，我们更改辅助函数以在基本情况下返回累加器：</p>
+<p>第三步，把辅助函数的基本情况改成返回累加器：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">acc</span> <span class="o">...</span>
 </pre></div>
 </div>
-<p>最后，我们改变递归的情况：</p>
+<p>最后，改写递归分支：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">else</span> <span class="n">fact_aux</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">acc</span><span class="o">)</span>
 </pre></div>
 </div>
-<p>把它们放在一起，我们有：</p>
+<p>把这些拼起来，就得到：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fact_aux</span> <span class="n">n</span> <span class="n">acc</span> <span class="o">=</span>
@@ -1755,8 +1507,7 @@ OCaml 编译器这样就很好）可以注意到 <em>tail 中何时有递归调�
 </div>
 </div>
 </div>
-<p>这是一个很好的练习，但也许不值得。  甚至在我们用尽之前
-堆栈空间，计算会出现整数溢出：</p>
+<p>这是个不错的练习，不过实际收益可能也没那么大。因为在栈空间耗尽之前，这个计算就已经会先遭遇整数溢出了：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">fact</span> <span class="mi">50</span>
@@ -1769,11 +1520,7 @@ OCaml 编译器这样就很好）可以注意到 <em>tail 中何时有递归调�
 </div>
 </div>
 </div>
-<p>为了解决这个问题，我们求助于 OCaml 的大整数库，
-<a class="reference external" href="https://antoinemine.github.io/Zarith/doc/latest/Z.html">Zarith</a>。这里我们使用了一些超越一切的 OCaml 功能
-到目前为止我们已经看到了，但希望没有什么特别令人惊讶的。 （如果你想
-按照此代码，首先在 OPAM 中安装 Zarith
-<code class="docutils literal notranslate"><span class="pre">opam</span> <span class="pre">install</span> <span class="pre">zarith</span></code>。）</p>
+<p>要解决这个问题，我们得求助于 OCaml 的大整数库 <a class="reference external" href="https://antoinemine.github.io/Zarith/doc/latest/Z.html">Zarith</a>。下面会用到一些超出目前课程范围的 OCaml 特性，但应该都不会太令人意外。（如果你想亲自运行这段代码，先用 <code class="docutils literal notranslate"><span class="pre">opam</span> <span class="pre">install</span> <span class="pre">zarith</span></code> 在 OPAM 里安装 Zarith。）</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">require</span> <span class="s2">&quot;zarith.top&quot;</span><span class="o">;;</span>
@@ -1804,18 +1551,13 @@ OCaml 编译器这样就很好）可以注意到 <em>tail 中何时有递归调�
 </div>
 </div>
 </div>
-<p>如果你愿意，可以使用该代码来计算 <code class="docutils literal notranslate"><span class="pre">zfact_tr</span> <span class="pre">1_000_000</span></code> 而不需要堆栈
-或整数溢出，尽管这需要几分钟的时间。</p>
-<p>模块章节将详细解释我们上面使用的 OCaml 功能，
-但现在：</p>
+<p>如果你愿意，甚至可以用这段代码去计算 <code class="docutils literal notranslate"><span class="pre">zfact_tr</span> <span class="pre">1_000_000</span></code>，而且既不会栈溢出，也不会整数溢出，不过这会花上几分钟。</p>
+<p>模块一章会更详细地解释上面用到的这些 OCaml 特性。现在先简单说明一下：</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">#require</span></code> 加载该库，该库提供了一个名为 <code class="docutils literal notranslate"><span class="pre">Z</span></code> 的模块。回想一下
-<span class="math notranslate nohighlight">\(\mathbb{Z}\)</span> 是数学中用来表示整数的符号。</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Z.n</span></code> 表示在 <code class="docutils literal notranslate"><span class="pre">Z</span></code> 内部定义的名称 <code class="docutils literal notranslate"><span class="pre">n</span></code>。</p></li>
-<li><p>类型 <code class="docutils literal notranslate"><span class="pre">Z.t</span></code> 是大整数类型的库名称。</p></li>
-<li><p>我们使用库值 <code class="docutils literal notranslate"><span class="pre">Z.equal</span></code> 进行相等比较，使用 <code class="docutils literal notranslate"><span class="pre">Z.zero</span></code> 表示 0，
-<code class="docutils literal notranslate"><span class="pre">Z.pred</span></code> 表示前驱（即减 1）， <code class="docutils literal notranslate"><span class="pre">Z.mul</span></code> 表示乘法，
-<code class="docutils literal notranslate"><span class="pre">Z.one</span></code> 表示 1，<code class="docutils literal notranslate"><span class="pre">Z.of_int</span></code> 将原始整数转换为大整数。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#require</span></code> 会加载这个库，而该库提供了一个名为 <code class="docutils literal notranslate"><span class="pre">Z</span></code> 的模块。回忆一下，数学中 <span class="math notranslate nohighlight">\(\mathbb{Z}\)</span> 正是整数集合的符号。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Z.n</span></code> 表示模块 <code class="docutils literal notranslate"><span class="pre">Z</span></code> 内部定义的名字 <code class="docutils literal notranslate"><span class="pre">n</span></code>。</p></li>
+<li><p>类型 <code class="docutils literal notranslate"><span class="pre">Z.t</span></code> 是这个库对“大整数类型”的命名。</p></li>
+<li><p>我们使用库中的 <code class="docutils literal notranslate"><span class="pre">Z.equal</span></code> 做相等比较，<code class="docutils literal notranslate"><span class="pre">Z.zero</span></code> 表示 0，<code class="docutils literal notranslate"><span class="pre">Z.pred</span></code> 表示前驱（也就是减 1），<code class="docutils literal notranslate"><span class="pre">Z.mul</span></code> 表示乘法，<code class="docutils literal notranslate"><span class="pre">Z.one</span></code> 表示 1，而 <code class="docutils literal notranslate"><span class="pre">Z.of_int</span></code> 用来把原始整数转换成大整数。</p></li>
 </ul>
 </section>
 </section>
@@ -1889,10 +1631,10 @@ OCaml 编译器这样就很好）可以注意到 <em>tail 中何时有递归调�
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">2.4.3. 函数应用</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">2.4.4. 管道</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">2.4.5. 多态函数</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">2.4.6. 带标签和可选参数</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">2.4.6. 带标签参数与可选参数</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">2.4.7. 部分应用</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">2.4.8. 函数结合性</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">2.4.9. 作为函数的运算符</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">2.4.8. 函数的结合性</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">2.4.9. 把运算符当作函数</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">2.4.10. 尾递归</a></li>
 </ul>
   </nav></div>

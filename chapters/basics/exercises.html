@@ -189,7 +189,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">2. OCaml 基础知识</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">2. OCaml 基础</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="toplevel.html">2.1. OCaml 顶层</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">2.2. 编译 OCaml 程序</a></li>
 <li class="toctree-l2"><a class="reference internal" href="expressions.html">2.3. 表达式</a></li>
@@ -541,132 +541,93 @@ We are happy to add or correct solutions. Please make contributions through GitH
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: values [★]</strong></p>
-<p>以下每个 OCaml 表达式的类型和值是什么？</p>
+<p>下面每个 OCaml 表达式的类型和值分别是什么？</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">7</span> <span class="pre">*</span> <span class="pre">(1</span> <span class="pre">+</span> <span class="pre">2</span> <span class="pre">+</span> <span class="pre">3)</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;CS</span> <span class="pre">&quot;</span> <span class="pre">^</span> <span class="pre">string_of_int</span> <span class="pre">3110</span></code></p></li>
 </ul>
-<p><em>提示：在顶层输入每个表达式，它会告诉你答案。
-注意：<code class="docutils literal notranslate"><span class="pre">^</span></code> 不是求幂。</em></p>
+<p><em>提示：把每个表达式输入到顶层里，顶层会告诉你答案。
+注意：<code class="docutils literal notranslate"><span class="pre">^</span></code> 不是求幂运算。</em></p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: operators [★★]</strong></p>
-<p>查看 <a class="reference external" href="https://v2.ocaml.org/manual/expr.html#ss%3Aexpr-operators">OCaml 手册中的完整运算符表</a>（你需要
-向下滚动以在该页面上找到它）。</p>
+<p>查看 <a class="reference external" href="https://v2.ocaml.org/manual/expr.html#ss%3Aexpr-operators">OCaml 手册中的运算符总表</a>（你需要向下滚动才能看到）。</p>
 <ul class="simple">
-<li><p>编写一个将 <code class="docutils literal notranslate"><span class="pre">42</span></code> 乘以 <code class="docutils literal notranslate"><span class="pre">10</span></code> 的表达式。</p></li>
-<li><p>编写一个表达式，将 <code class="docutils literal notranslate"><span class="pre">3.14</span></code> 除以 <code class="docutils literal notranslate"><span class="pre">2.0</span></code>。 <em>提示：整数和
-浮点运算符在 OCaml 中的编写方式不同。</em></p></li>
-<li><p>编写一个表达式来计算 <code class="docutils literal notranslate"><span class="pre">4.2</span></code> 的七次方。 <em>注：
-OCaml 中没有内置的整数求幂运算符（也没有
-C，顺便说一句），部分原因是它不是大多数 CPU 提供的操作。</em></p></li>
+<li><p>写一个把 <code class="docutils literal notranslate"><span class="pre">42</span></code> 乘以 <code class="docutils literal notranslate"><span class="pre">10</span></code> 的表达式。</p></li>
+<li><p>写一个把 <code class="docutils literal notranslate"><span class="pre">3.14</span></code> 除以 <code class="docutils literal notranslate"><span class="pre">2.0</span></code> 的表达式。<em>提示：在 OCaml 中，整数运算符和浮点运算符的写法不同。</em></p></li>
+<li><p>写一个计算 <code class="docutils literal notranslate"><span class="pre">4.2</span></code> 的七次方的表达式。<em>注意：OCaml 没有内建的整数幂运算符（顺便说一句，C 也没有），部分原因是大多数 CPU 本身并不直接提供这个操作。</em></p></li>
 </ul>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: equality [★]</strong></p>
 <ul class="simple">
-<li><p>编写一个使用结构相等性比较 <code class="docutils literal notranslate"><span class="pre">42</span></code> 和 <code class="docutils literal notranslate"><span class="pre">42</span></code> 的表达式。</p></li>
-<li><p>编写一个使用结构相等性比较 <code class="docutils literal notranslate"><span class="pre">&quot;hi&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&quot;hi&quot;</span></code> 的表达式。
-结果如何？</p></li>
-<li><p>编写一个表达式，使用物理相等性将 <code class="docutils literal notranslate"><span class="pre">&quot;hi&quot;</span></code> 与 <code class="docutils literal notranslate"><span class="pre">&quot;hi&quot;</span></code> 进行比较。
-结果如何？</p></li>
+<li><p>写一个使用结构相等比较 <code class="docutils literal notranslate"><span class="pre">42</span></code> 和 <code class="docutils literal notranslate"><span class="pre">42</span></code> 的表达式。</p></li>
+<li><p>写一个使用结构相等比较 <code class="docutils literal notranslate"><span class="pre">&quot;hi&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&quot;hi&quot;</span></code> 的表达式。结果是什么？</p></li>
+<li><p>写一个使用物理相等比较 <code class="docutils literal notranslate"><span class="pre">&quot;hi&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&quot;hi&quot;</span></code> 的表达式。结果是什么？</p></li>
 </ul>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: assert [★]</strong></p>
 <ul class="simple">
-<li><p>在 utop 中输入 <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">true;;</span></code> ，看看会发生什么。</p></li>
-<li><p>在 utop 中输入 <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">false;;</span></code> ，看看会发生什么。</p></li>
-<li><p>编写一个表达式，断言 2110（在结构上）不等于 3110。</p></li>
+<li><p>在 utop 中输入 <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">true;;</span></code>，看看会发生什么。</p></li>
+<li><p>在 utop 中输入 <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">false;;</span></code>，看看会发生什么。</p></li>
+<li><p>写一个断言 2110 在结构上不等于 3110 的表达式。</p></li>
 </ul>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: if [★]</strong></p>
-<p>如果 <code class="docutils literal notranslate"><span class="pre">2</span></code> 大于 <code class="docutils literal notranslate"><span class="pre">1</span></code> 并且则编写一个计算结果为 <code class="docutils literal notranslate"><span class="pre">42</span></code> 的 if 表达式
-否则计算结果为 <code class="docutils literal notranslate"><span class="pre">7</span></code>。</p>
+<p>写一个 <code class="docutils literal notranslate"><span class="pre">if</span></code> 表达式：如果 <code class="docutils literal notranslate"><span class="pre">2</span></code> 大于 <code class="docutils literal notranslate"><span class="pre">1</span></code>，则求值为 <code class="docutils literal notranslate"><span class="pre">42</span></code>；否则求值为 <code class="docutils literal notranslate"><span class="pre">7</span></code>。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: double fun [★]</strong></p>
-<p>使用上面的增量函数作为指导，定义一个函数 <code class="docutils literal notranslate"><span class="pre">double</span></code>
-将其输入乘以 2。例如，<code class="docutils literal notranslate"><span class="pre">double</span> <span class="pre">7</span></code> 将是 <code class="docutils literal notranslate"><span class="pre">14</span></code>。测试你的
-通过将其应用于一些输入来实现函数。将这些测试用例转化为断言。</p>
+<p>以上面的 <code class="docutils literal notranslate"><span class="pre">increment</span></code> 函数为参考，定义一个函数 <code class="docutils literal notranslate"><span class="pre">double</span></code>，把输入乘以 2。例如，<code class="docutils literal notranslate"><span class="pre">double</span> <span class="pre">7</span></code> 的结果应为 <code class="docutils literal notranslate"><span class="pre">14</span></code>。用若干输入测试你的函数，并把这些测试写成断言。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: more fun [★★]</strong></p>
 <ul class="simple">
-<li><p>定义一个计算浮点数立方的函数。测试你的
-通过将其应用于一些输入来实现函数。</p></li>
-<li><p>定义一个计算整数符号（1、0 或 -1）的函数。使用一个
-嵌套 if 表达式。通过将其应用于一些输入来测试你的函数。</p></li>
-<li><p>定义一个函数，计算给定半径的圆的面积。测试
-你的函数带有<code class="docutils literal notranslate"><span class="pre">assert</span></code>。</p></li>
+<li><p>定义一个计算浮点数立方的函数。通过给它传几个输入来测试。</p></li>
+<li><p>定义一个计算整数符号（1、0 或 -1）的函数。使用嵌套的 <code class="docutils literal notranslate"><span class="pre">if</span></code> 表达式。通过给它传几个输入来测试。</p></li>
+<li><p>定义一个函数，根据给定半径计算圆的面积。用 <code class="docutils literal notranslate"><span class="pre">assert</span></code> 测试你的函数。</p></li>
 </ul>
-<p>对于后者，请记住浮点运算并不精确。
-你应该断言结果是“接近”，而不是断言精确值
-足够”，例如，在 1e-5 内。如果你不熟悉，那么这是值得的
-阅读<a class="reference external" href="https://floating-point-gui.de/">floating-point arithmetic</a>。</p>
-<p>只需提供额外的参数即可定义采用多个输入的函数
-这些输入的名称作为 let 定义的一部分。例如，以下
-函数计算三个参数的平均值：</p>
+<p>对于最后一个练习，要记住浮点运算并不精确。你应当断言结果“足够接近”，而不是断言它和精确值完全相等，例如误差在 <code class="docutils literal notranslate"><span class="pre">1e-5</span></code> 以内。如果这对你来说还比较陌生，建议阅读一下 <a class="reference external" href="https://floating-point-gui.de/">floating-point arithmetic</a>。</p>
+<p>接受多个输入的函数，只需在 <code class="docutils literal notranslate"><span class="pre">let</span></code> 定义中额外写出这些输入的名字即可。例如，下面这个函数计算三个参数的平均值：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">avg3</span> <span class="n">x</span> <span class="n">y</span> <span class="n">z</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span> <span class="o">+.</span> <span class="n">y</span> <span class="o">+.</span> <span class="n">z</span><span class="o">)</span> <span class="o">/.</span> <span class="mi">3</span><span class="o">.</span>
 </pre></div>
 </div>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: RMS [★★]</strong></p>
-<p>定义一个计算两个的<em>均方根</em>的函数
-数字—即<span class="math notranslate nohighlight">\(\sqrt{(x^2 + y^2) / 2}\)</span>。使用 <code class="docutils literal notranslate"><span class="pre">assert</span></code> 测试你的函数。</p>
+<p>定义一个函数，用来计算两个数的<em>均方根</em>（root mean square），即 <span class="math notranslate nohighlight">\(\sqrt{(x^2 + y^2) / 2}\)</span>。使用 <code class="docutils literal notranslate"><span class="pre">assert</span></code> 测试你的函数。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: date fun [★★★]</strong></p>
-<p>定义一个函数，以整数 <code class="docutils literal notranslate"><span class="pre">d</span></code> 和字符串 <code class="docutils literal notranslate"><span class="pre">m</span></code> 作为输入并返回
-<code class="docutils literal notranslate"><span class="pre">true</span></code> 恰好在 <code class="docutils literal notranslate"><span class="pre">d</span></code> 和 <code class="docutils literal notranslate"><span class="pre">m</span></code> 形成<em>有效日期</em>时。这里，有效日期有一个月
-这是以下缩写之一：Jan、Feb、Mar、Apr、May、Jun、Jul、
-八月、九月、十月、十一月、十二月。日期必须是 1 到
-该月的最少天数（含）。例如，如果月份是
-一月，则该日在 1 日到 31 日之间（含 1 日和 31 日），而如果月份是二月，
-那么该日期介于 1 点到 28 点之间（含 1 点和 28 点）。</p>
-<p>你的函数能有多简洁（即几行短代码）？你
-绝对可以在不到 12 行的时间内完成此操作。</p>
+<p>定义一个函数，接受整数 <code class="docutils literal notranslate"><span class="pre">d</span></code> 和字符串 <code class="docutils literal notranslate"><span class="pre">m</span></code> 作为输入，并且当且仅当 <code class="docutils literal notranslate"><span class="pre">d</span></code> 和 <code class="docutils literal notranslate"><span class="pre">m</span></code> 构成一个<em>有效日期</em>时返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>。这里，“有效日期”要求月份必须是以下缩写之一：Jan、Feb、Mar、Apr、May、Jun、Jul、Aug、Sept、Oct、Nov、Dec；日期必须在该月最少天数所允许的范围内（含边界）。例如，如果月份是 Jan，那么日期必须在 1 到 31 之间（含 1 和 31）；如果月份是 Feb，那么日期必须在 1 到 28 之间（含 1 和 28）。</p>
+<p>看看你能把这个函数写得多精炼（也就是用尽量少、尽量短的代码行）。完全可以把它写在 12 行以内。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: fib [★★]</strong></p>
-<p>定义一个递归函数 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>，使得 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">n</span></code> 是第 <code class="docutils literal notranslate"><span class="pre">n</span></code>
-<a class="reference external" href="https://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci sequence</a> 中的数字，即 1, 1, 2, 3, 5, 8, 13, …
-是：</p>
+<p>定义一个递归函数 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>，使得 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">n</span></code> 是 <a class="reference external" href="https://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci sequence</a> 中的第 <code class="docutils literal notranslate"><span class="pre">n</span></code> 个数。该序列是 1、1、2、3、5、8、13、…。也就是说：</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">1</span> <span class="pre">=</span> <span class="pre">1</span></code>，</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">2</span> <span class="pre">=</span> <span class="pre">1</span></code>，以及</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">fib</span> <span class="pre">(n-1)</span> <span class="pre">+</span> <span class="pre">fib</span> <span class="pre">(n-2)</span></code> 对于任何 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">&gt;</span> <span class="pre">2</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">1</span> <span class="pre">=</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">2</span> <span class="pre">=</span> <span class="pre">1</span></code></p></li>
+<li><p>对任何 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">&gt;</span> <span class="pre">2</span></code>，都有 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">fib</span> <span class="pre">(n-1)</span> <span class="pre">+</span> <span class="pre">fib</span> <span class="pre">(n-2)</span></code></p></li>
 </ul>
-<p>在顶层测试你的函数。</p>
+<p>在顶层中测试你的函数。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: fib fast [★★★]</strong></p>
-<p>你的 <code class="docutils literal notranslate"><span class="pre">fib</span></code> 实现计算第 50 个斐波那契数的速度有多快？
-如果它几乎是即时计算的，那么恭喜！但递归的
-大多数人一开始想出的解决方案似乎会无限期地挂起。
-问题是显而易见的解决方案会重复计算子问题。对于
-例如，计算 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">5</span></code> 需要计算 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">4</span></code>，并且如果
-这些是单独计算的，大量的工作（实际上是指数量）
-正在重做。</p>
-<p>创建一个仅需要线性工作量的函数 <code class="docutils literal notranslate"><span class="pre">fib_fast</span></code>。 <em>提示：</em>
-编写一个递归辅助函数 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>，其中
-<code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">n</span> <span class="pre">pp</span> <span class="pre">p</span></code> 定义如下：</p>
+<p>你的 <code class="docutils literal notranslate"><span class="pre">fib</span></code> 实现计算第 50 个斐波那契数的速度有多快？如果几乎瞬间就算出来了，那很好；但大多数人最先想到的递归解法，看起来会像是一直卡在那里。问题在于，那个显而易见的解法会反复计算子问题。例如，计算 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">5</span></code> 需要计算 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">4</span></code>；而如果这两个值分别单独去算，就会有大量工作被重复做了（事实上是指数级的重复）。</p>
+<p>请实现一个只需要线性工作量的函数 <code class="docutils literal notranslate"><span class="pre">fib_fast</span></code>。<em>提示：</em> 写一个递归辅助函数 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">n</span> <span class="pre">pp</span> <span class="pre">p</span></code> 定义如下：</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">1</span> <span class="pre">pp</span> <span class="pre">p</span> <span class="pre">=</span> <span class="pre">p</span></code>，以及</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">n</span> <span class="pre">pp</span> <span class="pre">p</span> <span class="pre">=</span> <span class="pre">h</span> <span class="pre">(n-1)</span> <span class="pre">p</span> <span class="pre">(pp+p)</span></code> 对于任何 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">1</span> <span class="pre">pp</span> <span class="pre">p</span> <span class="pre">=</span> <span class="pre">p</span></code></p></li>
+<li><p>对任何 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>，都有 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">n</span> <span class="pre">pp</span> <span class="pre">p</span> <span class="pre">=</span> <span class="pre">h</span> <span class="pre">(n-1)</span> <span class="pre">p</span> <span class="pre">(pp+p)</span></code></p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">h</span></code> 的想法是假设前两个斐波那契数是 <code class="docutils literal notranslate"><span class="pre">pp</span></code>
-和 <code class="docutils literal notranslate"><span class="pre">p</span></code>，然后向前计算 <code class="docutils literal notranslate"><span class="pre">n</span></code> 更多数字。因此，<code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">h</span> <span class="pre">n</span> <span class="pre">0</span> <span class="pre">1</span></code> 为
-任何 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>。</p>
-<p><code class="docutils literal notranslate"><span class="pre">n</span></code> 的第一个值是多少，其中 <code class="docutils literal notranslate"><span class="pre">fib_fast</span> <span class="pre">n</span></code> 为负数，表示
-发生了整数溢出？</p>
+<p><code class="docutils literal notranslate"><span class="pre">h</span></code> 的思路是：假设前两个斐波那契数分别是 <code class="docutils literal notranslate"><span class="pre">pp</span></code> 和 <code class="docutils literal notranslate"><span class="pre">p</span></code>，然后继续向前计算 <code class="docutils literal notranslate"><span class="pre">n</span></code> 个数。因此，对任何 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>，都有 <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">h</span> <span class="pre">n</span> <span class="pre">0</span> <span class="pre">1</span></code>。</p>
+<p>找出第一个使 <code class="docutils literal notranslate"><span class="pre">fib_fast</span> <span class="pre">n</span></code> 为负数的 <code class="docutils literal notranslate"><span class="pre">n</span></code> 值。这表明发生了整数溢出。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: poly types [★★★]</strong></p>
-<p>下面每个函数的类型是什么？  你可以要求高层检查一下
-你的答案。</p>
+<p>下面每个函数的类型是什么？你可以让顶层帮你检查答案。</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="k">if</span> <span class="n">x</span> <span class="k">then</span> <span class="n">x</span> <span class="k">else</span> <span class="n">x</span>
 <span class="k">let</span> <span class="n">g</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="k">if</span> <span class="n">y</span> <span class="k">then</span> <span class="n">x</span> <span class="k">else</span> <span class="n">x</span>
 <span class="k">let</span> <span class="n">h</span> <span class="n">x</span> <span class="n">y</span> <span class="n">z</span> <span class="o">=</span> <span class="k">if</span> <span class="n">x</span> <span class="k">then</span> <span class="n">y</span> <span class="k">else</span> <span class="n">z</span>
@@ -676,14 +637,11 @@ C，顺便说一句），部分原因是它不是大多数 CPU 提供的操作�
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: divide [★★]</strong></p>
-<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">divide</span> <span class="pre">:</span> <span class="pre">numerator:float</span> <span class="pre">-&gt;</span> <span class="pre">denominator:float</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code>。应用
-你的函数。</p>
+<p>写一个函数 <code class="docutils literal notranslate"><span class="pre">divide</span> <span class="pre">:</span> <span class="pre">numerator:float</span> <span class="pre">-&gt;</span> <span class="pre">denominator:float</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code>，并应用你的函数。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: associativity [★★]</strong></p>
-<p>假设我们已经定义了<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">add</span> <span class="pre">x</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code>。以下哪一项
-产生一个整数，产生一个函数，产生一个错误？
-决定一个答案，然后在顶层检查你的答案。</p>
+<p>假设我们已经定义了 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">add</span> <span class="pre">x</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code>。下面哪些表达式会产生整数，哪些会产生函数，哪些会产生错误？先自己判断，再到顶层中验证。</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">add</span> <span class="pre">5</span> <span class="pre">1</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">add</span> <span class="pre">5</span></code></p></li>
@@ -693,8 +651,7 @@ C，顺便说一句），部分原因是它不是大多数 CPU 提供的操作�
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: average [★★]</strong></p>
-<p>定义一个中缀运算符 <code class="docutils literal notranslate"><span class="pre">+/.</span></code> 来计算两个的平均值
-浮点数。  例如，</p>
+<p>定义一个中缀运算符 <code class="docutils literal notranslate"><span class="pre">+/.</span></code>，用来计算两个浮点数的平均值。例如：</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">1.0</span> <span class="pre">+/.</span> <span class="pre">2.0</span> <span class="pre">=</span> <span class="pre">1.5</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">0.</span> <span class="pre">+/.</span> <span class="pre">0.</span> <span class="pre">=</span> <span class="pre">0.</span></code></p></li>
@@ -702,12 +659,12 @@ C，顺便说一句），部分原因是它不是大多数 CPU 提供的操作�
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: hello world [★]</strong></p>
-<p>在 utop 中输入以下内容：</p>
+<p>在 utop 中输入：</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">print_endline</span> <span class="pre">&quot;Hello</span> <span class="pre">world!&quot;;;</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">print_string</span> <span class="pre">&quot;Hello</span> <span class="pre">world!&quot;;;</span></code></p></li>
 </ul>
-<p>请注意每个输出的差异。</p>
+<p>观察两者输出的差异。</p>
 </section>
 
     <script type="text/x-thebe-config">

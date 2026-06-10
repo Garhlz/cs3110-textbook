@@ -187,7 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../intro/summary.html">1.5. 总结</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">2. OCaml 基础知识</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">2. OCaml 基础</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="toplevel.html">2.1. OCaml 顶层</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">2.2. 编译 OCaml 程序</a></li>
 <li class="toctree-l2"><a class="reference internal" href="expressions.html">2.3. 表达式</a></li>
@@ -613,10 +613,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">2.6. </span>打印<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>OCaml 具有针对一些内置原语的内置打印函数
-类型：<code class="docutils literal notranslate"><span class="pre">print_char</span></code>、<code class="docutils literal notranslate"><span class="pre">print_string</span></code>、<code class="docutils literal notranslate"><span class="pre">print_int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">print_float</span></code>。有
-还有一个 <code class="docutils literal notranslate"><span class="pre">print_endline</span></code> 函数，类似于 <code class="docutils literal notranslate"><span class="pre">print_string</span></code>，但也输出
-换行符。</p>
+<p>OCaml 为少数几种内置原始类型提供了内建的打印函数：<code class="docutils literal notranslate"><span class="pre">print_char</span></code>、<code class="docutils literal notranslate"><span class="pre">print_string</span></code>、<code class="docutils literal notranslate"><span class="pre">print_int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">print_float</span></code>。此外还有一个 <code class="docutils literal notranslate"><span class="pre">print_endline</span></code> 函数，它和 <code class="docutils literal notranslate"><span class="pre">print_string</span></code> 类似，但会额外输出一个换行符。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_endline</span> <span class="s2">&quot;Camels are bae&quot;</span>
@@ -634,7 +631,7 @@ document.write(`
 </div>
 <section id="unit">
 <h2><span class="section-number">2.6.1. </span>Unit<a class="headerlink" href="#unit" title="Permalink to this heading">#</a></h2>
-<p>让我们看一下其中几个函数的类型：</p>
+<p>我们来看看其中几个函数的类型：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_endline</span>
@@ -659,20 +656,12 @@ document.write(`
 </div>
 </div>
 </div>
-<p>它们都接受一个字符串作为输入并返回一个 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 类型的值，我们
-以前没见过。该类型只有一个值，写为 <code class="docutils literal notranslate"><span class="pre">()</span></code>
-也读作“unit”。所以 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 类似于 <code class="docutils literal notranslate"><span class="pre">bool</span></code>，只不过
-<code class="docutils literal notranslate"><span class="pre">unit</span></code> 类型的值比 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 类型的值少。</p>
-<p>当你需要接受参数或返回值，但没有
-有意义的值要传递或返回时，就会使用 <code class="docutils literal notranslate"><span class="pre">unit</span></code>。它相当于 Java 中的 <code class="docutils literal notranslate"><span class="pre">void</span></code>，
-也类似于 Python 中的 <code class="docutils literal notranslate"><span class="pre">None</span></code>。编写或使用有副作用的代码时，
-经常会用到 <code class="docutils literal notranslate"><span class="pre">unit</span></code>。打印就是副作用的一个例子：它会改变
-外部世界，而且这种改变无法撤销。</p>
+<p>它们都接受一个字符串作为输入，并返回一个 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 类型的值。这个类型我们之前还没有见过。<code class="docutils literal notranslate"><span class="pre">unit</span></code> 类型只有一个值，写作 <code class="docutils literal notranslate"><span class="pre">()</span></code>，读作 “unit”。所以你可以把 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 想成有点像 <code class="docutils literal notranslate"><span class="pre">bool</span></code>，只不过 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 比 <code class="docutils literal notranslate"><span class="pre">bool</span></code> 少一个值。</p>
+<p>当你需要接收参数或者返回值，但又没有任何“有意义的值”可传可返时，就会用到 <code class="docutils literal notranslate"><span class="pre">unit</span></code>。它相当于 Java 中的 <code class="docutils literal notranslate"><span class="pre">void</span></code>，也和 Python 里的 <code class="docutils literal notranslate"><span class="pre">None</span></code> 有些相似。<code class="docutils literal notranslate"><span class="pre">unit</span></code> 往往出现在有副作用的代码中。打印就是副作用的一个例子：它改变了外部世界，而且这种改变无法撤销。</p>
 </section>
 <section id="id2">
 <h2><span class="section-number">2.6.2. </span>分号<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>如果你想打印一件又一件，你可以按顺序打印一些东西
-使用嵌套 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式的函数：</p>
+<p>如果你想依次打印多样东西，可以用嵌套的 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式来串联几个打印函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">print_endline</span> <span class="s2">&quot;Camels&quot;</span> <span class="k">in</span>
@@ -696,11 +685,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>上面的 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">_</span> <span class="pre">=</span> <span class="pre">e</span></code> 语法是一种求值 <code class="docutils literal notranslate"><span class="pre">e</span></code> 但不把
-结果绑定到任何名字的方式。事实上，我们知道每个 <code class="docutils literal notranslate"><span class="pre">print_endline</span></code>
-函数都会返回什么：它始终返回 <code class="docutils literal notranslate"><span class="pre">()</span></code>，也就是 unit 值。
-所以没有充分理由把它绑定到变量名。我们也可以写 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">()</span> <span class="pre">=</span> <span class="pre">e</span></code>，
-表明我们知道这只是一个不关心的 unit 值：</p>
+<p>上面的 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">_</span> <span class="pre">=</span> <span class="pre">e</span></code> 语法表示“对 <code class="docutils literal notranslate"><span class="pre">e</span></code> 求值，但不把结果绑定到任何名字上”。其实我们已经知道，这些 <code class="docutils literal notranslate"><span class="pre">print_endline</span></code> 函数返回的永远都是 <code class="docutils literal notranslate"><span class="pre">()</span></code>，也就是那个 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 值，所以完全没有必要把它绑定到某个变量名上。我们也可以写成 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">()</span> <span class="pre">=</span> <span class="pre">e</span></code>，明确表示我们知道它只是一个我们不关心的 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 值：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">print_endline</span> <span class="s2">&quot;Camels&quot;</span> <span class="k">in</span>
@@ -724,10 +709,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>但无论哪种写法，所有这些 <code class="docutils literal notranslate"><span class="pre">let..in</span></code> 样板都很烦人。
-所以 OCaml 提供了一种特殊语法，用来串联多个返回 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 的函数。
-表达式 <code class="docutils literal notranslate"><span class="pre">e1;</span> <span class="pre">e2</span></code> 会先求值 <code class="docutils literal notranslate"><span class="pre">e1</span></code>，它应该求值为 <code class="docutils literal notranslate"><span class="pre">()</span></code>，
-然后丢弃该值，并求值 <code class="docutils literal notranslate"><span class="pre">e2</span></code>。所以我们可以将上面的代码改写为：</p>
+<p>但无论哪种写法，这些 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">..</span> <span class="pre">in</span></code> 模板代码都显得有点烦。于是 OCaml 提供了一种专门的语法，用于把多个返回 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 的函数串起来。表达式 <code class="docutils literal notranslate"><span class="pre">e1;</span> <span class="pre">e2</span></code> 会先对 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 求值，<code class="docutils literal notranslate"><span class="pre">e1</span></code> 应当求值为 <code class="docutils literal notranslate"><span class="pre">()</span></code>；然后这个值会被丢弃，再继续对 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 求值。所以，上面的代码可以改写为：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_endline</span> <span class="s2">&quot;Camels&quot;</span><span class="o">;</span>
@@ -751,23 +733,15 @@ document.write(`
 </div>
 </div>
 </div>
-<p>这是更惯用的 OCaml 代码，而且对于命令式来说它看起来也更自然
-程序员。</p>
+<p>这就是更符合 OCaml 习惯的写法，而且对熟悉命令式语言的程序员来说，看上去也更自然。</p>
 <div class="admonition warning">
 <p class="admonition-title">警告</p>
-<p>在该示例中，最后一个 <code class="docutils literal notranslate"><span class="pre">print_endline</span></code> 之后没有分号。一个常见的
-错误是在每个打印语句<em>之后</em>放置一个分号。相反，
-分号严格位于<em>语句之间</em>。也就是说，分号是一个语句
-<em>分隔符</em>不是语句<em>终止符</em>。如果你要在
-最后，根据周围的代码，你可能会收到语法错误。</p>
+<p>在这个例子里，最后一个 <code class="docutils literal notranslate"><span class="pre">print_endline</span></code> 后面没有分号。一个常见错误是：在每条打印语句<em>后面</em>都加上分号。其实分号只出现在<em>语句之间</em>。也就是说，分号是语句的<em>分隔符</em>，不是语句的<em>终止符</em>。如果你在末尾再加一个分号，根据周围代码的不同，可能会引发语法错误。</p>
 </div>
 </section>
 <section id="ignore">
 <h2><span class="section-number">2.6.3. </span>Ignore<a class="headerlink" href="#ignore" title="Permalink to this heading">#</a></h2>
-<p>如果 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 没有类型 <code class="docutils literal notranslate"><span class="pre">unit</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">e1;</span> <span class="pre">e2</span></code> 将给出警告，因为
-你正在丢弃一个潜在有用的值。如果这确实是你的意图，那么你
-可以调用内置函数 <code class="docutils literal notranslate"><span class="pre">ignore</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">unit</span></code> 将任意值转换为
-<code class="docutils literal notranslate"><span class="pre">()</span></code>：</p>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 的类型不是 <code class="docutils literal notranslate"><span class="pre">unit</span></code>，那么写 <code class="docutils literal notranslate"><span class="pre">e1;</span> <span class="pre">e2</span></code> 会收到警告，因为你丢弃了一个也许有用的值。如果你确实就是想这么做，可以调用内置函数 <code class="docutils literal notranslate"><span class="pre">ignore</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">unit</span></code>，把任意值转换成 <code class="docutils literal notranslate"><span class="pre">()</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">(</span><span class="n">ignore</span> <span class="mi">3</span><span class="o">);</span> <span class="mi">5</span>
@@ -780,7 +754,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>实际上 <code class="docutils literal notranslate"><span class="pre">ignore</span></code> 很容易自己实现：</p>
+<p>其实 <code class="docutils literal notranslate"><span class="pre">ignore</span></code> 很容易自己实现：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">ignore</span> <span class="n">x</span> <span class="o">=</span> <span class="bp">()</span>
@@ -793,9 +767,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>或者你甚至可以写下划线来表示该函数接受一个值，
-但不把该值绑定到名称。这意味着该函数体内永远不能使用这个值。
-但这没关系：我们本来就想忽略它。</p>
+<p>你甚至可以直接把参数写成下划线，表示这个函数接受一个值，但不会把它绑定到任何名字上。这也意味着函数体根本无法使用这个值。不过这正好符合我们的目的：我们就是要忽略它。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">ignore</span> <span class="o">_</span> <span class="o">=</span> <span class="bp">()</span>
@@ -811,9 +783,7 @@ document.write(`
 </section>
 <section id="printf">
 <h2><span class="section-number">2.6.4. </span>Printf<a class="headerlink" href="#printf" title="Permalink to this heading">#</a></h2>
-<p>对于复杂的文本输出，使用原始类型的内置函数
-打印很快就会变得乏味。例如，假设你想写一个
-打印统计数据的函数：</p>
+<p>如果要输出比较复杂的文本，仅靠原始类型对应的那些内建打印函数，很快就会变得繁琐。比如，假设你想写一个函数来打印某项统计量：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [print_stat name num] prints [name: num]. *)</span>
@@ -846,23 +816,15 @@ document.write(`
 </div>
 </div>
 </div>
-<p>我们如何缩短<code class="docutils literal notranslate"><span class="pre">print_stat</span></code>？在 Java 中，你可以使用重载的 <code class="docutils literal notranslate"><span class="pre">+</span></code>
-运算符将所有对象转换为字符串：</p>
+<p>怎样把 <code class="docutils literal notranslate"><span class="pre">print_stat</span></code> 写得更简洁一些？在 Java 里，你可能会用重载的 <code class="docutils literal notranslate"><span class="pre">+</span></code> 运算符，把所有对象拼接成字符串：</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">print_stat</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">num</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>但 OCaml 值不是对象，并且它们没有 <code class="docutils literal notranslate"><span class="pre">toString()</span></code> 方法
-它们继承自某个根 <code class="docutils literal notranslate"><span class="pre">Object</span></code> 类。OCaml 也不允许重载
-运算符。</p>
-<p>不过很久以前，FORTRAN 发明了一种与其他语言不同的解决方案
-C 和 Java 甚至 Python 支持。这个想法是使用<em>格式说明符</em>来
-—顾名思义—指定如何格式化输出。
-这个想法最出名的名字可能是“printf”，它来自 C 语言中
-实现它的库函数。许多其他语言和库仍然
-使用该名称，包括 OCaml 的 <code class="docutils literal notranslate"><span class="pre">Printf</span></code> 模块。</p>
-<p>以下是我们如何使用 <code class="docutils literal notranslate"><span class="pre">printf</span></code> 重新实现 <code class="docutils literal notranslate"><span class="pre">print_stat</span></code>：</p>
+<p>但 OCaml 的值不是对象，也没有从某个根类 <code class="docutils literal notranslate"><span class="pre">Object</span></code> 继承来的 <code class="docutils literal notranslate"><span class="pre">toString()</span></code> 方法。OCaml 也不允许运算符重载。</p>
+<p>不过很久以前，FORTRAN 发明了另一种后来被 C、Java 甚至 Python 等语言采用的方案：使用<em>格式说明符</em>（format specifier）来指定输出该如何格式化。这个思路最广为人知的名字大概就是 “printf”，也就是 C 标准库中那个实现这一思路的函数名。许多语言和库今天仍沿用这个名字，包括 OCaml 的 <code class="docutils literal notranslate"><span class="pre">Printf</span></code> 模块。</p>
+<p>下面是如何用 <code class="docutils literal notranslate"><span class="pre">printf</span></code> 重写 <code class="docutils literal notranslate"><span class="pre">print_stat</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">print_stat</span> <span class="n">name</span> <span class="n">num</span> <span class="o">=</span>
@@ -891,37 +853,20 @@ C 和 Java 甚至 Python 支持。这个想法是使用<em>格式说明符</em>�
 </div>
 </div>
 </div>
-<p>函数 <code class="docutils literal notranslate"><span class="pre">Printf.printf</span></code> 的第一个参数是格式说明符。它
-<em>看起来</em>像一个字符串，但它的含义远不止于此。其实是
-OCaml 编译器非常深入地理解了这一点。里面的格式
-说明符有：</p>
+<p>函数 <code class="docutils literal notranslate"><span class="pre">Printf.printf</span></code> 的第一个参数是格式说明符。它<em>看起来</em>像一个字符串，但其实不只是普通字符串那么简单。OCaml 编译器会以相当深入的方式理解它。在这个格式说明符里面，有两类内容：</p>
 <ul class="simple">
-<li><p>普通字符，以及</p></li>
-<li><p>转换说明符，以 <code class="docutils literal notranslate"><span class="pre">%</span></code> 开头。</p></li>
+<li><p>普通字符；</p></li>
+<li><p>转换说明符（conversion specifier），也就是以 <code class="docutils literal notranslate"><span class="pre">%</span></code> 开头的片段。</p></li>
 </ul>
-<p>有大约两打可用的转换说明符，你可以阅读
-大约在 <a class="reference external" href="https://ocaml.org/api/Printf.html">documentation of <code class="docutils literal notranslate"><span class="pre">Printf</span></code></a> 中。让我们来拆解一下
-以上面的格式说明符为例。</p>
+<p>可用的转换说明符有二十多种，详见 <a class="reference external" href="https://ocaml.org/api/Printf.html"><code class="docutils literal notranslate"><span class="pre">Printf</span></code> 的文档</a>。我们就以上面的格式说明符为例来拆解一下。</p>
 <ul class="simple">
-<li><p>它以 <code class="docutils literal notranslate"><span class="pre">&quot;%s&quot;</span></code> 开头，这是字符串的转换说明符。  这意味着
-<code class="docutils literal notranslate"><span class="pre">printf</span></code> 的下一个参数必须是 <code class="docutils literal notranslate"><span class="pre">string</span></code>，并且该字符串的内容
-将被输出。</p></li>
-<li><p>它以 <code class="docutils literal notranslate"><span class="pre">&quot;:</span> <span class="pre">&quot;</span></code> 继续，这些只是普通字符。它们会被插入
-到输出中。</p></li>
-<li><p>然后它有另一个转换说明符 <code class="docutils literal notranslate"><span class="pre">%F</span></code>。这意味着下一个参数
-<code class="docutils literal notranslate"><span class="pre">printf</span></code> 必须具有类型 <code class="docutils literal notranslate"><span class="pre">float</span></code>，并且将以与
-OCaml 用于打印浮点数。</p></li>
-<li><p>之后的换行符 <code class="docutils literal notranslate"><span class="pre">&quot;\n&quot;</span></code> 是另一个纯字符序列。</p></li>
-<li><p>最后，转换说明符 <code class="docutils literal notranslate"><span class="pre">&quot;%!&quot;</span></code> 表示<em>刷新输出缓冲区</em>。
-正如你在早期的编程课程中可能已经学到的那样，输出通常是
-<em>缓冲</em>，这意味着它不会同步或立即发生。刷新
-缓冲区可以确保仍在缓冲区中的任何内容都会被输出
-立即。这个说明符的特殊之处在于它实际上不需要
-<code class="docutils literal notranslate"><span class="pre">printf</span></code> 的另一个参数。</p></li>
+<li><p>开头的 <code class="docutils literal notranslate"><span class="pre">&quot;%s&quot;</span></code> 是字符串的转换说明符。这意味着 <code class="docutils literal notranslate"><span class="pre">printf</span></code> 的下一个参数必须是一个 <code class="docutils literal notranslate"><span class="pre">string</span></code>，并且该字符串的内容会被输出。</p></li>
+<li><p>接着的 <code class="docutils literal notranslate"><span class="pre">&quot;:</span> <span class="pre">&quot;</span></code> 只是普通字符，会原样插入到输出里。</p></li>
+<li><p>然后是另一个转换说明符 <code class="docutils literal notranslate"><span class="pre">%F</span></code>。这意味着 <code class="docutils literal notranslate"><span class="pre">printf</span></code> 的下一个参数必须是 <code class="docutils literal notranslate"><span class="pre">float</span></code> 类型，并且会按 OCaml 打印浮点数时所使用的格式输出。</p></li>
+<li><p>之后的 <code class="docutils literal notranslate"><span class="pre">&quot;\n&quot;</span></code> 是另一段普通字符序列，也就是换行。</p></li>
+<li><p>最后的转换说明符 <code class="docutils literal notranslate"><span class="pre">&quot;%!&quot;</span></code> 表示<em>刷新输出缓冲区</em>（flush the output buffer）。你可能在之前的编程课里学过，输出通常是<em>带缓冲</em>的，也就是说它不会立刻、一次性全部显示出来。刷新缓冲区可以确保缓冲区里尚未输出的内容立刻被真正输出。这个说明符比较特殊，因为它并不需要 <code class="docutils literal notranslate"><span class="pre">printf</span></code> 再接收一个额外参数。</p></li>
 </ul>
-<p>如果参数的类型相对于转换说明符不正确，
-OCaml 会检测到这一点。  让我们添加一个类型注释来强制 <code class="docutils literal notranslate"><span class="pre">num</span></code> 成为一个
-<code class="docutils literal notranslate"><span class="pre">int</span></code>，看看浮点转换说明符 <code class="docutils literal notranslate"><span class="pre">%F</span></code> 会发生什么：</p>
+<p>如果某个参数的类型和转换说明符要求不匹配，OCaml 会检测出来。比如，我们给 <code class="docutils literal notranslate"><span class="pre">num</span></code> 人为加上类型注解，强制它是 <code class="docutils literal notranslate"><span class="pre">int</span></code>，然后看看使用浮点转换说明符 <code class="docutils literal notranslate"><span class="pre">%F</span></code> 会发生什么：</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">print_stat</span> <span class="n">name</span> <span class="o">(</span><span class="n">num</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">=</span>
@@ -939,7 +884,7 @@ OCaml 会检测到这一点。  让我们添加一个类型注释来强制 <code
 </div>
 </div>
 </div>
-<p>为了解决这个问题，我们可以更改为 <code class="docutils literal notranslate"><span class="pre">int</span></code> 的转换说明符，即 <code class="docutils literal notranslate"><span class="pre">%i</span></code>：</p>
+<p>要修正这个问题，可以把转换说明符改成 <code class="docutils literal notranslate"><span class="pre">int</span></code> 对应的 <code class="docutils literal notranslate"><span class="pre">%i</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">print_stat</span> <span class="n">name</span> <span class="n">num</span> <span class="o">=</span>
@@ -953,8 +898,7 @@ OCaml 会检测到这一点。  让我们添加一个类型注释来强制 <code
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">printf</span></code> 的另一个非常有用的变体是 <code class="docutils literal notranslate"><span class="pre">sprintf</span></code>，它收集输出
-在字符串中而不是打印它：</p>
+<p><code class="docutils literal notranslate"><span class="pre">printf</span></code> 还有一个非常有用的变体叫做 <code class="docutils literal notranslate"><span class="pre">sprintf</span></code>，它不会直接打印，而是把输出收集成一个字符串：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">string_of_stat</span> <span class="n">name</span> <span class="n">num</span> <span class="o">=</span>
