@@ -64,15 +64,15 @@ let center = function
 
 `shape` 变体类型与我们之前看到的变体类似：它由一组构造函数定义。不同之处在于，这些构造函数可以附带额外的数据。`shape` 类型的每个值都恰好由这些构造函数之一构成。我们有时说构造函数带有一个*标签*（tag），因为它把所携带的数据标记为来自某个特定构造函数。
 
-变体类型有时称为”带标签的联合类型”（tagged union）。该类型的每个值都来自多个集合的并集，这些集合分别对应各构造函数所携带的基础类型。例如，对于 `shape` 类型，每个值都带有 `Point`、`Circle` 或 `Rect` 标签，并携带来自以下集合之一的值：
+变体类型有时称为"带标签的联合类型"（tagged union）。该类型的每个值都来自多个集合的并集，这些集合分别对应各构造函数所携带的基础类型。例如，对于 `shape` 类型，每个值都带有 `Point`、`Circle` 或 `Rect` 标签，并携带来自以下集合之一的值：
 
 - 所有 `point` 值的集合，或
 - 所有 `point * float` 值的集合，或
 - 所有 `point * point` 值的集合。
 
-这些变体类型还有一个名字叫”代数数据类型”（algebraic data type）。这里的”代数”是指变体类型同时包含和类型与积类型，正如上一节中已经定义过的那样。和类型来自”变体的每个值由多个构造函数*之一*构成”，积类型则来自”构造函数可以携带元组或记录，而这些值包含来自其*每个*组成类型的子值”。
+这些变体类型还有一个名字叫"代数数据类型"（algebraic data type）。这里的"代数"是指变体类型同时包含和类型与积类型，正如上一节中已经定义过的那样。和类型来自"变体的每个值由多个构造函数*之一*构成"，积类型则来自"构造函数可以携带元组或记录，而这些值包含来自其*每个*组成类型的子值"。
 
-使用变体，我们可以以一种类型安全的方式来表达”一个类型是其他若干类型的联合”。例如，下面的类型表示 `string` 或 `int`：
+使用变体，我们可以以一种类型安全的方式来表达"一个类型是其他若干类型的联合"。例如，下面的类型表示 `string` 或 `int`：
 ```{code-cell} ocaml
 type string_or_int =
   | String of string
@@ -147,15 +147,15 @@ C
 
 ## 通配分支的陷阱
 
-用模式匹配处理变体时，需要注意 *Real World OCaml* 一书中所说的”通配分支”问题。下面这个简单例子展示了可能出错的地方。假设你编写了这样一个变体和函数：
+用模式匹配处理变体时，需要注意 *Real World OCaml* 一书中所说的"通配分支"问题。下面这个简单例子展示了可能出错的地方。假设你编写了这样一个变体和函数：
 ```{code-cell} ocaml
 type color = Blue | Red
 
 (* 中间隔着上千行代码 *)
 
 let string_of_color = function
-  | Blue -> “blue”
-  | _ -> “red”
+  | Blue -> "blue"
+  | _ -> "red"
 ```
 看起来没问题，对吧？但有一天你发现世界上的颜色不止这两种——你还需要表示绿色。于是你回过头把绿色加到变体定义中：
 ```{code-cell} ocaml
@@ -164,8 +164,8 @@ type color = Blue | Red | Green
 (* 中间隔着上千行代码 *)
 
 let string_of_color = function
-  | Blue -> “blue”
-  | _ -> “red”
+  | Blue -> "blue"
+  | _ -> "red"
 ```
 但因为中间隔着上千行代码，你忘记了 `string_of_color` 也需要更新。现在，它突然间分不清红和绿了：
 ```{code-cell} ocaml
@@ -176,8 +176,8 @@ string_of_color Green
 相反，如果你一开始就这样写，情况会好得多：
 ```{code-cell} ocaml
 let string_of_color = function
-  | Blue -> “blue”
-  | Red  -> “red”
+  | Blue -> "blue"
+  | Red  -> "red"
 ```
 OCaml 类型检查器现在就能提醒你：`string_of_color` 还没有针对新构造函数进行更新。
 
@@ -215,9 +215,9 @@ type node = {value : int; next : mylist}
 and mylist = Nil | Node of node
 ```
 
-任何相互递归都必须至少有一种变体或记录类型来承担”递归传递”的角色。例如，下面的写法是不允许的：
+任何相互递归都必须至少有一种变体或记录类型来承担"递归传递"的角色。例如，下面的写法是不允许的：
 ```{code-cell} ocaml
-:tags: [“raises-exception”]
+:tags: ["raises-exception"]
 type t = u and u = t
 ```
 但这样可以：
@@ -231,7 +231,7 @@ type node = {value : int; next : node}
 ```
 但普通的类型同义词不行：
 ```{code-cell} ocaml
-:tags: [“raises-exception”]
+:tags: ["raises-exception"]
 type t = t * t
 ```
 
@@ -244,7 +244,7 @@ type t = t * t
 type 'a mylist = Nil | Cons of 'a * 'a mylist
 
 let lst3 = Cons (3, Nil)  (* 类似 [3] *)
-let lst_hi = Cons (“hi”, Nil)  (* 类似 [“hi”] *)
+let lst_hi = Cons ("hi", Nil)  (* 类似 ["hi"] *)
 ```
 这里，`mylist` 是一个*类型构造器*，而不是一个类型：没有办法写一个类型为 `mylist` 的值。但我们可以写类型为 `int mylist` 的值（如 `lst3`）和类型为 `string mylist` 的值（如 `lst_hi`）。可以把类型构造器想象成函数，但它将类型映射到类型，而不是将值映射到值。
 
@@ -269,7 +269,7 @@ let empty = function
   | Cons _ -> false
 ```
 
-我们刚刚编写的函数展示了一种称为**参数多态性**（parametric polymorphism）的语言特性。这些函数不关心 `'a mylist` 中的 `'a` 具体是什么，因此它们可以愉快地作用于 `int mylist`、`string mylist` 或任何其他 `(something) mylist`。”多态性”（polymorphism）一词源于希腊词根”poly”（许多）和”morph”（形式）。类型 `'a mylist` 的值可以根据实际类型 `'a` 的不同而呈现多种形式。
+我们刚刚编写的函数展示了一种称为**参数多态性**（parametric polymorphism）的语言特性。这些函数不关心 `'a mylist` 中的 `'a` 具体是什么，因此它们可以愉快地作用于 `int mylist`、`string mylist` 或任何其他 `(something) mylist`。"多态性"（polymorphism）一词源于希腊词根"poly"（许多）和"morph"（形式）。类型 `'a mylist` 的值可以根据实际类型 `'a` 的不同而呈现多种形式。
 
 不过，当你对 `'a` 类型施加约束时，就会放弃一部分多态性。例如：
 ```{code-cell} ocaml
@@ -282,7 +282,7 @@ let rec sum = function
 参数化类型也可以有多个类型参数，此时需要括号：
 ```{code-cell} ocaml
 type ('a, 'b) pair = {first : 'a; second : 'b}
-let x = {first = 2; second = “hello”}
+let x = {first = 2; second = "hello"}
 ```
 
 ## 多态变体
@@ -315,7 +315,7 @@ OCaml 提供了另一种变体形式来支持这种场景：*多态变体*（pol
 
 1. 无需在使用前声明类型或其构造函数。
 
-2. 多态变体类型没有名字。（所以这个特性的另一个叫法可能是”匿名变体”。）
+2. 多态变体类型没有名字。（所以这个特性的另一个叫法可能是"匿名变体"。）
 
 3. 多态变体的构造函数以反引号字符开头。
 
@@ -327,12 +327,12 @@ let f = function
   | n -> `Finite (-n)
 ```
 
-这个类型表示 `f` 要么返回 `` `Finite n``（其中 `n : int`），要么返回 `` `Infinity``。方括号并不表示列表，而是表示一组可能的构造函数。`>` 符号表示：针对该类型值进行模式匹配的代码，必须”至少”处理 `` `Finite`` 和 `` `Infinity`` 这两个构造函数，甚至还可以处理更多。例如，我们可以写：
+这个类型表示 `f` 要么返回 `` `Finite n``（其中 `n : int`），要么返回 `` `Infinity``。方括号并不表示列表，而是表示一组可能的构造函数。`>` 符号表示：针对该类型值进行模式匹配的代码，必须"至少"处理 `` `Finite`` 和 `` `Infinity`` 这两个构造函数，甚至还可以处理更多。例如，我们可以写：
 ```{code-cell} ocaml
 match f 3 with
-  | `NegInfinity -> “negative infinity”
-  | `Finite n -> “finite”
-  | `Infinity -> “infinite”
+  | `NegInfinity -> "negative infinity"
+  | `Finite n -> "finite"
+  | `Infinity -> "infinite"
 ```
 模式匹配包含 `` `Finite`` 和 `` `Infinity`` 之外的构造函数也是完全可以的，因为 `f` 保证永远不会返回这些之外的构造函数。
 
@@ -342,14 +342,14 @@ match f 3 with
 
 OCaml 的内置列表数据类型实际上就是一种递归的参数化变体。它的定义如下：
 ```{code-cell} ocaml
-:tags: [“remove-output”]
+:tags: ["remove-output"]
 type 'a list = [] | ( :: ) of 'a * 'a list
 ```
-所以 `list` 实际上只是一个类型构造器，带有（值）构造函数 `[]`（读作”nil”）和 `::`（读作”cons”）。
+所以 `list` 实际上只是一个类型构造器，带有（值）构造函数 `[]`（读作"nil"）和 `::`（读作"cons"）。
 
 OCaml 的内置选项数据类型实际上也是一种参数化变体。它的定义如下：
 ```{code-cell} ocaml
-:tags: [“remove-output”]
+:tags: ["remove-output"]
 type 'a option = None | Some of 'a
 ```
 所以 `option` 实际上只是一个类型构造器，带有（值）构造函数 `None` 和 `Some`。

@@ -38,5 +38,3 @@ let rec lookup k = function
 关联列表的插入是常数时间操作，而查找是线性时间。虽然字典肯定有更高效的实现——我们将在本课程后面学习一些——但对于小型且非性能关键的字典来说，关联列表是一个非常简单的有用实现。OCaml 标准库的 [`List` 模块][list] 中提供了用于关联列表的函数；可以查找 `List.assoc` 及其下方的函数。我们刚刚写的 `lookup` 实际上已经以 `List.assoc_opt` 的名字定义在了库中。库中没有预定义的 `insert` 函数，因为用一对（pair）来实现同样简单。
 
 [list]: https://ocaml.org/api/List.html
-
-[list]: https://ocaml.org/api/List.html

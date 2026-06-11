@@ -816,7 +816,7 @@ OUnit 提供的函数，用于检查其两个参数是否相等。
 处理周末，但应该先注意到我们已经写好的测试：
 它们包含大量重复代码。事实上，我们可能就是通过复制粘贴第一个测试，
 再修改接下来的三个测试来写出它们的。
-这表明我们应该“重构”代码。 （正如我们之前所做的那样
+这表明我们应该”重构”代码。 （正如我们之前所做的那样
 我们正在测试 <code class="docutils literal notranslate"><span class="pre">sum</span></code> 函数。）</p>
 <p>让我们抽象一个为 <code class="docutils literal notranslate"><span class="pre">next_weekday</span></code> 创建测试用例的函数：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">make_next_weekday_test</span> <span class="n">name</span> <span class="n">expected_output</span> <span class="n">input</span> <span class="o">=</span>

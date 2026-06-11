@@ -687,10 +687,10 @@ document.write(`
 <li><p>引发异常</p></li>
 <li><p>无法终止（即”无限循环”）</p></li>
 </ul>
-<p>到目前为止，我们只介绍了这三种情况中第一种的动态语义。加入异常之后会怎样？现在，表达式的求值要么产生一个值，要么产生一个<em>异常包</em>（exception packet）。异常包不是普通的 OCaml 值；唯一能识别它的语言构造是 <code class="docutils literal notranslate"><span class="pre">raise</span></code> 和 <code class="docutils literal notranslate"><span class="pre">try</span></code>。例如，异常值 <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">“oops”</span></code> 是 <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">(Failure</span> <span class="pre">“oops”)</span></code> 所创建异常包的一部分，但异常包中不仅仅包含异常值，还可能包含栈追踪等信息。</p>
+<p>到目前为止，我们只介绍了这三种情况中第一种的动态语义。加入异常之后会怎样？现在，表达式的求值要么产生一个值，要么产生一个<em>异常包</em>（exception packet）。异常包不是普通的 OCaml 值；唯一能识别它的语言构造是 <code class="docutils literal notranslate"><span class="pre">raise</span></code> 和 <code class="docutils literal notranslate"><span class="pre">try</span></code>。例如，异常值 <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">&quot;oops&quot;</span></code> 是 <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">(Failure</span> <span class="pre">&quot;oops&quot;)</span></code> 所创建异常包的一部分，但异常包中不仅仅包含异常值，还可能包含栈追踪等信息。</p>
 <p>对于任何非 <code class="docutils literal notranslate"><span class="pre">try</span></code> 表达式 <code class="docutils literal notranslate"><span class="pre">e</span></code>，如果求值 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的某个子表达式时产生了异常包 <code class="docutils literal notranslate"><span class="pre">P</span></code>，那么求值 <code class="docutils literal notranslate"><span class="pre">e</span></code> 也会产生异常包 <code class="docutils literal notranslate"><span class="pre">P</span></code>。</p>
 <p>但这里我们第一次遇到了一个问题：子表达式按什么顺序求值？有时这个问题的答案已经由我们之前给出的语义所确定。例如，对于 let 表达式，我们知道绑定表达式必须在主体表达式之前求值。因此下面的代码引发 <code class="docutils literal notranslate"><span class="pre">A</span></code>：</p>
-<div class="cell tag_“raises-exception” docutils container">
+<div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="k">raise</span> <span class="nc">A</span> <span class="k">in</span> <span class="k">raise</span> <span class="nc">B</span><span class="o">;;</span>
 </pre></div>
@@ -705,24 +705,67 @@ document.write(`
 </div>
 </div>
 <p>对于函数应用，OCaml 没有正式规定函数与其参数之间的求值顺序，但当前实现的策略是先求值参数再求值函数。因此，除了产生一些编译器警告外，下面的代码会引发 <code class="docutils literal notranslate"><span class="pre">A</span></code>，而第一个表达式实际上永远不会被作为函数应用到参数上：</p>
-<div class="cell tag_“raises-exception” tag_“hide-output” docutils container">
-<div class="cell_input docutils container">
+<div class="cell tag_raises-exception tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">(</span><span class="k">raise</span> <span class="nc">B</span><span class="o">)</span> <span class="o">(</span><span class="k">raise</span> <span class="nc">A</span><span class="o">)</span>
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File &quot;[4]&quot;, line 1, characters 10-19:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1 | (raise B) (raise A)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>              ^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning 20 [ignored-extra-argument]: this argument will not be used by the function.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: A.
+
+<span class="n">Raised</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[4]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">10</span><span class="o">-</span><span class="mi">19</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+</details>
 </div>
 <p>这两段代码引发相同的异常，而这在意料之中——因为我们知道 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">e1</span> <span class="pre">in</span> <span class="pre">e2</span></code> 是 <code class="docutils literal notranslate"><span class="pre">(fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e2)</span> <span class="pre">e1</span></code> 的语法糖。</p>
 <p>但下面的代码会引发哪个异常呢？</p>
-<div class="cell tag_“raises-exception” tag_“hide-output” docutils container">
-<div class="cell_input docutils container">
+<div class="cell tag_raises-exception tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">(</span><span class="k">raise</span> <span class="nc">A</span><span class="o">,</span> <span class="k">raise</span> <span class="nc">B</span><span class="o">)</span>
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: B.
+
+<span class="n">Raised</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[5]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">10</span><span class="o">-</span><span class="mi">17</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+</details>
 </div>
 <p>答案很微妙。语言规范没有规定元组的各组件应该按什么顺序求值，我们的语义也没有精确指定这个顺序。因此程序员实际上不能依赖它。当前 OCaml 的实现恰好是从右向左求值的，所以上面的代码实际上会引发 <code class="docutils literal notranslate"><span class="pre">B</span></code>。如果你真的想强制求值顺序，就需要使用 let 表达式：</p>
-<div class="cell tag_“raises-exception” docutils container">
+<div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">a</span> <span class="o">=</span> <span class="k">raise</span> <span class="nc">A</span> <span class="k">in</span>
 <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="k">raise</span> <span class="nc">B</span> <span class="k">in</span>
@@ -730,19 +773,41 @@ document.write(`
 </pre></div>
 </div>
 </div>
-</div>
-<p>这段代码保证会引发 <code class="docutils literal notranslate"><span class="pre">A</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">B</span></code>。</p>
-<p>一个有趣的边界情况是当 <code class="docutils literal notranslate"><span class="pre">raise</span></code> 表达式本身包含会引发异常的子表达式时：</p>
-<div class="cell tag_“raises-exception” docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span>exception C of string;;
-exception D of string;;
-raise (C (raise (D “oops”)))
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: A.
+
+<span class="n">Raised</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[6]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">8</span><span class="o">-</span><span class="mi">15</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>这段代码最终引发 <code class="docutils literal notranslate"><span class="pre">D</span></code>，因为首先要将 <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">(raise</span> <span class="pre">(D</span> <span class="pre">“oops”))</span></code> 求值为一个值，为此又需要将 <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">(D</span> <span class="pre">“oops”)</span></code> 求值为一个值。后者产生包含 <code class="docutils literal notranslate"><span class="pre">D</span> <span class="pre">“oops”</span></code> 的异常包，然后该异常包向上传播，成为求值 <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">(raise</span> <span class="pre">(D</span> <span class="pre">“oops”))</span></code> 的结果，进而又成为求值 <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">(C</span> <span class="pre">(raise</span> <span class="pre">(D</span> <span class="pre">“oops”)))</span></code> 的结果。</p>
+<p>这段代码保证会引发 <code class="docutils literal notranslate"><span class="pre">A</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">B</span></code>。</p>
+<p>一个有趣的边界情况是当 <code class="docutils literal notranslate"><span class="pre">raise</span></code> 表达式本身包含会引发异常的子表达式时：</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">exception</span> <span class="nc">C</span> <span class="k">of</span> <span class="kt">string</span><span class="o">;;</span>
+<span class="k">exception</span> <span class="nc">D</span> <span class="k">of</span> <span class="kt">string</span><span class="o">;;</span>
+<span class="k">raise</span> <span class="o">(</span><span class="nc">C</span> <span class="o">(</span><span class="k">raise</span> <span class="o">(</span><span class="nc">D</span> <span class="s2">&quot;oops&quot;</span><span class="o">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>exception C of string
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>exception D of string
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: D &quot;oops&quot;.
+
+<span class="n">Raised</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[7]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">9</span><span class="o">-</span><span class="mi">27</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>这段代码最终引发 <code class="docutils literal notranslate"><span class="pre">D</span></code>，因为首先要将 <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">(raise</span> <span class="pre">(D</span> <span class="pre">&quot;oops&quot;))</span></code> 求值为一个值，为此又需要将 <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">(D</span> <span class="pre">&quot;oops&quot;)</span></code> 求值为一个值。后者产生包含 <code class="docutils literal notranslate"><span class="pre">D</span> <span class="pre">&quot;oops&quot;</span></code> 的异常包，然后该异常包向上传播，成为求值 <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">(raise</span> <span class="pre">(D</span> <span class="pre">&quot;oops&quot;))</span></code> 的结果，进而又成为求值 <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">(C</span> <span class="pre">(raise</span> <span class="pre">(D</span> <span class="pre">&quot;oops&quot;)))</span></code> 的结果。</p>
 <p>一旦表达式求值产生了异常包 <code class="docutils literal notranslate"><span class="pre">P</span></code>，该包就会一直向上传播，直到遇到 <code class="docutils literal notranslate"><span class="pre">try</span></code> 表达式：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">try</span> <span class="n">e</span> <span class="k">with</span>
 <span class="o">|</span> <span class="n">p1</span> <span class="o">-&gt;</span> <span class="n">e1</span>
@@ -757,15 +822,20 @@ raise (C (raise (D “oops”)))
 <p>异常也有一种模式形式。下面是一个使用示例：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span>match List.hd [] with
-  | [] -&gt; “empty”
-  | _ :: _ -&gt; “non-empty”
-  | exception (Failure s) -&gt; s
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">match</span> <span class="nn">List</span><span class="p">.</span><span class="n">hd</span> <span class="bp">[]</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="s2">&quot;empty&quot;</span>
+  <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="s2">&quot;non-empty&quot;</span>
+  <span class="o">|</span> <span class="k">exception</span> <span class="o">(</span><span class="nc">Failure</span> <span class="n">s</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">s</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = &quot;hd&quot;
 </pre></div>
 </div>
 </div>
 </div>
-<p>注意上面的代码是一个标准的 <code class="docutils literal notranslate"><span class="pre">match</span></code> 表达式，而非 <code class="docutils literal notranslate"><span class="pre">try</span></code> 表达式。它将 <code class="docutils literal notranslate"><span class="pre">List.hd</span> <span class="pre">[]</span></code> 的结果与提供的三个模式进行匹配。众所周知，<code class="docutils literal notranslate"><span class="pre">List.hd</span> <span class="pre">[]</span></code> 会引发包含 <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">“hd”</span></code> 的异常。<em>异常模式</em> <code class="docutils literal notranslate"><span class="pre">exception</span> <span class="pre">(Failure</span> <span class="pre">s)</span></code> 会匹配这个异常包。因此上面的代码求值结果为 <code class="docutils literal notranslate"><span class="pre">”hd”</span></code>。</p>
+<p>注意上面的代码是一个标准的 <code class="docutils literal notranslate"><span class="pre">match</span></code> 表达式，而非 <code class="docutils literal notranslate"><span class="pre">try</span></code> 表达式。它将 <code class="docutils literal notranslate"><span class="pre">List.hd</span> <span class="pre">[]</span></code> 的结果与提供的三个模式进行匹配。众所周知，<code class="docutils literal notranslate"><span class="pre">List.hd</span> <span class="pre">[]</span></code> 会引发包含 <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">&quot;hd&quot;</span></code> 的异常。<em>异常模式</em> <code class="docutils literal notranslate"><span class="pre">exception</span> <span class="pre">(Failure</span> <span class="pre">s)</span></code> 会匹配这个异常包。因此上面的代码求值结果为 <code class="docutils literal notranslate"><span class="pre">&quot;hd&quot;</span></code>。</p>
 <p>异常模式是一种语法糖。考虑下面的代码：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">match</span> <span class="n">e</span> <span class="k">with</span>
   <span class="o">|</span> <span class="n">p1</span> <span class="o">-&gt;</span> <span class="n">e1</span>
@@ -789,13 +859,13 @@ raise (C (raise (D “oops”)))
 <section id="ounit">
 <h2><span class="section-number">3.10.4. </span>异常与 OUnit<a class="headerlink" href="#ounit" title="Permalink to this heading">#</a></h2>
 <p>如果函数的规格说明中包含”会引发异常”这一行为，你可能想编写 OUnit 测试来验证函数确实如此。具体做法如下：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>open OUnit2
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">OUnit2</span>
 
-let tests = “suite” &gt;::: [
-    “empty” &gt;:: (fun _ -&gt; assert_raises (Failure “hd”) (fun () -&gt; List.hd []));
-  ]
+<span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">&quot;suite&quot;</span> <span class="o">&gt;:::</span> <span class="o">[</span>
+    <span class="s2">&quot;empty&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_raises</span> <span class="o">(</span><span class="nc">Failure</span> <span class="s2">&quot;hd&quot;</span><span class="o">)</span> <span class="o">(</span><span class="k">fun</span> <span class="bp">()</span> <span class="o">-&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">hd</span> <span class="bp">[]</span><span class="o">));</span>
+  <span class="o">]</span>
 
-let _ = run_test_tt_main tests
+<span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">run_test_tt_main</span> <span class="n">tests</span>
 </pre></div>
 </div>
 <p>表达式 <code class="docutils literal notranslate"><span class="pre">assert_raises</span> <span class="pre">exn</span> <span class="pre">(fun</span> <span class="pre">()</span> <span class="pre">-&gt;</span> <span class="pre">e)</span></code> 检查表达式 <code class="docutils literal notranslate"><span class="pre">e</span></code> 是否引发了异常 <code class="docutils literal notranslate"><span class="pre">exn</span></code>。如果是，OUnit 测试用例成功；否则失败。</p>

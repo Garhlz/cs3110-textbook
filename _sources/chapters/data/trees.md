@@ -105,7 +105,7 @@ let rec mem x = function
   | Leaf -> false
   | Node {value; left; right} -> value = x || mem x left || mem x right
 ```
-函数名 `mem` 是”member”（成员）的缩写；标准库经常以此命名那些在集合数据结构中搜索、判断某个元素是否是集合成员的函数。
+函数名 `mem` 是"member"（成员）的缩写；标准库经常以此命名那些在集合数据结构中搜索、判断某个元素是否是集合成员的函数。
 
 下面是一个计算树的*前序*（preorder）遍历的函数：每个节点在其子节点之前被访问，并按访问顺序将值收集到列表中：
 ```{code-cell} ocaml
