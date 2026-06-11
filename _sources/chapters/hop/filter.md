@@ -46,11 +46,7 @@ let rec odds = function
 let lst2 = odds [1; 2; 3; 4]
 ```
 
-函数 `evens` 和 `odds` 几乎是相同的代码：唯一重要的
-区别在于它们应用于 head 元素的测试。正如我们对 `map` 所做的那样
-在上一节中，我们将该测试分解为函数。让我们命名
-函数 `p`，作为“谓词”的缩写。谓词只是一个
-测试某件事是真还是假的函数：
+函数 `evens` 和 `odds` 几乎是相同的代码：唯一重要的区别在于它们对头部元素应用的测试。正如我们在上一节对 `map` 所做的那样，我们将这个测试提取为一个函数。我们把该函数命名为 `p`，作为"谓词"（predicate）的缩写。谓词就是一个测试某件事是真还是假的函数：
 
 ```{code-cell} ocaml
 let rec filter p = function
@@ -65,8 +61,7 @@ let evens = filter even
 let odds = filter odd
 ```
 
-多么简单！多么清楚！（至少对于熟悉
-`filter`。）
+多么简单！多么清晰！（至少对熟悉 `filter` 的人来说如此。）
 
 ## `filter` 和尾递归
 

@@ -599,7 +599,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">4.2.1. 副作用</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">4.2.2. <code class="docutils literal notranslate"><span class="pre">map</span></code> 和尾递归</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">4.2.2. <code class="docutils literal notranslate"><span class="pre">map</span></code> 与尾递归</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">4.2.3. 其他语言中的 Map</a></li>
 </ul>
             </nav>
@@ -658,13 +658,11 @@ document.write(`
 </div>
 <p>这两个函数有很多相似之处：</p>
 <ul class="simple">
-<li><p>它们都针对列表进行模式匹配。</p></li>
-<li><p>对于空列表的基本情况，它们都返回相同的值。</p></li>
-<li><p>在非空列表的情况下，它们都在尾部递归。</p></li>
+<li><p>它们都对列表进行模式匹配。</p></li>
+<li><p>空列表作为基本情况时，它们都返回相同的值。</p></li>
+<li><p>非空列表时，它们都对尾部进行递归调用。</p></li>
 </ul>
-<p>事实上，唯一的区别（除了他们的名字）是他们为
-head 元素：添加与连接。让我们重写这两个函数
-这种差异更加明显：</p>
+<p>事实上，唯一的区别（除了名字）就在于它们对头部元素的操作：加一 vs. 拼接。让我们重写这两个函数，使这种差异更加明显：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [add1 lst] adds 1 to each element of [lst]. *)</span>
@@ -694,7 +692,7 @@ head 元素：添加与连接。让我们重写这两个函数
 </div>
 <p>现在这两个函数之间的唯一区别（同样，除了它们的
 名称）是辅助函数 <code class="docutils literal notranslate"><span class="pre">f</span></code> 的主体。为什么要重复所有这些代码呢？
-函数差别这么小？我们不妨“抽象”一下
+函数差别这么小？我们不妨”抽象”一下
 每个主函数中都有一个辅助函数，并将其作为一个参数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -729,12 +727,7 @@ head 元素：添加与连接。让我们重写这两个函数
 </div>
 </div>
 </div>
-<p>但现在 <code class="docutils literal notranslate"><span class="pre">add1'</span></code> 和 <code class="docutils literal notranslate"><span class="pre">concat_bang'</span></code> 之间确实没有任何区别
-除了他们的名字。它们是完全重复的代码。甚至他们的类型都是
-现在是一样的，因为它们没有提到整数或字符串。我们可能
-也可以只保留其中一个，并为其想一个好听的新名字。一
-可能性可能是 <code class="docutils literal notranslate"><span class="pre">transform</span></code>，因为它们通过应用
-对列表中的每个元素执行函数：</p>
+<p>但现在 <code class="docutils literal notranslate"><span class="pre">add1'</span></code> 和 <code class="docutils literal notranslate"><span class="pre">concat_bang'</span></code> 之间除了名字之外确实没有任何区别了。它们是完全重复的代码，甚至连类型都变得一样了（因为它们不再提及整数或字符串）。我们完全可以只保留其中一个，给它起个好听的新名字。一个可能的名字是 <code class="docutils literal notranslate"><span class="pre">transform</span></code>（变换），因为它就是对列表中的每个元素应用一个函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">transform</span> <span class="n">f</span> <span class="o">=</span> <span class="k">function</span>
@@ -763,24 +756,17 @@ head 元素：添加与连接。让我们重写这两个函数
 </div>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p>而不是</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add1</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">transform</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="n">lst</span>
-</pre></div>
-</div>
-<p>上面我们写了</p>
+<p>我们上面写的代码是：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add1</span> <span class="o">=</span> <span class="n">transform</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
 </pre></div>
 </div>
-<p>这是另一种更高阶的方式，但这是我们已经学到的
-关于部分应用的幌子。  后一种写法
-该函数部分地将 <code class="docutils literal notranslate"><span class="pre">transform</span></code> 应用于其两个之一
-参数，从而返回一个函数。  该函数绑定到
-名称 <code class="docutils literal notranslate"><span class="pre">add1</span></code>。</p>
+<p>而不是：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add1</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">transform</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="n">lst</span>
+</pre></div>
 </div>
-<p>事实上，C++ 库确实调用了等效函数 <code class="docutils literal notranslate"><span class="pre">transform</span></code>。但是OCaml
-和许多其他语言（包括 Java 和 Python）使用较短的单词 <em>map</em>，
-在数学意义上，函数如何将输入映射到输出。那么让我们
-对该名称进行最后一项更改：</p>
+<p>这是一种更高阶的写法，不过我们已经在部分应用的讨论中见识过了。后一种写法将 <code class="docutils literal notranslate"><span class="pre">transform</span></code> 部分应用于它的两个参数之一，从而返回一个函数。该函数被绑定到名字 <code class="docutils literal notranslate"><span class="pre">add1</span></code>。</p>
+</div>
+<p>事实上，C++ 库中对应的函数确实叫 <code class="docutils literal notranslate"><span class="pre">transform</span></code>。但 OCaml 和许多其他语言（包括 Java 和 Python）使用了更简短的名字 <em>map</em>，取的是数学中”函数将输入映射到输出”的含义。那么让我们做最后一项名称修改：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">map</span> <span class="n">f</span> <span class="o">=</span> <span class="k">function</span>
@@ -813,15 +799,8 @@ head 元素：添加与连接。让我们重写这两个函数
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/hynjCGMpcFk" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 <section id="id1">
 <h2><span class="section-number">4.2.1. </span>副作用<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">map</span></code> 函数已经作为 <code class="docutils literal notranslate"><span class="pre">List.map</span></code> 存在于 OCaml 的标准库中，但是
-与我们上面发现的实现有一点小小的不同。  首先，
-让我们看看我们自己的实现有什么潜在的问题，然后我们看看
-在标准库的实现中。</p>
-<p>我们之前在 <a class="reference internal" href="../data/exceptions.html"><span class="doc std std-doc">exceptions</span></a> 的讨论中已经看到
-OCaml 语言规范通常不指定计算顺序
-子表达式，而当前的语言实现通常会
-从右到左求值。因此，下面这段（相当刻意构造的）代码实际上
-导致列表元素以看似相反的顺序打印：</p>
+<p><code class="docutils literal notranslate"><span class="pre">map</span></code> 函数已经以 <code class="docutils literal notranslate"><span class="pre">List.map</span></code> 的名字存在于 OCaml 标准库中，但与我们上面的实现有一个小小的不同。首先来看看我们自己的实现有什么潜在的问题，然后再看标准库的实现。</p>
+<p>我们之前在<a class="reference internal" href="../data/exceptions.html"><span class="doc std std-doc">异常</span></a>的讨论中已经看到，OCaml 语言规范通常不规定子表达式的求值顺序，而当前 OCaml 的实现通常是从右向左求值。因此，下面这段（相当刻意构造的）代码实际上会导致列表元素以看似相反的顺序被打印：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">p</span> <span class="n">x</span> <span class="o">=</span> <span class="n">print_int</span> <span class="n">x</span><span class="o">;</span> <span class="n">print_newline</span><span class="bp">()</span><span class="o">;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
@@ -847,18 +826,12 @@ OCaml 语言规范通常不指定计算顺序
 </div>
 <p>原因如下：</p>
 <ul class="simple">
-<li><p>表达式 <code class="docutils literal notranslate"><span class="pre">map</span> <span class="pre">p</span> <span class="pre">[1;</span> <span class="pre">2]</span></code> 的计算结果为 <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">1</span> <span class="pre">::</span> <span class="pre">map</span> <span class="pre">p</span> <span class="pre">[2]</span></code>。</p></li>
-<li><p>然后对该表达式的右侧求值，得到
-<code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">1</span> <span class="pre">::</span> <span class="pre">(p</span> <span class="pre">2</span> <span class="pre">::</span> <span class="pre">map</span> <span class="pre">p</span> <span class="pre">[])</span></code>。<code class="docutils literal notranslate"><span class="pre">p</span></code> 对 <code class="docutils literal notranslate"><span class="pre">1</span></code> 的应用尚未
-发生。</p></li>
-<li><p>接下来再次求值 <code class="docutils literal notranslate"><span class="pre">::</span></code> 的右侧，产生
-<code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">1</span> <span class="pre">::</span> <span class="pre">(p</span> <span class="pre">2</span> <span class="pre">::</span> <span class="pre">[])</span></code>.</p></li>
-<li><p>然后 <code class="docutils literal notranslate"><span class="pre">p</span></code> 应用于 <code class="docutils literal notranslate"><span class="pre">2</span></code>，最后应用于 <code class="docutils literal notranslate"><span class="pre">1</span></code>。</p></li>
+<li><p>表达式 <code class="docutils literal notranslate"><span class="pre">map</span> <span class="pre">p</span> <span class="pre">[1;</span> <span class="pre">2]</span></code> 求值为 <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">1</span> <span class="pre">::</span> <span class="pre">map</span> <span class="pre">p</span> <span class="pre">[2]</span></code>。</p></li>
+<li><p>然后对该表达式的右侧求值，得到 <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">1</span> <span class="pre">::</span> <span class="pre">(p</span> <span class="pre">2</span> <span class="pre">::</span> <span class="pre">map</span> <span class="pre">p</span> <span class="pre">[])</span></code>。<code class="docutils literal notranslate"><span class="pre">p</span></code> 对 <code class="docutils literal notranslate"><span class="pre">1</span></code> 的应用尚未发生。</p></li>
+<li><p>接下来再次求值 <code class="docutils literal notranslate"><span class="pre">::</span></code> 的右侧，得到 <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">1</span> <span class="pre">::</span> <span class="pre">(p</span> <span class="pre">2</span> <span class="pre">::</span> <span class="pre">[])</span></code>。</p></li>
+<li><p>然后 <code class="docutils literal notranslate"><span class="pre">p</span></code> 被应用到 <code class="docutils literal notranslate"><span class="pre">2</span></code>，最后应用到 <code class="docutils literal notranslate"><span class="pre">1</span></code>。</p></li>
 </ul>
-<p>对于那些倾向于认为这一点的人来说，这可能会感到惊讶
-求值会从左到右进行。解决方案是使用 <code class="docutils literal notranslate"><span class="pre">let</span></code>
-表达式，确保函数应用的求值发生在
-在递归调用之前：</p>
+<p>对于那些以为求值会从左向右进行的人来说，这可能会让人惊讶。解决方案是使用 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式，确保函数应用在递归调用之前完成求值：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">map</span> <span class="n">f</span> <span class="o">=</span> <span class="k">function</span>
@@ -894,7 +867,7 @@ OCaml 语言规范通常不指定计算顺序
 </ul>
 <p>这就是标准库定义 <code class="docutils literal notranslate"><span class="pre">List.map</span></code> 的方式。我们应该用它来代替
 从现在开始我们自己重新定义该函数。但很高兴我们有
-可以说是“从头开始”发现了这个函数，如果需要的话我们可以
+可以说是”从头开始”发现了这个函数，如果需要的话我们可以
 快速重新编码。</p>
 <p>从这次讨论中得到的更大的教训是，当求值
 顺序很重要，我们需要使用 <code class="docutils literal notranslate"><span class="pre">let</span></code> 来确保它。什么时候重要？仅当
@@ -902,10 +875,8 @@ OCaml 语言规范通常不指定计算顺序
 稍后我们将添加可变性。</p>
 </section>
 <section id="id2">
-<h2><span class="section-number">4.2.2. </span><code class="docutils literal notranslate"><span class="pre">map</span></code> 和尾递归<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>精明的读者会注意到 <code class="docutils literal notranslate"><span class="pre">map</span></code> 的实现不是 tail
-递归的。这在某种程度上是不可避免的。下面是一种诱人但糟糕的
-尾递归版本写法：</p>
+<h2><span class="section-number">4.2.2. </span><code class="docutils literal notranslate"><span class="pre">map</span></code> 与尾递归<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>细心的读者会注意到 <code class="docutils literal notranslate"><span class="pre">map</span></code> 的实现不是尾递归的。这在某种程度上是不可避免的。下面是一种诱人但糟糕的尾递归版本写法：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">map_tr_aux</span> <span class="n">f</span> <span class="n">acc</span> <span class="o">=</span> <span class="k">function</span>
@@ -930,16 +901,8 @@ OCaml 语言规范通常不指定计算顺序
 </div>
 </div>
 </div>
-<p>在某种程度上是有效的：输出是正确的，并且 <code class="docutils literal notranslate"><span class="pre">map_tr_aux</span></code> 是尾部
-递归的。微妙的问题在于子表达式 <code class="docutils literal notranslate"><span class="pre">acc</span> <span class="pre">&#64;</span> <span class="pre">[f</span> <span class="pre">h]</span></code>。回想一下
-追加是单链表上的线性时间操作。也就是说，如果有
-<span class="math notranslate nohighlight">\(n\)</span> 列出元素然后追加需要时间 <span class="math notranslate nohighlight">\(O(n)\)</span>。所以在每次递归调用时我们
-执行 <span class="math notranslate nohighlight">\(O(n)\)</span> 操作。并且将会有 <span class="math notranslate nohighlight">\(n\)</span> 递归调用，每个递归调用一个
-列表的元素。总共需要 <span class="math notranslate nohighlight">\(n \cdot O(n)\)</span> 工作，即 <span class="math notranslate nohighlight">\(O(n^2)\)</span>。
-所以我们实现了尾递归，但代价很高：应该是
-线性时间操作变成了二次时间。</p>
-<p>为了解决这个问题，我们可以使用常量时间 cons 操作
-线性时间追加操作：</p>
+<p>从某种角度看，它是有效的：输出正确，且 <code class="docutils literal notranslate"><span class="pre">map_tr_aux</span></code> 是尾递归的。但微妙的问题出在子表达式 <code class="docutils literal notranslate"><span class="pre">acc</span> <span class="pre">&#64;</span> <span class="pre">[f</span> <span class="pre">h]</span></code>。回想一下，追加是单链表上的线性时间操作。也就是说，如果有 <span class="math notranslate nohighlight">\(n\)</span> 个列表元素，追加需要时间 <span class="math notranslate nohighlight">\(O(n)\)</span>。因此在每次递归调用时，我们都执行了 <span class="math notranslate nohighlight">\(O(n)\)</span> 操作。而总共有 <span class="math notranslate nohighlight">\(n\)</span> 次递归调用，列表每个元素一次。总共需要 <span class="math notranslate nohighlight">\(n \cdot O(n)\)</span> 的工作量，即 <span class="math notranslate nohighlight">\(O(n^2)\)</span>。所以我们虽然实现了尾递归，但代价很高：本应是线性时间的操作变成了二次时间。</p>
+<p>为了解决这个问题，我们可以用常数时间的 cons 操作替代线性时间的追加操作：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">map_tr_aux</span> <span class="n">f</span> <span class="n">acc</span> <span class="o">=</span> <span class="k">function</span>
@@ -964,34 +927,27 @@ OCaml 语言规范通常不指定计算顺序
 </div>
 </div>
 </div>
-<p>在某种程度上，这是有效的：它是尾递归和线性时间。
-这次更明显的问题是输出顺序反了。每次我们取出输入列表前面的元素，
-都会把它放到输出列表的前面，于是元素顺序被颠倒了。</p>
+<p>从某种角度看，这个方案是有效的：它同时是尾递归和线性时间。但这次更明显的问题是输出顺序反了。每次我们从输入列表前面取出一个元素，都把它放到输出列表的前面，于是元素顺序就被颠倒了。</p>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p>要理解为什么会发生逆转，可能有助于思考输入和
-输出列表为排队的人：</p>
+<p>要理解为什么会发生反转，把输入和输出列表想象成排队的人可能会有帮助：</p>
 <ul class="simple">
-<li><p>输入：爱丽丝、鲍勃。</p></li>
+<li><p>输入：Alice、Bob。</p></li>
 <li><p>输出：空。</p></li>
 </ul>
-<p>然后我们从输入中删除 Alice 并将她添加到输出中：</p>
+<p>然后我们从输入中移除 Alice，把她加到了输出中：</p>
 <ul class="simple">
-<li><p>输入：鲍勃.</p></li>
-<li><p>输出：爱丽丝。</p></li>
+<li><p>输入：Bob。</p></li>
+<li><p>输出：Alice。</p></li>
 </ul>
-<p>然后我们从输入中删除 Bob 并将他添加到输出中：</p>
+<p>然后我们从输入中移除 Bob，把他加到了输出中：</p>
 <ul class="simple">
 <li><p>输入：空。</p></li>
-<li><p>输出：鲍勃，爱丽丝。</p></li>
+<li><p>输出：Bob、Alice。</p></li>
 </ul>
-<p>重点是，对于单链表，我们只能对表头进行操作
-列表仍然是常数时间。我们不能将 Bob 移到输出的后面
-不要让他走过爱丽丝—和任何其他可能站着的人
-在输出中。</p>
+<p>关键在于，对于单链表，我们只能对列表头部进行操作才能保持常数时间。我们不能直接把 Bob 放到输出的末尾——除非让他越过 Alice 以及输出中可能站着的其他人。</p>
 </div>
-<p>因此，标准库将此函数称为 <code class="docutils literal notranslate"><span class="pre">List.rev_map</span></code>，即
-是一个（尾递归）映射函数，以相反的顺序返回其输出。</p>
+<p>因此，标准库将这个函数称为 <code class="docutils literal notranslate"><span class="pre">List.rev_map</span></code>——一个以相反顺序返回结果的（尾递归）映射函数。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">rev_map_aux</span> <span class="n">f</span> <span class="n">acc</span> <span class="o">=</span> <span class="k">function</span>
@@ -1016,8 +972,7 @@ OCaml 语言规范通常不指定计算顺序
 </div>
 </div>
 </div>
-<p>如果你希望以“正确”的顺序输出，那很简单：只需应用 <code class="docutils literal notranslate"><span class="pre">List.rev</span></code>
-对它：</p>
+<p>如果你希望得到”正确”顺序的输出，很简单：再应用一次 <code class="docutils literal notranslate"><span class="pre">List.rev</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">rev</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">rev_map</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">])</span>
@@ -1030,47 +985,24 @@ OCaml 语言规范通常不指定计算顺序
 </div>
 </div>
 </div>
-<p>由于 <code class="docutils literal notranslate"><span class="pre">List.rev</span></code> 既是线性时间又是尾递归，因此会产生完整的
-解决方案。我们得到了线性时间和尾递归的映射计算。费用
-是它需要两次遍历列表：一次进行转换，另一次进行转换
-反向。我们不会比单链接的效率做得更好
-列表。当然，还有其他实现列表的数据结构，我们将
-最终还是会谈到这些。同时，请记住，我们通常不必
-担心尾递归（也就是说，堆栈空间），直到列表有
-10,000 个或更多元素。</p>
-<p>为什么标准库不提供这个一体化的函数呢？也许会
-有一天，如果有足够的理由。但你可能会发现自己
-编程没有太多需要。在很多情况下，我们可以这样做
-没有尾递归，或者满足于反向列表。</p>
-<p>从这次讨论中得到的更大的教训是，可以有一个
-递归函数的时间和空间效率之间的权衡。由
-试图使函数更加节省空间（即尾递归），我们
-可能会意外地使其渐近地降低时间效率（即二次
-而不是线性的），或者如果我们聪明的话可以保持渐近时间效率
-相同（即线性），但代价是恒定因子（即处理两次）。</p>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">List.rev</span></code> 既是线性时间又是尾递归的，这就构成了一个完整的解决方案。我们得到了线性时间且尾递归的映射计算。代价是需要遍历列表两次：一次做变换，另一次做反转。在单链表上我们没法做得更好了。当然，还有其他的数据结构可以用来实现列表，我们最终会讨论到。同时记住：通常我们不需要担心尾递归（也即栈空间），除非列表规模达到 10,000 个或更多元素。</p>
+<p>为什么标准库不提供这个一体化函数？也许有一天会有充分理由添加。但你在日常编程中可能并不太需要它。在很多情况下，我们可以不用尾递归，或者可以接受反序的列表。</p>
+<p>从这次讨论中得到的更重要的教训是：递归函数的时间效率和空间效率之间可能存在权衡。试图让函数更省空间（即尾递归），可能意外导致时间效率的渐近退化（从线性变成二次）；或者，如果我们足够聪明，可以保持渐近时间效率不变（即线性），但需要付出常数因子的代价（即遍历两次）。</p>
 </section>
 <section id="id3">
 <h2><span class="section-number">4.2.3. </span>其他语言中的 Map<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
-<p>上面我们提到，map 的概念存在于很多编程语言中。
-下面是一个来自 Python 的示例：</p>
+<p>上面我们提到，map 的概念存在于很多编程语言中。下面是一个 Python 示例：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])))</span>
 <span class="go">[2, 3, 4]</span>
 </pre></div>
 </div>
-<p>我们必须使用 <code class="docutils literal notranslate"><span class="pre">list</span></code> 函数将 <code class="docutils literal notranslate"><span class="pre">map</span></code> 的结果转换回
-列表，因为 Python 为了提高效率而生成 <code class="docutils literal notranslate"><span class="pre">map</span></code> 的每个元素
-根据需要输出。这里我们再次看到“什么时候评估？”的主题。
-返回。</p>
-<p>在 Java 中，map 是 Java 8 中添加的 <code class="docutils literal notranslate"><span class="pre">Stream</span></code> 抽象的一部分。
-没有用于列表或流的内置 Java 语法，它有点多
-冗长地举个例子。这里我们使用一个工厂方法<code class="docutils literal notranslate"><span class="pre">Stream.of</span></code>来创建一个
-流：</p>
+<p>我们必须使用 <code class="docutils literal notranslate"><span class="pre">list</span></code> 函数将 <code class="docutils literal notranslate"><span class="pre">map</span></code> 的结果转换回列表，因为 Python 会按需惰性地生成 <code class="docutils literal notranslate"><span class="pre">map</span></code> 的每个输出元素。这里我们再次遇到了”何时求值？”这个主题。</p>
+<p>在 Java 中，map 是 Java 8 中新增的 <code class="docutils literal notranslate"><span class="pre">Stream</span></code> 抽象的一部分。Java 没有内置的列表或流字面量语法，因此示例略为冗长。这里我们使用工厂方法 <code class="docutils literal notranslate"><span class="pre">Stream.of</span></code> 创建一个流：</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">jshell</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Stream</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">).</span><span class="na">map</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">).</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">toList</span><span class="p">())</span>
 <span class="n">$1</span><span class="w"> </span><span class="o">==&gt;</span><span class="w"> </span><span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">]</span>
 </pre></div>
 </div>
-<p>就像在 Python 示例中一样，我们必须使用一些东西将流转换回来
-到一个列表中。在本例中，它是 <code class="docutils literal notranslate"><span class="pre">collect</span></code> 方法。</p>
+<p>和 Python 示例一样，我们必须用某些东西将流转换回列表。这里用的是 <code class="docutils literal notranslate"><span class="pre">collect</span></code> 方法。</p>
 </section>
 </section>
 
@@ -1139,7 +1071,7 @@ OCaml 语言规范通常不指定计算顺序
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">4.2.1. 副作用</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">4.2.2. <code class="docutils literal notranslate"><span class="pre">map</span></code> 和尾递归</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">4.2.2. <code class="docutils literal notranslate"><span class="pre">map</span></code> 与尾递归</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">4.2.3. 其他语言中的 Map</a></li>
 </ul>
   </nav></div>

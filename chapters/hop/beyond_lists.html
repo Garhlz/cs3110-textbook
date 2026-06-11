@@ -613,9 +613,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">4.5. </span>超越列表<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/5Yyk-l-cUNI" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>像map和fold这样的函数并不局限于列表。它们有意义
-几乎任何类型的数据收集。例如，回想一下这棵树
-代表：</p>
+<p>像 map 和 fold 这样的函数并不局限于列表。它们对几乎任何类型的数据集合都有意义。例如，回想一下树的表示：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span>
@@ -632,8 +630,7 @@ document.write(`
 </div>
 <section id="map">
 <h2><span class="section-number">4.5.1. </span>树上的 <code class="docutils literal notranslate"><span class="pre">map</span></code><a class="headerlink" href="#map" title="Permalink to this heading">#</a></h2>
-<p>这个很容易。  我们所要做的就是将函数 <code class="docutils literal notranslate"><span class="pre">f</span></code> 应用于
-每个节点的值 <code class="docutils literal notranslate"><span class="pre">v</span></code> ：</p>
+<p>这个很容易。我们只需将函数 <code class="docutils literal notranslate"><span class="pre">f</span></code> 应用到每个节点的值 <code class="docutils literal notranslate"><span class="pre">v</span></code> 上：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">map_tree</span> <span class="n">f</span> <span class="o">=</span> <span class="k">function</span>
@@ -651,14 +648,7 @@ document.write(`
 </section>
 <section id="fold">
 <h2><span class="section-number">4.5.2. </span>树上的 <code class="docutils literal notranslate"><span class="pre">fold</span></code><a class="headerlink" href="#fold" title="Permalink to this heading">#</a></h2>
-<p>这个只稍微难一点。让我们为 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">tree</span></code> 开发一个 fold 函数
-与我们的 <code class="docutils literal notranslate"><span class="pre">fold_right</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">list</span></code> 类似。一种思考方式
-<code class="docutils literal notranslate"><span class="pre">List.fold_right</span></code> 是列表中的 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 值被替换为
-<code class="docutils literal notranslate"><span class="pre">acc</span></code> 参数，并且每个 <code class="docutils literal notranslate"><span class="pre">::</span></code> 构造函数都被替换为
-<code class="docutils literal notranslate"><span class="pre">f</span></code> 参数。例如， <code class="docutils literal notranslate"><span class="pre">[a;</span> <span class="pre">b;</span> <span class="pre">c]</span></code> 是语法糖
-<code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">::</span> <span class="pre">(b</span> <span class="pre">::</span> <span class="pre">(c</span> <span class="pre">::</span> <span class="pre">[]))</span></code>。因此，如果我们将 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">0</span></code>，将 <code class="docutils literal notranslate"><span class="pre">::</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code>，
-我们得到<code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">(b</span> <span class="pre">+</span> <span class="pre">(c</span> <span class="pre">+</span> <span class="pre">0))</span></code>。沿着这些思路，我们可以重写以下方法
-<code class="docutils literal notranslate"><span class="pre">fold_right</span></code> 这将帮助我们更清晰地思考：</p>
+<p>这个只稍微难一点。让我们为 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">tree</span></code> 开发一个 fold 函数，类似 <code class="docutils literal notranslate"><span class="pre">fold_right</span></code> 之于 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">list</span></code>。一种理解 <code class="docutils literal notranslate"><span class="pre">List.fold_right</span></code> 的思路是：列表中的 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 值被替换为 <code class="docutils literal notranslate"><span class="pre">acc</span></code> 参数，每个 <code class="docutils literal notranslate"><span class="pre">::</span></code> 构造函数被替换为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 参数。例如，<code class="docutils literal notranslate"><span class="pre">[a;</span> <span class="pre">b;</span> <span class="pre">c]</span></code> 是 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">::</span> <span class="pre">(b</span> <span class="pre">::</span> <span class="pre">(c</span> <span class="pre">::</span> <span class="pre">[]))</span></code> 的语法糖。因此，如果我们把 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">0</span></code>，把 <code class="docutils literal notranslate"><span class="pre">::</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code>，就得到 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">(b</span> <span class="pre">+</span> <span class="pre">(c</span> <span class="pre">+</span> <span class="pre">0))</span></code>。沿着这条思路，我们可以重写 <code class="docutils literal notranslate"><span class="pre">fold_right</span></code>，帮助自己更清晰地思考：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mylist</span> <span class="o">=</span>
@@ -680,15 +670,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>算法是一样的。我们所做的只是改变列表的定义
-使用用字母字符而不是标点符号编写的构造函数，
-并更改 fold 函数的参数顺序。</p>
-<p>对于树，我们希望 <code class="docutils literal notranslate"><span class="pre">acc</span></code> 的初始值替换每个 <code class="docutils literal notranslate"><span class="pre">Leaf</span></code>
-构造函数，就像它替换列表中的 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 一样。我们想要每个 <code class="docutils literal notranslate"><span class="pre">Node</span></code>
-构造函数被运算符替换。但现在操作员需要
-<em>ternary</em> 而不是 <em>binary</em>— 也就是说，它需要三个
-参数而不是两个 — 因为树节点有一个值，一个左子节点，
-和一个右孩子，而列表 cons 只有头和尾。</p>
+<p>算法是一样的。我们只是把列表的定义改成了用字母而不是标点符号书写的构造函数，并调整了 fold 函数的参数顺序。</p>
+<p>对于树，我们希望 <code class="docutils literal notranslate"><span class="pre">acc</span></code> 的初始值替换每个 <code class="docutils literal notranslate"><span class="pre">Leaf</span></code> 构造函数，就像它替换列表中的 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 一样。我们希望每个 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 构造函数被某个运算符替换。但这次运算符需要是<em>三元</em>的（ternary）而不是<em>二元</em>的（binary）——也就是说，它需要三个参数而不是两个——因为树节点有一个值和两个子节点（左孩子和右孩子），而列表的 cons 只有头部和尾部。</p>
 <p>受这些观察的启发，下面是树上的 fold 函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -704,12 +687,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>如果你将该函数与 <code class="docutils literal notranslate"><span class="pre">fold_mylist</span></code> 进行比较，你会注意到它非常接近
-相同。第二次模式匹配中只多了一次递归调用
-分支，对应于定义中又出现一次 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">tree</span></code>
-那种类型的。</p>
-<p>然后我们可以使用 <code class="docutils literal notranslate"><span class="pre">fold_tree</span></code> 来实现我们已经实现的一些树函数
-以前见过：</p>
+<p>如果你将这个函数与 <code class="docutils literal notranslate"><span class="pre">fold_mylist</span></code> 比较，会发现它们几乎一模一样。区别仅仅是第二个模式匹配分支中多了一次递归调用，对应 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">tree</span></code> 类型定义中多出的那一个自引用。</p>
+<p>然后我们可以用 <code class="docutils literal notranslate"><span class="pre">fold_tree</span></code> 来实现我们以前见过的一些树函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">size</span> <span class="n">t</span> <span class="o">=</span> <span class="n">fold_tree</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="n">l</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">l</span> <span class="o">+</span> <span class="n">r</span><span class="o">)</span> <span class="mi">0</span> <span class="n">t</span>
@@ -730,38 +709,21 @@ document.write(`
 </div>
 </div>
 </div>
-<p>为什么我们选择 <code class="docutils literal notranslate"><span class="pre">fold_right</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">fold_left</span></code> 来进行此开发？因为
-<code class="docutils literal notranslate"><span class="pre">fold_left</span></code> 是尾递归，这是我们永远无法实现的
-在二叉树上。假设我们先处理左分支；那我们还得
-在我们返回之前处理正确的分支。所以总会有工作剩下
-在一个分支上进行递归调用后执行的操作。因此，在树上相当于
-<code class="docutils literal notranslate"><span class="pre">fold_right</span></code> 是我们所希望的最好的。</p>
-<p>我们用来派生 <code class="docutils literal notranslate"><span class="pre">fold_tree</span></code> 的技术适用于任何 OCaml 变体类型
-<code class="docutils literal notranslate"><span class="pre">t</span></code>：</p>
+<p>为什么我们在这次推导中选择 <code class="docutils literal notranslate"><span class="pre">fold_right</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">fold_left</span></code>？因为 <code class="docutils literal notranslate"><span class="pre">fold_left</span></code> 是尾递归的，而这在二叉树上永远无法实现。假设我们先处理左分支，那么在返回之前还必须处理右分支。所以在一个分支的递归调用之后，总还有剩余工作要做。因此，<code class="docutils literal notranslate"><span class="pre">fold_right</span></code> 在树上的等价物就是我们能得到的最好的了。</p>
+<p>我们用来推导 <code class="docutils literal notranslate"><span class="pre">fold_tree</span></code> 的技术适用于任意 OCaml 变体类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>：</p>
 <ul class="simple">
-<li><p>编写一个递归 <code class="docutils literal notranslate"><span class="pre">fold</span></code> 函数，每个函数接受一个参数
-<code class="docutils literal notranslate"><span class="pre">t</span></code> 的构造函数。</p></li>
-<li><p>该 <code class="docutils literal notranslate"><span class="pre">fold</span></code> 函数与构造函数匹配，调用自身
-递归地处理它遇到的任何 <code class="docutils literal notranslate"><span class="pre">t</span></code> 类型的值。</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">fold</span></code> 的适当参数来组合所有递归的结果
-调用以及每个构造函数中不属于 <code class="docutils literal notranslate"><span class="pre">t</span></code> 类型的所有数据。</p></li>
+<li><p>编写一个递归 <code class="docutils literal notranslate"><span class="pre">fold</span></code> 函数，为 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的每个构造函数各取一个参数。</p></li>
+<li><p>该 <code class="docutils literal notranslate"><span class="pre">fold</span></code> 函数匹配各个构造函数，对遇到的任何类型为 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的值递归调用自身。</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">fold</span></code> 的适当参数，将所有递归调用的结果以及每个构造函数中不属于类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的数据组合起来。</p></li>
 </ul>
-<p>这种技术构建了一种称为“变形”的东西，又名“广义”
-折叠操作*。要了解有关变形的更多信息，请参加类别课程
-理论。</p>
+<p>这种技术构建了一种称为”catamorphism”（又名”广义折叠操作”）的东西。要了解更多，可以去学范畴论。</p>
 </section>
 <section id="filter">
 <h2><span class="section-number">4.5.3. </span>树上的 <code class="docutils literal notranslate"><span class="pre">filter</span></code><a class="headerlink" href="#filter" title="Permalink to this heading">#</a></h2>
-<p>这可能是最难设计的。  问题是：如果我们决定
-要过滤一个节点，我们应该对其子节点做什么？</p>
+<p>这个可能是最难设计的。问题在于：如果我们决定过滤掉某个节点，应该如何处理它的子节点？</p>
 <ul class="simple">
-<li><p>我们可以对孩子们进行递归。如果过滤后只有一个孩子
-仍然存在，我们可以推广它来代替它的父级。但如果两个孩子都
-留下，还是都不留下？然后我们就必须以某种方式重塑树的形状。没有
-了解有关如何使用该树的更多信息—也就是说，
-它代表的数据类型—我们被卡住了。</p></li>
-<li><p>相反，我们可以完全消除孩子们。于是决定
-过滤节点意味着修剪以该节点为根的整个子树。</p></li>
+<li><p>我们可以对子节点递归。如果过滤后只有一个子节点留下，可以让它提升到父节点的位置。但如果两个子节点都留下，或两个都不留，怎么办？我们就必须以某种方式重塑树的形状。如果不了解更多关于这棵树的具体用途——即它所代表的数据类型——我们就会陷入困境。</p></li>
+<li><p>另一种做法是，直接连同子节点一起全部删掉。这样，决定过滤某个节点就意味着修剪掉以该节点为根的整棵子树。</p></li>
 </ul>
 <p>后者很容易实现：</p>
 <div class="cell docutils container">

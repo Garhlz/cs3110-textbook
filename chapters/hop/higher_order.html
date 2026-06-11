@@ -614,7 +614,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">4.1. </span>高阶函数<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>考虑整数上的这些函数 <code class="docutils literal notranslate"><span class="pre">double</span></code> 和 <code class="docutils literal notranslate"><span class="pre">square</span></code>：</p>
+<p>考虑以下两个作用在整数上的函数 <code class="docutils literal notranslate"><span class="pre">double</span></code> 和 <code class="docutils literal notranslate"><span class="pre">square</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">double</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span>
@@ -631,8 +631,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>让我们使用这些函数来编写另外两个函数：一个把数乘以 4，
-另一个计算数的四次方：</p>
+<p>让我们用它们来编写另外两个函数：一个把数乘以 4，另一个计算数的四次方：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">quad</span> <span class="n">x</span> <span class="o">=</span> <span class="n">double</span> <span class="o">(</span><span class="n">double</span> <span class="n">x</span><span class="o">)</span>
@@ -649,9 +648,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>这两个函数有一个明显的相似之处：它们的作用是
-将给定函数应用于一个值两次。通过将函数传递给另一个函数
-函数 <code class="docutils literal notranslate"><span class="pre">twice</span></code> 作为参数，我们可以抽象这个函数：</p>
+<p>这两个函数有一个明显的相似之处：它们都是把某个函数对同一个值应用两次。我们可以把这个模式抽象出来：把函数也作为参数传给另一个函数 <code class="docutils literal notranslate"><span class="pre">twice</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">twice</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span> <span class="o">(</span><span class="n">f</span> <span class="n">x</span><span class="o">)</span>
@@ -664,11 +661,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>函数 <code class="docutils literal notranslate"><span class="pre">twice</span></code> 是高阶的：它的输入 <code class="docutils literal notranslate"><span class="pre">f</span></code> 是一个函数。
-并且 — 回想一下所有 OCaml 函数实际上只接收一个
-参数 — 从技术上讲，它的输出是 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">f</span> <span class="pre">(f</span> <span class="pre">x)</span></code>；
-因此 <code class="docutils literal notranslate"><span class="pre">twice</span></code> 返回函数，所以它也是高阶的。</p>
-<p>使用<code class="docutils literal notranslate"><span class="pre">twice</span></code>，我们可以以统一的方式实现<code class="docutils literal notranslate"><span class="pre">quad</span></code>和<code class="docutils literal notranslate"><span class="pre">fourth</span></code>：</p>
+<p>函数 <code class="docutils literal notranslate"><span class="pre">twice</span></code> 是高阶的：它的输入 <code class="docutils literal notranslate"><span class="pre">f</span></code> 是一个函数。而且——回想一下所有 OCaml 函数实际上只接收一个参数——从技术上讲，它的输出是 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">f</span> <span class="pre">(f</span> <span class="pre">x)</span></code>；因此 <code class="docutils literal notranslate"><span class="pre">twice</span></code> 也返回函数，所以它同样是高阶的。</p>
+<p>用 <code class="docutils literal notranslate"><span class="pre">twice</span></code>，我们可以以统一的方式实现 <code class="docutils literal notranslate"><span class="pre">quad</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fourth</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">quad</span> <span class="n">x</span> <span class="o">=</span> <span class="n">twice</span> <span class="n">double</span> <span class="n">x</span>
@@ -687,23 +681,10 @@ document.write(`
 </div>
 <section id="id2">
 <h2><span class="section-number">4.1.1. </span>抽象原则<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>上面，我们利用了 <code class="docutils literal notranslate"><span class="pre">quad</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fourth</span></code> 之间的结构相似性
-以节省工作量。诚然，在这个玩具示例中，这似乎并不需要太多工作。
-但想象一下 <code class="docutils literal notranslate"><span class="pre">twice</span></code> 实际上是一些更复杂的函数。
-然后，如果有人想出一个更有效的版本，每个函数
-用它编写的函数（如 <code class="docutils literal notranslate"><span class="pre">quad</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fourth</span></code>）都可以从效率提升中受益，
-而无需重新编码。</p>
-<p>成为一名优秀程序员的一部分就是认识到这些相似之处和
-通过创建实现它们的函数（或其他代码单元）来<em>抽象</em>这些相似性。
-Bruce MacLennan 在他的教科书中将此称为“抽象原则”
-<em>函数式编程：理论与实践</em>（1990）。抽象原则
-意思是避免多次陈述同一件事；相反，要把重复出现的模式
-<em>提取出来</em>。高阶函数可以实现这样的重构，
-因为它们允许我们分解函数，并用其他函数对函数进行参数化。</p>
-<p>除了<code class="docutils literal notranslate"><span class="pre">twice</span></code>之外，这里还有一些比较简单的例子，也感谢
-Mac伦南：</p>
-<p><strong>应用。</strong> 我们可以编写一个函数，将其第一个输入应用到第二个输入
-输入：</p>
+<p>上面我们利用了 <code class="docutils literal notranslate"><span class="pre">quad</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fourth</span></code> 之间的结构相似性来节省工作量。诚然，在这个玩具示例中这似乎并不省多少事。但想象一下，如果 <code class="docutils literal notranslate"><span class="pre">twice</span></code> 实际上是某个更复杂的函数。那么，一旦有人写出了更高效的版本，每个用它定义的函数（如 <code class="docutils literal notranslate"><span class="pre">quad</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fourth</span></code>）就都能从中受益，无需重新编写。</p>
+<p>成为优秀程序员的一个标志，就是能识别这些相似性，并通过创建体现这些相似性的函数（或其他代码单元）来<em>抽象</em>它们。Bruce MacLennan 在其教材 <em>Functional Programming: Theory and Practice</em>（1990）中将此称为”抽象原则”。抽象原则说的是：避免多次陈述同一件事；相反，要把重复出现的模式<em>提取出来</em>。高阶函数使得这种重构成为可能，因为它们允许我们将函数参数化，用不同的函数来替换函数中的变化部分。</p>
+<p>除了 <code class="docutils literal notranslate"><span class="pre">twice</span></code> 之外，这里还有一些较简单的例子，同样出自 MacLennan：</p>
+<p><strong>应用（Apply）。</strong> 我们可以编写一个函数，将第一个输入应用到第二个输入：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">apply</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span> <span class="n">x</span>
@@ -716,9 +697,8 @@ Mac伦南：</p>
 </div>
 </div>
 </div>
-<p>当然，编写 <code class="docutils literal notranslate"><span class="pre">apply</span> <span class="pre">f</span></code> 比直接编写 <code class="docutils literal notranslate"><span class="pre">f</span></code> 更费事。</p>
-<p><strong>Pipeline.</strong> 我们之前见过的 pipeline 操作符是一个
-高阶函数：</p>
+<p>当然，写 <code class="docutils literal notranslate"><span class="pre">apply</span> <span class="pre">f</span></code> 比直接写 <code class="docutils literal notranslate"><span class="pre">f</span></code> 更啰嗦。</p>
+<p><strong>管道（Pipeline）。</strong> 我们之前见过的管道运算符就是一个高阶函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">pipeline</span> <span class="n">x</span> <span class="n">f</span> <span class="o">=</span> <span class="n">f</span> <span class="n">x</span>
@@ -739,7 +719,7 @@ Mac伦南：</p>
 </div>
 </div>
 </div>
-<p><strong>Compose.</strong> 我们可以编写一个组合另外两个函数的函数：</p>
+<p><strong>组合（Compose）。</strong> 我们可以编写一个将两个函数组合起来的函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">compose</span> <span class="n">f</span> <span class="n">g</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span> <span class="o">(</span><span class="n">g</span> <span class="n">x</span><span class="o">)</span>
@@ -752,8 +732,7 @@ Mac伦南：</p>
 </div>
 </div>
 </div>
-<p>这个函数可以让我们创建一个可以应用的新函数
-多次，例如：</p>
+<p>这个函数可以让我们创建一个能多次应用的新函数，例如：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">square_then_double</span> <span class="o">=</span> <span class="n">compose</span> <span class="n">double</span> <span class="n">square</span>
@@ -774,8 +753,7 @@ Mac伦南：</p>
 </div>
 </div>
 </div>
-<p><strong>Both.</strong> 我们可以编写一个函数，将两个函数应用于同一个
-参数并返回一对结果：</p>
+<p><strong>两者（Both）。</strong> 我们可以编写一个函数，将两个函数应用于同一个参数，返回一对结果：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">both</span> <span class="n">f</span> <span class="n">g</span> <span class="n">x</span> <span class="o">=</span> <span class="o">(</span><span class="n">f</span> <span class="n">x</span><span class="o">,</span> <span class="n">g</span> <span class="n">x</span><span class="o">)</span>
@@ -796,8 +774,7 @@ Mac伦南：</p>
 </div>
 </div>
 </div>
-<p><strong>条件</strong> 我们可以编写一个函数，有条件地选择两个中的哪一个
-基于谓词应用的函数：</p>
+<p><strong>条件（Cond）。</strong> 我们可以编写一个函数，根据谓词的结果选择应用两个函数中的哪一个：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">cond</span> <span class="n">p</span> <span class="n">f</span> <span class="n">g</span> <span class="n">x</span> <span class="o">=</span>
@@ -814,29 +791,11 @@ Mac伦南：</p>
 </section>
 <section id="id3">
 <h2><span class="section-number">4.1.2. </span>“高阶”的含义<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
-<p>尽管“高阶”一词在整个逻辑和计算机科学中都有使用
-不一定在所有情况下都具有精确或一致的含义。</p>
-<p>在逻辑中，“一阶量化”主要指的是普遍的和
-存在（<span class="math notranslate nohighlight">\(\forall\)</span> 和 <span class="math notranslate nohighlight">\(\exists\)</span>）量词。这些可以让你量化
-一些感兴趣的“领域”，例如自然数。但对于任意给定的
-量化，比如 <span class="math notranslate nohighlight">\(\forall x\)</span>，被量化的变量代表一个
-该域的单个元素，例如自然数 42。</p>
-<p><em>二阶量化</em>让你可以做一些更强大的事情，
-也就是对论域中的“属性”进行量化。属性是关于单个元素的断言，
-例如某个自然数是偶数，或者它是素数。在某些逻辑中，我们可以将属性等同于个体的集合，
-例如所有偶数自然数的集合。所以二阶量化是
-通常被认为是对“集合”的量化。你还可以考虑属性
-作为接受元素并返回布尔值的函数，指示
-元素是否满足属性；这就是所谓的属性的<em>特征函数</em>。</p>
-<p><em>三阶</em>逻辑将允许对属性的属性进行量化，
-以及属性的属性的属性的<em>四阶</em>，等等。
-<em>高阶逻辑</em>是指所有这些比逻辑更强大的逻辑
-一阶逻辑；尽管这一领域的一个有趣的结果是所有
-高阶逻辑可以用二阶逻辑来表达。</p>
-<p>在编程语言中，“一阶函数”类似地指作用于普通数据元素
-（例如字符串、整数、记录、变体等）的函数。
-而<em>高阶函数</em>可以操作函数，很像高阶逻辑可以量化属性
-（而属性就像函数）。</p>
+<p>“高阶”这个词在逻辑学和计算机科学中都有使用，但在不同语境下不一定有精确一致的含义。</p>
+<p>在逻辑学中，”一阶量化”主要指的是全称量词和存在量词（<span class="math notranslate nohighlight">\(\forall\)</span> 和 <span class="math notranslate nohighlight">\(\exists\)</span>）。它们允许你对某个感兴趣的”论域”进行量化，比如自然数。对于任意给定的量化，比如 <span class="math notranslate nohighlight">\(\forall x\)</span>，被量化的变量代表该论域中的单个元素，例如自然数 42。</p>
+<p><em>二阶量化</em>则更进一步，允许你对论域中的”属性”进行量化。属性是关于单个元素的断言，比如某个自然数是偶数，或者它是素数。在某些逻辑中，我们可以将属性等同于个体的集合，例如所有偶数自然数的集合。因此二阶量化通常被认为是对”集合”的量化。你还可以将属性视为接受元素并返回布尔值的函数，指示元素是否满足该属性；这就是所谓的属性的<em>特征函数</em>。</p>
+<p><em>三阶</em>逻辑允许对属性的属性进行量化，<em>四阶</em>则允许对属性的属性的属性进行量化，依此类推。<em>高阶逻辑</em>是指所有比一阶逻辑更强大的逻辑；不过这一领域有一个有趣的结果：所有高阶逻辑都可以用二阶逻辑来表达。</p>
+<p>在编程语言中，<em>一阶函数</em>类似地指作用于普通数据元素（如字符串、整数、记录、变体等）的函数。而<em>高阶函数</em>则可以操作函数本身，就像高阶逻辑可以对属性进行量化一样（而属性就如同函数）。</p>
 </section>
 <section id="id4">
 <h2><span class="section-number">4.1.3. </span>著名的高阶函数<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>

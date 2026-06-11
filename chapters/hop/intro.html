@@ -535,29 +535,14 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">4. </span>高阶编程<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/rTbinjZ9-oc" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>函数是值，就像 OCaml 中的任何其他值一样。这到底是什么意思？
-这意味着我们可以把函数作为参数传给其他函数，
-可以把函数存储在数据结构中，也可以把函数作为其他函数的结果返回，等等。</p>
-<p><em>高阶函数</em>要么接受其他函数作为输入，要么返回其他函数
-作为输出（或两者）。高阶函数也称为
-<em>函数式</em>，因此用它们进行编程可以称为<em>函数式编程</em>—
-这也说明了使用 OCaml 这类语言编程时的核心所在。</p>
-<p>高阶函数是函数式语言中较近才被主流语言吸收的特性之一。
-Java 8 Streams 库和 Python 2.3 的 <code class="docutils literal notranslate"><span class="pre">itertools</span></code> 模块就是这样的例子；
-C++ 至少从 2011 年开始也一直在增加对它的支持。</p>
+<p>函数也是值，和 OCaml 中其他任何值一样。这到底意味着什么？意味着我们可以把函数作为参数传给其他函数，可以把函数存储在数据结构中，也可以把函数作为其他函数的返回值，等等。</p>
+<p><em>高阶函数</em>要么接受其他函数作为输入，要么返回其他函数作为输出（或两者兼具）。高阶函数也称为<em>泛函</em>（functional），因此用它们编程也就是<em>函数式编程</em>（functional programming）——这也正是 OCaml 这类语言的核心所在。</p>
+<p>高阶函数是函数式语言的特性中较晚才被主流语言吸收的一个。Java 8 的 Streams 库和 Python 2.3 的 <code class="docutils literal notranslate"><span class="pre">itertools</span></code> 模块就是例子；C++ 至少从 2011 年起也在不断增加对它的支持。</p>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p>C 专家可能会反对说，这种吸收并不算新。毕竟 C 很早就能
-通过函数指针进行高阶编程。但这种能力还依赖一种额外的编程模式：
-通过附加的 <em>environment</em> 参数，为通过指针调用的函数提供其中变量的值。
-正如我们将在后面关于解释器的章节中看到的那样，函数式语言中
-（高阶）函数的本质在于它们实际上是所谓的“闭包”，
-从而消除了这个额外参数的需要。请记住，问题不在于一种语言中
-什么是“可能的”—毕竟所有内容最终都编译为机器代码，
-所以我们总能直接写机器码—而在于什么计算方式是<em>愉快的</em>。</p>
+<p>C 语言专家可能会反驳说，这并不算什么新鲜事。毕竟 C 很早就能通过函数指针进行高阶编程。但这种能力还依赖一种额外的编程模式：通过附加的 <em>environment</em> 参数，为通过指针调用的函数提供其中变量的值。正如我们将在后面关于解释器的章节中看到的那样，函数式语言中（高阶）函数的本质在于它们实际上是所谓的”闭包”（closure），从而消除了这个额外参数的需要。请记住，问题不在于一种语言中什么是”可能的”——毕竟所有内容最终都编译为机器码，我们总能直接写机器码——而在于哪种计算方式是<em>令人愉悦的</em>。</p>
 </div>
-<p>在本章中，我们将看到高阶函数为何值得重视：它们能带来美观、
-通用且可重用的代码。</p>
+<p>本章我们将看到高阶函数为何值得重视：它们能带来优雅、通用且可重用的代码。</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>

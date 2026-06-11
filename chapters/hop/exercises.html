@@ -610,19 +610,12 @@ We are happy to add or correct solutions. Please make contributions through GitH
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: exists [★★]</strong></p>
-<p>考虑编写一个函数 <code class="docutils literal notranslate"><span class="pre">exists:</span> <span class="pre">('a</span> <span class="pre">-&gt;</span> <span class="pre">bool)</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">list</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code>，这样
-<code class="docutils literal notranslate"><span class="pre">exists</span> <span class="pre">p</span> <span class="pre">[a1;</span> <span class="pre">...;</span> <span class="pre">an]</span></code> 返回列表中是否至少有一个元素
-满足谓词 <code class="docutils literal notranslate"><span class="pre">p</span></code>。也就是说，它的求值结果与
-<code class="docutils literal notranslate"><span class="pre">(p</span> <span class="pre">a1)</span> <span class="pre">||</span> <span class="pre">(p</span> <span class="pre">a2)</span> <span class="pre">||</span> <span class="pre">...</span> <span class="pre">||</span> <span class="pre">(p</span> <span class="pre">an)</span></code>。当应用于空列表时，它会计算
-至 <code class="docutils literal notranslate"><span class="pre">false</span></code>。</p>
-<p>正如我们上面所做的那样，写出这个问题的三个解决方案：</p>
+<p>考虑编写一个函数 <code class="docutils literal notranslate"><span class="pre">exists:</span> <span class="pre">('a</span> <span class="pre">-&gt;</span> <span class="pre">bool)</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">list</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code>，使得 <code class="docutils literal notranslate"><span class="pre">exists</span> <span class="pre">p</span> <span class="pre">[a1;</span> <span class="pre">...;</span> <span class="pre">an]</span></code> 返回列表中是否至少有一个元素满足谓词 <code class="docutils literal notranslate"><span class="pre">p</span></code>。也就是说，它的求值结果等同于 <code class="docutils literal notranslate"><span class="pre">(p</span> <span class="pre">a1)</span> <span class="pre">||</span> <span class="pre">(p</span> <span class="pre">a2)</span> <span class="pre">||</span> <span class="pre">...</span> <span class="pre">||</span> <span class="pre">(p</span> <span class="pre">an)</span></code>。当应用于空列表时，它求值为 <code class="docutils literal notranslate"><span class="pre">false</span></code>。</p>
+<p>正如我们上面所做的那样，写出这个问题的三个解法：</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">exists_rec</span></code>，必须是不使用<code class="docutils literal notranslate"><span class="pre">List</span></code>的递归函数
-模块,</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">exists_fold</span></code>，它使用 <code class="docutils literal notranslate"><span class="pre">List.fold_left</span></code> 或 <code class="docutils literal notranslate"><span class="pre">List.fold_right</span></code>，但是
-不是任何其他 <code class="docutils literal notranslate"><span class="pre">List</span></code> 模块函数，也不是 <code class="docutils literal notranslate"><span class="pre">rec</span></code> 关键字，并且</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">exists_lib</span></code>，它使用 <code class="docutils literal notranslate"><span class="pre">List</span></code> 模块函数的任意组合，除了
-<code class="docutils literal notranslate"><span class="pre">fold_left</span></code> 或 <code class="docutils literal notranslate"><span class="pre">fold_right</span></code>，并且不使用 <code class="docutils literal notranslate"><span class="pre">rec</span></code> 关键字。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exists_rec</span></code>，必须是不使用 <code class="docutils literal notranslate"><span class="pre">List</span></code> 模块的递归函数，</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exists_fold</span></code>，使用 <code class="docutils literal notranslate"><span class="pre">List.fold_left</span></code> 或 <code class="docutils literal notranslate"><span class="pre">List.fold_right</span></code>，但不使用任何其他 <code class="docutils literal notranslate"><span class="pre">List</span></code> 模块函数，也不使用 <code class="docutils literal notranslate"><span class="pre">rec</span></code> 关键字，</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exists_lib</span></code>，使用 <code class="docutils literal notranslate"><span class="pre">List</span></code> 模块函数的任意组合，但 <code class="docutils literal notranslate"><span class="pre">fold_left</span></code> 或 <code class="docutils literal notranslate"><span class="pre">fold_right</span></code> 除外，且不使用 <code class="docutils literal notranslate"><span class="pre">rec</span></code> 关键字。</p></li>
 </ul>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />

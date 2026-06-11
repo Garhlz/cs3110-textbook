@@ -600,9 +600,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">4.7. </span>柯里化<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>我们已经看到一个 OCaml 函数接受两个类型为 <code class="docutils literal notranslate"><span class="pre">t1</span></code> 的参数
-和 <code class="docutils literal notranslate"><span class="pre">t2</span></code> 并返回类型为 <code class="docutils literal notranslate"><span class="pre">t3</span></code> 的值，其类型为 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">t3</span></code>。我们使用
-let 表达式中函数名后面的两个变量：</p>
+<p>我们已经看到，一个接受两个参数（类型分别为 <code class="docutils literal notranslate"><span class="pre">t1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">t2</span></code>）并返回类型 <code class="docutils literal notranslate"><span class="pre">t3</span></code> 的值的 OCaml 函数，其类型为 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">t3</span></code>。我们在 let 表达式中将两个变量写在函数名后面：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
@@ -615,8 +613,7 @@ let 表达式中函数名后面的两个变量：</p>
 </div>
 </div>
 </div>
-<p>定义带有两个参数的函数的另一种方法是编写一个函数
-这需要一个元组：</p>
+<p>另一种定义双参数函数的方式是写一个接受元组的函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add&#39;</span> <span class="n">t</span> <span class="o">=</span> <span class="n">fst</span> <span class="n">t</span> <span class="o">+</span> <span class="n">snd</span> <span class="n">t</span>
@@ -629,8 +626,7 @@ let 表达式中函数名后面的两个变量：</p>
 </div>
 </div>
 </div>
-<p>我们可以在中使用元组模式，而不是使用 <code class="docutils literal notranslate"><span class="pre">fst</span></code> 和 <code class="docutils literal notranslate"><span class="pre">snd</span></code>
-函数的定义，导致第三种实现：</p>
+<p>我们还可以在函数定义中使用元组模式，而不是使用 <code class="docutils literal notranslate"><span class="pre">fst</span></code> 和 <code class="docutils literal notranslate"><span class="pre">snd</span></code>，得到第三种实现：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add&#39;&#39;</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
@@ -643,20 +639,9 @@ let 表达式中函数名后面的两个变量：</p>
 </div>
 </div>
 </div>
-<p>调用使用第一种样式（类型为 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">t3</span></code>）编写的函数
-<em>柯里化</em>函数，以及使用第二种风格的函数（类型
-<code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">*</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">t3</span></code>) 被称为<em>非柯里化</em>。打个比方，柯里化函数是
-“更辣”，因为你可以部分应用它们（这是你不能做的
-非柯里化函数：不能传入一半的函数）。事实上，咖喱这个词
-不是指香料，而是指一位名叫 <a class="reference external" href="https://en.wikipedia.org/wiki/Haskell_Curry">Haskell Curry</a> 的逻辑学家（其中之一）
-一小群拥有以他们的名字命名的编程语言的人
-名字和姓氏）。</p>
-<p>有时你会遇到提供非柯里化版本的库
-函数，但你希望在你自己的代码中使用它的柯里化版本；或恶习
-反之亦然。因此了解如何在两种类型之间进行转换是很有用的
-函数，就像我们上面对 <code class="docutils literal notranslate"><span class="pre">add</span></code> 所做的那样。</p>
-<p>你甚至可以编写几个高阶函数来进行转换
-给你：</p>
+<p>使用第一种风格（类型为 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">-&gt;</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">t3</span></code>）的函数称为<em>柯里化</em>函数（curried function），而使用第二种风格（类型为 <code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">*</span> <span class="pre">t2</span> <span class="pre">-&gt;</span> <span class="pre">t3</span></code>）的函数称为<em>非柯里化</em>函数（uncurried function）。打个比方，柯里化函数更”辣”（hotter），因为你可以部分应用它们（这是非柯里化函数不能做的：不能只传入一半的参数）。”Curry”这个词并非指香料咖喱，而是来自逻辑学家 <a class="reference external" href="https://en.wikipedia.org/wiki/Haskell_Curry">Haskell Curry</a> 的名字——他是少数既有名又有姓被用来命名编程语言的人之一。</p>
+<p>有时你会遇到库提供了函数的非柯里化版本，但你想在自己的代码中使用柯里化版本，或者反过来。因此了解如何在两种函数形式之间转换会很有用，就像我们上面为 <code class="docutils literal notranslate"><span class="pre">add</span></code> 所做的那样。</p>
+<p>你甚至可以编写两个高阶函数来自动完成这种转换：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">curry</span> <span class="n">f</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">f</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span>

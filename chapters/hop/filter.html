@@ -668,11 +668,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>函数 <code class="docutils literal notranslate"><span class="pre">evens</span></code> 和 <code class="docutils literal notranslate"><span class="pre">odds</span></code> 几乎是相同的代码：唯一重要的
-区别在于它们应用于 head 元素的测试。正如我们对 <code class="docutils literal notranslate"><span class="pre">map</span></code> 所做的那样
-在上一节中，我们将该测试分解为函数。让我们命名
-函数 <code class="docutils literal notranslate"><span class="pre">p</span></code>，作为“谓词”的缩写。谓词只是一个
-测试某件事是真还是假的函数：</p>
+<p>函数 <code class="docutils literal notranslate"><span class="pre">evens</span></code> 和 <code class="docutils literal notranslate"><span class="pre">odds</span></code> 几乎是相同的代码：唯一重要的区别在于它们对头部元素应用的测试。正如我们在上一节对 <code class="docutils literal notranslate"><span class="pre">map</span></code> 所做的那样，我们将这个测试提取为一个函数。我们把该函数命名为 <code class="docutils literal notranslate"><span class="pre">p</span></code>，作为”谓词”（predicate）的缩写。谓词就是一个测试某件事是真还是假的函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">filter</span> <span class="n">p</span> <span class="o">=</span> <span class="k">function</span>
@@ -704,8 +700,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>多么简单！多么清楚！（至少对于熟悉
-<code class="docutils literal notranslate"><span class="pre">filter</span></code>。）</p>
+<p>多么简单！多么清晰！（至少对熟悉 <code class="docutils literal notranslate"><span class="pre">filter</span></code> 的人来说如此。）</p>
 <section id="id1">
 <h2><span class="section-number">4.3.1. </span><code class="docutils literal notranslate"><span class="pre">filter</span></code> 和尾递归<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 <p>正如我们对 <code class="docutils literal notranslate"><span class="pre">map</span></code> 所做的那样，我们可以创建 <code class="docutils literal notranslate"><span class="pre">filter</span></code> 的尾递归版本：</p>
