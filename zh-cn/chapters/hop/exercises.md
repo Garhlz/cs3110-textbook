@@ -84,20 +84,13 @@ let ( @@ ) f g x = x |> g |> f
 <!--------------------------------------------------------------------------->
 {{ ex2 | replace("%%NAME%%", "exists")}}
 
-考虑编写一个函数 `exists: ('a -> bool) -> 'a list -> bool`，这样
-`exists p [a1; ...; an]` 返回列表中是否至少有一个元素
-满足谓词 `p`。也就是说，它的求值结果与
-`(p a1) || (p a2) || ... || (p an)`。当应用于空列表时，它会计算
-至 `false`。
+考虑编写一个函数 `exists: ('a -> bool) -> 'a list -> bool`，使得 `exists p [a1; ...; an]` 返回列表中是否至少有一个元素满足谓词 `p`。也就是说，它的求值结果等同于 `(p a1) || (p a2) || ... || (p an)`。当应用于空列表时，它求值为 `false`。
 
-正如我们上面所做的那样，写出这个问题的三个解决方案：
+正如我们上面所做的那样，写出这个问题的三个解法：
 
-* `exists_rec`，必须是不使用`List`的递归函数
-模块,
-* `exists_fold`，它使用 `List.fold_left` 或 `List.fold_right`，但是
-不是任何其他 `List` 模块函数，也不是 `rec` 关键字，并且
-* `exists_lib`，它使用 `List` 模块函数的任意组合，除了
-`fold_left` 或 `fold_right`，并且不使用 `rec` 关键字。
+* `exists_rec`，必须是不使用 `List` 模块的递归函数，
+* `exists_fold`，使用 `List.fold_left` 或 `List.fold_right`，但不使用任何其他 `List` 模块函数，也不使用 `rec` 关键字，
+* `exists_lib`，使用 `List` 模块函数的任意组合，但 `fold_left` 或 `fold_right` 除外，且不使用 `rec` 关键字。
 
 <!--------------------------------------------------------------------------->
 {{ ex3 | replace("%%NAME%%", "account balance")}}
