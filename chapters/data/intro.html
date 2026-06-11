@@ -534,19 +534,19 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">3. </span>数据和类型<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>在本章中，我们将研究 OCaml 的一些内置数据类型，包括列表、变体、记录、元组和选项。其中许多可能会让你觉得很熟悉，因为类似的类型在其他编程语言中也很常见。特别是：</p>
+<p>本章将介绍 OCaml 的一些内置数据类型，包括列表、变体、记录、元组和选项。其中许多你可能已经感到熟悉，因为类似的类型在其他编程语言中也很常见。具体来说：</p>
 <ul class="simple">
-<li><p><strong>列表</strong>和<strong>元组</strong>可能与 Python 中的相似；</p></li>
-<li><p><strong>记录</strong>和<strong>变体</strong>可能与 C 或 Java 中的 <code class="docutils literal notranslate"><span class="pre">struct</span></code> 和 <code class="docutils literal notranslate"><span class="pre">enum</span></code> 类型相似。</p></li>
+<li><p><strong>列表</strong>和<strong>元组</strong>与 Python 中的类似；</p></li>
+<li><p><strong>记录</strong>和<strong>变体</strong>与 C 或 Java 中的 <code class="docutils literal notranslate"><span class="pre">struct</span></code> 和 <code class="docutils literal notranslate"><span class="pre">enum</span></code> 类似。</p></li>
 </ul>
-<p>由于这种相似性，我们把这些称为<em>标准</em>数据类型。我们还会学习<em>模式匹配</em>，这个特性你可能不太熟悉。</p>
-<p>几乎在学完列表之后，我们就会暂停对标准数据类型的学习，转而学习如何用 OUnit 在 OCaml 中进行单元测试。OUnit 是一个单元测试框架，类似于你可能在其他语言中用过的框架。我们之所以现在才介绍 OUnit，是因为它依赖于列表。</p>
-<p>在本章后面，我们会研究一些在其他语言中不那么常见的 OCaml 数据类型。它们包括：</p>
+<p>由于这些相似性，我们称之为<em>标准</em>数据类型。此外，我们还会学习<em>模式匹配</em>——这个特性你可能不太熟悉。</p>
+<p>学完列表之后，我们会暂时放下标准数据类型，转而学习如何用 OUnit 在 OCaml 中进行单元测试。OUnit 是一个单元测试框架，类似于你在其他语言中可能用过的框架。我们之所以在这里介绍 OUnit，是因为它依赖于列表。</p>
+<p>本章后半部分会介绍一些在其他语言中不那么常见的 OCaml 数据类型，包括：</p>
 <ul class="simple">
-<li><p><strong>选项</strong>，与 Java 中的 <code class="docutils literal notranslate"><span class="pre">null</span></code> 有松散的联系；</p></li>
-<li><p><strong>关联列表</strong>，这是一个基于列表和元组的极简映射（字典）实现；</p></li>
+<li><p><strong>选项</strong>，与 Java 中的 <code class="docutils literal notranslate"><span class="pre">null</span></code> 有一定关联；</p></li>
+<li><p><strong>关联列表</strong>，基于列表和元组的轻量级映射（字典）实现；</p></li>
 <li><p><strong>代数数据类型</strong>，可以说是 OCaml 中最重要的类型，也是许多其他内置类型的基础；</p></li>
-<li><p><strong>异常</strong>，这是一种特殊的代数数据类型。</p></li>
+<li><p><strong>异常</strong>，一种特殊的代数数据类型。</p></li>
 </ul>
 <div class="toctree-wrapper compound">
 </div>

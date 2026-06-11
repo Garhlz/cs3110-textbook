@@ -603,8 +603,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.1.3. （不）改变列表</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3.1.4. 与列表的模式匹配</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">3.1.5. 深度模式匹配</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">3.1.6. 立即匹配</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ocamldoc">3.1.7. OCamldoc 和列表语法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">3.1.6. 即时匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ocamldoc">3.1.7. OCamldoc 与列表语法</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">3.1.8. 列表推导式</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">3.1.9. 尾递归</a></li>
 </ul>
@@ -621,13 +621,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">3.1. </span>列表<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/x8oLIEtSRBs" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>OCaml 列表是一系列具有相同类型的值。它们
-以单链表实现。列表在语言中是一等公民：
-语言为轻松创建和使用列表提供了特殊支持。
-这是 OCaml 与许多其他函数式语言共享的特性。
-Python 这样的主流命令式语言如今也有这种支持。
-也许这是因为程序员喜欢把列表作为语言的一等组成部分来直接使用，
-而不必通过库来操作它们（像 C 和 Java 那样）。</p>
+<p>OCaml 列表是一系列类型相同的值，以单链表实现。列表在 OCaml 中是一等公民：语言提供了创建和使用列表的专门语法支持。这是 OCaml 与许多其他函数式语言共有的特性。像 Python 这样的主流命令式语言如今也提供了类似支持。程序员往往更喜欢把列表当作语言的一等组成部分直接使用，而不是通过库来操作它们（像 C 和 Java 那样）。</p>
 <section id="id2">
 <h2><span class="section-number">3.1.1. </span>构建列表<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/I9u4kFPM7YI" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
@@ -637,21 +631,12 @@ Python 这样的主流命令式语言如今也有这种支持。
 <span class="o">[</span><span class="n">e1</span><span class="o">;</span> <span class="n">e2</span><span class="o">;</span> <span class="o">...;</span> <span class="n">en</span><span class="o">]</span>
 </pre></div>
 </div>
-<p>空列表写作 <code class="docutils literal notranslate"><span class="pre">[]</span></code>，读作“nil”，这个名字来自
-Lisp。给定一个列表 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 和元素 <code class="docutils literal notranslate"><span class="pre">elt</span></code>，我们可以把 <code class="docutils literal notranslate"><span class="pre">elt</span></code> 加到 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 前面：
-写作 <code class="docutils literal notranslate"><span class="pre">elt</span> <span class="pre">::</span> <span class="pre">lst</span></code>。双冒号运算符读作“cons”，这个名字
-它来自 Lisp 中的一个运算符，该运算符 <u>cons</u>tructs 内存中的对象。
-“Cons”也可以用作动词，例如“我会把一个元素 cons 到列表上”。
-列表的第一个元素通常称为它的“头部”，其余元素（如果有的话）
-称为它的<em>尾部</em>。</p>
-<p>cons 运算符 <code class="docutils literal notranslate"><span class="pre">::</span></code> 是右结合的，这意味着 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span> <span class="pre">::</span> <span class="pre">e3</span></code> 是
-理解为 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">(e2</span> <span class="pre">::</span> <span class="pre">e3)</span></code>，而不是 <code class="docutils literal notranslate"><span class="pre">(e1</span> <span class="pre">::</span> <span class="pre">e2)</span> <span class="pre">::</span> <span class="pre">e3</span></code>。</p>
-<p>方括号语法很方便，但没有必要。任意列表
-<code class="docutils literal notranslate"><span class="pre">[e1;</span> <span class="pre">e2;</span> <span class="pre">...;</span> <span class="pre">en]</span></code> 可以用更原始的 nil 和
-cons 语法：<code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span> <span class="pre">::</span> <span class="pre">...</span> <span class="pre">::</span> <span class="pre">en</span> <span class="pre">::</span> <span class="pre">[]</span></code>。当一种好用的语法可以
-用语言中更原始的语法定义出来时，我们称这种
-好用的语法为<em>语法糖</em>：它让语言变得“更甜”。
-把这种语法糖转换为更原始的语法称为“去糖”。</p>
+<p>空列表写作 <code class="docutils literal notranslate"><span class="pre">[]</span></code>，读作”nil”，这个名字源自 Lisp。给定一个列表 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 和元素 <code class="docutils literal notranslate"><span class="pre">elt</span></code>，我们可以把 <code class="docutils literal notranslate"><span class="pre">elt</span></code> 加到 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 的前面，写作 <code class="docutils literal notranslate"><span class="pre">elt</span> <span class="pre">::</span> <span class="pre">lst</span></code>。双冒号运算符读作”cons”，这个名字也来自 Lisp，指的是一个 <u>cons</u>tructs（构造）内存中对象的运算符。”Cons”也可以用作动词，比如”我会把一个元素 cons 到列表上”。列表的第一个元素通常称为它的<em>头部</em>（head），其余元素（如果有的话）称为它的<em>尾部</em>（tail）。</p>
+<p>cons 运算符 <code class="docutils literal notranslate"><span class="pre">::</span></code> 是右结合的，这意味着 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span> <span class="pre">::</span> <span class="pre">e3</span></code>
+被理解为 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">(e2</span> <span class="pre">::</span> <span class="pre">e3)</span></code>，而不是 <code class="docutils literal notranslate"><span class="pre">(e1</span> <span class="pre">::</span> <span class="pre">e2)</span> <span class="pre">::</span> <span class="pre">e3</span></code>。</p>
+<p>方括号语法很方便，但并不是必需的。任意列表
+<code class="docutils literal notranslate"><span class="pre">[e1;</span> <span class="pre">e2;</span> <span class="pre">...;</span> <span class="pre">en]</span></code> 都可以用更原始的 nil 和 cons 语法表示：
+<code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span> <span class="pre">::</span> <span class="pre">...</span> <span class="pre">::</span> <span class="pre">en</span> <span class="pre">::</span> <span class="pre">[]</span></code>。当一种好用的语法可以用语言中更原始的语法定义出来时，我们称这种好用的语法为<em>语法糖</em>（syntactic sugar）：它让语言变得更”甜”。把语法糖转换为更原始的语法，称为”去糖”（desugaring）。</p>
 <p>因为列表的元素可以是任意表达式，所以列表可以是
 嵌套的深度任意深，例如 <code class="docutils literal notranslate"><span class="pre">[[[]];</span> <span class="pre">[[1;</span> <span class="pre">2;</span> <span class="pre">3]]]</span></code>。</p>
 <p><strong>动态语义。</strong></p>
@@ -663,9 +648,9 @@ cons 语法：<code class="docutils literal notranslate"><span class="pre">e1</s
 <ul class="simple">
 <li><p>如果对所有 <code class="docutils literal notranslate"><span class="pre">i</span></code> ∈ <code class="docutils literal notranslate"><span class="pre">1..n</span></code> 都有 <code class="docutils literal notranslate"><span class="pre">ei</span></code> 计算得到 <code class="docutils literal notranslate"><span class="pre">vi</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">[e1;</span> <span class="pre">...;</span> <span class="pre">en]</span></code> 计算得到 <code class="docutils literal notranslate"><span class="pre">[v1;</span> <span class="pre">...;</span> <span class="pre">vn]</span></code>。</p></li>
 </ul>
-<p>在求值规则中反复写”计算得到”开始变得枯燥。让我们引入一个更简洁的记号：我们用 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">==&gt;</span> <span class="pre">v</span></code> 表示”e 计算得到 v”。注意 <code class="docutils literal notranslate"><span class="pre">==&gt;</span></code> 不是 OCaml 语法的一部分，而是我们用来描述语言的元语言符号。用这个记号，我们可以改写上面的后两个规则：</p>
+<p>在求值规则中反复写”求值为”逐渐显得啰嗦。让我们引入一个更简洁的记号：用 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">==&gt;</span> <span class="pre">v</span></code> 表示”e 求值为 v”。注意 <code class="docutils literal notranslate"><span class="pre">==&gt;</span></code> 不是 OCaml 语法的一部分，而是我们用来描述语言的元语言符号。用这个记号，上面后两条规则可以改写为：</p>
 <ul class="simple">
-<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">==&gt;</span> <span class="pre">v1</span></code>，且 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">==&gt;</span> <span class="pre">v2</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span> <span class="pre">==&gt;</span> <span class="pre">v1</span> <span class="pre">::</span> <span class="pre">v2</span></code>。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">==&gt;</span> <span class="pre">v1</span></code> 且 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">==&gt;</span> <span class="pre">v2</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">::</span> <span class="pre">e2</span> <span class="pre">==&gt;</span> <span class="pre">v1</span> <span class="pre">::</span> <span class="pre">v2</span></code>。</p></li>
 <li><p>如果对所有 <code class="docutils literal notranslate"><span class="pre">i</span></code> ∈ <code class="docutils literal notranslate"><span class="pre">1..n</span></code> 都有 <code class="docutils literal notranslate"><span class="pre">ei</span> <span class="pre">==&gt;</span> <span class="pre">vi</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">[e1;</span> <span class="pre">...;</span> <span class="pre">en]</span> <span class="pre">==&gt;</span> <span class="pre">[v1;</span> <span class="pre">...;</span> <span class="pre">vn]</span></code>。</p></li>
 </ul>
 <p><strong>静态语义。</strong></p>
@@ -753,10 +738,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 </div>
-<p>多行格式是我们在本书中通常使用的格式，因为它有助于
-人眼能更好地理解语法。OCaml 代码格式化工具，
-不过，只要代码很短，就会转向单行格式
-足以适合仅一条线。</p>
+<p>多行格式是本书中我们通常使用的格式，因为它让人眼更容易看清语法结构。不过，OCaml 代码格式化工具在代码足够短、能放进一行时，往往会将其整理为单行格式。</p>
 <p>这是使用模式匹配计算列表长度的另一个示例：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -791,10 +773,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 </div>
-<p>该函数实际上是作为 OCaml 标准库 <code class="docutils literal notranslate"><span class="pre">List</span></code> 的一部分内置的
-模块。它的名字是<code class="docutils literal notranslate"><span class="pre">List.length</span></code>。该“点”符号表示
-名为 <code class="docutils literal notranslate"><span class="pre">List</span></code> 的模块内名为 <code class="docutils literal notranslate"><span class="pre">length</span></code> 的函数，很像点
-许多其他语言中使用的符号。</p>
+<p>这个函数实际上已经内置在 OCaml 标准库的 <code class="docutils literal notranslate"><span class="pre">List</span></code> 模块中，名字叫 <code class="docutils literal notranslate"><span class="pre">List.length</span></code>。这里的”点”表示法表示模块 <code class="docutils literal notranslate"><span class="pre">List</span></code> 中名为 <code class="docutils literal notranslate"><span class="pre">length</span></code> 的函数，与许多其他语言中的点号用法类似。</p>
 <p>这是第三个示例，它将一个列表附加到
 另一个列表：</p>
 <div class="cell docutils container">
@@ -812,9 +791,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 </div>
-<p>例如，<code class="docutils literal notranslate"><span class="pre">append</span> <span class="pre">[1;</span> <span class="pre">2]</span> <span class="pre">[3;</span> <span class="pre">4]</span></code> 是 <code class="docutils literal notranslate"><span class="pre">[1;</span> <span class="pre">2;</span> <span class="pre">3;</span> <span class="pre">4]</span></code>。这个函数其实就是
-可用作内置运算符 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>，因此我们可以编写
-<code class="docutils literal notranslate"><span class="pre">[1;</span> <span class="pre">2]</span> <span class="pre">&#64;</span> <span class="pre">[3;</span> <span class="pre">4]</span></code>。</p>
+<p>例如，<code class="docutils literal notranslate"><span class="pre">append</span> <span class="pre">[1;</span> <span class="pre">2]</span> <span class="pre">[3;</span> <span class="pre">4]</span></code> 的结果是 <code class="docutils literal notranslate"><span class="pre">[1;</span> <span class="pre">2;</span> <span class="pre">3;</span> <span class="pre">4]</span></code>。这个函数实际上就是内置运算符 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>，所以我们可以直接写 <code class="docutils literal notranslate"><span class="pre">[1;</span> <span class="pre">2]</span> <span class="pre">&#64;</span> <span class="pre">[3;</span> <span class="pre">4]</span></code>。</p>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/VDRTatjSl0E" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 <p>作为最后一个例子，我们可以编写一个函数来确定是否
 列表为空：</p>
@@ -847,20 +824,8 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 </div>
-<p>请注意上面的所有递归函数与通过以下方法进行证明有何相似之处
-自然数归纳法：每个自然数要么是 0，要么是 1
-大于其他一些自然数 <span class="math notranslate nohighlight">\(n\)</span>，因此归纳证明具有
-0 的基本情况和 <span class="math notranslate nohighlight">\(n + 1\)</span> 的归纳情况。同样，我们所有的函数
-有一个空列表的基本情况和一个包含列表的递归情况
-比另一个列表多一个元素。这种相似性并非偶然。有一个
-归纳与递归之间的深厚关系；我们将探讨这一点
-本书后面将详细介绍这种关系。</p>
-<p>顺便说一句，有两个库函数 <code class="docutils literal notranslate"><span class="pre">List.hd</span></code> 和 <code class="docutils literal notranslate"><span class="pre">List.tl</span></code> 会返回
-列表的头部和尾部。但在惯用的 OCaml 中，不建议直接把这些函数
-应用到列表上。问题在于，如果把它们应用到空列表，它们会抛出异常，
-而你必须记得处理这个异常。相反，你应该使用模式匹配：
-这样你会被迫至少处理空列表和非空列表两种情况，
-从而避免异常，让程序更加健壮。</p>
+<p>注意上面所有这些递归函数与自然数归纳法证明之间的相似性：每个自然数要么是 0，要么是比另一个自然数 <span class="math notranslate nohighlight">\(n\)</span> 大 1，因此归纳证明包含 0 的基本情况和 <span class="math notranslate nohighlight">\(n + 1\)</span> 的归纳情况。同样，我们上面所有函数都包含一个处理空列表的基本情况，以及一个处理”比另一个列表多一个元素”的递归情况。这种相似性并非巧合。归纳与递归之间存在着深刻的联系；本书后面会更详细地探讨这一关系。</p>
+<p>顺便一提，标准库提供了两个函数 <code class="docutils literal notranslate"><span class="pre">List.hd</span></code> 和 <code class="docutils literal notranslate"><span class="pre">List.tl</span></code>，分别返回列表的头部和尾部。但在惯用 OCaml 代码中，不建议直接对列表使用这两个函数。问题在于，如果对空列表调用它们，会抛出异常，而你必须记得处理这个异常。更好的做法是使用模式匹配：这样编译器会强制你至少处理空列表和非空列表两种情况，从而避免异常，让程序更健壮。</p>
 </section>
 <section id="id4">
 <h2><span class="section-number">3.1.3. </span>（不）改变列表<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
@@ -875,23 +840,12 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
   <span class="o">|</span> <span class="n">h</span> <span class="o">::</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">h</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">::</span> <span class="n">t</span>
 </pre></div>
 </div>
-<p>现在你可能会担心这样是否浪费空间。毕竟，
-编译器至少有两种方法可以实现上述代码：</p>
+<p>现在你可能会担心这样做是否浪费空间。毕竟，编译器至少有两种方式来实现上面的代码：</p>
 <ol class="arabic simple">
-<li><p>在模式匹配到 cons 时，复制整个尾部列表 <code class="docutils literal notranslate"><span class="pre">t</span></code> 来创建新列表，
-使得使用的内存量增加
-数量与 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的长度成比例。</p></li>
-<li><p>在旧列表和新列表之间共享尾列表 <code class="docutils literal notranslate"><span class="pre">t</span></code>，这样
-使用的内存量不会增加—超出一块额外的内存
-存储 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">+</span> <span class="pre">1</span></code> 所需的内存。</p></li>
+<li><p>在模式匹配到 cons 时，把整个尾部列表 <code class="docutils literal notranslate"><span class="pre">t</span></code> 复制一份来创建新列表，导致内存使用量与 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的长度成正比地增加。</p></li>
+<li><p>在旧列表和新列表之间共享尾部列表 <code class="docutils literal notranslate"><span class="pre">t</span></code>，这样内存使用量几乎不会增加——只需要额外的一块内存来存储 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">+</span> <span class="pre">1</span></code>。</p></li>
 </ol>
-<p>事实上，编译器执行的是后者。所以没必要担心。
-编译器实现共享非常安全的原因正是
-列表元素是不可变的。如果它们是可变的，那么我们就必须
-担心我的列表是否与你的列表共享，
-以及我所做的更改是否会在你的列表中可见。所以不变性使得
-更容易推理代码，并使编译器可以安全地执行
-执行优化。</p>
+<p>事实上，编译器实现的是后者。所以不必担心。编译器之所以能安全地实现共享，正是因为列表元素是不可变的。如果它们可变，我们就不得不担心”我的列表是否与你的列表共享”以及”我所做的改动会不会体现在你的列表里”。因此，不可变性既让代码更容易推理，也让编译器可以安全地执行这类优化。</p>
 </section>
 <section id="id5">
 <h2><span class="section-number">3.1.4. </span>与列表的模式匹配<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
@@ -922,12 +876,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 模式的可能性。</p>
 <p><strong>动态语义。</strong></p>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/sz72NP4u4DQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>模式匹配涉及两个相互关联的任务：确定模式是否
-匹配一个值，并确定该值的哪些部分应该关联
-模式中的变量名称。前一个任务直观上是关于
-确定模式和值是否具有相同的<em>形状</em>。后一个任务
-是关于确定模式引入的<em>变量绑定</em>。对于
-例如，考虑以下代码：</p>
+<p>模式匹配涉及两个相互关联的任务：判断某个模式是否匹配某个值，以及确定该值的哪些部分应当与模式中的变量名绑定。前一个任务直观上是在判断模式与值是否具有相同的<em>形状</em>（shape）。后一个任务则是确定模式引入了哪些<em>变量绑定</em>（variable binding）。例如，考虑下面的代码：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">match</span> <span class="mi">1</span> <span class="o">::</span> <span class="bp">[]</span> <span class="k">with</span>
@@ -942,46 +891,24 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 </div>
-<p>在求值第二个分支的右侧时，<code class="docutils literal notranslate"><span class="pre">h</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">1</span></code>
-并且 <code class="docutils literal notranslate"><span class="pre">t</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">[]</span></code>。让我们写 <code class="docutils literal notranslate"><span class="pre">h-&gt;1</span></code> 来表示变量绑定：
-<code class="docutils literal notranslate"><span class="pre">h</span></code> 具有值 <code class="docutils literal notranslate"><span class="pre">1</span></code>；这不是一段 OCaml 语法，而是一个
-我们用来推理语言的符号。所以产生的变量绑定
-第二个分支将是 <code class="docutils literal notranslate"><span class="pre">h-&gt;1,</span> <span class="pre">t-&gt;[]</span></code>。</p>
-<p>使用该表示法，以下是模式何时匹配值的定义，并且
-匹配的绑定产生：</p>
+<p>在求值第二个分支的右侧时，<code class="docutils literal notranslate"><span class="pre">h</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">1</span></code>，<code class="docutils literal notranslate"><span class="pre">t</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">[]</span></code>。我们用 <code class="docutils literal notranslate"><span class="pre">h-&gt;1</span></code> 来表示变量绑定：即 <code class="docutils literal notranslate"><span class="pre">h</span></code> 具有值 <code class="docutils literal notranslate"><span class="pre">1</span></code>；这不是 OCaml 语法，而是我们用来推理语言的一种记号。因此，第二个分支产生的变量绑定是 <code class="docutils literal notranslate"><span class="pre">h-&gt;1,</span> <span class="pre">t-&gt;[]</span></code>。</p>
+<p>使用这种记号，下面给出模式何时匹配某个值以及匹配后产生哪些绑定的定义：</p>
 <ul class="simple">
-<li><p>模式 <code class="docutils literal notranslate"><span class="pre">x</span></code> 匹配任何值 <code class="docutils literal notranslate"><span class="pre">v</span></code> 并生成变量绑定
-<code class="docutils literal notranslate"><span class="pre">x-&gt;v</span></code>.</p></li>
-<li><p>模式 <code class="docutils literal notranslate"><span class="pre">_</span></code> 匹配任何值并且不产生绑定。</p></li>
-<li><p>模式 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 与值 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 匹配并且不生成任何绑定。</p></li>
-<li><p>如果 <code class="docutils literal notranslate"><span class="pre">p1</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 并生成一组 <span class="math notranslate nohighlight">\(b_1\)</span> 绑定，并且如果 <code class="docutils literal notranslate"><span class="pre">p2</span></code> 匹配
-<code class="docutils literal notranslate"><span class="pre">v2</span></code> 并生成一组 <span class="math notranslate nohighlight">\(b_2\)</span> 绑定，然后 <code class="docutils literal notranslate"><span class="pre">p1</span> <span class="pre">::</span> <span class="pre">p2</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">v1</span> <span class="pre">::</span> <span class="pre">v2</span></code>
-并生成绑定集 <span class="math notranslate nohighlight">\(b_1 \cup b_2\)</span> 。注意 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 必须是一个列表
-（因为它位于 <code class="docutils literal notranslate"><span class="pre">::</span></code> 的右侧）并且可以具有任意长度：0
-元素、1 个元素或多个元素。请注意，联合 <span class="math notranslate nohighlight">\(b_1 \cup b_2\)</span>
-单独绑定同一个变量时，绑定永远不会出现问题
-在 <span class="math notranslate nohighlight">\(b_1\)</span> 和 <span class="math notranslate nohighlight">\(b_2\)</span> 中，因为语法限制没有变量
-名称可能在模式中出现多次。</p></li>
-<li><p>如果对 <code class="docutils literal notranslate"><span class="pre">1..n</span></code> 中的所有 <code class="docutils literal notranslate"><span class="pre">i</span></code>，<code class="docutils literal notranslate"><span class="pre">pi</span></code> 与 <code class="docutils literal notranslate"><span class="pre">vi</span></code> 匹配并产生集合
-<span class="math notranslate nohighlight">\(b_i\)</span> 的绑定，然后 <code class="docutils literal notranslate"><span class="pre">[p1;</span> <span class="pre">...;</span> <span class="pre">pn]</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">[v1;</span> <span class="pre">...;</span> <span class="pre">vn]</span></code> 并产生
-绑定集 <span class="math notranslate nohighlight">\(\bigcup_i b_i\)</span> 。请注意，此模式指定
-列表的长度必须准确。</p></li>
+<li><p>模式 <code class="docutils literal notranslate"><span class="pre">x</span></code> 匹配任何值 <code class="docutils literal notranslate"><span class="pre">v</span></code>，并产生变量绑定 <code class="docutils literal notranslate"><span class="pre">x-&gt;v</span></code>。</p></li>
+<li><p>模式 <code class="docutils literal notranslate"><span class="pre">_</span></code> 匹配任何值，不产生任何绑定。</p></li>
+<li><p>模式 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 匹配值 <code class="docutils literal notranslate"><span class="pre">[]</span></code>，不产生任何绑定。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">p1</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 并产生绑定集 <span class="math notranslate nohighlight">\(b_1\)</span>，且 <code class="docutils literal notranslate"><span class="pre">p2</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 并产生绑定集 <span class="math notranslate nohighlight">\(b_2\)</span>，那么 <code class="docutils literal notranslate"><span class="pre">p1</span> <span class="pre">::</span> <span class="pre">p2</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">v1</span> <span class="pre">::</span> <span class="pre">v2</span></code>，并产生绑定集 <span class="math notranslate nohighlight">\(b_1 \cup b_2\)</span>。注意 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 必须是一个列表（因为它位于 <code class="docutils literal notranslate"><span class="pre">::</span></code> 的右侧），且可以是任意长度：0 个、1 个或多个元素。另外注意，<span class="math notranslate nohighlight">\(b_1 \cup b_2\)</span> 的并集永远不会出现同一变量被重复绑定的问题，因为语法限制变量名不能在模式中多次出现。</p></li>
+<li><p>如果对所有 <code class="docutils literal notranslate"><span class="pre">i</span></code> ∈ <code class="docutils literal notranslate"><span class="pre">1..n</span></code>，<code class="docutils literal notranslate"><span class="pre">pi</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">vi</span></code> 并产生绑定集 <span class="math notranslate nohighlight">\(b_i\)</span>，那么 <code class="docutils literal notranslate"><span class="pre">[p1;</span> <span class="pre">...;</span> <span class="pre">pn]</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">[v1;</span> <span class="pre">...;</span> <span class="pre">vn]</span></code>，并产生绑定集 <span class="math notranslate nohighlight">\(\bigcup_i b_i\)</span>。注意这个模式精确指定了列表的长度。</p></li>
 </ul>
-<p>现在我们可以说明如何求值 <code class="docutils literal notranslate"><span class="pre">match</span> <span class="pre">e</span> <span class="pre">with</span> <span class="pre">p1</span> <span class="pre">-&gt;</span> <span class="pre">e1</span> <span class="pre">|</span> <span class="pre">...</span> <span class="pre">|</span> <span class="pre">pn</span> <span class="pre">-&gt;</span> <span class="pre">en</span></code>：</p>
+<p>现在我们可以说明 <code class="docutils literal notranslate"><span class="pre">match</span> <span class="pre">e</span> <span class="pre">with</span> <span class="pre">p1</span> <span class="pre">-&gt;</span> <span class="pre">e1</span> <span class="pre">|</span> <span class="pre">...</span> <span class="pre">|</span> <span class="pre">pn</span> <span class="pre">-&gt;</span> <span class="pre">en</span></code> 的求值方式：</p>
 <ul class="simple">
-<li><p>将 <code class="docutils literal notranslate"><span class="pre">e</span></code> 计算为值 <code class="docutils literal notranslate"><span class="pre">v</span></code>。</p></li>
-<li><p>尝试将 <code class="docutils literal notranslate"><span class="pre">v</span></code> 与 <code class="docutils literal notranslate"><span class="pre">p1</span></code> 匹配，然后与 <code class="docutils literal notranslate"><span class="pre">p2</span></code> 匹配，依此类推，按顺序
-它们出现在匹配表达式中。</p></li>
-<li><p>如果 <code class="docutils literal notranslate"><span class="pre">v</span></code> 与任何模式都不匹配，则求值
-匹配表达式会引发 <code class="docutils literal notranslate"><span class="pre">Match_failure</span></code> 异常。我们还没有讨论过
-OCaml 中的异常，但你肯定在其他语言中熟悉它们
-语言。我们将在本章结尾处回到异常情况，之后
-我们已经介绍了 OCaml 中的一些其他内置数据结构。</p></li>
-<li><p>否则，让 <code class="docutils literal notranslate"><span class="pre">pi</span></code> 成为第一个匹配的模式，并让 <span class="math notranslate nohighlight">\(b\)</span> 成为匹配的模式。
-通过将 <code class="docutils literal notranslate"><span class="pre">v</span></code> 与 <code class="docutils literal notranslate"><span class="pre">pi</span></code> 匹配而生成的变量绑定。</p></li>
-<li><p>将这些绑定替换为 <code class="docutils literal notranslate"><span class="pre">ei</span></code> 内的 <span class="math notranslate nohighlight">\(b\)</span>，生成新表达式 <code class="docutils literal notranslate"><span class="pre">e'</span></code>。</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">e</span></code> 求值为值 <code class="docutils literal notranslate"><span class="pre">v</span></code>。</p></li>
+<li><p>按模式在匹配表达式中出现的顺序，依次尝试将 <code class="docutils literal notranslate"><span class="pre">v</span></code> 与 <code class="docutils literal notranslate"><span class="pre">p1</span></code>、<code class="docutils literal notranslate"><span class="pre">p2</span></code>……进行匹配。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">v</span></code> 与任何模式都不匹配，求值该匹配表达式会引发 <code class="docutils literal notranslate"><span class="pre">Match_failure</span></code> 异常。我们还没有讨论过 OCaml 中的异常，但你在其他语言中一定对异常并不陌生。我们会在本章末尾（介绍完 OCaml 的其他一些内置数据结构之后）回到异常这个话题。</p></li>
+<li><p>否则，令 <code class="docutils literal notranslate"><span class="pre">pi</span></code> 为第一个匹配成功的模式，令 <span class="math notranslate nohighlight">\(b\)</span> 为将 <code class="docutils literal notranslate"><span class="pre">v</span></code> 与 <code class="docutils literal notranslate"><span class="pre">pi</span></code> 匹配所产生的变量绑定。</p></li>
+<li><p>将绑定 <span class="math notranslate nohighlight">\(b\)</span> 替换到 <code class="docutils literal notranslate"><span class="pre">ei</span></code> 中，产生新表达式 <code class="docutils literal notranslate"><span class="pre">e'</span></code>。</p></li>
 <li><p>将 <code class="docutils literal notranslate"><span class="pre">e'</span></code> 求值为值 <code class="docutils literal notranslate"><span class="pre">v'</span></code>。</p></li>
-<li><p>整个匹配表达式的结果是<code class="docutils literal notranslate"><span class="pre">v'</span></code>。</p></li>
+<li><p>整个匹配表达式的结果就是 <code class="docutils literal notranslate"><span class="pre">v'</span></code>。</p></li>
 </ul>
 <p>例如，下面展示如何求值这个匹配表达式：</p>
 <div class="cell docutils container">
@@ -1017,23 +944,13 @@ OCaml 中的异常，但你肯定在其他语言中熟悉它们
 </ul>
 <p><strong>静态语义。</strong></p>
 <ul class="simple">
-<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">ta</span></code> 且对于所有 <code class="docutils literal notranslate"><span class="pre">i</span></code>，则认为 <code class="docutils literal notranslate"><span class="pre">pi</span> <span class="pre">:</span> <span class="pre">ta</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ei</span> <span class="pre">:</span> <span class="pre">tb</span></code>，
-然后<code class="docutils literal notranslate"><span class="pre">(match</span> <span class="pre">e</span> <span class="pre">with</span> <span class="pre">p1</span> <span class="pre">-&gt;</span> <span class="pre">e1</span> <span class="pre">|</span> <span class="pre">...</span> <span class="pre">|</span> <span class="pre">pn</span> <span class="pre">-&gt;</span> <span class="pre">en)</span> <span class="pre">:</span> <span class="pre">tb</span></code>。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">ta</span></code>，且对所有 <code class="docutils literal notranslate"><span class="pre">i</span></code> 都有 <code class="docutils literal notranslate"><span class="pre">pi</span> <span class="pre">:</span> <span class="pre">ta</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ei</span> <span class="pre">:</span> <span class="pre">tb</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">(match</span> <span class="pre">e</span> <span class="pre">with</span> <span class="pre">p1</span> <span class="pre">-&gt;</span> <span class="pre">e1</span> <span class="pre">|</span> <span class="pre">...</span> <span class="pre">|</span> <span class="pre">pn</span> <span class="pre">-&gt;</span> <span class="pre">en)</span> <span class="pre">:</span> <span class="pre">tb</span></code>。</p></li>
 </ul>
-<p>该规则依赖于能够判断模式是否具有特定类型。
-像往常一样，类型推断在这里发挥作用。OCaml 编译器推断
-任何模式变量的类型以及所有出现的通配符
-模式。至于列表模式，它们具有与以下相同的类型检查规则：
-列出表达式。</p>
+<p>这条规则依赖于判断模式是否具有特定类型的能力。和往常一样，类型推断在这里发挥作用。OCaml 编译器会推断出模式中所有模式变量和通配符的类型。列表模式与列表表达式遵循相同的类型检查规则。</p>
 <p><strong>额外的静态检查。</strong></p>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/aLQJpk9vXD4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>除了类型检查规则之外，编译器还有另外两项检查
-对每个匹配表达式执行的操作。</p>
-<p>首先，**详尽性：**编译器检查以确保存在
-足够的模式以保证其中至少有一个与表达式匹配
-<code class="docutils literal notranslate"><span class="pre">e</span></code>，无论该表达式在运行时的值是什么。这确保了
-程序员没有忘记任何分支。例如，下面的函数
-将导致编译器发出警告：</p>
+<p>除了类型检查规则之外，编译器还会对每个匹配表达式执行另外两项检查。</p>
+<p>第一项是<strong>穷尽性检查</strong>（exhaustiveness）：编译器会检查是否有足够多的模式，以保证无论表达式 <code class="docutils literal notranslate"><span class="pre">e</span></code> 在运行时的值是什么，至少有一个模式能匹配。这确保程序员没有遗漏任何分支。例如，下面的函数会导致编译器发出警告：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">head</span> <span class="n">lst</span> <span class="o">=</span> <span class="k">match</span> <span class="n">lst</span> <span class="k">with</span> <span class="n">h</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">h</span>
@@ -1064,19 +981,12 @@ OCaml 中的异常，但你肯定在其他语言中熟悉它们
 </div>
 </div>
 </div>
-<p>通过向程序员提出警告，编译器正在帮助
-程序员防范 <code class="docutils literal notranslate"><span class="pre">Match_failure</span></code> 异常的可能性
-运行时。</p>
+<p>通过向程序员发出警告，编译器帮助程序员防范运行时可能出现的 <code class="docutils literal notranslate"><span class="pre">Match_failure</span></code> 异常。</p>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p>抱歉，上面的单元格的输出如何被分成许多行
-HTML。当前是 <a class="reference external" href="https://github.com/executablebooks/jupyter-book/issues/973">open issue with JupyterBook</a>，框架
-用于构建本书。</p>
+<p>抱歉，上面这个单元格的输出在 HTML 中被分割成了多行。这是用于构建本书的框架 <a class="reference external" href="https://github.com/executablebooks/jupyter-book/issues/973">JupyterBook 的一个已知 issue</a>。</p>
 </div>
-<p>其次，**未使用的分支：**编译器检查是否有任何
-分支永远无法匹配，因为之前的分支之一是
-保证成功。例如，下面的函数将导致编译器
-发出警告：</p>
+<p>第二项是<strong>无用分支检查</strong>（unused branch）：编译器会检查是否有任何分支因前面的分支总能匹配成功而永远不会被匹配到。例如，下面的函数会导致编译器发出警告：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">lst</span> <span class="o">=</span>
@@ -1108,14 +1018,9 @@ HTML。当前是 <a class="reference external" href="https://github.com/executab
 </div>
 </div>
 </div>
-<p>第二个分支未使用，因为第一个分支会匹配
-第二个分支能匹配的任何内容。</p>
-<p>未使用的匹配情况通常表明程序员编写了其他内容
-比他们的意图。因此，通过提出该警告，编译器正在提供帮助
-程序员检测代码中潜在的错误。</p>
-<p>以下是导致未使用匹配情况警告的最常见错误之一。
-理解它也是检查你是否真正理解
-匹配表达式的动态语义：</p>
+<p>第二个分支不会被使用，因为第一个分支能匹配第二个分支所能匹配的任何值。</p>
+<p>无用匹配分支通常意味着程序员写出的代码与其本意不符。因此，编译器通过发出警告来帮助程序员发现代码中的潜在错误。</p>
+<p>下面是一个最常见的导致”无用匹配分支”警告的错误。理解这个例子也能检验你是否真正掌握了匹配表达式的动态语义：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">length_is</span> <span class="n">lst</span> <span class="n">n</span> <span class="o">=</span>
@@ -1146,16 +1051,7 @@ HTML。当前是 <a class="reference external" href="https://github.com/executab
 </div>
 </div>
 </div>
-<p>程序员原本想表达：如果 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 的长度等于 <code class="docutils literal notranslate"><span class="pre">n</span></code>，那么
-该函数返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>，否则返回 <code class="docutils literal notranslate"><span class="pre">false</span></code>。但事实上
-该函数<em>总是</em>返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>。为什么？因为模式变量 <code class="docutils literal notranslate"><span class="pre">n</span></code> 是
-与函数参数 <code class="docutils literal notranslate"><span class="pre">n</span></code> 不同。假设 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 的长度为 5。
-那么模式匹配就变成：<code class="docutils literal notranslate"><span class="pre">match</span> <span class="pre">5</span> <span class="pre">with</span> <span class="pre">n</span> <span class="pre">-&gt;</span> <span class="pre">true</span> <span class="pre">|</span> <span class="pre">_</span> <span class="pre">-&gt;</span> <span class="pre">false</span></code>。<code class="docutils literal notranslate"><span class="pre">n</span></code>
-是否匹配 5？是的，根据上面的规则：变量模式匹配任何值。
-这里产生绑定 <code class="docutils literal notranslate"><span class="pre">n-&gt;5</span></code>。然后求值会把该绑定应用到
-<code class="docutils literal notranslate"><span class="pre">true</span></code>，也就是用 5 替换 <code class="docutils literal notranslate"><span class="pre">true</span></code> 中所有出现的 <code class="docutils literal notranslate"><span class="pre">n</span></code>。
-没有这样的出现。因此求值完成，结果就是
-<code class="docutils literal notranslate"><span class="pre">true</span></code>。</p>
+<p>程序员原本想表达：如果 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 的长度等于 <code class="docutils literal notranslate"><span class="pre">n</span></code>，则该函数返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>，否则返回 <code class="docutils literal notranslate"><span class="pre">false</span></code>。但实际上，这个函数<em>总是</em>返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>。为什么？因为模式变量 <code class="docutils literal notranslate"><span class="pre">n</span></code> 与函数参数 <code class="docutils literal notranslate"><span class="pre">n</span></code> 是不同的东西。假设 <code class="docutils literal notranslate"><span class="pre">lst</span></code> 的长度为 5，那么模式匹配变为：<code class="docutils literal notranslate"><span class="pre">match</span> <span class="pre">5</span> <span class="pre">with</span> <span class="pre">n</span> <span class="pre">-&gt;</span> <span class="pre">true</span> <span class="pre">|</span> <span class="pre">_</span> <span class="pre">-&gt;</span> <span class="pre">false</span></code>。<code class="docutils literal notranslate"><span class="pre">n</span></code> 是否匹配 5？是的，根据前面的规则：变量模式匹配任何值，并产生绑定 <code class="docutils literal notranslate"><span class="pre">n-&gt;5</span></code>。然后求值会把这个绑定应用到 <code class="docutils literal notranslate"><span class="pre">true</span></code> 中——也就是用 5 替换 <code class="docutils literal notranslate"><span class="pre">true</span></code> 中所有出现的 <code class="docutils literal notranslate"><span class="pre">n</span></code>。由于 <code class="docutils literal notranslate"><span class="pre">true</span></code> 中根本没有 <code class="docutils literal notranslate"><span class="pre">n</span></code>，求值完成，结果就是 <code class="docutils literal notranslate"><span class="pre">true</span></code>。</p>
 <p>程序员真正想写的是：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1171,7 +1067,7 @@ HTML。当前是 <a class="reference external" href="https://github.com/executab
 </div>
 </div>
 </div>
-<p>或者更好：</p>
+<p>或者更简洁地：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">length_is</span> <span class="n">lst</span> <span class="n">n</span> <span class="o">=</span>
@@ -1188,21 +1084,18 @@ HTML。当前是 <a class="reference external" href="https://github.com/executab
 </section>
 <section id="id6">
 <h2><span class="section-number">3.1.5. </span>深度模式匹配<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
-<p>模式可以嵌套。  这样做可以让你的代码深入了解
-列表的结构。  例如：</p>
+<p>模式可以嵌套。这样可以让代码深入到列表的内部结构。例如：</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">::</span> <span class="pre">[]</span></code> 与所有列表仅匹配一个元素</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">::</span> <span class="pre">[]</span></code> 匹配所有恰好包含一个元素的列表</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span></code> 匹配所有至少包含一个元素的列表</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span> <span class="pre">::</span> <span class="pre">[]</span></code> 匹配所有包含两个元素的列表</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span> <span class="pre">::</span> <span class="pre">[]</span></code> 匹配所有恰好包含两个元素的列表</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span> <span class="pre">::</span> <span class="pre">_</span></code> 匹配所有至少包含三个元素的列表</p></li>
 </ul>
 </section>
 <section id="id7">
-<h2><span class="section-number">3.1.6. </span>立即匹配<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">3.1.6. </span>即时匹配<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/VgVP8Tin6yY" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>当你有一个立即与其最终模式匹配的函数时
-争论，有一个很好的语法糖可以用来避免写作
-额外的代码。这是一个例子：而不是</p>
+<p>当函数体一上来就直接对最后一个参数做模式匹配时，有一种很好的语法糖可以省去多余的代码。举个例子，与其这样写：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">lst</span> <span class="o">=</span>
@@ -1218,7 +1111,7 @@ HTML。当前是 <a class="reference external" href="https://github.com/executab
 </div>
 </div>
 </div>
-<p>你可以写</p>
+<p>不如这样写：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="o">=</span> <span class="k">function</span>
@@ -1233,65 +1126,37 @@ HTML。当前是 <a class="reference external" href="https://github.com/executab
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">function</span></code> 一词是一个关键字。请注意，我们可以省略该行
-包含 <code class="docutils literal notranslate"><span class="pre">match</span></code> 以及从未使用过的参数名称
-除了那条线之外的任何其他地方。但在这种情况下，这一点尤其重要
-函数的规范注释，用于记录该参数的内容
-应该是，因为代码不再给它一个描述性的名称。</p>
+<p><code class="docutils literal notranslate"><span class="pre">function</span></code> 是一个关键字。注意我们省去了包含 <code class="docutils literal notranslate"><span class="pre">match</span></code> 的那一行，以及那个除了出现在那一行之外没在其他地方用过的参数名。但此时，为函数编写规范注释来记录参数的含义就尤为重要，因为代码不再为参数提供有意义的描述性名称。</p>
 </section>
 <section id="ocamldoc">
-<h2><span class="section-number">3.1.7. </span>OCamldoc 和列表语法<a class="headerlink" href="#ocamldoc" title="Permalink to this heading">#</a></h2>
-<p>OCamldoc 是一个类似于 Javadoc 的文档生成器。它提取注释
-从源代码生成 HTML（以及其他输出格式）。
-生成 <code class="docutils literal notranslate"><span class="pre">List</span></code> 模块的 <a class="reference external" href="https://ocaml.org/api/List.html">标准库网页文档</a>
-由该模块的 <a class="reference external" href="https://github.com/ocaml/ocaml/blob/trunk/stdlib/list.mli">标准库源代码</a> 中的 OCamldoc 提供，
-例如。</p>
+<h2><span class="section-number">3.1.7. </span>OCamldoc 与列表语法<a class="headerlink" href="#ocamldoc" title="Permalink to this heading">#</a></h2>
+<p>OCamldoc 是一个类似于 Javadoc 的文档生成器。它从源代码中提取注释，并生成 HTML 等输出格式。<code class="docutils literal notranslate"><span class="pre">List</span></code> 模块的<a class="reference external" href="https://ocaml.org/api/List.html">标准库网页文档</a>就是由该模块的<a class="reference external" href="https://github.com/ocaml/ocaml/blob/trunk/stdlib/list.mli">标准库源码</a>中嵌入的 OCamldoc 注释生成的。</p>
 <div class="admonition warning">
 <p class="admonition-title">警告</p>
-<p>OCamldoc 中有一个使用方括号的语法约定，
-很容易和列表混淆。</p>
-<p>在 OCamldoc 注释中，源代码用方括号括起来。那段代码
-会以等宽字体呈现，并在输出 HTML 中进行语法高亮。
-本例中的方括号并不表示列表。</p>
+<p>OCamldoc 中有一个使用方括号的语法约定，很容易与列表混淆。</p>
+<p>在 OCamldoc 注释中，源代码用方括号括起来。被括起来的代码在输出的 HTML 中会以等宽字体呈现，并带有语法高亮。这里的方括号并不表示列表。</p>
 </div>
-<p>例如，这是标准库源代码中 <code class="docutils literal notranslate"><span class="pre">List.hd</span></code> 的注释
-代码：</p>
+<p>例如，下面是标准库源码中 <code class="docutils literal notranslate"><span class="pre">List.hd</span></code> 的注释：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** Return the first element of the given list. Raise</span>
 <span class="c">   [Failure &quot;hd&quot;] if the list is empty. *)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">[Failure</span> <span class="pre">&quot;hd&quot;]</span></code> 并不意味着包含异常的列表
-<code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">&quot;hd&quot;</span></code>。相反，它意味着将表达式 <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">&quot;hd&quot;</span></code> 排版为
-源代码，如你所见<a class="reference external" href="https://ocaml.org/api/List.html">here</a>。</p>
-<p>当你想将列表作为以下内容的一部分进行讨论时，这可能会变得特别令人困惑
-文档。例如，我们可以这样重写该注释：</p>
+<p><code class="docutils literal notranslate"><span class="pre">[Failure</span> <span class="pre">&quot;hd&quot;]</span></code> 并不表示一个包含异常 <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">&quot;hd&quot;</span></code> 的列表，而是表示将表达式 <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">&quot;hd&quot;</span></code> 以源代码格式排版，如<a class="reference external" href="https://ocaml.org/api/List.html">这里</a>所示。</p>
+<p>当你想在文档中讨论列表时，这种歧义会变得特别让人困惑。例如，我们可以这样重写上面的注释：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [hd lst] returns the first element of [lst].</span>
 <span class="c">    Raises [Failure &quot;hd&quot;] if [lst = []]. *)</span>
 </pre></div>
 </div>
-<p>在 <code class="docutils literal notranslate"><span class="pre">[lst</span> <span class="pre">=</span> <span class="pre">[]]</span></code> 中，外部方括号表示源代码作为
-注释，而内部方括号表示空列表。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">[lst</span> <span class="pre">=</span> <span class="pre">[]]</span></code> 中，外层方括号表示注释中的源代码排版，而内层方括号才是空列表。</p>
 </section>
 <section id="id8">
 <h2><span class="section-number">3.1.8. </span>列表推导式<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h2>
-<p>一些语言，包括 Python 和 Haskell，有一种称为
-<em>推导式</em>的语法，允许用类似数学中集合推导式的方式编写列表。
-推导式最早的例子似乎来自
-函数式语言 NPL，设计于 1977 年。</p>
-<p>OCaml 没有内置的推导式语法支持。虽然有些
-开发了扩展，但似乎不再支持任何扩展。初级
-通过推导式完成的主要任务（过滤掉一些元素，以及
-转换其他元素）实际上已经得到<em>高阶
-编程</em>，我们将在后面的章节中学习，以及管道运算符，
-我们已经了解到了。因此，推导式提供的额外语法
-从来没有真正需要过。</p>
+<p>一些语言（包括 Python 和 Haskell）提供了一种称为<em>推导式</em>（comprehension）的语法，让我们可以像数学中的集合推导式那样来书写列表。推导式最早的例子似乎来自 1977 年设计的函数式语言 NPL。</p>
+<p>OCaml 没有内置推导式语法支持。虽然有过一些扩展，但似乎已不再被维护。推导式能完成的主要任务（过滤掉部分元素、转换其他元素）实际上已经被<em>高阶编程</em>（我们将在后续章节学习）以及管道运算符（我们已经学过）很好地覆盖了。因此，推导式提供的额外语法从来不是必需的。</p>
 </section>
 <section id="id9">
 <h2><span class="section-number">3.1.9. </span>尾递归<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h2>
-<p>回想一下，如果一个函数递归地调用自身，那么它就是“尾递归”，但是
-递归调用返回后不执行任何计算，并且
-立即将其递归调用的值返回给调用者。考虑
-这两个实现，<code class="docutils literal notranslate"><span class="pre">sum</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sum_tr</span></code> 对列表求和：</p>
+<p>回想一下，如果一个函数递归地调用自身，且递归调用返回之后不再执行任何计算，而是立即将递归调用的值返回给调用者，那么这个函数就是<em>尾递归</em>的。考虑下面两个对列表求和的实现，<code class="docutils literal notranslate"><span class="pre">sum</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sum_tr</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="o">(</span><span class="n">l</span> <span class="o">:</span> <span class="kt">int</span> <span class="kt">list</span><span class="o">)</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">=</span>
@@ -1321,27 +1186,10 @@ HTML。当前是 <a class="reference external" href="https://github.com/executab
 </div>
 </div>
 </div>
-<p>请观察上面的 <code class="docutils literal notranslate"><span class="pre">sum</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sum_tr</span></code> 函数之间的以下区别：
-在<code class="docutils literal notranslate"><span class="pre">sum</span></code>函数中，不是尾递归，递归调用之后
-返回其值，我们向其添加 <code class="docutils literal notranslate"><span class="pre">x</span></code> 。在尾部递归 <code class="docutils literal notranslate"><span class="pre">sum_tr</span></code> 中，或者更确切地说
-在<code class="docutils literal notranslate"><span class="pre">sum_plus_acc</span></code>中，递归调用返回后，我们立即返回
-值无需进一步计算。</p>
-<p>如果你要在很长的列表上编写函数，尾递归就变成了
-对性能很重要。因此，当你可以选择使用
-尾递归与非尾递归函数，你可能最好使用
-在很长的列表上使用尾递归函数以实现空间效率。
-因此，List 模块记录了哪些函数是尾递归的
-哪些不是。</p>
-<p>但这并不意味着尾递归实现严格来说更好。
-例如，尾递归函数可能更难阅读。 （考虑
-<code class="docutils literal notranslate"><span class="pre">sum_plus_acc</span></code>。）此外，在某些情况下实现尾递归
-函数需要进行预处理或后处理以反转
-列表。在中小型列表上，反转列表的开销（两者
-及时并为反向列表分配内存）可以使
-尾递归版本时间效率较低。什么是“小”与“大”
-在这里？这很难说，但根据
-<a class="reference external" href="https://ocaml.org/api/List.html"><code class="docutils literal notranslate"><span class="pre">List</span></code> 模块的标准库文档</a>。</p>
-<p>这是一个有用的尾递归函数，可以生成长列表：</p>
+<p>观察 <code class="docutils literal notranslate"><span class="pre">sum</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sum_tr</span></code> 函数之间的区别：在非尾递归的 <code class="docutils literal notranslate"><span class="pre">sum</span></code> 中，递归调用返回后，我们还要把 <code class="docutils literal notranslate"><span class="pre">x</span></code> 加到返回值上。而在尾递归的 <code class="docutils literal notranslate"><span class="pre">sum_tr</span></code> 中（或者更准确地说，在 <code class="docutils literal notranslate"><span class="pre">sum_plus_acc</span></code> 中），递归调用返回后，我们立即原样返回其值，不做任何进一步计算。</p>
+<p>如果你要在非常长的列表上编写函数，尾递归对性能就很重要。因此，当你可以在尾递归和非尾递归之间做选择时，对于长列表，使用尾递归函数往往能获得更好的空间效率。<code class="docutils literal notranslate"><span class="pre">List</span></code> 模块的文档也因此注明了哪些函数是尾递归的，哪些不是。</p>
+<p>但这并不意味着尾递归实现一定更好。例如，尾递归函数可能更难阅读（想想 <code class="docutils literal notranslate"><span class="pre">sum_plus_acc</span></code>）。此外，某些情况下要将函数实现为尾递归，需要对列表进行预处理或后处理来反转列表。在中小型列表上，反转列表带来的开销（包括时间开销和额外内存开销）反而可能使尾递归版本的时间效率更低。至于这里的”小”和”大”如何界定，很难给出确切答案，可以参见 <a class="reference external" href="https://ocaml.org/api/List.html"><code class="docutils literal notranslate"><span class="pre">List</span></code> 模块的标准库文档</a>。</p>
+<p>这是一个很有用的尾递归函数，用来生成一个长列表：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [from i j l] is the list containing the integers from [i] to [j],</span>
@@ -1387,12 +1235,8 @@ HTML。当前是 <a class="reference external" href="https://github.com/executab
 </div>
 </div>
 </div>
-<p>值得研究 <code class="docutils literal notranslate"><span class="pre">--</span></code> 的定义，以说服自己
-你了解（i）它是如何工作的以及（ii）为什么它是尾递归的。</p>
-<p>你将来可能会决定再次创建这样的列表。而不是
-必须记住这个定义在哪里，并且必须将其复制到你的
-代码，这是使用内置库创建相同列表的简单方法
-函数：</p>
+<p>值得仔细研究一下 <code class="docutils literal notranslate"><span class="pre">--</span></code> 的定义，确保自己理解 (i) 它如何工作，以及 (ii) 为什么它是尾递归的。</p>
+<p>将来你可能还需要再次创建类似的列表。除了需要记住这段定义在哪里并复制到代码中之外，也可以用内置库函数更简单地实现同样的效果：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">List</span><span class="p">.</span><span class="n">init</span> <span class="mi">1_000_000</span> <span class="nn">Fun</span><span class="p">.</span><span class="n">id</span>
@@ -1424,9 +1268,7 @@ HTML。当前是 <a class="reference external" href="https://github.com/executab
 </div>
 </div>
 </div>
-<p>表达式 <code class="docutils literal notranslate"><span class="pre">List.init</span> <span class="pre">len</span> <span class="pre">f</span></code> 创建列表 <code class="docutils literal notranslate"><span class="pre">[f</span> <span class="pre">0;</span> <span class="pre">f</span> <span class="pre">1;</span> <span class="pre">...;</span> <span class="pre">f</span> <span class="pre">(len</span> <span class="pre">-</span> <span class="pre">1)]</span></code>，
-如果 <code class="docutils literal notranslate"><span class="pre">len</span></code> 大于 10,000，它会递归地尾部执行此操作。函数
-<code class="docutils literal notranslate"><span class="pre">Fun.id</span></code> 只是识别函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span></code>。</p>
+<p>表达式 <code class="docutils literal notranslate"><span class="pre">List.init</span> <span class="pre">len</span> <span class="pre">f</span></code> 会创建列表 <code class="docutils literal notranslate"><span class="pre">[f</span> <span class="pre">0;</span> <span class="pre">f</span> <span class="pre">1;</span> <span class="pre">...;</span> <span class="pre">f</span> <span class="pre">(len</span> <span class="pre">-</span> <span class="pre">1)]</span></code>，且当 <code class="docutils literal notranslate"><span class="pre">len</span></code> 大于 10,000 时会采用尾递归方式。函数 <code class="docutils literal notranslate"><span class="pre">Fun.id</span></code> 就是恒等函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x</span></code>。</p>
 </section>
 </section>
 
@@ -1499,8 +1341,8 @@ HTML。当前是 <a class="reference external" href="https://github.com/executab
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.1.3. （不）改变列表</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3.1.4. 与列表的模式匹配</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">3.1.5. 深度模式匹配</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">3.1.6. 立即匹配</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ocamldoc">3.1.7. OCamldoc 和列表语法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">3.1.6. 即时匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ocamldoc">3.1.7. OCamldoc 与列表语法</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">3.1.8. 列表推导式</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">3.1.9. 尾递归</a></li>
 </ul>

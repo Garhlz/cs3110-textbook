@@ -540,23 +540,18 @@ We are happy to add or correct solutions. Please make contributions through GitH
 <hr class="docutils" />
 <p><strong>Exercise: list expressions [★]</strong></p>
 <ul class="simple">
-<li><p>构造一个包含整数 1 到 5 的列表。使用正方形
-列表的括号符号。</p></li>
-<li><p>构造相同的列表，但不使用方括号表示法。相反，
-使用 <code class="docutils literal notranslate"><span class="pre">::</span></code> 和 <code class="docutils literal notranslate"><span class="pre">[]</span></code>。</p></li>
-<li><p>再次构建相同的列表。这次一定会出现下面的表达式
-在你的回答中：<code class="docutils literal notranslate"><span class="pre">[2;</span> <span class="pre">3;</span> <span class="pre">4]</span></code>。使用 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 运算符，不要使用 <code class="docutils literal notranslate"><span class="pre">::</span></code>。</p></li>
+<li><p>构造一个包含整数 1 到 5 的列表。使用列表的方括号语法。</p></li>
+<li><p>构造相同的列表，但不使用方括号语法，而是使用 <code class="docutils literal notranslate"><span class="pre">::</span></code> 和 <code class="docutils literal notranslate"><span class="pre">[]</span></code>。</p></li>
+<li><p>再次构造相同的列表。这次你的答案中必须包含表达式 <code class="docutils literal notranslate"><span class="pre">[2;</span> <span class="pre">3;</span> <span class="pre">4]</span></code>。使用 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 运算符，不要使用 <code class="docutils literal notranslate"><span class="pre">::</span></code>。</p></li>
 </ul>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: product [★★]</strong></p>
-<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">product</span></code> 返回 a 中所有元素的乘积
-列表。空列表的所有元素的乘积是 <code class="docutils literal notranslate"><span class="pre">1</span></code>。</p>
+<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">product</span></code>，返回列表中所有元素的乘积。空列表的所有元素之积为 <code class="docutils literal notranslate"><span class="pre">1</span></code>。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: concat [★★]</strong></p>
-<p>编写一个连接列表中所有字符串的函数。连接
-空列表中所有字符串的总和是空字符串 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>。</p>
+<p>编写一个函数，连接列表中所有的字符串。空列表中所有字符串的连接结果为 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: product test [★★]</strong></p>
@@ -577,12 +572,8 @@ We are happy to add or correct solutions. Please make contributions through GitH
 <p><strong>Exercise: library [★★★]</strong></p>
 <p>请查阅 <a class="reference external" href="https://ocaml.org/api/List.html"><code class="docutils literal notranslate"><span class="pre">List</span></code> standard library</a> 来解决这些练习：</p>
 <ul class="simple">
-<li><p>编写一个函数，它接受 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">list</span></code> 并返回第五个元素
-该列表（如果存在这样的元素）。如果列表少于五个
-元素，返回 <code class="docutils literal notranslate"><span class="pre">0</span></code>。 <em>提示：<code class="docutils literal notranslate"><span class="pre">List.length</span></code> 和 <code class="docutils literal notranslate"><span class="pre">List.nth</span></code>。</em></p></li>
-<li><p>编写一个函数，它接受 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">list</span></code> 并返回排序的列表
-降序排列。 <em>提示：<code class="docutils literal notranslate"><span class="pre">List.sort</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">Stdlib.compare</span></code> 作为第一个
-参数，以及 <code class="docutils literal notranslate"><span class="pre">List.rev</span></code>.</em></p></li>
+<li><p>编写一个接受 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">list</span></code> 的函数，返回该列表的第五个元素（如果存在）。如果列表少于五个元素，则返回 <code class="docutils literal notranslate"><span class="pre">0</span></code>。<em>提示：<code class="docutils literal notranslate"><span class="pre">List.length</span></code> 和 <code class="docutils literal notranslate"><span class="pre">List.nth</span></code>。</em></p></li>
+<li><p>编写一个接受 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">list</span></code> 的函数，返回按降序排列的列表。<em>提示：<code class="docutils literal notranslate"><span class="pre">List.sort</span></code> 以 <code class="docutils literal notranslate"><span class="pre">Stdlib.compare</span></code> 为第一个参数，以及 <code class="docutils literal notranslate"><span class="pre">List.rev</span></code>。</em></p></li>
 </ul>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
@@ -703,37 +694,18 @@ Pokémon 具有 44 HP 和水属性。</p></li>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: pokefun [★★★]</strong></p>
-<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">max_hp</span> <span class="pre">:</span> <span class="pre">pokemon</span> <span class="pre">list</span> <span class="pre">-&gt;</span> <span class="pre">pokemon</span> <span class="pre">option</span></code> ，给定一个列表
-<code class="docutils literal notranslate"><span class="pre">pokemon</span></code>，找到HP最高的神奇é兽。</p>
+<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">max_hp</span> <span class="pre">:</span> <span class="pre">pokemon</span> <span class="pre">list</span> <span class="pre">-&gt;</span> <span class="pre">pokemon</span> <span class="pre">option</span></code>，给定一个 <code class="docutils literal notranslate"><span class="pre">pokemon</span></code> 列表，找出 HP 最高的宝可梦。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: date before [★★]</strong></p>
-<p>将“类似日期的三元组”定义为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">int</span> <span class="pre">*</span> <span class="pre">int</span></code> 类型的值。例子
-类似日期的三元组包括 <code class="docutils literal notranslate"><span class="pre">(2013,</span> <span class="pre">2,</span> <span class="pre">1)</span></code> 和 <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1000)</span></code>。 <em>日期</em>是
-类似日期的三元组，其第一部分是正年份（即共同年份中的年份）
-era)，第二部分是 1 到 12 之间的月份，第三部分是 1 之间的一天
-和 31（或 30、29 或 28，具体取决于月份和年份）。 <code class="docutils literal notranslate"><span class="pre">(2013,</span> <span class="pre">2,</span> <span class="pre">1)</span></code> 是一个
-日期； <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1000)</span></code> 不是。</p>
-<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">is_before</span></code> ，将两个日期作为输入并计算结果
-<code class="docutils literal notranslate"><span class="pre">true</span></code> 或 <code class="docutils literal notranslate"><span class="pre">false</span></code>。如果第一个参数是一个日期，则其计算结果为 <code class="docutils literal notranslate"><span class="pre">true</span></code>
-出现在第二个参数之前。 （如果两个日期相同，则结果为
-<code class="docutils literal notranslate"><span class="pre">false</span></code>。）</p>
-<p>你的函数需要仅针对日期正确工作，而不是任意日期
-类似日期的三元组。但是，你可能会发现更容易编写你的
-如果你考虑使其适用于任意类似日期的三元组，则可以解决此问题。对于
-例如，更容易忘记输入是否确实是日期，并且
-只需编写一个函数来声明（例如）2013 年 1 月 100 日到来
-2013 年 2 月 34 日之前—因为一月的任何日期都在任何日期之前
-2 月，但有一个函数表示 2013 年 1 月 100 日晚于
-2013 年 2 月 34 日同样有效。你可能会忽略闰年。</p>
+<p>将”类日期三元组”定义为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">int</span> <span class="pre">*</span> <span class="pre">int</span></code> 类型的值。类日期三元组的例子包括 <code class="docutils literal notranslate"><span class="pre">(2013,</span> <span class="pre">2,</span> <span class="pre">1)</span></code> 和 <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1000)</span></code>。<em>日期</em>是一种类日期三元组，其第一部分为正年份（即公元纪年中的年份），第二部分为 1 到 12 之间的月份，第三部分为 1 到 31（或 30、29、28，取决于月份和年份）之间的日期。<code class="docutils literal notranslate"><span class="pre">(2013,</span> <span class="pre">2,</span> <span class="pre">1)</span></code> 是一个日期；<code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1000)</span></code> 不是。</p>
+<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">is_before</span></code>，接受两个日期作为输入，返回 <code class="docutils literal notranslate"><span class="pre">true</span></code> 或 <code class="docutils literal notranslate"><span class="pre">false</span></code>。如果第一个参数表示的日期在第二个参数之前，则求值为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。（如果两个日期相同，结果为 <code class="docutils literal notranslate"><span class="pre">false</span></code>。）</p>
+<p>你的函数只需要对日期正确工作，而不需要处理任意类日期三元组。不过，如果你考虑让函数对任意类日期三元组也能工作，可能会发现解题更容易。例如，更容易的做法是不去关心输入是否真的是日期，只需编写一个函数声明（例如）2013 年 1 月 100 日在 2013 年 2 月 34 日之前——因为一月的任何日期都在二月的任何日期之前，但如果有一个函数说 2013 年 1 月 100 日在 2013 年 2 月 34 日之后，同样也是合理的。你可以忽略闰年。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: earliest date [★★★]</strong></p>
-<p>编写一个函数<code class="docutils literal notranslate"><span class="pre">earliest</span> <span class="pre">:</span> <span class="pre">(int*int*int)</span> <span class="pre">list</span> <span class="pre">-&gt;</span> <span class="pre">(int</span> <span class="pre">*</span> <span class="pre">int</span> <span class="pre">*</span> <span class="pre">int)</span> <span class="pre">option</span></code>。它
-如果输入列表为空，则计算结果为 <code class="docutils literal notranslate"><span class="pre">None</span></code>；如果日期 <code class="docutils literal notranslate"><span class="pre">d</span></code> 为 <code class="docutils literal notranslate"><span class="pre">Some</span> <span class="pre">d</span></code>，则计算结果为 <code class="docutils literal notranslate"><span class="pre">Some</span> <span class="pre">d</span></code>
-列表中最早的日期。 <em>提示：使用<code class="docutils literal notranslate"><span class="pre">is_before</span></code>。</em></p>
-<p>与上一个练习一样，你的函数需要正确运行
-仅适用于日期，不适用于任意类似日期的三元组。</p>
+<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">earliest</span> <span class="pre">:</span> <span class="pre">(int*int*int)</span> <span class="pre">list</span> <span class="pre">-&gt;</span> <span class="pre">(int</span> <span class="pre">*</span> <span class="pre">int</span> <span class="pre">*</span> <span class="pre">int)</span> <span class="pre">option</span></code>。如果输入列表为空，它求值为 <code class="docutils literal notranslate"><span class="pre">None</span></code>；否则求值为 <code class="docutils literal notranslate"><span class="pre">Some</span> <span class="pre">d</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">d</span></code> 是列表中最早的日期。<em>提示：使用 <code class="docutils literal notranslate"><span class="pre">is_before</span></code>。</em></p>
+<p>与上一题一样，你的函数只需要对日期正确工作，不需要处理任意类日期三元组。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: assoc list [★]</strong></p>
@@ -745,18 +717,10 @@ era)，第二部分是 1 到 12 之间的月份，第三部分是 1 之间的一
 <hr class="docutils" />
 <p><strong>Exercise: cards [★★]</strong></p>
 <ul class="simple">
-<li><p>定义代表四种花色的变体类型 <code class="docutils literal notranslate"><span class="pre">suit</span></code> ♣ ♦
-♥ ♠，在 <a class="reference external" href="https://en.wikipedia.org/wiki/Standard_52-card_deck">standard 52-card deck</a> 中。所有构造函数
-你的类型应该是恒定的。</p></li>
-<li><p>定义一个类型 <code class="docutils literal notranslate"><span class="pre">rank</span></code> 代表一张牌可能的等级：2, 3, …,
-10、杰克、王后、国王或王牌。有很多可能的解决方案；你自由了
-选择适合你的任何内容。一是让<code class="docutils literal notranslate"><span class="pre">rank</span></code>成为<code class="docutils literal notranslate"><span class="pre">int</span></code>的同义词，
-并假设 Jack=11，Queen=12，King=13，Ace=1 或 14。另一种方法是
-使用变体。</p></li>
-<li><p>定义一个类型 <code class="docutils literal notranslate"><span class="pre">card</span></code> 来表示单张牌的花色和点数。制造
-它有两个字段的记录。</p></li>
-<li><p>定义一些 <code class="docutils literal notranslate"><span class="pre">card</span></code> 类型的值：梅花 A、红心 Q、
-方块二，黑桃七。</p></li>
+<li><p>定义一个变体类型 <code class="docutils literal notranslate"><span class="pre">suit</span></code>，代表<a class="reference external" href="https://en.wikipedia.org/wiki/Standard_52-card_deck">标准 52 张扑克牌</a>中的四种花色 ♣ ♦ ♥ ♠。你的类型中所有构造函数都应为常量构造函数。</p></li>
+<li><p>定义一个类型 <code class="docutils literal notranslate"><span class="pre">rank</span></code>，代表一张牌可能的点数：2, 3, …, 10, Jack, Queen, King 或 Ace。有多种可能的解法，你可以自由选择。一种做法是让 <code class="docutils literal notranslate"><span class="pre">rank</span></code> 成为 <code class="docutils literal notranslate"><span class="pre">int</span></code> 的同义词，假设 Jack=11, Queen=12, King=13, Ace=1 或 14。另一种做法是使用变体。</p></li>
+<li><p>定义一个类型 <code class="docutils literal notranslate"><span class="pre">card</span></code>，代表单张牌的花色和点数。让它成为具有两个字段的记录。</p></li>
+<li><p>定义一些 <code class="docutils literal notranslate"><span class="pre">card</span></code> 类型的值：梅花 A、红心 Q、方块 2、黑桃 7。</p></li>
 </ul>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
@@ -814,18 +778,11 @@ alt=”象限 1：x 和 y 均为正值。  象限 2：x 为负，y 为正。  �
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: depth [★★]</strong></p>
-<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">depth</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">tree</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 返回节点数
-从根到叶子的任何最长路径。例如，空的深度
-树（简单来说<code class="docutils literal notranslate"><span class="pre">Leaf</span></code>）是<code class="docutils literal notranslate"><span class="pre">0</span></code>，上面的树<code class="docutils literal notranslate"><span class="pre">t</span></code>的深度是<code class="docutils literal notranslate"><span class="pre">3</span></code>。 <em>提示：
-有一个库函数 <code class="docutils literal notranslate"><span class="pre">max</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 返回最大值
-任意两个相同类型的值。</em></p>
+<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">depth</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">tree</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>，返回从根到叶子的任意最长路径上的节点数。例如，空树（就是 <code class="docutils literal notranslate"><span class="pre">Leaf</span></code>）的深度为 <code class="docutils literal notranslate"><span class="pre">0</span></code>，上面那棵树 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的深度为 <code class="docutils literal notranslate"><span class="pre">3</span></code>。<em>提示：库函数 <code class="docutils literal notranslate"><span class="pre">max</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 返回任意两个同类型值中的较大者。</em></p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: shape [★★★]</strong></p>
-<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">same_shape</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">tree</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">tree</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code> 来确定
-两棵树是否具有相同的形状，无论它们的值是否相同
-每个节点的进位都是相同的。 <em>提示：使用具有三个分支的模式匹配，
-其中匹配的表达式是一对树。</em></p>
+<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">same_shape</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">tree</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">tree</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code>，判断两棵树是否具有相同的形状，不论每个节点携带的值是否相同。<em>提示：使用具有三个分支的模式匹配，其中被匹配的表达式是一对树。</em></p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: list max exn [★★]</strong></p>
@@ -848,15 +805,7 @@ alt=”象限 1：x 和 y 均为正值。  象限 2：x 为负，y 为正。  �
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: is_bst [★★★★]</strong></p>
-<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">is_bst</span> <span class="pre">:</span> <span class="pre">('a*'b)</span> <span class="pre">tree</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code> ，当且仅返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>
-如果给定的树满足二叉搜索树不变量。一个高效的
-该函数最多访问每个节点一次的版本有点棘手
-写。 <em>提示：编写一个递归辅助函数，该函数采用树和
-给你 (i) 树中的最小值和最大值，或者 (ii) 告诉你
-树是空的，或者 (iii) 告诉你树不满足
-不变的。你的 <code class="docutils literal notranslate"><span class="pre">is_bst</span></code> 函数不会递归，但会调用你的
-辅助函数和模式匹配结果。你将需要定义一个新的
-辅助函数的返回类型的变体类型。</em></p>
+<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">is_bst</span> <span class="pre">:</span> <span class="pre">('a*'b)</span> <span class="pre">tree</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code>，当且仅当给定的树满足二叉搜索树不变量时返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>。要写出一个高效的、每个节点最多访问一次的版本，有一点技巧性。<em>提示：编写一个递归辅助函数，它接受一棵树，并返回以下三者之一：(i) 树中的最小和最大键值，(ii) 树为空，(iii) 树不满足不变量。你的 <code class="docutils literal notranslate"><span class="pre">is_bst</span></code> 函数本身不递归，而是调用辅助函数并对结果进行模式匹配。你需要为辅助函数的返回类型定义一个新的变体类型。</em></p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: quadrant poly [★★]</strong></p>

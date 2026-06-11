@@ -629,9 +629,7 @@ document.write(`
 </div>
 </div>
 <p>变体值的各个选项在 OCaml 中称为”构造函数”。在上面的例子中，构造函数包括 <code class="docutils literal notranslate"><span class="pre">Sun</span></code>、<code class="docutils literal notranslate"><span class="pre">Mon</span></code> 等。这里对”构造函数”一词的使用与 C++ 或 Java 中的含义有所不同。</p>
-<p>对于 OCaml 中的每种数据类型，我们一直在讨论如何构建和
-访问它。对于变体，构建很容易：只需写下变体的名称
-构造函数。为了访问，我们使用模式匹配。例如：</p>
+<p>对于 OCaml 中的每种数据类型，我们一直在讨论如何构建和访问它。对于变体，构建非常简单：只需写下构造函数的名称。访问则通过模式匹配来完成。例如：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">int_of_day</span> <span class="n">d</span> <span class="o">=</span>
@@ -652,8 +650,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>没有任何类型的自动方法将构造函数名称映射到 <code class="docutils literal notranslate"><span class="pre">int</span></code>，
-就像你对带有枚举的语言所期望的那样。</p>
+<p>OCaml 不会像你在带有枚举的语言中所期待的那样，自动将构造函数名称映射为 <code class="docutils literal notranslate"><span class="pre">int</span></code>。</p>
 <p><strong>语法。</strong></p>
 <p>定义变体类型：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="nc">C1</span> <span class="o">|</span> <span class="o">...</span> <span class="o">|</span> <span class="nc">Cn</span>
@@ -672,8 +669,7 @@ document.write(`
 </ul>
 <section id="id2">
 <h2><span class="section-number">3.2.1. </span>作用域<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>假设有两个类型定义了重叠的构造函数名称，例如
-例如，</p>
+<p>假设有两个类型定义了重叠的构造函数名称，例如：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">t1</span> <span class="o">=</span> <span class="nc">C</span> <span class="o">|</span> <span class="nc">D</span>
@@ -694,13 +690,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>当 <code class="docutils literal notranslate"><span class="pre">D</span></code> 出现在这些定义之后时，它指的是哪种类型？也就是说，
-上面的 <code class="docutils literal notranslate"><span class="pre">x</span></code> 是什么类型？答案是后面定义的类型获胜。
-所以<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">:</span> <span class="pre">t2</span></code>。这可能会让程序员感到惊讶，因此在任何给定的范围内
-范围（例如，文件或模块，尽管我们还没有涵盖模块）
-每当可能出现重叠的构造函数名称时，都会惯用它们作为前缀
-一些显着的特征。例如，假设我们将类型定义为
-代表 Pokémon：</p>
+<p>当 <code class="docutils literal notranslate"><span class="pre">D</span></code> 出现在这些定义之后时，它指的是哪种类型？也就是说，上面的 <code class="docutils literal notranslate"><span class="pre">x</span></code> 是什么类型？答案是：后定义的类型会胜出。因此 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">:</span> <span class="pre">t2</span></code>。这可能会让程序员感到意外，因此在同一作用域内（例如同一个文件或模块，不过我们还没有涉及模块），每当可能出现构造函数名冲突时，惯用的做法是给构造函数加上一个区分性的前缀。例如，假设我们定义代表宝可梦（Pokémon）的类型：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">ptype</span> <span class="o">=</span>
@@ -720,10 +710,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>因为“Normal”自然是 a 类型的构造函数名称
-Pokémon 和 Pokémon 攻击的有效性，我们额外添加一个
-每个构造函数名称前面的字符指示它是类型还是
-一个有效性。</p>
+<p>因为”Normal”既可能是一种宝可梦类型，也可能是一种宝可梦招式的效果，所以我们在每个构造函数名前额外加一个字符，用来区分它是类型（T）还是效果（E）。</p>
 </section>
 <section id="id3">
 <h2><span class="section-number">3.2.2. </span>模式匹配<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
@@ -733,8 +720,7 @@ Pokémon 和 Pokémon 攻击的有效性，我们额外添加一个
 <ul class="simple">
 <li><p>构造函数名称 <code class="docutils literal notranslate"><span class="pre">C</span></code></p></li>
 </ul>
-<p>我们扩展了模式何时匹配一个值并产生一个的定义
-绑定如下：</p>
+<p>我们扩展模式匹配值并产生绑定的定义如下：</p>
 <ul class="simple">
 <li><p>模式 <code class="docutils literal notranslate"><span class="pre">C</span></code> 与值 <code class="docutils literal notranslate"><span class="pre">C</span></code> 匹配并且不生成任何绑定。</p></li>
 </ul>

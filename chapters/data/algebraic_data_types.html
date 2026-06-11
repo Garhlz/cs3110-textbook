@@ -600,7 +600,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.9.1. 携带数据的变体</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.9.2. 语法和语义</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.9.3. 通配情况</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.9.3. 通配分支的陷阱</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3.9.4. 递归变体</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">3.9.5. 参数化变体</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">3.9.6. 多态变体</a></li>
@@ -680,29 +680,15 @@ document.write(`
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">shape</span></code> 变体类型与我们之前看到的变体类似：它由一组构造函数定义。
-不同之处在于，这些构造函数附带了额外的数据。
-<code class="docutils literal notranslate"><span class="pre">shape</span></code> 类型的每个值都恰好由这些构造函数之一形成。
-我们有时说构造函数带有一个 <em>tag</em>，
-因为它把所携带的数据标记为来自某个特定构造函数。</p>
-<p>变体类型有时称为“标记联合”。该类型的每个值都是
-来自一组值，该值是基础类型的所有值的并集
-构造函数携带的。例如，对于 <code class="docutils literal notranslate"><span class="pre">shape</span></code> 类型，每个值都是
-带有 <code class="docutils literal notranslate"><span class="pre">Point</span></code> 或 <code class="docutils literal notranslate"><span class="pre">Circle</span></code> 或 <code class="docutils literal notranslate"><span class="pre">Rect</span></code> 标记，并带有以下值：</p>
+<p><code class="docutils literal notranslate"><span class="pre">shape</span></code> 变体类型与我们之前看到的变体类似：它由一组构造函数定义。不同之处在于，这些构造函数可以附带额外的数据。<code class="docutils literal notranslate"><span class="pre">shape</span></code> 类型的每个值都恰好由这些构造函数之一构成。我们有时说构造函数带有一个<em>标签</em>（tag），因为它把所携带的数据标记为来自某个特定构造函数。</p>
+<p>变体类型有时称为”带标签的联合类型”（tagged union）。该类型的每个值都来自多个集合的并集，这些集合分别对应各构造函数所携带的基础类型。例如，对于 <code class="docutils literal notranslate"><span class="pre">shape</span></code> 类型，每个值都带有 <code class="docutils literal notranslate"><span class="pre">Point</span></code>、<code class="docutils literal notranslate"><span class="pre">Circle</span></code> 或 <code class="docutils literal notranslate"><span class="pre">Rect</span></code> 标签，并携带来自以下集合之一的值：</p>
 <ul class="simple">
-<li><p>所有 <code class="docutils literal notranslate"><span class="pre">point</span></code> 值的集合，与</p></li>
-<li><p>所有 <code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">*</span> <span class="pre">float</span></code> 值的集合，与</p></li>
+<li><p>所有 <code class="docutils literal notranslate"><span class="pre">point</span></code> 值的集合，或</p></li>
+<li><p>所有 <code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">*</span> <span class="pre">float</span></code> 值的集合，或</p></li>
 <li><p>所有 <code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">*</span> <span class="pre">point</span></code> 值的集合。</p></li>
 </ul>
-<p>这些变体类型的另一个名称是“代数数据类型”。这里的“代数”
-指的是变体类型同时包含和类型与积类型，正如
-上一讲中已经定义过的那样。和类型来自这样一个事实：
-变体的一个值由“若干构造函数之一”形成。积类型来自这样一个事实：
-构造函数可以携带元组或记录，而这些值包含来自其<em>每个</em>
-组成类型的子值。</p>
-<p>使用变体，我们可以表达一个代表其他几个的联合的类型
-类型，但以类型安全的方式。例如，这里是一个代表的类型
-<code class="docutils literal notranslate"><span class="pre">string</span></code> 或 <code class="docutils literal notranslate"><span class="pre">int</span></code>：</p>
+<p>这些变体类型还有一个名字叫”代数数据类型”（algebraic data type）。这里的”代数”是指变体类型同时包含和类型与积类型，正如上一节中已经定义过的那样。和类型来自”变体的每个值由多个构造函数<em>之一</em>构成”，积类型则来自”构造函数可以携带元组或记录，而这些值包含来自其<em>每个</em>组成类型的子值”。</p>
+<p>使用变体，我们可以以一种类型安全的方式来表达”一个类型是其他若干类型的联合”。例如，下面的类型表示 <code class="docutils literal notranslate"><span class="pre">string</span></code> 或 <code class="docutils literal notranslate"><span class="pre">int</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">string_or_int</span> <span class="o">=</span>
@@ -744,10 +730,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>因此，变体提供了一种类型安全的方法来执行以前可能执行的操作
-似乎不可能。</p>
-<p>变体还可以区分一个值是由哪个标签构造出来的，
-即使多个构造函数携带相同的类型。例如：</p>
+<p>因此，变体提供了一种类型安全的方式来做到以前看似不可能的事情。</p>
+<p>变体还可以区分一个值是由哪个标签构造出来的，即使多个构造函数携带相同的类型。例如：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="nc">Left</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">|</span> <span class="nc">Right</span> <span class="k">of</span> <span class="kt">int</span>
@@ -806,132 +790,81 @@ document.write(`
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">p</span></code></p></li>
 </ul>
-<p>我们扩展了模式何时匹配一个值并产生的定义
-绑定如下：</p>
+<p>我们扩展模式匹配值并产生绑定的定义如下：</p>
 <ul class="simple">
-<li><p>如果 <code class="docutils literal notranslate"><span class="pre">p</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">v</span></code> 并生成绑定 <span class="math notranslate nohighlight">\(b\)</span>，则 <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">p</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">v</span></code> 并且
-生成绑定 <span class="math notranslate nohighlight">\(b\)</span>。</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">p</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">v</span></code> 并产生绑定 <span class="math notranslate nohighlight">\(b\)</span>，则 <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">p</span></code> 匹配 <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">v</span></code> 并产生绑定 <span class="math notranslate nohighlight">\(b\)</span>。</p></li>
 </ul>
 </section>
 <section id="id4">
-<h2><span class="section-number">3.9.3. </span>通配情况<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
-<p>用模式匹配变体时，需要注意 <em>Real World OCaml</em>
-所说的“通配情况”。下面这个简单例子展示了可能出错的地方。
-假设你编写了这个变体和函数：</p>
+<h2><span class="section-number">3.9.3. </span>通配分支的陷阱<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>用模式匹配处理变体时，需要注意 <em>Real World OCaml</em> 一书中所说的”通配分支”问题。下面这个简单例子展示了可能出错的地方。假设你编写了这样一个变体和函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">color</span> <span class="o">=</span> <span class="nc">Blue</span> <span class="o">|</span> <span class="nc">Red</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span>type color = Blue | Red
 
-<span class="c">(* a thousand lines of code in between *)</span>
+(* 中间隔着上千行代码 *)
 
-<span class="k">let</span> <span class="n">string_of_color</span> <span class="o">=</span> <span class="k">function</span>
-  <span class="o">|</span> <span class="nc">Blue</span> <span class="o">-&gt;</span> <span class="s2">&quot;blue&quot;</span>
-  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="s2">&quot;red&quot;</span>
+let string_of_color = function
+  | Blue -&gt; “blue”
+  | _ -&gt; “red”
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type color = Blue | Red
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span>File &quot;[6]&quot;, line 6, characters 12-22:
+6 |   | Blue -&gt; “blue”
+                ^^^^^^^^^^
+Error: Invalid character U+201C in identifier
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val string_of_color : color -&gt; string = &lt;fun&gt;
-</pre></div>
 </div>
 </div>
-</div>
-<p>看起来不错，对吧？但有一天你发现世界上还有更多颜色：
-你需要表示绿色。于是你回去把绿色添加到变体中：</p>
+<p>看起来没问题，对吧？但有一天你发现世界上的颜色不止这两种——你还需要表示绿色。于是你回过头把绿色加到变体定义中：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">color</span> <span class="o">=</span> <span class="nc">Blue</span> <span class="o">|</span> <span class="nc">Red</span> <span class="o">|</span> <span class="nc">Green</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span>type color = Blue | Red | Green
 
-<span class="c">(* a thousand lines of code in between *)</span>
+(* 中间隔着上千行代码 *)
 
-<span class="k">let</span> <span class="n">string_of_color</span> <span class="o">=</span> <span class="k">function</span>
-  <span class="o">|</span> <span class="nc">Blue</span> <span class="o">-&gt;</span> <span class="s2">&quot;blue&quot;</span>
-  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="s2">&quot;red&quot;</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type color = Blue | Red | Green
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val string_of_color : color -&gt; string = &lt;fun&gt;
+let string_of_color = function
+  | Blue -&gt; “blue”
+  | _ -&gt; “red”
 </pre></div>
 </div>
 </div>
 </div>
-<p>但因为中间隔着数千行代码，你忘记了
-<code class="docutils literal notranslate"><span class="pre">string_of_color</span></code> 也需要更新。现在，它突然变得
-红绿不分：</p>
+<p>但因为中间隔着上千行代码，你忘记了 <code class="docutils literal notranslate"><span class="pre">string_of_color</span></code> 也需要更新。现在，它突然间分不清红和绿了：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">string_of_color</span> <span class="nc">Green</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = &quot;red&quot;
-</pre></div>
 </div>
-</div>
-</div>
-<p>问题出在 <code class="docutils literal notranslate"><span class="pre">string_of_color</span></code> 中模式匹配的 <em>catch-all</em> 情况：
-最后一个使用通配符模式的分支会匹配任何东西。
-这类代码面对变体类型未来的变化并不稳健。</p>
-<p>相反，如果你一开始这样编写该函数，情况就会好得多：</p>
+<p>问题出在 <code class="docutils literal notranslate"><span class="pre">string_of_color</span></code> 中模式匹配的 <em>catch-all</em>（通配）分支：最后一个使用通配符模式的分支会匹配任何值。这类代码面对变体类型未来的变化是脆弱的。</p>
+<p>相反，如果你一开始就这样写，情况会好得多：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">string_of_color</span> <span class="o">=</span> <span class="k">function</span>
-  <span class="o">|</span> <span class="nc">Blue</span> <span class="o">-&gt;</span> <span class="s2">&quot;blue&quot;</span>
-  <span class="o">|</span> <span class="nc">Red</span>  <span class="o">-&gt;</span> <span class="s2">&quot;red&quot;</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File &quot;[9]&quot;, lines 1-3, characters 22-17:
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1 | ......................function
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2 |   | Blue -&gt; &quot;blue&quot;
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3 |   | Red  -&gt; &quot;red&quot;
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning 8 [partial-match]: this pattern-matching is not exhaustive.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Here is an example of a case that is not matched:
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Green
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val string_of_color : color -&gt; string = &lt;fun&gt;
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span>let string_of_color = function
+  | Blue -&gt; “blue”
+  | Red  -&gt; “red”
 </pre></div>
 </div>
 </div>
 </div>
-<p>OCaml 类型检查器现在会提醒你尚未更新
-<code class="docutils literal notranslate"><span class="pre">string_of_color</span></code> 来处理新的构造函数。</p>
-<p>这个故事的寓意是：通配情况可能导致有错误的代码。应当避免使用它们。</p>
+<p>OCaml 类型检查器现在就能提醒你：<code class="docutils literal notranslate"><span class="pre">string_of_color</span></code> 还没有针对新构造函数进行更新。</p>
+<p>这个故事的寓意是：通配分支可能导致有缺陷的代码，应当避免使用。</p>
 </section>
 <section id="id5">
 <h2><span class="section-number">3.9.4. </span>递归变体<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/gDh217oAfnY" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>变体类型可能会在自身定义中提到自己的名字。例如，
-这是一个变体类型，可以用来表示类似的东西
-<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">list</span></code>：</p>
+<p>变体类型可以在自身的定义中引用自己的名字。例如，下面是一个可以用来表示类似 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">list</span></code> 的变体类型：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">intlist</span> <span class="o">=</span> <span class="nc">Nil</span> <span class="o">|</span> <span class="nc">Cons</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">intlist</span>
 
-<span class="k">let</span> <span class="n">lst3</span> <span class="o">=</span> <span class="nc">Cons</span> <span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="nc">Nil</span><span class="o">)</span>  <span class="c">(* similar to 3 :: [] or [3] *)</span>
-<span class="k">let</span> <span class="n">lst123</span> <span class="o">=</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">lst3</span><span class="o">))</span> <span class="c">(* similar to [1; 2; 3] *)</span>
+<span class="k">let</span> <span class="n">lst3</span> <span class="o">=</span> <span class="nc">Cons</span> <span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="nc">Nil</span><span class="o">)</span>  <span class="c">(* 类似 3 :: [] 或 [3] *)</span>
+<span class="k">let</span> <span class="n">lst123</span> <span class="o">=</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">Cons</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">lst3</span><span class="o">))</span> <span class="c">(* 类似 [1; 2; 3] *)</span>
 
 <span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="o">(</span><span class="n">l</span> <span class="o">:</span> <span class="n">intlist</span><span class="o">)</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">l</span> <span class="k">with</span>
@@ -948,31 +881,9 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type intlist = Nil | Cons of int * intlist
-</pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst3 : intlist = Cons (3, Nil)
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst123 : intlist = Cons (1, Cons (2, Cons (3, Nil)))
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum : intlist -&gt; int = &lt;fun&gt;
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : intlist -&gt; int = &lt;fun&gt;
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : intlist -&gt; bool = &lt;fun&gt;
-</pre></div>
-</div>
-</div>
-</div>
-<p>请注意，在 <code class="docutils literal notranslate"><span class="pre">intlist</span></code> 的定义中，我们将 <code class="docutils literal notranslate"><span class="pre">Cons</span></code> 构造函数定义为
-携带一个包含 <code class="docutils literal notranslate"><span class="pre">intlist</span></code> 的值。这使得类型 <code class="docutils literal notranslate"><span class="pre">intlist</span></code> 成为
-<em>递归</em>：它是根据自身定义的。</p>
-<p>如果使用 <code class="docutils literal notranslate"><span class="pre">and</span></code> 关键字，类型可能是相互递归的：</p>
+<p>注意在 <code class="docutils literal notranslate"><span class="pre">intlist</span></code> 的定义中，我们将 <code class="docutils literal notranslate"><span class="pre">Cons</span></code> 构造函数定义为携带一个包含 <code class="docutils literal notranslate"><span class="pre">intlist</span></code> 的值。这使得类型 <code class="docutils literal notranslate"><span class="pre">intlist</span></code> 成为<em>递归类型</em>——它用自身来定义自身。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">and</span></code> 关键字，类型可以相互递归：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span><span class="n">value</span> <span class="o">:</span> <span class="kt">int</span><span class="o">;</span> <span class="n">next</span> <span class="o">:</span> <span class="n">mylist</span><span class="o">}</span>
@@ -980,42 +891,19 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type node = { value : int; next : mylist; }
-and mylist = Nil | Node of node
-</pre></div>
 </div>
-</div>
-</div>
-<p>任何此类相互递归必须至少涉及一种变体或记录类型
-递归“通过”。  例如，以下行为是不允许的：</p>
-<div class="cell tag_raises-exception docutils container">
+<p>任何相互递归都必须至少有一种变体或记录类型来承担”递归传递”的角色。例如，下面的写法是不允许的：</p>
+<div class="cell tag_“raises-exception” docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="n">u</span> <span class="k">and</span> <span class="n">u</span> <span class="o">=</span> <span class="n">t</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[12]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">10</span><span class="p">:</span>
-<span class="mi">1</span> <span class="o">|</span> <span class="nb">type</span> <span class="n">t</span> <span class="o">=</span> <span class="n">u</span> <span class="ow">and</span> <span class="n">u</span> <span class="o">=</span> <span class="n">t</span>
-    <span class="o">^^^^^^^^^^</span>
-<span class="ne">Error</span>: The type abbreviation t is cyclic:
-         <span class="n">t</span> <span class="o">=</span> <span class="n">u</span><span class="p">,</span>
-         <span class="n">u</span> <span class="o">=</span> <span class="n">t</span>
-</pre></div>
 </div>
-</div>
-</div>
-<p>但这是：</p>
+<p>但这样可以：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="nc">U</span> <span class="k">of</span> <span class="n">u</span> <span class="k">and</span> <span class="n">u</span> <span class="o">=</span> <span class="nc">T</span> <span class="k">of</span> <span class="n">t</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type t = U of u
-and u = T of t
 </pre></div>
 </div>
 </div>
@@ -1027,68 +915,32 @@ and u = T of t
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type node = { value : int; next : node; }
-</pre></div>
 </div>
-</div>
-</div>
-<p>但普通的旧类型同义词可能不是：</p>
-<div class="cell tag_raises-exception docutils container">
+<p>但普通的类型同义词不行：</p>
+<div class="cell tag_“raises-exception” docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">*</span> <span class="n">t</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[15]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">14</span><span class="p">:</span>
-<span class="mi">1</span> <span class="o">|</span> <span class="nb">type</span> <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">*</span> <span class="n">t</span>
-    <span class="o">^^^^^^^^^^^^^^</span>
-<span class="ne">Error</span>: The type abbreviation t is cyclic:
-         <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">*</span> <span class="n">t</span><span class="p">,</span>
-         <span class="n">t</span> <span class="o">*</span> <span class="n">t</span> <span class="n">contains</span> <span class="n">t</span>
-</pre></div>
 </div>
-</div>
-</div>
-<p>虽然 <code class="docutils literal notranslate"><span class="pre">node</span></code> 是合法的类型定义，但无法构造值
-属于这种类型，因为涉及循环：构造第一个
-<code class="docutils literal notranslate"><span class="pre">node</span></code> 值存在，你已经需要 <code class="docutils literal notranslate"><span class="pre">node</span></code> 类型的值来
-存在。稍后，当我们介绍命令式特性时，我们会看到使用类似的想法
-（但成功）对于可变链表。</p>
+<p>虽然 <code class="docutils literal notranslate"><span class="pre">node</span></code> 是合法的类型定义，但却无法构造出这种类型的值，因为这里存在循环依赖：要构造第一个 <code class="docutils literal notranslate"><span class="pre">node</span></code> 值，你首先需要有一个 <code class="docutils literal notranslate"><span class="pre">node</span></code> 类型的值存在。稍后介绍命令式特性时，我们会看到用类似的想法（成功地）实现可变链表。</p>
 </section>
 <section id="id6">
 <h2><span class="section-number">3.9.5. </span>参数化变体<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
-<p>变体类型可以在其他类型上“参数化”。  例如，
-上面的 <code class="docutils literal notranslate"><span class="pre">intlist</span></code> 类型可以概括为提供列表（编码为
-我们自己）超过任何类型：</p>
+<p>变体类型可以在其他类型上进行<em>参数化</em>。例如，上面的 <code class="docutils literal notranslate"><span class="pre">intlist</span></code> 类型可以推广为提供任意类型的列表（用我们自己编码的方式）：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mylist</span> <span class="o">=</span> <span class="nc">Nil</span> <span class="o">|</span> <span class="nc">Cons</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mylist</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span>type &#39;a mylist = Nil | Cons of &#39;a * &#39;a mylist
 
-<span class="k">let</span> <span class="n">lst3</span> <span class="o">=</span> <span class="nc">Cons</span> <span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="nc">Nil</span><span class="o">)</span>  <span class="c">(* similar to [3] *)</span>
-<span class="k">let</span> <span class="n">lst_hi</span> <span class="o">=</span> <span class="nc">Cons</span> <span class="o">(</span><span class="s2">&quot;hi&quot;</span><span class="o">,</span> <span class="nc">Nil</span><span class="o">)</span>  <span class="c">(* similar to [&quot;hi&quot;] *)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a mylist = Nil | Cons of &#39;a * &#39;a mylist
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst3 : int mylist = Cons (3, Nil)
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst_hi : string mylist = Cons (&quot;hi&quot;, Nil)
+let lst3 = Cons (3, Nil)  (* 类似 [3] *)
+let lst_hi = Cons (“hi”, Nil)  (* 类似 [“hi”] *)
 </pre></div>
 </div>
 </div>
 </div>
-<p>这里， <code class="docutils literal notranslate"><span class="pre">mylist</span></code> 是一个<em>类型构造函数</em>，但不是一个类型：没有办法写
-类型为 <code class="docutils literal notranslate"><span class="pre">mylist</span></code> 的值。但我们可以写入 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mylist</span></code> 类型的值（例如，
-<code class="docutils literal notranslate"><span class="pre">lst3</span></code>) 和 <code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">mylist</span></code> (例如 <code class="docutils literal notranslate"><span class="pre">lst_hi</span></code>)。将类型构造函数视为
-就像一个函数，但是将类型映射到类型，而不是将值映射到
-值。</p>
-<p>以下是 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mylist</span></code> 上的一些函数：</p>
+<p>这里，<code class="docutils literal notranslate"><span class="pre">mylist</span></code> 是一个<em>类型构造器</em>，而不是一个类型：没有办法写一个类型为 <code class="docutils literal notranslate"><span class="pre">mylist</span></code> 的值。但我们可以写类型为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mylist</span></code> 的值（如 <code class="docutils literal notranslate"><span class="pre">lst3</span></code>）和类型为 <code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">mylist</span></code> 的值（如 <code class="docutils literal notranslate"><span class="pre">lst_hi</span></code>）。可以把类型构造器想象成函数，但它将类型映射到类型，而不是将值映射到值。</p>
+<p>下面是作用在 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mylist</span></code> 上的一些函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">length</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mylist</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="k">function</span>
@@ -1101,18 +953,8 @@ and u = T of t
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : &#39;a mylist -&gt; int = &lt;fun&gt;
-</pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;a mylist -&gt; bool = &lt;fun&gt;
-</pre></div>
-</div>
-</div>
-</div>
-<p>请注意，每个函数的主体与之前的定义相比没有变化
-对于 <code class="docutils literal notranslate"><span class="pre">intlist</span></code>。我们改变的只是类型注释。这甚至可以
-安全地省略：</p>
+<p>注意每个函数的主体与之前针对 <code class="docutils literal notranslate"><span class="pre">intlist</span></code> 的定义相比没有变化，我们改变的只是类型标注。这些标注甚至可以安全地省略：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">length</span> <span class="o">=</span> <span class="k">function</span>
@@ -1125,23 +967,9 @@ and u = T of t
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : &#39;a mylist -&gt; int = &lt;fun&gt;
-</pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;a mylist -&gt; bool = &lt;fun&gt;
-</pre></div>
-</div>
-</div>
-</div>
-<p>我们刚刚编写的函数展示了一种语言特性，称为
-<strong>参数多态性</strong>。这些函数不关心 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 是什么
-<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mylist</span></code>，因此他们非常乐意在 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mylist</span></code> 上工作或
-<code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">mylist</span></code> 或任何其他 <code class="docutils literal notranslate"><span class="pre">(whatever)</span> <span class="pre">mylist</span></code>。 “多态性”这个词是
-基于希腊词根“poly”（许多）和“morph”（形式）。类型的值
-<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mylist</span></code> 可以有多种形式，具体取决于实际类型 <code class="docutils literal notranslate"><span class="pre">'a</span></code>。</p>
-<p>不过，当你对 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 类型施加约束时，你
-放弃一些多态性。例如，</p>
+<p>我们刚刚编写的函数展示了一种称为<strong>参数多态性</strong>（parametric polymorphism）的语言特性。这些函数不关心 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mylist</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 具体是什么，因此它们可以愉快地作用于 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mylist</span></code>、<code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">mylist</span></code> 或任何其他 <code class="docutils literal notranslate"><span class="pre">(something)</span> <span class="pre">mylist</span></code>。”多态性”（polymorphism）一词源于希腊词根”poly”（许多）和”morph”（形式）。类型 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mylist</span></code> 的值可以根据实际类型 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 的不同而呈现多种形式。</p>
+<p>不过，当你对 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 类型施加约束时，就会放弃一部分多态性。例如：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="o">=</span> <span class="k">function</span>
@@ -1150,29 +978,13 @@ and u = T of t
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val sum : int mylist -&gt; int = &lt;fun&gt;
-</pre></div>
 </div>
-</div>
-</div>
-<p>我们将 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code> 运算符与列表头一起使用这一事实限制了
-该头元素是 <code class="docutils literal notranslate"><span class="pre">int</span></code>，因此所有元素都必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。这意味着
-<code class="docutils literal notranslate"><span class="pre">sum</span></code> 必须采用 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mylist</span></code>，而不是任何其他类型的 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mylist</span></code>。</p>
-<p>参数化类型也可以有多个类型参数，
-在这种情况下需要括号：</p>
+<p>我们在列表头部使用了 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code> 运算符，这要求头部元素是 <code class="docutils literal notranslate"><span class="pre">int</span></code>，进而要求所有元素都是 <code class="docutils literal notranslate"><span class="pre">int</span></code>。这意味着 <code class="docutils literal notranslate"><span class="pre">sum</span></code> 必须接受 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mylist</span></code>，而不能是任意类型的 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mylist</span></code>。</p>
+<p>参数化类型也可以有多个类型参数，此时需要括号：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">pair</span> <span class="o">=</span> <span class="o">{</span><span class="n">first</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span> <span class="n">second</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">}</span>
-<span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="o">{</span><span class="n">first</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">second</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span><span class="o">}</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type (&#39;a, &#39;b) pair = { first : &#39;a; second : &#39;b; }
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val x : (int, string) pair = {first = 2; second = &quot;hello&quot;}
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span>type (&#39;a, &#39;b) pair = {first : &#39;a; second : &#39;b}
+let x = {first = 2; second = “hello”}
 </pre></div>
 </div>
 </div>
@@ -1180,8 +992,7 @@ and u = T of t
 </section>
 <section id="id7">
 <h2><span class="section-number">3.9.6. </span>多态变体<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
-<p>到目前为止，每当你想要定义变体类型时，你都必须给出
-它是一个名称，例如 <code class="docutils literal notranslate"><span class="pre">day</span></code>、<code class="docutils literal notranslate"><span class="pre">shape</span></code> 或 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mylist</span></code>：</p>
+<p>到目前为止，每当你想定义变体类型时，都必须给它一个名字，比如 <code class="docutils literal notranslate"><span class="pre">day</span></code>、<code class="docutils literal notranslate"><span class="pre">shape</span></code> 或 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">mylist</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">day</span> <span class="o">=</span> <span class="nc">Sun</span> <span class="o">|</span> <span class="nc">Mon</span> <span class="o">|</span> <span class="nc">Tue</span> <span class="o">|</span> <span class="nc">Wed</span> <span class="o">|</span> <span class="nc">Thu</span> <span class="o">|</span> <span class="nc">Fri</span> <span class="o">|</span> <span class="nc">Sat</span>
@@ -1195,22 +1006,8 @@ and u = T of t
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type day = Sun | Mon | Tue | Wed | Thu | Fri | Sat
-</pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type shape = Point of point | Circle of point * float | Rect of point * point
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a mylist = Nil | Cons of &#39;a * &#39;a mylist
-</pre></div>
-</div>
-</div>
-</div>
-<p>有时，你可能仅需要变量类型作为返回值
-单一函数。例如，这里有一个函数 <code class="docutils literal notranslate"><span class="pre">f</span></code> ，它可以返回一个
-<code class="docutils literal notranslate"><span class="pre">int</span></code> 或 <span class="math notranslate nohighlight">\(\infty\)</span>；你被迫定义一个变体类型来表示
-结果：</p>
+<p>但有时你可能只在一个函数的返回值中需要变体类型。例如，下面这个函数 <code class="docutils literal notranslate"><span class="pre">f</span></code> 可能返回一个 <code class="docutils literal notranslate"><span class="pre">int</span></code> 或 <span class="math notranslate nohighlight">\(\infty\)</span>；你被迫定义一个变体类型来表示这个结果：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">fin_or_inf</span> <span class="o">=</span> <span class="nc">Finite</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">|</span> <span class="nc">Infinity</span>
@@ -1222,23 +1019,12 @@ and u = T of t
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type fin_or_inf = Finite of int | Infinity
-</pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val f : int -&gt; fin_or_inf = &lt;fun&gt;
-</pre></div>
-</div>
-</div>
-</div>
-<p>这个定义的缺点是你被迫定义
-<code class="docutils literal notranslate"><span class="pre">fin_or_inf</span></code> 即使它不会在你的程序的大部分内容中使用。</p>
-<p>OCaml 中还有另一种变体支持这种编程：
-<em>多态性变体</em>。多态变体与变体一样，除了：</p>
+<p>这种做法的缺点是你被迫定义了 <code class="docutils literal notranslate"><span class="pre">fin_or_inf</span></code> 类型，尽管它在程序的大部分地方都不会用到。</p>
+<p>OCaml 提供了另一种变体形式来支持这种场景：<em>多态变体</em>（polymorphic variant）。多态变体与普通变体类似，但有三个区别：</p>
 <ol class="arabic simple">
-<li><p>在使用它们之前，你不必声明它们的类型或构造函数。</p></li>
-<li><p>多态变体类型没有名称。（所以这个特性的另一个名字
-可能是“匿名变体”。）</p></li>
+<li><p>无需在使用前声明类型或其构造函数。</p></li>
+<li><p>多态变体类型没有名字。（所以这个特性的另一个叫法可能是”匿名变体”。）</p></li>
 <li><p>多态变体的构造函数以反引号字符开头。</p></li>
 </ol>
 <p>使用多态变体，我们可以重写 <code class="docutils literal notranslate"><span class="pre">f</span></code>：</p>
@@ -1251,65 +1037,42 @@ and u = T of t
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val f : int -&gt; [&gt; `Finite of int | `Infinity ] = &lt;fun&gt;
-</pre></div>
 </div>
-</div>
-</div>
-<p>该类型表示 <code class="docutils literal notranslate"><span class="pre">f</span></code> 要么返回 <code class="docutils literal notranslate"> <span class="pre">`Finite</span> <span class="pre">n</span></code> for some <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">:</span> <span class="pre">int</span></code> 要么
-<code class="docutils literal notranslate"> <span class="pre">`Infinity</span></code>。方括号并不表示列表，而是表示一组
-可能的构造函数。 <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> 符号表示模式匹配的任何代码
-针对该类型的值必须“至少”处理构造函数
-<code class="docutils literal notranslate"> <span class="pre">`Finite</span></code> and `` <code class="docutils literal notranslate"><span class="pre">Infinity</span></code>，甚至可能更多。例如，我们可以写：</p>
+<p>这个类型表示 <code class="docutils literal notranslate"><span class="pre">f</span></code> 要么返回 <code class="docutils literal notranslate"> <span class="pre">`Finite</span> <span class="pre">n</span></code>（其中 <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">:</span> <span class="pre">int</span></code>），要么返回 <code class="docutils literal notranslate"> <span class="pre">`Infinity</span></code>。方括号并不表示列表，而是表示一组可能的构造函数。<code class="docutils literal notranslate"><span class="pre">&gt;</span></code> 符号表示：针对该类型值进行模式匹配的代码，必须”至少”处理 <code class="docutils literal notranslate"> <span class="pre">`Finite</span></code> 和 <code class="docutils literal notranslate"> <span class="pre">`Infinity</span></code> 这两个构造函数，甚至还可以处理更多。例如，我们可以写：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">match</span> <span class="n">f</span> <span class="mi">3</span> <span class="k">with</span>
-  <span class="o">|</span> <span class="o">`</span><span class="nc">NegInfinity</span> <span class="o">-&gt;</span> <span class="s2">&quot;negative infinity&quot;</span>
-  <span class="o">|</span> <span class="o">`</span><span class="nc">Finite</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="s2">&quot;finite&quot;</span>
-  <span class="o">|</span> <span class="o">`</span><span class="nc">Infinity</span> <span class="o">-&gt;</span> <span class="s2">&quot;infinite&quot;</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = &quot;finite&quot;
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span>match f 3 with
+  | `NegInfinity -&gt; “negative infinity”
+  | `Finite n -&gt; “finite”
+  | `Infinity -&gt; “infinite”
 </pre></div>
 </div>
 </div>
 </div>
-<p>模式匹配包含除以下之外的构造函数是完全可以的
-<code class="docutils literal notranslate"> <span class="pre">`Finite</span></code> or <code class="docutils literal notranslate"> <span class="pre">`Infinity</span></code>, because <code class="docutils literal notranslate"><span class="pre">f</span></code> 保证永远不会返回任何
-除此之外的构造函数。</p>
-<p>我们将会看到多态变体还有其他更引人注目的用途
-稍后在课程中。它们在库中特别有用。目前，我们
-通常会引导你远离多态变体的广泛使用，
-因为它们的类型可能变得难以管理。</p>
+<p>模式匹配包含 <code class="docutils literal notranslate"> <span class="pre">`Finite</span></code> 和 <code class="docutils literal notranslate"> <span class="pre">`Infinity</span></code> 之外的构造函数也是完全可以的，因为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 保证永远不会返回这些之外的构造函数。</p>
+<p>在课程稍后的部分，我们会看到多态变体还有其他更引人注目的用途，尤其是在库中。目前，我们通常会引导你避免广泛使用多态变体，因为它们的类型可能变得难以管理。</p>
 </section>
 <section id="id8">
 <h2><span class="section-number">3.9.7. </span>内置变体<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h2>
-<p>OCaml 的内置列表数据类型实际上是一种递归的参数化变体。它
-定义如下：</p>
-<div class="cell tag_remove-output docutils container">
+<p>OCaml 的内置列表数据类型实际上就是一种递归的参数化变体。它的定义如下：</p>
+<div class="cell tag_“remove-output” docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span> <span class="bp">[]</span> <span class="o">|</span> <span class="o">(</span> <span class="o">::</span> <span class="o">)</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>所以 <code class="docutils literal notranslate"><span class="pre">list</span></code> 实际上只是一个类型构造函数，带有（值）构造函数
-<code class="docutils literal notranslate"><span class="pre">[]</span></code> （我们发音为“nil”）和 <code class="docutils literal notranslate"><span class="pre">::</span></code> （我们发音为“cons”）。</p>
-<p>OCaml 的内置选项数据类型实际上也是参数化变体。这是
-定义如下：</p>
-<div class="cell tag_remove-output docutils container">
+<p>所以 <code class="docutils literal notranslate"><span class="pre">list</span></code> 实际上只是一个类型构造器，带有（值）构造函数 <code class="docutils literal notranslate"><span class="pre">[]</span></code>（读作”nil”）和 <code class="docutils literal notranslate"><span class="pre">::</span></code>（读作”cons”）。</p>
+<p>OCaml 的内置选项数据类型实际上也是一种参数化变体。它的定义如下：</p>
+<div class="cell tag_“remove-output” docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">option</span> <span class="o">=</span> <span class="nc">None</span> <span class="o">|</span> <span class="nc">Some</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>所以 <code class="docutils literal notranslate"><span class="pre">option</span></code> 实际上只是一个类型构造函数，带有（值）构造函数
-<code class="docutils literal notranslate"><span class="pre">None</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Some</span></code>。</p>
-<p>你可以看到 <a class="reference external" href="https://ocaml.org/manual/core.html">core OCaml library</a> 中定义了 <code class="docutils literal notranslate"><span class="pre">list</span></code> 和 <code class="docutils literal notranslate"><span class="pre">option</span></code>。</p>
+<p>所以 <code class="docutils literal notranslate"><span class="pre">option</span></code> 实际上只是一个类型构造器，带有（值）构造函数 <code class="docutils literal notranslate"><span class="pre">None</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Some</span></code>。</p>
+<p>你可以在 <a class="reference external" href="https://ocaml.org/manual/core.html">OCaml 核心库</a> 中查看 <code class="docutils literal notranslate"><span class="pre">list</span></code> 和 <code class="docutils literal notranslate"><span class="pre">option</span></code> 的定义。</p>
 </section>
 </section>
 
@@ -1379,7 +1142,7 @@ and u = T of t
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.9.1. 携带数据的变体</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.9.2. 语法和语义</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.9.3. 通配情况</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.9.3. 通配分支的陷阱</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3.9.4. 递归变体</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">3.9.5. 参数化变体</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">3.9.6. 多态变体</a></li>

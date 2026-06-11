@@ -530,7 +530,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">3.3.1. OUnit 的示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">3.3.1. OUnit 示例</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.3.2. OUnit 示例的说明</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.3.3. 改进 OUnit 输出</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.3.4. 测试异常</a></li>
@@ -554,28 +554,18 @@ document.write(`
 插入点：我们现在已经知道足够多的内容，可以理解如何在 OCaml 中
 进行单元测试，没有必要再推迟学习它。</p>
 </div>
-<p>使用顶层来测试函数仅适用于非常小的程序。
-较大的程序需要包含许多“单元测试”的“测试套件”，并且可以
-每次我们更新代码库时都会重新运行。单元测试是对一个小的测试
-程序中的一部分函数，例如单个函数。</p>
-<p>我们现在已经了解了足够多的 OCaml 特性，可以学习如何使用
-名为 OUnit 的库。它是一个单元测试框架，类似于 Java 中的 JUnit、
-Haskell 中的 HUnit 等。使用 OUnit 的基本工作流程如下：</p>
+<p>用顶层来测试函数只适合非常小的程序。较大的程序需要包含许多”单元测试”的”测试套件”，并且每次更新代码库时都能重新运行。单元测试是针对程序中一小部分功能（如单个函数）的测试。</p>
+<p>现在我们已经掌握了足够多的 OCaml 特性，可以来学习如何使用 OUnit 这个库了。OUnit 是一个单元测试框架，类似于 Java 中的 JUnit、Haskell 中的 HUnit 等。使用 OUnit 的基本工作流程如下：</p>
 <ul class="simple">
-<li><p>在文件 <code class="docutils literal notranslate"><span class="pre">f.ml</span></code> 中编写一个函数。里面可能还有很多其他的函数
-文件也。</p></li>
-<li><p>在单独的文件 <code class="docutils literal notranslate"><span class="pre">test.ml</span></code> 中编写该函数的单元测试。这个具体
-文件名其实并不重要。</p></li>
-<li><p>构建并运行 <code class="docutils literal notranslate"><span class="pre">test</span></code> 以执行单元测试。</p></li>
+<li><p>在文件 <code class="docutils literal notranslate"><span class="pre">f.ml</span></code> 中编写函数。该文件中可能还有很多其他函数。</p></li>
+<li><p>在单独的文件 <code class="docutils literal notranslate"><span class="pre">test.ml</span></code> 中编写该函数的单元测试。具体的文件名其实并不重要。</p></li>
+<li><p>构建并运行 <code class="docutils literal notranslate"><span class="pre">test</span></code> 来执行单元测试。</p></li>
 </ul>
 <p><a class="reference external" href="https://gildor478.github.io/ounit/ounit2/index.html">OUnit 文档</a> 可在 GitHub 上找到。</p>
 <section id="id1">
-<h2><span class="section-number">3.3.1. </span>OUnit 的示例<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
-<p>以下示例展示如何创建 OUnit 测试套件。
-示例中的某些内容乍看可能有些神秘；这些内容
-会在下一节中讨论。</p>
-<p>创建一个新目录。在该目录中，创建一个名为 <code class="docutils literal notranslate"><span class="pre">sum.ml</span></code> 的文件，并将
-将以下代码写入其中：</p>
+<h2><span class="section-number">3.3.1. </span>OUnit 示例<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>以下示例展示了如何创建 OUnit 测试套件。示例中的一些内容乍看可能有些神秘；这些内容将在下一节中讨论。</p>
+<p>创建一个新目录。在该目录中，创建一个名为 <code class="docutils literal notranslate"><span class="pre">sum.ml</span></code> 的文件，将以下代码写入其中：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="o">=</span> <span class="k">function</span>
   <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>
   <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">xs</span>
@@ -594,10 +584,7 @@ Haskell 中的 HUnit 等。使用 OUnit 的基本工作流程如下：</p>
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">run_test_tt_main</span> <span class="n">tests</span>
 </pre></div>
 </div>
-<p>根据你的编辑器及其配置，你现在可能会看到一些
-关于 OUnit2 和 Sum 的“未绑定模块”错误。不用担心；代码实际上是
-正确的。我们只需要设置 Dune，并告诉它链接 OUnit。创建一个 <code class="docutils literal notranslate"><span class="pre">dune</span></code>
-文件并将其放入其中：</p>
+<p>根据你的编辑器和配置，你现在可能会看到一些关于 OUnit2 和 Sum 的”未绑定模块”错误。不用担心，代码实际上是正确的。我们只需要配置 Dune，告诉它链接 OUnit。创建一个 <code class="docutils literal notranslate"><span class="pre">dune</span></code> 文件，写入以下内容：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(executable
  (name test)
  (libraries ounit2))
@@ -611,9 +598,7 @@ Haskell 中的 HUnit 等。使用 OUnit 的基本工作流程如下：</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>dune<span class="w"> </span>build<span class="w"> </span>test.exe
 </pre></div>
 </div>
-<p>返回到你的编辑器并执行任何会导致其重新访问 <code class="docutils literal notranslate"><span class="pre">test.ml</span></code> 的操作。
-你可以关闭并重新打开窗口，或者对文件进行一些简单的更改
-（例如，添加然后删除空格）。现在错误应该全部消失。</p>
+<p>回到你的编辑器，做任何能让它重新加载 <code class="docutils literal notranslate"><span class="pre">test.ml</span></code> 的操作。你可以关闭再重新打开窗口，或者对文件做一些小改动（比如添加一个空格再删除）。现在错误应该全部消失了。</p>
 <p>最后，你可以运行测试套件：</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>dune<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>./test.exe
 </pre></div>
@@ -648,18 +633,16 @@ OK
 <span class="o">------------------------------------------------------------------------------</span>
 </pre></div>
 </div>
-<p>该输出的第一行</p>
+<p>输出的第一行</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FFF</span>
 </pre></div>
 </div>
-<p>告诉我们 OUnit 运行了三个测试用例，并且所有三个 <u>f</u>ailed。</p>
-<p>下一个有趣的行</p>
+<p>告诉我们 OUnit 运行了三个测试用例，并且全部三个都失败了（<u>f</u>ailed）。</p>
+<p>下一个值得关注的行是：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Error</span><span class="p">:</span> <span class="n">test</span> <span class="n">suite</span> <span class="k">for</span> <span class="nb">sum</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="n">two_elements</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>告诉我们，在名为 <code class="docutils literal notranslate"><span class="pre">test</span> <span class="pre">suite</span> <span class="pre">for</span> <span class="pre">sum</span></code> 的测试套件中，测试用例位于
-名为 <code class="docutils literal notranslate"><span class="pre">two_elements</span></code> 的索引 2 失败。该测试用例的其余输出
-不是特别有趣；我们暂时忽略它。</p>
+<p>它告诉我们，在名为 <code class="docutils literal notranslate"><span class="pre">test</span> <span class="pre">suite</span> <span class="pre">for</span> <span class="pre">sum</span></code> 的测试套件中，索引为 2、名为 <code class="docutils literal notranslate"><span class="pre">two_elements</span></code> 的测试用例失败了。该测试用例的其余输出不是特别有用，我们暂时忽略它。</p>
 </section>
 <section id="id2">
 <h2><span class="section-number">3.3.2. </span>OUnit 示例的说明<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
@@ -761,11 +744,7 @@ OUnit 提供的函数，用于检查其两个参数是否相等。
 <span class="o">]</span>
 </pre></div>
 </div>
-<p>对于比整数更复杂的输出类型，你最终会得到
-需要编写自己的函数来传递给 <code class="docutils literal notranslate"><span class="pre">printer</span></code>。这类似于
-用 Java 编写 <code class="docutils literal notranslate"><span class="pre">toString()</span></code> 方法：对于你自己发明的复杂类型，
-该语言不知道如何将它们呈现为字符串。你必须提供
-执行此操作的代码。</p>
+<p>对于比整数更复杂的输出类型，你需要自己编写函数传递给 <code class="docutils literal notranslate"><span class="pre">printer</span></code>。这类似于在 Java 中编写 <code class="docutils literal notranslate"><span class="pre">toString()</span></code> 方法：对于你自己定义的复杂类型，语言不知道如何将它们呈现为字符串，你必须提供相应的代码。</p>
 </section>
 <section id="id4">
 <h2><span class="section-number">3.3.4. </span>测试异常<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
@@ -952,7 +931,7 @@ OUnit 提供的函数，用于检查其两个参数是否相等。
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">3.3.1. OUnit 的示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">3.3.1. OUnit 示例</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.3.2. OUnit 示例的说明</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.3.3. 改进 OUnit 输出</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.3.4. 测试异常</a></li>

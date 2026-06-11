@@ -598,8 +598,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let">3.5.1. 使用 Let 进行模式匹配</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.5.2. 使用函数进行模式匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let">3.5.1. 用 Let 进行模式匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.5.2. 用函数进行模式匹配</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.5.3. 模式匹配示例</a></li>
 </ul>
             </nav>
@@ -628,77 +628,62 @@ document.write(`
 </ul>
 <p>你可以在手册中阅读<a class="reference external" href="https://ocaml.org/manual/patterns.html">所有模式形式</a>。</p>
 <section id="let">
-<h2><span class="section-number">3.5.1. </span>使用 Let 进行模式匹配<a class="headerlink" href="#let" title="Permalink to this heading">#</a></h2>
-<p>事实上，到目前为止我们一直使用的 let 表达式的语法是一种特殊的
-OCaml 允许的完整语法的情况。该语法是：</p>
+<h2><span class="section-number">3.5.1. </span>用 Let 进行模式匹配<a class="headerlink" href="#let" title="Permalink to this heading">#</a></h2>
+<p>事实上，我们一直在使用的 let 表达式语法只是 OCaml 完整语法的一个特例。完整语法是：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="n">e1</span> <span class="k">in</span> <span class="n">e2</span>
 </pre></div>
 </div>
-<p>也就是说，装订的左侧实际上可能是一个图案，而不仅仅是一个
-标识符。当然，变量标识符在我们的有效模式列表中，
-这就是为什么我们到目前为止所研究的语法只是一个特例。</p>
-<p>考虑到这种语法，我们重新审视 let 表达式的语义。</p>
+<p>也就是说，绑定的左侧实际上可以是一个模式，而不仅仅是一个标识符。当然，变量标识符本身就在我们的合法模式列表之中，这也是为什么我们之前学到的语法只是一个特例。</p>
+<p>有了这个更一般的语法，我们来重新审视 let 表达式的语义。</p>
 <p><strong>动态语义。</strong></p>
-<p>要对 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">p</span> <span class="pre">=</span> <span class="pre">e1</span> <span class="pre">in</span> <span class="pre">e2</span></code> 求值：</p>
+<p>对 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">p</span> <span class="pre">=</span> <span class="pre">e1</span> <span class="pre">in</span> <span class="pre">e2</span></code> 求值：</p>
 <ol class="arabic simple">
-<li><p>将 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 计算为值 <code class="docutils literal notranslate"><span class="pre">v1</span></code>。</p></li>
-<li><p>将 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 与模式 <code class="docutils literal notranslate"><span class="pre">p</span></code> 进行匹配。如果不匹配，则引发异常
-<code class="docutils literal notranslate"><span class="pre">Match_failure</span></code>。否则，如果匹配，它会生成一组 <span class="math notranslate nohighlight">\(b\)</span>
-绑定。</p></li>
-<li><p>将这些绑定替换为 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 中的 <span class="math notranslate nohighlight">\(b\)</span>，产生新的表达式 <code class="docutils literal notranslate"><span class="pre">e2'</span></code>。</p></li>
-<li><p>将 <code class="docutils literal notranslate"><span class="pre">e2'</span></code> 计算为值 <code class="docutils literal notranslate"><span class="pre">v2</span></code>。</p></li>
-<li><p>let 表达式的求值结果是 <code class="docutils literal notranslate"><span class="pre">v2</span></code>。</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 求值为值 <code class="docutils literal notranslate"><span class="pre">v1</span></code>。</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 与模式 <code class="docutils literal notranslate"><span class="pre">p</span></code> 进行匹配。如果匹配失败，则引发 <code class="docutils literal notranslate"><span class="pre">Match_failure</span></code> 异常。如果匹配成功，则产生一组绑定 <span class="math notranslate nohighlight">\(b\)</span>。</p></li>
+<li><p>将绑定 <span class="math notranslate nohighlight">\(b\)</span> 替换到 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 中，产生新表达式 <code class="docutils literal notranslate"><span class="pre">e2'</span></code>。</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">e2'</span></code> 求值为值 <code class="docutils literal notranslate"><span class="pre">v2</span></code>。</p></li>
+<li><p>整个 let 表达式的求值结果为 <code class="docutils literal notranslate"><span class="pre">v2</span></code>。</p></li>
 </ol>
 <p><strong>静态语义。</strong></p>
 <ul class="simple">
-<li><p>如果以下所有条件成立，则 <code class="docutils literal notranslate"><span class="pre">(let</span> <span class="pre">p</span> <span class="pre">=</span> <span class="pre">e1</span> <span class="pre">in</span> <span class="pre">e2)</span> <span class="pre">:</span> <span class="pre">t2</span></code>：</p>
+<li><p>如果以下条件全部成立，则 <code class="docutils literal notranslate"><span class="pre">(let</span> <span class="pre">p</span> <span class="pre">=</span> <span class="pre">e1</span> <span class="pre">in</span> <span class="pre">e2)</span> <span class="pre">:</span> <span class="pre">t2</span></code>：</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t1</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code> 中的模式变量是 <code class="docutils literal notranslate"><span class="pre">x1..xn</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">t2</span></code> 假设对于 <code class="docutils literal notranslate"><span class="pre">1..n</span></code> 中的所有 <code class="docutils literal notranslate"><span class="pre">i</span></code> 来说，它认为
-<code class="docutils literal notranslate"><span class="pre">xi</span> <span class="pre">:</span> <span class="pre">ti</span></code>，</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code> 中的模式变量为 <code class="docutils literal notranslate"><span class="pre">x1..xn</span></code></p></li>
+<li><p>在假设对所有 <code class="docutils literal notranslate"><span class="pre">i</span></code> ∈ <code class="docutils literal notranslate"><span class="pre">1..n</span></code> 有 <code class="docutils literal notranslate"><span class="pre">xi</span> <span class="pre">:</span> <span class="pre">ti</span></code> 的前提下，可推出 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">t2</span></code></p></li>
 </ul>
 </li>
 </ul>
-<p><strong>让定义。</strong></p>
-<p>和之前一样，let 定义可以理解为一个 let 表达式，其主体有
-尚未给出。所以他们的语法可以概括为</p>
+<p><strong>let 定义。</strong></p>
+<p>和之前一样，let 定义可以理解为一个主体尚未给出的 let 表达式。因此其语法可以推广为：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="n">e</span>
 </pre></div>
 </div>
-<p>和以前一样，它们的语义遵循 let 表达式的语义。</p>
+<p>其语义也同之前一样，遵循 let 表达式的语义。</p>
 </section>
 <section id="id2">
-<h2><span class="section-number">3.5.2. </span>使用函数进行模式匹配<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>到目前为止我们使用的函数语法也是
-OCaml 允许的完整语法。该语法是：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">f</span> <span class="n">p1</span> <span class="o">...</span> <span class="n">pn</span> <span class="o">=</span> <span class="n">e1</span> <span class="k">in</span> <span class="n">e2</span>   <span class="c">(* function as part of let expression *)</span>
-<span class="k">let</span> <span class="n">f</span> <span class="n">p1</span> <span class="o">...</span> <span class="n">pn</span> <span class="o">=</span> <span class="n">e</span>          <span class="c">(* function definition at toplevel *)</span>
-<span class="k">fun</span> <span class="n">p1</span> <span class="o">...</span> <span class="n">pn</span> <span class="o">-&gt;</span> <span class="n">e</span>           <span class="c">(* anonymous function *)</span>
+<h2><span class="section-number">3.5.2. </span>用函数进行模式匹配<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>我们迄今为止使用的函数语法同样只是 OCaml 完整语法的一个特例。完整语法是：</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">f</span> <span class="n">p1</span> <span class="o">...</span> <span class="n">pn</span> <span class="o">=</span> <span class="n">e1</span> <span class="k">in</span> <span class="n">e2</span>   <span class="c">(* 作为 let 表达式一部分的函数 *)</span>
+<span class="k">let</span> <span class="n">f</span> <span class="n">p1</span> <span class="o">...</span> <span class="n">pn</span> <span class="o">=</span> <span class="n">e</span>          <span class="c">(* 顶层的函数定义 *)</span>
+<span class="k">fun</span> <span class="n">p1</span> <span class="o">...</span> <span class="n">pn</span> <span class="o">-&gt;</span> <span class="n">e</span>           <span class="c">(* 匿名函数 *)</span>
 </pre></div>
 </div>
-<p>我们需要关心的真正原始的语法形式是<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">p</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code>。让我们
-重新审视匿名函数的语义及其应用
-形式；其他表格的变化如下：</p>
+<p>我们真正需要关心的原始语法形式是 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">p</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code>。让我们重新审视匿名函数的语义以及函数应用的语义；其他形式的变化由此可以推出：</p>
 <p><strong>静态语义。</strong></p>
 <ul class="simple">
-<li><p>令 <code class="docutils literal notranslate"><span class="pre">x1..xn</span></code> 为 <code class="docutils literal notranslate"><span class="pre">p</span></code> 中出现的模式变量。如果假设
-<code class="docutils literal notranslate"><span class="pre">x1</span> <span class="pre">:</span> <span class="pre">t1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">:</span> <span class="pre">t2</span></code> 以及 … 和 <code class="docutils literal notranslate"><span class="pre">xn</span> <span class="pre">:</span> <span class="pre">tn</span></code>，我们可以得出结论 <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">:</span> <span class="pre">t</span></code>
-和 <code class="docutils literal notranslate"> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">u</span></code>，然后是 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">p</span> <span class="pre">-&gt;</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code>。</p></li>
-<li><p>应用程序的类型检查规则不变。</p></li>
+<li><p>令 <code class="docutils literal notranslate"><span class="pre">x1..xn</span></code> 为 <code class="docutils literal notranslate"><span class="pre">p</span></code> 中出现的模式变量。如果在假设 <code class="docutils literal notranslate"><span class="pre">x1</span> <span class="pre">:</span> <span class="pre">t1</span></code>、<code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">:</span> <span class="pre">t2</span></code>、…、<code class="docutils literal notranslate"><span class="pre">xn</span> <span class="pre">:</span> <span class="pre">tn</span></code> 的前提下，可以推出 <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">:</span> <span class="pre">t</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">u</span></code>，那么 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">p</span> <span class="pre">-&gt;</span> <span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">u</span></code>。</p></li>
+<li><p>函数应用的类型检查规则不变。</p></li>
 </ul>
 <p><strong>动态语义。</strong></p>
 <ul class="simple">
 <li><p>匿名函数的求值规则不变。</p></li>
-<li><p>要对 <code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">e1</span></code> 求值：</p>
+<li><p>对 <code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">e1</span></code> 求值：</p>
 <ol class="arabic simple">
-<li><p>将 <code class="docutils literal notranslate"><span class="pre">e0</span></code> 计算为匿名函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">p</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code>，并且
-将 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 求值为值 <code class="docutils literal notranslate"><span class="pre">v1</span></code>。</p></li>
-<li><p>将 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 与模式 <code class="docutils literal notranslate"><span class="pre">p</span></code> 进行匹配。如果不匹配，则引发异常
-<code class="docutils literal notranslate"><span class="pre">Match_failure</span></code>。否则，如果匹配，它会生成一组 <span class="math notranslate nohighlight">\(b\)</span>
-绑定。</p></li>
-<li><p>将这些绑定替换为 <code class="docutils literal notranslate"><span class="pre">e</span></code> 中的 <span class="math notranslate nohighlight">\(b\)</span>，产生新的表达式 <code class="docutils literal notranslate"><span class="pre">e'</span></code>。</p></li>
-<li><p>将 <code class="docutils literal notranslate"><span class="pre">e'</span></code> 计算为值 <code class="docutils literal notranslate"><span class="pre">v</span></code>，这是计算 <code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">e1</span></code> 的结果。</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">e0</span></code> 求值为匿名函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">p</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code>，并将 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 求值为值 <code class="docutils literal notranslate"><span class="pre">v1</span></code>。</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 与模式 <code class="docutils literal notranslate"><span class="pre">p</span></code> 进行匹配。如果匹配失败，则引发 <code class="docutils literal notranslate"><span class="pre">Match_failure</span></code> 异常。如果匹配成功，则产生一组绑定 <span class="math notranslate nohighlight">\(b\)</span>。</p></li>
+<li><p>将绑定 <span class="math notranslate nohighlight">\(b\)</span> 替换到 <code class="docutils literal notranslate"><span class="pre">e</span></code> 中，产生新表达式 <code class="docutils literal notranslate"><span class="pre">e'</span></code>。</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">e'</span></code> 求值为值 <code class="docutils literal notranslate"><span class="pre">v</span></code>，这就是 <code class="docutils literal notranslate"><span class="pre">e0</span> <span class="pre">e1</span></code> 的求值结果。</p></li>
 </ol>
 </li>
 </ul>
@@ -880,8 +865,8 @@ OCaml 允许的完整语法。该语法是：</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let">3.5.1. 使用 Let 进行模式匹配</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.5.2. 使用函数进行模式匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let">3.5.1. 用 Let 进行模式匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.5.2. 用函数进行模式匹配</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.5.3. 模式匹配示例</a></li>
 </ul>
   </nav></div>

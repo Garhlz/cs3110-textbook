@@ -615,14 +615,13 @@ document.write(`
 </ul>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p>托尼·霍尔爵士称他的 <code class="docutils literal notranslate"><span class="pre">null</span></code> 发明为
-<a class="reference external" href="https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare/">“billion-dollar mistake”</a>。</p>
+<p>托尼·霍尔爵士（Sir Tony Hoare）称他的 <code class="docutils literal notranslate"><span class="pre">null</span></code> 发明为
+<a class="reference external" href="https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare/">“十亿美元的错误”</a>（billion-dollar mistake）。</p>
 </div>
-<p>英国计算机科学家托尼·霍尔爵士把他发明的 <code class="docutils literal notranslate"><span class="pre">null</span></code> 称为
-除了这些可能之外，OCaml 还提供了一个更好的解决方案，叫做<em>选项</em>。（Haskell 的使用者会把选项识别为 Maybe 单子。）</p>
-<p>你可以把选项想象成一个密封的盒子。盒子里可能有东西，也可能是空的。在打开盒子之前，我们不知道是哪种情况。如果打开盒子发现里面有东西，我们可以把它取出来使用。因此，选项提供了一种”可选类型”，本质上是一个二选一的类型：盒子要么满满当当，要么空空如也。</p>
-<p>在上面的 <code class="docutils literal notranslate"><span class="pre">list_max</span></code> 例子中，我们希望在列表为空时返回一个空盒子，或者在列表非空时返回一个包含最大元素的盒子。</p>
-<p>下面是创建一个里面装有 <code class="docutils literal notranslate"><span class="pre">42</span></code> 的选项的方法：</p>
+<p>除了上述可能性之外，OCaml 还提供了一种更好的解决方案，叫做<em>选项</em>（option）。（Haskell 使用者会将选项识别为 Maybe 单子。）</p>
+<p>你可以把选项想象成一个密封的盒子。盒子里可能有东西，也可能是空的。在打开盒子之前，我们不知道是哪种情况。如果打开盒子发现里面有东西，就可以把它取出来使用。因此，选项提供了一种”可选类型”：本质上是一个二选一的类型——盒子要么满满当当，要么空空如也。</p>
+<p>在上面的 <code class="docutils literal notranslate"><span class="pre">list_max</span></code> 例子中，当列表为空时我们希望返回一个空盒子，当列表非空时返回一个装有最大元素的盒子。</p>
+<p>下面是如何创建一个装有 <code class="docutils literal notranslate"><span class="pre">42</span></code> 的选项：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nc">Some</span> <span class="mi">42</span>
@@ -635,7 +634,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>下面是创建一个像空盒子一样的选项的方法：</p>
+<p>下面是如何创建一个空盒子的选项：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nc">None</span>
@@ -648,9 +647,9 @@ document.write(`
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">Some</span></code> 表示盒子里有东西，值是 <code class="docutils literal notranslate"><span class="pre">42</span></code>。<code class="docutils literal notranslate"><span class="pre">None</span></code> 表示盒子是空的。</p>
-<p>与 <code class="docutils literal notranslate"><span class="pre">list</span></code> 一样，我们把 <code class="docutils literal notranslate"><span class="pre">option</span></code> 称为<em>类型构造器</em>：给定一个类型，它产生一个新的类型；但它本身不是一个类型。所以对于任何类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>，我们可以写 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">option</span></code> 作为一个类型。但 <code class="docutils literal notranslate"><span class="pre">option</span></code> 单独不能用作类型。<code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">option</span></code> 类型的值可能包含一个 <code class="docutils literal notranslate"><span class="pre">t</span></code> 类型的值，也可能什么都不包含。<code class="docutils literal notranslate"><span class="pre">None</span></code> 的类型是 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">option</span></code>，因为它不受任何类型约束——因为里面没有东西。</p>
-<p>你可以使用模式匹配来访问选项值 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的内容。下面是一个从选项中提取 <code class="docutils literal notranslate"><span class="pre">int</span></code>（如果存在的话）并将其转换为字符串的函数：</p>
+<p><code class="docutils literal notranslate"><span class="pre">Some</span></code> 表示盒子里有东西，其值是 <code class="docutils literal notranslate"><span class="pre">42</span></code>。<code class="docutils literal notranslate"><span class="pre">None</span></code> 表示盒子是空的。</p>
+<p>与 <code class="docutils literal notranslate"><span class="pre">list</span></code> 一样，<code class="docutils literal notranslate"><span class="pre">option</span></code> 是一个<em>类型构造器</em>：给定一个类型，它产生一个新的类型；但它本身不是一个类型。因此，对任意类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>，我们可以写 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">option</span></code> 作为一个类型，但单独的 <code class="docutils literal notranslate"><span class="pre">option</span></code> 不能用作类型。<code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">option</span></code> 类型的值要么包含一个 <code class="docutils literal notranslate"><span class="pre">t</span></code> 类型的值，要么什么都不包含。<code class="docutils literal notranslate"><span class="pre">None</span></code> 的类型是 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">option</span></code>，因为它不对内容施加任何类型约束——毕竟里面没有东西。</p>
+<p>你可以使用模式匹配来访问选项值的内容。下面是一个函数，从选项中提取 <code class="docutils literal notranslate"><span class="pre">int</span></code>（如果存在的话）并将其转换为字符串：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">extract</span> <span class="n">o</span> <span class="o">=</span>
@@ -704,27 +703,14 @@ document.write(`
 </div>
 <div class="admonition tip">
 <p class="admonition-title">小技巧</p>
-<p><code class="docutils literal notranslate"><span class="pre">begin</span></code>..<code class="docutils literal notranslate"><span class="pre">end</span></code> 包装上面的嵌套模式匹配并不严格
-这里是必需的，但这不是一个坏习惯，因为它会阻止潜在的语法
-更复杂的代码中的错误。关键字 <code class="docutils literal notranslate"><span class="pre">begin</span></code> 和 <code class="docutils literal notranslate"><span class="pre">end</span></code> 是等效的
-至 <code class="docutils literal notranslate"><span class="pre">(</span></code> 和 <code class="docutils literal notranslate"><span class="pre">)</span></code>。</p>
+<p>上面用 <code class="docutils literal notranslate"><span class="pre">begin</span></code>..<code class="docutils literal notranslate"><span class="pre">end</span></code> 包裹嵌套模式匹配在这里并非严格必需，但这是一个好习惯，因为在更复杂的代码中它可以避免潜在的语法错误。关键字 <code class="docutils literal notranslate"><span class="pre">begin</span></code> 和 <code class="docutils literal notranslate"><span class="pre">end</span></code> 等价于 <code class="docutils literal notranslate"><span class="pre">(</span></code> 和 <code class="docutils literal notranslate"><span class="pre">)</span></code>。</p>
 </div>
-<p>在 Java 中，每个对象引用都是隐式的一个选项。要么有一个
-引用内的对象，或者那里什么也没有。那个“没什么”是
-由值 <code class="docutils literal notranslate"><span class="pre">null</span></code> 表示。Java 并不强制程序员显式地
-检查 null 情况，这会导致空指针异常。OCaml 选项
-强制程序员在 <code class="docutils literal notranslate"><span class="pre">None</span></code> 的模式匹配中包含一个分支，从而
-确保程序员在出现问题时能够考虑到正确的做法
-那里什么也没有。所以我们可以将选项视为消除的原则性方法
-<code class="docutils literal notranslate"><span class="pre">null</span></code> 来自语言。使用选项通常被认为是更好的编码
-练习而不是引发异常，因为它迫使调用者做某事
-在 <code class="docutils literal notranslate"><span class="pre">None</span></code> 情况下是明智的。</p>
+<p>在 Java 中，每个对象引用都隐式地是一个选项：要么引用指向某个对象，要么那里什么也没有。那个”什么也没有”用值 <code class="docutils literal notranslate"><span class="pre">null</span></code> 来表示。Java 并不强制程序员显式检查 null 的情况，这导致了空指针异常。而 OCaml 的选项强制程序员在模式匹配中包含 <code class="docutils literal notranslate"><span class="pre">None</span></code> 分支，从而确保程序员在”什么也没有”的情况下必须考虑正确的处理方式。因此，我们可以将选项视为一种有原则地消除语言中 <code class="docutils literal notranslate"><span class="pre">null</span></code> 的方法。使用选项通常被认为是比抛出异常更好的编程实践，因为它强制调用者在 <code class="docutils literal notranslate"><span class="pre">None</span></code> 情况下做出合理的处理。</p>
 <p><strong>选项的语法和语义。</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">option</span></code> 是每个类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的一个类型。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">option</span></code> 是对每个类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 都存在的类型。</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">None</span></code> 是 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">option</span></code> 类型的值。</p></li>
-<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code>，则 <code class="docutils literal notranslate"><span class="pre">Some</span> <span class="pre">e</span></code> 是 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">option</span></code> 类型的表达式。如果 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">==&gt;</span> <span class="pre">v</span></code> 那么
-<code class="docutils literal notranslate"><span class="pre">Some</span> <span class="pre">e</span> <span class="pre">==&gt;</span> <span class="pre">Some</span> <span class="pre">v</span></code></p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">:</span> <span class="pre">t</span></code>，则 <code class="docutils literal notranslate"><span class="pre">Some</span> <span class="pre">e</span></code> 是 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">option</span></code> 类型的表达式。如果 <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">==&gt;</span> <span class="pre">v</span></code>，则 <code class="docutils literal notranslate"><span class="pre">Some</span> <span class="pre">e</span> <span class="pre">==&gt;</span> <span class="pre">Some</span> <span class="pre">v</span></code>。</p></li>
 </ul>
 </section>
 

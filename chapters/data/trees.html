@@ -597,7 +597,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.11.1. 用元组表示</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.11.2. 记录表示</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.11.2. 用记录表示</a></li>
 </ul>
             </nav>
         </div>
@@ -612,13 +612,10 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">3.11. </span>示例：树<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/WV9DGpRTAE0" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>树是一种非常有用的数据结构。正如你所记得的，<em>二叉树</em>
-CS 2110 是一个包含一个值和两个子树的节点。一个二进制
-树也可以是一棵空树，我们也用它来表示不存在
-子节点。</p>
+<p>树是一种非常有用的数据结构。你可能还记得，CS 2110 中的<em>二叉树</em>（binary tree）是一个包含一个值和两棵子树的节点。二叉树也可以是一棵空树，我们用空树来表示不存在子节点的情况。</p>
 <section id="id2">
 <h2><span class="section-number">3.11.1. </span>用元组表示<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>这是二叉树数据类型的定义：</p>
+<p>下面是二叉树数据类型的定义：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span>
@@ -633,17 +630,14 @@ CS 2110 是一个包含一个值和两个子树的节点。一个二进制
 </div>
 </div>
 </div>
-<p>节点携带类型为 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 的数据项，并具有左子树和右子树。  一片叶子
-是空的。  将此定义与列表的定义进行比较，并注意如何
-类似的它们的结构是：</p>
+<p>节点携带一个类型为 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 的数据项，并拥有左子树和右子树。叶子（Leaf）是空的。将此定义与列表的定义进行比较，注意它们的结构有多么相似：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span>                        <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mylist</span> <span class="o">=</span>
   <span class="o">|</span> <span class="nc">Leaf</span>                                <span class="o">|</span> <span class="nc">Nil</span>
   <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span>      <span class="o">|</span> <span class="nc">Cons</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mylist</span>
 </pre></div>
 </div>
-<p>唯一本质的区别是 <code class="docutils literal notranslate"><span class="pre">Cons</span></code> 携带一个子列表，而 <code class="docutils literal notranslate"><span class="pre">Node</span></code>
-带有两个子树。</p>
-<p>这是构造一棵小树的代码：</p>
+<p>唯一的本质区别是 <code class="docutils literal notranslate"><span class="pre">Cons</span></code> 携带一棵子树，而 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 携带两棵子树。</p>
+<p>下面是构造一棵小树的代码：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(* the code below constructs this tree:</span>
@@ -675,9 +669,7 @@ CS 2110 是一个包含一个值和两个子树的节点。一个二进制
 </div>
 </div>
 </div>
-<p>树的<em>大小</em>是其中的节点数（即 <code class="docutils literal notranslate"><span class="pre">Node</span></code>s，而不是
-<code class="docutils literal notranslate"><span class="pre">Leaf</span></code>s)。例如，上面的树<code class="docutils literal notranslate"><span class="pre">t</span></code>的大小是7。这是一个函数
-<code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">tree</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 返回树中的节点数：</p>
+<p>树的<em>大小</em>（size）是其中节点的数量（即 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 的数量，不包括 <code class="docutils literal notranslate"><span class="pre">Leaf</span></code>）。例如，上面的树 <code class="docutils literal notranslate"><span class="pre">t</span></code> 的大小是 7。下面这个函数 <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">tree</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 返回一棵树中的节点数：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">let</span> <span class="n">rec</span> <span class="n">size</span> <span class="o">=</span> <span class="n">function</span>
   <span class="o">|</span> <span class="n">Leaf</span> <span class="o">-&gt;</span> <span class="mi">0</span>
   <span class="o">|</span> <span class="n">Node</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">size</span> <span class="n">l</span> <span class="o">+</span> <span class="n">size</span> <span class="n">r</span>
@@ -685,10 +677,8 @@ CS 2110 是一个包含一个值和两个子树的节点。一个二进制
 </div>
 </section>
 <section id="id3">
-<h2><span class="section-number">3.11.2. </span>记录表示<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
-<p>接下来，让我们修改树类型以使用记录类型来表示树节点。
-在 OCaml 中，我们必须定义两种相互递归的类型，一种代表一棵树
-节点，一个代表一棵（可能是空的）树：</p>
+<h2><span class="section-number">3.11.2. </span>用记录表示<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>接下来，我们将树类型修改为用记录类型来表示树节点。在 OCaml 中，我们必须定义两种相互递归的类型：一种表示树节点，另一种表示（可能为空的）树：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span>
@@ -735,8 +725,7 @@ and &#39;a node = { value : &#39;a; left : &#39;a tree; right : &#39;a tree; }
 </div>
 </div>
 </div>
-<p>我们可以使用模式匹配来编写常用的递归算法
-穿越树木。例如，这是对树的递归搜索：</p>
+<p>我们可以使用模式匹配来编写遍历树的常见递归算法。例如，下面是对树的递归搜索：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [mem x t] is whether [x] is a value at some node in tree [t]. *)</span>
@@ -752,12 +741,8 @@ and &#39;a node = { value : &#39;a; left : &#39;a tree; right : &#39;a tree; }
 </div>
 </div>
 </div>
-<p>函数名 <code class="docutils literal notranslate"><span class="pre">mem</span></code> 是“member”的缩写；标准库经常使用
-该名称的函数是通过集合数据结构实现搜索
-确定某个元素是否是该集合的成员。</p>
-<p>这是一个计算树的<em>预序</em>遍历的函数，其中
-通过构造一个列表，每个节点在其任何子节点之前被访问
-这些值按照访问顺序出现：</p>
+<p>函数名 <code class="docutils literal notranslate"><span class="pre">mem</span></code> 是”member”（成员）的缩写；标准库经常以此命名那些在集合数据结构中搜索、判断某个元素是否是集合成员的函数。</p>
+<p>下面是一个计算树的<em>前序</em>（preorder）遍历的函数：每个节点在其子节点之前被访问，并按访问顺序将值收集到列表中：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">preorder</span> <span class="o">=</span> <span class="k">function</span>
@@ -784,10 +769,7 @@ and &#39;a node = { value : &#39;a; left : &#39;a tree; right : &#39;a tree; }
 </div>
 </div>
 </div>
-<p>虽然从上面的代码来看该算法非常清晰，但它需要
-由于 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 运算符，不平衡树上的二次时间。  那
-问题可以通过引入额外的参数 <code class="docutils literal notranslate"><span class="pre">acc</span></code> 来累积来解决
-每个节点的值，但代价是使代码不太清晰：</p>
+<p>虽然从上面的代码来看算法非常清晰，但由于 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 运算符的存在，在不平衡树上它需要二次方时间。这个问题可以通过引入一个额外的参数 <code class="docutils literal notranslate"><span class="pre">acc</span></code> 来累积每个节点的值来解决，代价是代码可读性有所下降：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">preorder_lin</span> <span class="n">t</span> <span class="o">=</span>
@@ -804,8 +786,7 @@ and &#39;a node = { value : &#39;a; left : &#39;a tree; right : &#39;a tree; }
 </div>
 </div>
 </div>
-<p>上面的版本对树中的每个 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 只使用一次 <code class="docutils literal notranslate"><span class="pre">::</span></code> 操作，
-使其成为线性时间。</p>
+<p>上面的版本对树中每个 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 只使用一次 <code class="docutils literal notranslate"><span class="pre">::</span></code> 操作，因此是线性时间的。</p>
 </section>
 </section>
 
@@ -874,7 +855,7 @@ and &#39;a node = { value : &#39;a; left : &#39;a tree; right : &#39;a tree; }
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3.11.1. 用元组表示</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.11.2. 记录表示</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3.11.2. 用记录表示</a></li>
 </ul>
   </nav></div>
 

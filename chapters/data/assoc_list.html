@@ -600,10 +600,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">3.8. </span>关联列表<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p><em>映射</em>是一种将<em>键</em>映射到<em>值</em>的数据结构。映射也被称为
-<em>词典</em>。映射的一种简单实现是<em>关联列表</em>，它
-是一个对的列表。例如，这里是一个关联列表，它映射了一些
-形状名称与其边数相关：</p>
+<p><em>映射</em>（map）是一种将<em>键</em>（key）映射到<em>值</em>（value）的数据结构。映射也被称为<em>字典</em>（dictionary）。映射的一种简单实现是<em>关联列表</em>（association list），它就是一个”对”的列表。例如，下面是一个关联列表，将一些形状名称映射到它们的边数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">d</span> <span class="o">=</span> <span class="o">[(</span><span class="s2">&quot;rectangle&quot;</span><span class="o">,</span> <span class="mi">4</span><span class="o">);</span> <span class="o">(</span><span class="s2">&quot;nonagon&quot;</span><span class="o">,</span> <span class="mi">9</span><span class="o">);</span> <span class="o">(</span><span class="s2">&quot;icosagon&quot;</span><span class="o">,</span> <span class="mi">20</span><span class="o">)]</span>
@@ -617,10 +614,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>请注意，关联列表与其说是 OCaml 中的内置数据类型，不如说是
-其他两种类型的组合：列表和对。</p>
-<p>下面是两个在关联中实现插入和查找的函数
-列表：</p>
+<p>注意，关联列表与其说是 OCaml 中的内置数据类型，不如说是另外两种类型（列表和对）的组合。</p>
+<p>下面是两个在关联列表中实现插入和查找的函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [insert k v lst] is an association list that binds key [k] to value [v]</span>
@@ -644,20 +639,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">insert</span></code> 函数只是在前面添加一个从键到值的新映射
-列表中的。它不会费心去检查密钥是否已经在列表中。
-<code class="docutils literal notranslate"><span class="pre">lookup</span></code> 函数从左到右查看列表。所以如果有的话
-列表中某个给定键恰好有多个映射，只有最近的一个
-插入的一个将被返回。</p>
-<p>因此，关联列表中的插入是常数时间，而查找是
-线性时间。尽管肯定有更有效的实现
-字典—我们将在本课程后面学习一些—关联
-对于小型字典来说，列表是一个非常简单且有用的实现，
-不是性能关键。OCaml 标准库具有以下函数
-<a class="reference external" href="https://ocaml.org/api/List.html"><code class="docutils literal notranslate"><span class="pre">List</span></code> module</a> 中的关联列表；寻找 <code class="docutils literal notranslate"><span class="pre">List.assoc</span></code> 和
-文档中其下方的函数。我们刚刚写的 <code class="docutils literal notranslate"><span class="pre">lookup</span></code> 是
-实际上已经定义为 <code class="docutils literal notranslate"><span class="pre">List.assoc_opt</span></code>。没有预定义的 <code class="docutils literal notranslate"><span class="pre">insert</span></code>
-函数在库中，因为仅仅使用一对就很简单了。</p>
+<p><code class="docutils literal notranslate"><span class="pre">insert</span></code> 函数只是将一个新的键值映射添加到列表的最前面，它不会费心去检查键是否已经在列表中。<code class="docutils literal notranslate"><span class="pre">lookup</span></code> 函数从左到右扫描列表。因此，如果列表中恰好存在同一个键的多个映射，只有最近插入的那个会被返回。</p>
+<p>关联列表的插入是常数时间操作，而查找是线性时间。虽然字典肯定有更高效的实现——我们将在本课程后面学习一些——但对于小型且非性能关键的字典来说，关联列表是一个非常简单的有用实现。OCaml 标准库的 <a class="reference external" href="https://ocaml.org/api/List.html"><code class="docutils literal notranslate"><span class="pre">List</span></code> 模块</a> 中提供了用于关联列表的函数；可以查找 <code class="docutils literal notranslate"><span class="pre">List.assoc</span></code> 及其下方的函数。我们刚刚写的 <code class="docutils literal notranslate"><span class="pre">lookup</span></code> 实际上已经以 <code class="docutils literal notranslate"><span class="pre">List.assoc_opt</span></code> 的名字定义在了库中。库中没有预定义的 <code class="docutils literal notranslate"><span class="pre">insert</span></code> 函数，因为用一对（pair）来实现同样简单。</p>
 </section>
 
     <script type="text/x-thebe-config">
