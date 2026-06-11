@@ -618,22 +618,8 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">5.6. </span>函数式数据结构<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/CLeXXZDkkCI" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>“函数式数据结构”是一种不利用可变性的数据结构。
-可以用函数式语言构建函数式数据结构
-以及命令式语言。例如，你可以构建
-通过创建 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 相当于 OCaml 的 <code class="docutils literal notranslate"><span class="pre">list</span></code> 类型的 Java
-其字段通过使用而不可变的类
-<code class="docutils literal notranslate"><span class="pre">final</span></code> 关键字。</p>
-<p>函数式数据结构具有<em>持久</em>的属性：更新
-数据结构及其操作之一不会更改现有版本
-的数据结构，而是产生一个新版本。两者都存在并且两者
-仍然可以访问。良好的语言实现将确保任何部分
-未被操作更改的数据结构将被<em>共享</em>
-旧版本和新版本之间。任何发生变化的部分都会
-<em>复制</em>以便旧版本可以保留。与持久数据相反
-结构是一种<em>短暂的</em>数据结构：更改具有破坏性，因此
-任何时候都只有一个版本。持久数据和短暂数据
-结构可以用函数式语言和命令式语言构建。</p>
+<p>“函数式数据结构”是一种不利用可变性的数据结构。函数式数据结构可以用函数式语言构建，也可以用命令式语言构建。例如，在 Java 中你可以通过创建字段被 <code class="docutils literal notranslate"><span class="pre">final</span></code> 关键字设为不可变的 <code class="docutils literal notranslate"><span class="pre">Node</span></code> 类，来构建等价于 OCaml <code class="docutils literal notranslate"><span class="pre">list</span></code> 类型的数据结构。</p>
+<p>函数式数据结构具有<em>持久性</em>（persistent）：对数据结构执行某种操作来”更新”它，并不会改变现有版本的数据结构，而是产生一个新版本。新旧两个版本并存，且仍然可以访问。好的语言实现会确保数据结构中未被操作改变的部分在旧版本和新版本之间被<em>共享</em>。任何发生变化的部分则会被<em>复制</em>，以便旧版本得以保留。与持久数据结构相对的是<em>短暂</em>（ephemeral）数据结构：更改具有破坏性，因此任何时候都只有一个版本。持久数据结构和短暂数据结构都可以用函数式语言和命令式语言构建。</p>
 <section id="id2">
 <h2><span class="section-number">5.6.1. </span>列表<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <p>OCaml 中内置的单链接 <code class="docutils literal notranslate"><span class="pre">list</span></code> 数据结构是有效的。我们知道
@@ -890,7 +876,7 @@ OCaml 将返回 <code class="docutils literal notranslate"><span class="pre">uni
 他们确信不会发生异常，他们可以省略代码
 处理它。该程序不太健壮，但编写起来更方便。</p></li>
 </ul>
-<p>因此，我们需要在“更早写更多代码（使用 option）”和
+<p>因此，我们需要在”更早写更多代码（使用 option）”和
 “稍后做更多调试（使用异常）”之间取舍。OCaml 标准库最近
 开始在数据结构中提供两个版本的接口，以便
 客户端可以选择他们想要的使用方式。例如，我们可以
@@ -1069,7 +1055,7 @@ OCaml 将返回 <code class="docutils literal notranslate"><span class="pre">uni
 计算</em>，1981 年 1 月），由 David Gries 教授提供建议。克里斯·冈崎
 （<em>纯函数式数据结构</em>，剑桥大学出版社，1988 年）调用
 这些<em>批量队列</em>。有时你会看到引用了相同的实现
-相当于“用两个堆栈实现队列”。那是因为堆栈和列表
+相当于”用两个堆栈实现队列”。那是因为堆栈和列表
 非常相似（正如我们已经看到的），你可以将 <code class="docutils literal notranslate"><span class="pre">pop</span></code> 重写为
 <code class="docutils literal notranslate"><span class="pre">List.tl</span></code> 等等。</p>
 <p>核心思想有A部分和B部分。A部分是：我们使用两个列表来

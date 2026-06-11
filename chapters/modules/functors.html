@@ -623,24 +623,12 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">5.9. </span>函子<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/CLi5RmgQ9Mg" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>我们在上一节中遇到的问题是我们想要添加
-代码到两个不同的模块，但是该代码需要在
-所添加模块的详细信息。就是这样的
-由称为 <em>functors</em> 的 OCaml 语言特性启用的参数化。</p>
+<p>我们在上一节中遇到的问题是需要将代码添加到两个不同的模块中，而这段代码因为与所添加模块的细节有关，所以无法直接写成通用函数。OCaml 中称为<em>函子</em>（functors）的语言特性提供了这样的参数化能力。</p>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p><strong>为什么命名为“函子”？</strong> 在 <a class="reference external" href="https://en.wikipedia.org/wiki/Category_theory">category theory</a> 中，一个
-<em>类别</em>包含<em>态射</em>，这是我们所描述的函数的泛化
-了解它们，<em>函子</em>是类别之间的映射。同样，OCaml 模块
-包含函数，并且 OCaml 函子从模块映射到模块。</p>
+<p><strong>为什么命名为”函子”？</strong> 在<a class="reference external" href="https://en.wikipedia.org/wiki/Category_theory">范畴论</a>中，一个<em>范畴</em>包含<em>态射</em>（morphism，即我们所熟知的”函数”的泛化），而<em>函子</em>是范畴之间的映射。类似地，OCaml 模块包含函数，而 OCaml 函子则从模块映射到模块。</p>
 </div>
-<p>不幸的是，这个名字令人生畏，但<strong>函子只是一个“函数”
-从模块到模块。</strong>“函数”一词在引号中
-句子只是因为它是一种不可互换的函数
-其余的函数我们已经见过了。 OCaml 的类型系统是
-<em>分层</em>：模块值与其他值不同，因此函数来自
-模块到模块的编写或使用方式不能与来自模块的函数相同
-价值观对价值观。但从概念上讲，函子实际上只是函数。</p>
+<p>不幸的是，这个名字听起来令人生畏，但<strong>函子本质上只是一个从模块到模块的”函数”</strong>。上面句子中”函数”打引号，只是因为它和我们见过的其他函数不可互换。OCaml 的类型系统是<em>分层</em>的：模块值与其他类型的值属于不同层次，因此从模块到模块的函数，其编写和使用方式不能与从普通值到普通值的函数相同。但从概念上讲，函子实际上就是函数。</p>
 <p>这是函子的一个小例子：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -671,7 +659,7 @@ document.write(`
 它采用的参数名为 <code class="docutils literal notranslate"><span class="pre">M</span></code> 且类型为 <code class="docutils literal notranslate"><span class="pre">X</span></code>。该结构本身有
 其中有一个名为 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的值。 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的值取决于
 参数<code class="docutils literal notranslate"><span class="pre">M</span></code>。</p>
-<p>由于函子本质上是函数，因此我们“应用”它们。这是一个例子
+<p>由于函子本质上是函数，因此我们”应用”它们。这是一个例子
 应用<code class="docutils literal notranslate"><span class="pre">IncX</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -842,7 +830,7 @@ document.write(`
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">F</span> <span class="o">(</span><span class="nc">M1</span> <span class="o">:</span> <span class="nc">S1</span><span class="o">)</span> <span class="o">...</span> <span class="o">(</span><span class="nc">Mn</span> <span class="o">:</span> <span class="nc">Sn</span><span class="o">)</span> <span class="o">=</span> <span class="o">...</span>
 </pre></div>
 </div>
-<p>当然，这只是一个“高阶函子”的语法糖，它需要
+<p>当然，这只是一个”高阶函子”的语法糖，它需要
 一个结构体作为输入并返回一个匿名函子：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">F</span> <span class="o">=</span> <span class="k">functor</span> <span class="o">(</span><span class="nc">M1</span> <span class="o">:</span> <span class="nc">S1</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">...</span> <span class="o">-&gt;</span> <span class="k">functor</span> <span class="o">(</span><span class="nc">Mn</span> <span class="o">:</span> <span class="nc">Sn</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">...</span>
 </pre></div>

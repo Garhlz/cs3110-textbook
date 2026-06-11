@@ -596,9 +596,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.3.1. 加载编译模块</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.3.1. 加载编译好的模块</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dune">5.3.2. Dune</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.3.3. 初始化顶层</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.3.3. 顶层初始化</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5.3.4. 引入库</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-use">5.3.5. <code class="docutils literal notranslate"><span class="pre">load</span></code> 与 <code class="docutils literal notranslate"><span class="pre">use</span></code></a></li>
 </ul>
@@ -621,15 +621,11 @@ document.write(`
 下面的文字。</p>
 </div>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/4yo-04VVzIw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>有几个涉及模块和顶层的语用学：
-掌握如何有效地结合使用两者很重要。</p>
+<p>关于模块和顶层的使用，有一些实用技巧值得掌握，以便更有效地将两者结合使用。</p>
 <section id="id2">
-<h2><span class="section-number">5.3.1. </span>加载编译模块<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>编译 OCaml 文件会生成一个与该文件同名的模块，但是
-第一个字母大写。这些编译好的模块可以加载到
-顶层使用 <code class="docutils literal notranslate"><span class="pre">#load</span></code>。</p>
-<p>例如，假设你创建一个名为 <code class="docutils literal notranslate"><span class="pre">mods.ml</span></code> 的文件，并输入以下内容
-里面的代码：</p>
+<h2><span class="section-number">5.3.1. </span>加载编译好的模块<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>编译 OCaml 文件会生成一个与该文件同名的模块，但首字母大写。这些编译好的模块可以通过 <code class="docutils literal notranslate"><span class="pre">#load</span></code> 加载到顶层中使用。</p>
+<p>例如，假设你创建一个名为 <code class="docutils literal notranslate"><span class="pre">mods.ml</span></code> 的文件，并在其中输入以下代码：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="s2">&quot;bigred&quot;</span>
 <span class="k">let</span> <span class="n">inc</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
@@ -637,14 +633,9 @@ document.write(`
 <span class="k">end</span>
 </pre></div>
 </div>
-<p>请注意，周围没有 <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">Mods</span> <span class="pre">=</span> <span class="pre">struct</span> <span class="pre">...</span> <span class="pre">end</span></code> 。代码位于
-可以说是文件的最顶层。</p>
-<p>然后假设你输入 <code class="docutils literal notranslate"><span class="pre">ocamlc</span> <span class="pre">mods.ml</span></code> 来编译它。新创建的其中之一
-文件是<code class="docutils literal notranslate"><span class="pre">mods.cmo</span></code>：这是一个<u>c</u>编译的<u>m</u>odule <u>o</u>bject文件，
-又名字节码。</p>
-<p>你可以使用以下命令使该字节码可在顶层使用
-指令。回想一下，指令前面需要 <code class="docutils literal notranslate"><span class="pre">#</span></code> 字符。
-它不是提示的一部分。</p>
+<p>注意，代码周围并没有 <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">Mods</span> <span class="pre">=</span> <span class="pre">struct</span> <span class="pre">...</span> <span class="pre">end</span></code>。这些代码可以说位于文件的最顶层。</p>
+<p>然后假设你执行 <code class="docutils literal notranslate"><span class="pre">ocamlc</span> <span class="pre">mods.ml</span></code> 来编译它。新创建的文件之一是 <code class="docutils literal notranslate"><span class="pre">mods.cmo</span></code>：这是一个编译后的模块对象文件（<u>c</u>ompiled <u>m</u>odule <u>o</u>bject），也称为字节码文件。</p>
+<p>你可以使用以下指令使该字节码在顶层中可用。回想一下，指令前面需要加 <code class="docutils literal notranslate"><span class="pre">#</span></code> 字符，它不是提示符的一部分。</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="o">#</span><span class="n">load</span> <span class="s2">&quot;mods.cmo&quot;</span><span class="o">;;</span>
 </pre></div>
 </div>
@@ -764,16 +755,9 @@ document.write(`
 在源代码的特定子目录中加载库。</p>
 </section>
 <section id="id3">
-<h2><span class="section-number">5.3.3. </span>初始化顶层<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
-<p>如果你正在对某个特定模块进行大量测试，那么这可能会很烦人
-每次启动 utop 时都必须输入指令。你确实想要初始化
-顶层在启动时包含一些代码，这样你就不必保留
-输入该代码。</p>
-<p>解决方案是在工作目录中创建一个文件并调用该文件
-<code class="docutils literal notranslate"><span class="pre">.ocamlinit</span></code>。请注意，该文件名前面的 <code class="docutils literal notranslate"><span class="pre">.</span></code> 是必需的，并且
-使其成为 <a class="reference external" href="https://en.wikipedia.org/wiki/Hidden_file_and_hidden_directory">hidden file</a> ，不会出现在目录列表中，除非
-明确请求（例如，使用 <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-a</span></code>）。 <code class="docutils literal notranslate"><span class="pre">.ocamlinit</span></code> 中的所有内容都将是
-加载时由 utop 处理。</p>
+<h2><span class="section-number">5.3.3. </span>顶层初始化<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>如果你正在对某个特定模块进行大量测试，每次启动 utop 时都要输入指令会很烦人。你希望顶层在启动时就包含一些代码，这样就不必反复输入这些代码。</p>
+<p>解决方案是在工作目录中创建一个名为 <code class="docutils literal notranslate"><span class="pre">.ocamlinit</span></code> 的文件。注意，文件名前面的 <code class="docutils literal notranslate"><span class="pre">.</span></code> 是必需的，它使该文件成为一个<a class="reference external" href="https://en.wikipedia.org/wiki/Hidden_file_and_hidden_directory">隐藏文件</a>，除非明确请求（如 <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-a</span></code>），否则不会出现在目录列表中。<code class="docutils literal notranslate"><span class="pre">.ocamlinit</span></code> 中的所有内容在 utop 启动时都会被处理。</p>
 <p>例如，假设你在同一目录中创建一个名为 <code class="docutils literal notranslate"><span class="pre">.ocamlinit</span></code> 的文件
 作为 <code class="docutils literal notranslate"><span class="pre">mods.ml</span></code>，并在该文件中放入以下代码：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">Mods</span><span class="o">;;</span>
@@ -993,9 +977,9 @@ Error: Unbound value b
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.3.1. 加载编译模块</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.3.1. 加载编译好的模块</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dune">5.3.2. Dune</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.3.3. 初始化顶层</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.3.3. 顶层初始化</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5.3.4. 引入库</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-use">5.3.5. <code class="docutils literal notranslate"><span class="pre">load</span></code> 与 <code class="docutils literal notranslate"><span class="pre">use</span></code></a></li>
 </ul>

@@ -547,11 +547,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">5.5. </span>编译单元<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/hjZ8FvMUw2k" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p><em>编译单元</em>是同一目录下的一对 OCaml 源文件
-目录。它们共享相同的基本名称，称之为 <code class="docutils literal notranslate"><span class="pre">x</span></code>，但是它们的
-扩展名不同：一个文件是 <code class="docutils literal notranslate"><span class="pre">x.ml</span></code>，另一个是 <code class="docutils literal notranslate"><span class="pre">x.mli</span></code>。该文件
-<code class="docutils literal notranslate"><span class="pre">x.ml</span></code> 称为<em>实现</em>，而 <code class="docutils literal notranslate"><span class="pre">x.mli</span></code> 称为
-<em>接口</em>。</p>
+<p><em>编译单元</em>（compilation unit）是同一目录下的一对 OCaml 源文件。它们共享相同的基本名称（称其为 <code class="docutils literal notranslate"><span class="pre">x</span></code>），但扩展名不同：一个文件是 <code class="docutils literal notranslate"><span class="pre">x.ml</span></code>，另一个是 <code class="docutils literal notranslate"><span class="pre">x.mli</span></code>。<code class="docutils literal notranslate"><span class="pre">x.ml</span></code> 文件称为<em>实现</em>（implementation），而 <code class="docutils literal notranslate"><span class="pre">x.mli</span></code> 文件称为<em>接口</em>（interface）。</p>
 <p>例如，假设 <code class="docutils literal notranslate"><span class="pre">foo.mli</span></code> 恰好包含以下内容：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">x</span> <span class="o">:</span> <span class="kt">int</span>
 <span class="k">val</span> <span class="n">f</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span>
@@ -638,7 +634,7 @@ HTML 文档。因此，接口文件中的注释应该面向这个受众来写。
 <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
 </pre></div>
 </div>
-<p>我们使用名称“mystack”，因为标准库已经有一个
+<p>我们使用名称”mystack”，因为标准库已经有一个
 <code class="docutils literal notranslate"><span class="pre">Stack</span></code> 模块。重新使用该名称可能会导致错误消息
 有点难以理解。</p>
 <p>同样将这段代码放入<code class="docutils literal notranslate"><span class="pre">mystack.ml</span></code>中，注意没有<code class="docutils literal notranslate"><span class="pre">struct..end</span></code>
@@ -811,7 +807,7 @@ Java 或 C++ 程序员有时会意外陷入<strong>误用</strong>情况。
 </pre></div>
 </div>
 <p>不幸的是，这确实意味着我们在接口文件和实现文件中都重复了 <code class="docutils literal notranslate"><span class="pre">Stack.S</span></code>。
-没有办法把已经在 <code class="docutils literal notranslate"><span class="pre">.mli</span></code> 文件中声明的模块类型自动“导入”到对应的
+没有办法把已经在 <code class="docutils literal notranslate"><span class="pre">.mli</span></code> 文件中声明的模块类型自动”导入”到对应的
 <code class="docutils literal notranslate"><span class="pre">.ml</span></code> 文件中。</p>
 </section>
 </section>

@@ -596,7 +596,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.4.1. 不透明度</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.4.1. 不透明性</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.4.2. 抽象类型</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5.4.3. 美观打印</a></li>
 </ul>
@@ -612,16 +612,10 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">5.4. </span>封装<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>模块系统的主要关注点之一是提供<em>封装</em>：
-将有关实现的信息隐藏在接口后面。 OCaml的模块
-系统通过我们已经见过的功能使这成为可能：<em>不透明度</em>
-模块类型注释创建。不透明度的一种特殊用途是声明
-<em>抽象类型</em>。我们将在本节中研究这两个想法。</p>
+<p>模块系统的主要关注点之一是提供<em>封装</em>（encapsulation）：把实现的信息隐藏在接口后面。OCaml 的模块系统通过我们已经见过的特性使封装成为可能：模块类型标注所带来的<em>不透明性</em>（opacity）。不透明性的一种特殊用途是声明<em>抽象类型</em>。我们将在本节中研究这两个概念。</p>
 <section id="id2">
-<h2><span class="section-number">5.4.1. </span>不透明度<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>实现模块时，你有时可能会使用辅助函数
-不想暴露给模块的客户端。  例如，也许你是
-实现提供尾递归阶乘函数的数学模块：</p>
+<h2><span class="section-number">5.4.1. </span>不透明性<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>实现模块时，有时你可能会使用一些不想暴露给模块客户端的辅助函数。例如，假设你在实现一个提供尾递归阶乘函数的数学模块：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Math</span> <span class="o">=</span> <span class="k">struct</span>
@@ -641,10 +635,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>你想让 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 可供 <code class="docutils literal notranslate"><span class="pre">Math</span></code> 的客户使用，但你还希望
-保持 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 隐藏。但在上面的代码中，你可以看到 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 是
-在为 <code class="docutils literal notranslate"><span class="pre">Math</span></code> 推断的签名中可见。隐藏它的一种方法就是简单地
-巢<code class="docutils literal notranslate"><span class="pre">fact_aux</span></code>：</p>
+<p>你希望 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 对 <code class="docutils literal notranslate"><span class="pre">Math</span></code> 的客户端可见，但希望 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 保持隐藏。然而在上面的代码中，你可以看到 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 出现在编译器为 <code class="docutils literal notranslate"><span class="pre">Math</span></code> 推断的签名中。隐藏它的一种方法是将 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 嵌套进去：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Math</span> <span class="o">=</span> <span class="k">struct</span>
@@ -665,14 +656,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>查看签名，注意 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 是如何消失的。但是，那个筑巢
-使得 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 有点难以阅读。这也意味着 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 不是
-可供任何其他函数<em>内部</em> <code class="docutils literal notranslate"><span class="pre">Math</span></code> 使用。在这种情况下就是
-可能很好—<code class="docutils literal notranslate"><span class="pre">Math</span></code>中可能没有任何其他函数
-需要 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code>。但如果有的话，我们就无法嵌套<code class="docutils literal notranslate"><span class="pre">fact_aux</span></code>。</p>
-<p>因此，还有另一种方法可以对 <code class="docutils literal notranslate"><span class="pre">Math</span></code> 的客户隐藏 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> ，同时仍然保留它
-对于 <code class="docutils literal notranslate"><span class="pre">Math</span></code> 的实现者可用，是使用仅公开的模块类型
-客户应该看到的那些名称：</p>
+<p>查看签名，注意 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 是如何消失的。但这种嵌套让 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 略显难读，也意味着 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 不能被 <code class="docutils literal notranslate"><span class="pre">Math</span></code> 内部的任何其他函数使用。在当前情况下这可能没问题——<code class="docutils literal notranslate"><span class="pre">Math</span></code> 中可能没有其他需要 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 的函数。但如果有的话，我们就无法嵌套 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code>。</p>
+<p>因此，还有一种方法既能对 <code class="docutils literal notranslate"><span class="pre">Math</span></code> 的客户端隐藏 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code>，又能让 <code class="docutils literal notranslate"><span class="pre">Math</span></code> 的实现者继续使用它：使用一个模块类型，只公开客户端需要看到的那些名称：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">MATH</span> <span class="o">=</span> <span class="k">sig</span>
@@ -717,7 +702,7 @@ document.write(`
 </div>
 </div>
 <p>从这个意义上说，模块类型注释是<em>不透明的</em>：它们可以防止可见性
-模块项目。我们说模块类型“密封”了模块，使得任何
+模块项目。我们说模块类型”密封”了模块，使得任何
 模块类型中未命名的组件将无法访问。</p>
 <div class="admonition important">
 <p class="admonition-title">重要</p>
@@ -785,7 +770,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>你甚至不必为“检查”模块命名，因为你可能
+<p>你甚至不必为”检查”模块命名，因为你可能
 从未打算访问它；你可以将其保留为匿名：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1007,7 +992,7 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <span class="n">s</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>那么在 OCaml 中，我们如何才能隐藏堆栈的“表示类型”呢？什么
+<p>那么在 OCaml 中，我们如何才能隐藏堆栈的”表示类型”呢？什么
 到目前为止，我们了解了不透明和密封还不够。问题是
 类型 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">list</span> <span class="pre">*</span> <span class="pre">int</span></code> 确实出现在签名中
 <code class="docutils literal notranslate"><span class="pre">ListStackCachedSize</span></code>，例如，在 <code class="docutils literal notranslate"><span class="pre">push</span></code> 中：</p>
@@ -1189,7 +1174,7 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 </div>
 </div>
 </div>
-<p>这真的是一个“列表”堆栈吗？它满足模块类型 <code class="docutils literal notranslate"><span class="pre">LIST_STACK</span></code>。但是
+<p>这真的是一个”列表”堆栈吗？它满足模块类型 <code class="docutils literal notranslate"><span class="pre">LIST_STACK</span></code>。但是
 经过反思，该模块类型实际上与列表没有任何关系
 一旦我们将类型 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">stack</span></code> 抽象化。确实没有必要调用它
 <code class="docutils literal notranslate"><span class="pre">LIST_STACK</span></code>。我们最好只使用 <code class="docutils literal notranslate"><span class="pre">STACK</span></code>，因为它可以实现
@@ -1353,8 +1338,8 @@ name，因为没有名为 <code class="docutils literal notranslate"><span class
 <p>当存在单一表示类型时，这种习惯用法相当常见
 数据结构的接口。你会看到它在整个标准中使用
 库。</p>
-<p>在非正式对话中，我们通常会在发音时不带“点”
-t”部分。例如，我们可能会说“alpha ListStack”，只是忽略
+<p>在非正式对话中，我们通常会在发音时不带”点”
+t”部分。例如，我们可能会说”alpha ListStack”，只是忽略
 <code class="docutils literal notranslate"><span class="pre">t</span></code>—尽管从技术上讲它必须存在才能成为合法的 OCaml 代码。</p>
 <p>最后，抽象类型实际上只是不透明的一种特殊情况。你其实
 如果你愿意，可以在签名中公开类型的定义：</p>
@@ -1512,7 +1497,7 @@ t”部分。例如，我们可能会说“alpha ListStack”，只是忽略
 格式化程序的典型用途是作为函数的参数，例如
 <code class="docutils literal notranslate"><span class="pre">Format.fprintf</span></code>，与 <code class="docutils literal notranslate"><span class="pre">Printf</span></code> 一样使用格式说明符。</p>
 <p>例如，假设你想要更改字符串的打印方式
-toplevel 并将“kupo”添加到每个字符串的末尾。这是可以做的代码
+toplevel 并将”kupo”添加到每个字符串的末尾。这是可以做的代码
 它：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1527,7 +1512,7 @@ toplevel 并将“kupo”添加到每个字符串的末尾。这是可以做的�
 </div>
 </div>
 </div>
-<p>现在你可以看到顶层在打印时向每个字符串添加了“kupo”，
+<p>现在你可以看到顶层在打印时向每个字符串添加了”kupo”，
 即使它实际上不是原始字符串的一部分：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1747,7 +1732,7 @@ toplevel 并将“kupo”添加到每个字符串的末尾。这是可以做的�
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.4.1. 不透明度</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.4.1. 不透明性</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.4.2. 抽象类型</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5.4.3. 美观打印</a></li>
 </ul>

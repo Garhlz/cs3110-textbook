@@ -663,11 +663,7 @@ document.write(`
 </div>
 </details>
 </div>
-<p>假设我们想添加一个函数 <code class="docutils literal notranslate"><span class="pre">of_list</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">list</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">t</span></code> ，它可以
-从列表中构造一个集合。如果我们能够访问两者的源代码
-<code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Set</span></code>，如果我们被允许修改它，这将不会是
-很难。但是如果它们是我们没有的第三方库怎么办
-源代码？</p>
+<p>假设我们想添加一个函数 <code class="docutils literal notranslate"><span class="pre">of_list</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">list</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">t</span></code>，它可以从列表中构造一个集合。如果我们能访问 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Set</span></code> 的源代码，并且被允许修改它们，这并不困难。但如果它们是第三方库，而我们没有源代码呢？</p>
 <p>在 Java 中，我们可以使用继承来解决这个问题：</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
 <span class="kd">class</span> <span class="nc">ListSet</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
@@ -959,10 +955,10 @@ document.write(`
 不抽象。当我们将其包含在 <code class="docutils literal notranslate"><span class="pre">ListSetExtended</span></code> 中时，我们就可以利用
 事实上它是 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">list</span></code> 的同义词。</p>
 <p>我们刚才所做的实际上与 Java 处理
-可见性修饰符 <code class="docutils literal notranslate"><span class="pre">public</span></code>、<code class="docutils literal notranslate"><span class="pre">private</span></code> 等。类的“私有版本”
+可见性修饰符 <code class="docutils literal notranslate"><span class="pre">public</span></code>、<code class="docutils literal notranslate"><span class="pre">private</span></code> 等。类的”私有版本”
 就像上面的 <code class="docutils literal notranslate"><span class="pre">Impl</span></code> 版本：任何可以看到该版本的人都可以看到
 所有公开的项目（Java 中的字段、OCaml 中的类型），没有任何
-封装。类的“公共版本”就像上面的密封版本：
+封装。类的”公共版本”就像上面的密封版本：
 任何可以看到该版本的人都被迫将这些项目视为抽象的，因此
 封装的。</p>
 <p>通过这种技术，如果我们想提供其中一个的新实现
@@ -994,7 +990,7 @@ document.write(`
 </div>
 </div>
 <p>但这是个坏主意。首先，它实际上是一个二次实现
-<code class="docutils literal notranslate"><span class="pre">elements</span></code> 而不是线性。其次，它不会“取代”原来的
+<code class="docutils literal notranslate"><span class="pre">elements</span></code> 而不是线性。其次，它不会”取代”原来的
 <code class="docutils literal notranslate"><span class="pre">elements</span></code> 的实现。记住模块的语义：所有定义
 按从上到下的顺序进行评估。所以 <code class="docutils literal notranslate"><span class="pre">elements</span></code> 的新定义
 以上要等到评估结束后才能使用。如果有更早的
