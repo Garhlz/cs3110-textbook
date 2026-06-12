@@ -613,9 +613,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">6.2. </span>可变字段<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/9RNeX5t4_xA" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>记录的字段可以声明为可变的，这意味着它们的内容可以
-更新而不构建新记录。例如，这是一个记录类型
-对于色域 <code class="docutils literal notranslate"><span class="pre">c</span></code> 可变的二维彩色点：</p>
+<p>记录的字段可以声明为可变的（mutable），这意味着它们的内容可以被更新而无需构建新记录。例如，下面是一个二维彩色点的记录类型，其颜色字段 <code class="docutils literal notranslate"><span class="pre">c</span></code> 是可变的：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">point</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span> <span class="o">:</span> <span class="kt">int</span><span class="o">;</span> <span class="n">y</span> <span class="o">:</span> <span class="kt">int</span><span class="o">;</span> <span class="k">mutable</span> <span class="n">c</span> <span class="o">:</span> <span class="kt">string</span><span class="o">}</span>
@@ -752,7 +750,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>我们之所以说“等效”是因为这些函数实际上都实现了
+<p>我们之所以说”等效”是因为这些函数实际上都实现了
 不是在 OCaml 本身中，而是在 OCaml 运行时中，后者主要用 C 实现。
 尽管如此，这些函数的行为确实与上面给出的 OCaml 源代码相同。</p>
 </section>

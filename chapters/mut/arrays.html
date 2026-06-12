@@ -601,10 +601,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">6.3. </span>数组和循环<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/-k4rM1viJH4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>数组是固定长度的可变序列，具有恒定时间的访问和更新。
-因此它们在很多方面与引用、列表和元组相似。和裁判一样，他们
-是可变的。与列表一样，它们是（有限）序列。就像元组一样，它们的长度
-是预先固定的，不能调整大小。</p>
+<p>数组是固定长度的可变序列，支持常数时间的访问和更新。因此它们在很多方面与引用、列表和元组相似。和 ref 一样，它们是可变的。与列表一样，它们是（有限）序列。与元组一样，它们的长度是预先固定的，不能调整大小。</p>
 <p>数组的语法与列表类似：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -618,10 +615,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>该代码创建一个数组，其长度固定为 2，其内容为
-初始化为 <code class="docutils literal notranslate"><span class="pre">0.</span></code> 和 <code class="docutils literal notranslate"><span class="pre">1.</span></code>。关键字 <code class="docutils literal notranslate"><span class="pre">array</span></code> 是一个类型构造函数，很多
-像<code class="docutils literal notranslate"><span class="pre">list</span></code>。</p>
-<p>稍后可以使用 <code class="docutils literal notranslate"><span class="pre">&lt;-</span></code> 运算符更改这些内容：</p>
+<p>这段代码创建了一个长度固定为 2 的数组，其内容初始化为 <code class="docutils literal notranslate"><span class="pre">0.</span></code> 和 <code class="docutils literal notranslate"><span class="pre">1.</span></code>。<code class="docutils literal notranslate"><span class="pre">array</span></code> 是一个类型构造器，和 <code class="docutils literal notranslate"><span class="pre">list</span></code> 很像。</p>
+<p>稍后可以使用 <code class="docutils literal notranslate"><span class="pre">&lt;-</span></code> 运算符修改这些内容：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">v</span><span class="o">.(</span><span class="mi">0</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="mi">5</span><span class="o">.</span>
@@ -646,9 +641,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>正如你在该示例中看到的，对数组进行索引使用以下语法
-<code class="docutils literal notranslate"><span class="pre">array.(index)</span></code>，其中括号是强制性的。</p>
-<p><a class="reference external" href="https://ocaml.org/api/Array.html"><code class="docutils literal notranslate"><span class="pre">Array</span></code> module</a> 在数组上有许多有用的函数。</p>
+<p>正如你在该示例中看到的，对数组进行索引的语法是 <code class="docutils literal notranslate"><span class="pre">array.(index)</span></code>，其中括号是强制性的。</p>
+<p><a class="reference external" href="https://ocaml.org/api/Array.html"><code class="docutils literal notranslate"><span class="pre">Array</span></code> 模块</a> 提供了许多有用的数组操作函数。</p>
 <p><strong>语法。</strong></p>
 <ul class="simple">
 <li><p>数组创建：<code class="docutils literal notranslate"><span class="pre">[|e0;</span> <span class="pre">e1;</span> <span class="pre">...;</span> <span class="pre">en|]</span></code></p></li>
@@ -657,21 +651,15 @@ document.write(`
 </ul>
 <p><strong>动态语义。</strong></p>
 <ul class="simple">
-<li><p>要评估 <code class="docutils literal notranslate"><span class="pre">[|e0;</span> <span class="pre">e1;</span> <span class="pre">...;</span> <span class="pre">en|]</span></code>，请将每个 <code class="docutils literal notranslate"><span class="pre">ei</span></code> 评估为值 <code class="docutils literal notranslate"><span class="pre">vi</span></code>，创建
-长度为 <code class="docutils literal notranslate"><span class="pre">n+1</span></code> 的新数组，并将数组中的每个值存储在其索引处。</p></li>
-<li><p>要计算 <code class="docutils literal notranslate"><span class="pre">e1.(e2)</span></code>，请将 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 计算为数组值 <code class="docutils literal notranslate"><span class="pre">v1</span></code>，并将 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 计算为数组值
-整数 <code class="docutils literal notranslate"><span class="pre">v2</span></code>。如果 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 不在数组的范围内（即 <code class="docutils literal notranslate"><span class="pre">0</span></code> 到
-<code class="docutils literal notranslate"><span class="pre">n-1</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">n</span></code> 是数组的长度），引发 <code class="docutils literal notranslate"><span class="pre">Invalid_argument</span></code>。
-否则，索引到 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 以获取索引 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 处的值 <code class="docutils literal notranslate"><span class="pre">v</span></code>，并返回 <code class="docutils literal notranslate"><span class="pre">v</span></code>。</p></li>
-<li><p>要计算 <code class="docutils literal notranslate"><span class="pre">e1.(e2)</span> <span class="pre">&lt;-</span> <span class="pre">e3</span></code>，请将每个表达式 <code class="docutils literal notranslate"><span class="pre">ei</span></code> 计算为值 <code class="docutils literal notranslate"><span class="pre">vi</span></code>。
-检查 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 是否在范围内，如索引语义所示。变异
-索引 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 处 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 的元素为 <code class="docutils literal notranslate"><span class="pre">v3</span></code>。</p></li>
+<li><p>对 <code class="docutils literal notranslate"><span class="pre">[|e0;</span> <span class="pre">e1;</span> <span class="pre">...;</span> <span class="pre">en|]</span></code> 求值时，将每个 <code class="docutils literal notranslate"><span class="pre">ei</span></code> 求值为值 <code class="docutils literal notranslate"><span class="pre">vi</span></code>，创建一个长度为 <code class="docutils literal notranslate"><span class="pre">n+1</span></code> 的新数组，并将每个值存储在对应的索引位置。</p></li>
+<li><p>对 <code class="docutils literal notranslate"><span class="pre">e1.(e2)</span></code> 求值时，将 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 求值为数组值 <code class="docutils literal notranslate"><span class="pre">v1</span></code>，将 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 求值为整数 <code class="docutils literal notranslate"><span class="pre">v2</span></code>。如果 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 不在数组的范围内（即 <code class="docutils literal notranslate"><span class="pre">0</span></code> 到 <code class="docutils literal notranslate"><span class="pre">n-1</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">n</span></code> 是数组长度），则引发 <code class="docutils literal notranslate"><span class="pre">Invalid_argument</span></code>。否则，在 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 中索引到 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 位置获得值 <code class="docutils literal notranslate"><span class="pre">v</span></code>，并返回 <code class="docutils literal notranslate"><span class="pre">v</span></code>。</p></li>
+<li><p>对 <code class="docutils literal notranslate"><span class="pre">e1.(e2)</span> <span class="pre">&lt;-</span> <span class="pre">e3</span></code> 求值时，将每个表达式 <code class="docutils literal notranslate"><span class="pre">ei</span></code> 求值为值 <code class="docutils literal notranslate"><span class="pre">vi</span></code>。按索引语义检查 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 是否在范围内。将 <code class="docutils literal notranslate"><span class="pre">v1</span></code> 中索引 <code class="docutils literal notranslate"><span class="pre">v2</span></code> 处的元素修改为 <code class="docutils literal notranslate"><span class="pre">v3</span></code>。</p></li>
 </ul>
 <p><strong>静态语义。</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[|e0;</span> <span class="pre">e1;</span> <span class="pre">...;</span> <span class="pre">en|]</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">array</span></code> 如果 <code class="docutils literal notranslate"><span class="pre">ei</span> <span class="pre">:</span> <span class="pre">t</span></code> 对于所有 <code class="docutils literal notranslate"><span class="pre">ei</span></code>。</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">e1.(e2)</span> <span class="pre">:</span> <span class="pre">t</span></code> 如果 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">array</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">int</span></code>。</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">e1.(e2)</span> <span class="pre">&lt;-</span> <span class="pre">e3</span> <span class="pre">:</span> <span class="pre">unit</span></code> 如果 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">array</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e3</span> <span class="pre">:</span> <span class="pre">t</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[|e0;</span> <span class="pre">e1;</span> <span class="pre">...;</span> <span class="pre">en|]</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">array</span></code>，如果对所有 <code class="docutils literal notranslate"><span class="pre">ei</span></code> 都有 <code class="docutils literal notranslate"><span class="pre">ei</span> <span class="pre">:</span> <span class="pre">t</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">e1.(e2)</span> <span class="pre">:</span> <span class="pre">t</span></code>，如果 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">array</span></code> 且 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">int</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">e1.(e2)</span> <span class="pre">&lt;-</span> <span class="pre">e3</span> <span class="pre">:</span> <span class="pre">unit</span></code>，如果 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t</span> <span class="pre">array</span></code> 且 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">int</span></code> 且 <code class="docutils literal notranslate"><span class="pre">e3</span> <span class="pre">:</span> <span class="pre">t</span></code>。</p></li>
 </ul>
 <p><strong>循环。</strong></p>
 <p>OCaml 有 while 循环和 for 循环。它们的语法如下：</p>
@@ -680,18 +668,8 @@ document.write(`
 <span class="k">for</span> <span class="n">x</span><span class="o">=</span><span class="n">e1</span> <span class="k">downto</span> <span class="n">e2</span> <span class="k">do</span> <span class="n">e3</span> <span class="k">done</span>
 </pre></div>
 </div>
-<p>这三个表达式中的每一个都计算 <code class="docutils literal notranslate"><span class="pre">do</span></code> 和 <code class="docutils literal notranslate"><span class="pre">done</span></code> 之间的表达式
-对于循环的每次迭代；当 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 变为 false 时，<code class="docutils literal notranslate"><span class="pre">while</span></code> 循环终止；
-<code class="docutils literal notranslate"><span class="pre">for</span></code> 循环对从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 的每个整数执行一次； <code class="docutils literal notranslate"><span class="pre">for..to</span></code> 循环
-每次迭代从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 开始评估并递增 <code class="docutils literal notranslate"><span class="pre">x</span></code> ； <code class="docutils literal notranslate"><span class="pre">for..downto</span></code>
-循环从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 开始计算，每次迭代递减 <code class="docutils literal notranslate"><span class="pre">x</span></code> 。全部三个
-循环终止后表达式的计算结果为 <code class="docutils literal notranslate"><span class="pre">()</span></code> 。因为他们
-始终求值为 <code class="docutils literal notranslate"><span class="pre">()</span></code>，它们不如 fold、map 或递归那么通用
-函数。</p>
-<p>循环本身并不可变，但它们最常用于
-与数组等可变函数结合—通常是
-循环会产生副作用。我们还可以使用像 <code class="docutils literal notranslate"><span class="pre">Array.iter</span></code> 这样的函数，
-<code class="docutils literal notranslate"><span class="pre">Array.map</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Array.fold_left</span></code> 而不是循环。</p>
+<p>这三个表达式都会对循环的每次迭代求值 <code class="docutils literal notranslate"><span class="pre">do</span></code> 与 <code class="docutils literal notranslate"><span class="pre">done</span></code> 之间的表达式；当 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 变为 false 时，<code class="docutils literal notranslate"><span class="pre">while</span></code> 循环终止；<code class="docutils literal notranslate"><span class="pre">for</span></code> 循环对从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 的每个整数执行一次；<code class="docutils literal notranslate"><span class="pre">for..to</span></code> 循环从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 开始求值，每次迭代递增 <code class="docutils literal notranslate"><span class="pre">x</span></code>；<code class="docutils literal notranslate"><span class="pre">for..downto</span></code> 循环从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 开始求值，每次迭代递减 <code class="docutils literal notranslate"><span class="pre">x</span></code>。三个循环在终止后均求值为 <code class="docutils literal notranslate"><span class="pre">()</span></code>。由于它们始终求值为 <code class="docutils literal notranslate"><span class="pre">()</span></code>，因此不如 fold、map 或递归函数通用。</p>
+<p>循环本身并不带来可变性，但它们最常与数组这类可变特性结合使用——通常循环会引发副作用。我们也可以使用 <code class="docutils literal notranslate"><span class="pre">Array.iter</span></code>、<code class="docutils literal notranslate"><span class="pre">Array.map</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Array.fold_left</span></code> 等函数来代替循环。</p>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/GkIgGhqHI7M" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 </section>
 
