@@ -109,8 +109,8 @@ $$
 \left(\frac{x_1}{|x|}, \ldots, \frac{x_n}{|x|}\right) .
 $$
 
-编写一个函数 `normalize : vector -> unit` 来规范化向量“
-通过改变输入数组来放置”。这是一个示例用法：
+编写一个函数 `normalize : vector -> unit` 来规范化向量"
+通过改变输入数组来放置"。这是一个示例用法：
 
 ```ocaml
 # let a = [|1.; 1.|];;
