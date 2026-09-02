@@ -65,25 +65,20 @@ module Math : MATH = struct
 end
 ```
 
-现在由于 `MATH` 没有提到 `fact_aux`，模块类型注释
-`Math : MATH` 导致 `fact_aux` 被隐藏：
+由于 `MATH` 中没有提到 `fact_aux`，模块类型标注 `Math : MATH` 会将 `fact_aux` 隐藏起来：
 
 ```{code-cell} ocaml
 :tags: ["raises-exception"]
 Math.fact_aux
 ```
 
-从这个意义上说，模块类型注释是*不透明的*：它们可以防止可见性
-模块项目。我们说模块类型"密封"了模块，使得任何
-模块类型中未命名的组件将无法访问。
+从这个意义上说，模块类型标注具有*不透明性*：它可以限制模块成员的可见性。我们称模块类型“密封”了模块，使外部代码无法访问模块类型中未列出的成员。
 
 ```{important}
-请记住，模块类型注释因此不仅仅*用于检查
-查看模块是否定义了某些项目。注释还隐藏项目。
+请记住，模块类型标注不仅用于检查模块是否定义了某些成员，还会隐藏未列出的成员。
 ```
 
-如果你只想检查定义而不隐藏任何内容怎么办？
-然后在模块定义时不要提供注释：
+如果只想检查定义是否满足要求，却不想隐藏任何内容，就不要在原模块的定义处添加标注：
 
 ```{code-cell} ocaml
 module type MATH = sig
@@ -113,17 +108,13 @@ Math.fact_aux
 MathCheck.fact_aux
 ```
 
-你甚至不必为"检查"模块命名，因为你可能
-从未打算访问它；你可以将其保留为匿名：
+甚至无须给这个用于“检查”的模块命名，因为我们本来就不打算访问它；让它保持匿名即可：
 
 ```{code-cell} ocaml
 module _ : MATH = Math
 ```
 
-**与可见性修饰符的比较。** OCaml 中密封的使用因此是
-类似于使用可见性修饰符，例如 `private` 和 `public`
-Java。事实上，思考 Java 类定义的一种方法是它们
-同时定义多个签名。
+**与可见性修饰符比较。** OCaml 中的密封类似于 Java 中的 `private`、`public` 等可见性修饰符。事实上，可以把 Java 类定义理解成同时定义了多个签名。
 
 例如，考虑这个 Java 类：
 ```java
@@ -674,11 +665,8 @@ ListStack.empty
 ListStack.(empty |> push 1 |> push 2)
 ```
 
-有关详细信息，请参阅 [toplevel 手册][toplevel]（搜索
-`#install_printer`)，[Format module][format]，还有这个
-[OCaml GitHub issue][poly-printer]。后者似乎是唯一的地方
-记录了额外参数的使用，如上面的 `pp_val` 中，以打印值
-多态类型。
+详细信息请参阅[顶层手册][toplevel]（搜索 `#install_printer`）、
+[`Format` 模块][format]以及这个 [OCaml GitHub issue][poly-printer]。最后一个链接似乎是唯一明确记录这种用法的资料：像上面的 `pp_val` 那样加入额外参数，以打印多态类型的值。
 
 [toplevel]: https://ocaml.org/manual/toplevel.html
 [format]: https://ocaml.org/api/Format.html

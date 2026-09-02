@@ -13,7 +13,7 @@ kernelspec:
   name: ocaml-jupyter
 ---
 
-# Include
+# Include：纳入定义
 
 {{ video_embed | replace("%%VID%%", "SmG3ChuOLpQ")}}
 
@@ -58,14 +58,12 @@ class ListSetExtended<T> extends ListSet<T> {
 }
 ```
 
-这有助于我们重用代码，因为子类继承了所有的方法
-它的超类。
+这样便能重用代码，因为子类会继承超类的所有方法。
 
 OCaml 的 *include* 与此类似。它让一个模块能够包含另一个模块定义的所有项，
-也让一个模块类型能够包含另一个模块类型给出的所有规格说明。
+也让一个模块类型能够包含另一个模块类型给出的全部规范。
 
-下面是我们如何使用 `include` 来解决添加 `of_list` 的问题
-`ListSet`：
+下面用 `include` 为 `ListSet` 添加 `of_list`：
 
 ```{code-cell} ocaml
 module ListSetExtended = struct
@@ -74,20 +72,15 @@ module ListSetExtended = struct
 end
 ```
 
-这段代码表示 `ListSetExtended` 是一个包含所有
-`ListSet` 模块的定义，以及 `of_list` 的定义。我们
-不必知道实现 `ListSet` 的源代码即可实现此目的。
+这段代码表示，`ListSetExtended` 包含 `ListSet` 中的所有定义，外加 `of_list` 的定义。即使看不到 `ListSet` 的实现源码，我们也能做到这一点。
 
 ```{note}
-你可能想知道为什么我们不能简单地实现 `of_list` 作为身份
-函数。请参阅下面有关封装的部分以获得答案。
+你可能会问，为什么不能直接把 `of_list` 实现成恒等函数。答案见下文关于封装的讨论。
 ```
 
-## Include 的语义
+## `include` 的语义
 
-包含可以在结构和签名内部使用。当我们包含在里面时
-一个签名，我们必须包含另一个签名。当我们包括在内
-一个结构，我们必须包含另一个结构。
+`include` 可以出现在结构或签名内部。在签名中只能 `include` 另一个签名，在结构中则只能 `include` 另一个结构。
 
 **包含一个结构**实际上只是编写一个语法糖
 模块中定义的每个名称的本地定义。写入 `include ListSet`
@@ -111,7 +104,7 @@ end
 `ListSet` 发生变化时， `include` 将反映该变化，而
 复制粘贴工作不会。
 
-**包括签名**大致相同。例如，我们可以写：
+**纳入签名**的原理大致相同。例如，可以写成：
 
 ```{code-cell} ocaml
 module type SetExtended = sig
@@ -236,7 +229,7 @@ end
 
 ```{warning}
 这不同于你在 Java 中可能期待的行为；Java 使用一种语言特性
-调用 [dynamic dispatch][dd] 来确定要执行哪个方法实现
+通过[动态分派][dd]确定要执行哪一个方法实现
 调用。动态调度可以说是面向对象的*定义*特征
 语言。 OCaml 函数不是方法，并且它们不使用动态
 派遣。
@@ -332,7 +325,7 @@ let of_list_uniq lst = of_list' UniqListSet.add UniqListSet.empty lst
 `of_list` 函数位于任一模块之外，因此打开其中一个模块的客户端
 模块不会自动获得命名这些函数的能力。
 
-我们尝试使用include来解决这个问题。首先，我们编写一个模块
+下面尝试用 `include` 解决这个问题。首先编写一个模块
 包含参数化实现：
 
 ```{code-cell} ocaml
