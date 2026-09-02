@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exercises.html">5.11. 练习</a></li>
@@ -616,9 +616,7 @@ document.write(`
 <h1><span class="section-number">5.3. </span>模块和顶层<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p>下面的视频使用旧版构建系统 ocamlbuild，而不是新的
-构建系统，Dune。一些细节随着Dune的变化而改变，如
-下面的文字。</p>
+<p>下面的视频使用的是旧构建系统 ocamlbuild，而不是较新的 Dune，因此部分细节已有变化，请以下文为准。</p>
 </div>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/4yo-04VVzIw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 <p>关于模块和顶层的使用，有一些实用技巧值得掌握，以便更有效地将两者结合使用。</p>
@@ -626,7 +624,7 @@ document.write(`
 <h2><span class="section-number">5.3.1. </span>加载编译好的模块<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <p>编译 OCaml 文件会生成一个与该文件同名的模块，但首字母大写。这些编译好的模块可以通过 <code class="docutils literal notranslate"><span class="pre">#load</span></code> 加载到顶层中使用。</p>
 <p>例如，假设你创建一个名为 <code class="docutils literal notranslate"><span class="pre">mods.ml</span></code> 的文件，并在其中输入以下代码：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="s2">&quot;bigred&quot;</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="s2">"bigred"</span>
 <span class="k">let</span> <span class="n">inc</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">42</span>
@@ -636,16 +634,14 @@ document.write(`
 <p>注意，代码周围并没有 <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">Mods</span> <span class="pre">=</span> <span class="pre">struct</span> <span class="pre">...</span> <span class="pre">end</span></code>。这些代码可以说位于文件的最顶层。</p>
 <p>然后假设你执行 <code class="docutils literal notranslate"><span class="pre">ocamlc</span> <span class="pre">mods.ml</span></code> 来编译它。新创建的文件之一是 <code class="docutils literal notranslate"><span class="pre">mods.cmo</span></code>：这是一个编译后的模块对象文件（<u>c</u>ompiled <u>m</u>odule <u>o</u>bject），也称为字节码文件。</p>
 <p>你可以使用以下指令使该字节码在顶层中可用。回想一下，指令前面需要加 <code class="docutils literal notranslate"><span class="pre">#</span></code> 字符，它不是提示符的一部分。</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="o">#</span><span class="n">load</span> <span class="s2">&quot;mods.cmo&quot;</span><span class="o">;;</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="o">#</span><span class="n">load</span> <span class="s2">"mods.cmo"</span><span class="o">;;</span>
 </pre></div>
 </div>
-<p>该指令加载在 <code class="docutils literal notranslate"><span class="pre">mods.cmo</span></code> 中找到的字节码，从而创建一个模块
-名为 <code class="docutils literal notranslate"><span class="pre">Mods</span></code> 可供使用。就好像你已经输入了这个一样
-代码：</p>
+<p>该指令加载 <code class="docutils literal notranslate"><span class="pre">mods.cmo</span></code> 中的字节码，并创建可供使用的模块 <code class="docutils literal notranslate"><span class="pre">Mods</span></code>，效果如同输入了下面的代码：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Mods</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="s2">&quot;bigred&quot;</span>
+  <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="s2">"bigred"</span>
   <span class="k">let</span> <span class="n">inc</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
   <span class="k">module</span> <span class="nc">M</span> <span class="o">=</span> <span class="k">struct</span>
     <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">42</span>
@@ -670,7 +666,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = &quot;bigred&quot;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = "bigred"
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 42
@@ -686,7 +682,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[3]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[3]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="n">inc</span>
     <span class="o">^^^</span>
 <span class="ne">Error</span>: Unbound value inc
@@ -708,7 +704,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>当然，如果打开模块，可以直接命名为<code class="docutils literal notranslate"><span class="pre">inc</span></code>：</p>
+<p>当然，打开模块后就可以直接使用 <code class="docutils literal notranslate"><span class="pre">inc</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">Mods</span><span class="o">;;</span>
@@ -725,20 +721,16 @@ document.write(`
 </section>
 <section id="dune">
 <h2><span class="section-number">5.3.2. </span>Dune<a class="headerlink" href="#dune" title="Permalink to this heading">#</a></h2>
-<p>Dune 提供了一个命令，可以更轻松地启动带有库的 utop
-已加载。假设我们将此Dune文件添加到与 <code class="docutils literal notranslate"><span class="pre">mods.ml</span></code> 相同的目录中：</p>
+<p>Dune 提供了一个命令，可以启动 utop 并自动加载库。假设在 <code class="docutils literal notranslate"><span class="pre">mods.ml</span></code> 所在目录中加入以下 Dune 文件：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(library
  (name mods))
 </pre></div>
 </div>
-<p>这告诉Dune从 <code class="docutils literal notranslate"><span class="pre">mods.ml</span></code> （以及任何其他
-同一目录中的文件（如果存在）。  然后我们可以运行这个命令
-启动 utop 并加载该库：</p>
+<p>它会让 Dune 根据 <code class="docutils literal notranslate"><span class="pre">mods.ml</span></code>（以及同一目录中的其他源文件，如果有的话）构建一个库。然后运行以下命令，启动 utop 并加载该库：</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>dune<span class="w"> </span>utop
 </pre></div>
 </div>
-<p>现在我们可以立即访问 <code class="docutils literal notranslate"><span class="pre">Mods</span></code> 的组件，而无需发出
-<code class="docutils literal notranslate"><span class="pre">#load</span></code> 指令：</p>
+<p>现在无须执行 <code class="docutils literal notranslate"><span class="pre">#load</span></code> 指令，便能直接访问 <code class="docutils literal notranslate"><span class="pre">Mods</span></code> 中的成员：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Mods</span><span class="p">.</span><span class="n">inc</span>
@@ -751,8 +743,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>如果你愿意，<code class="docutils literal notranslate"><span class="pre">dune</span> <span class="pre">utop</span></code> 命令接受目录名称作为参数
-在源代码的特定子目录中加载库。</p>
+<p><code class="docutils literal notranslate"><span class="pre">dune</span> <span class="pre">utop</span></code> 还可以接收目录名作为参数，以加载源代码特定子目录中的库。</p>
 </section>
 <section id="id3">
 <h2><span class="section-number">5.3.3. </span>顶层初始化<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
@@ -793,7 +784,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[8]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">5</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[8]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">5</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="nb">open</span> <span class="n">OUnit2</span><span class="p">;;</span>
          <span class="o">^^^^^^</span>
 <span class="ne">Error</span>: Unbound module OUnit2
@@ -806,7 +797,7 @@ document.write(`
 符合以下指令：</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">require</span> <span class="s2">&quot;ounit2&quot;</span><span class="o">;;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">require</span> <span class="s2">"ounit2"</span><span class="o">;;</span>
 </pre></div>
 </div>
 </div>
@@ -887,21 +878,21 @@ Error: Reference to undefined global `Mods'
 直接，例如 <code class="docutils literal notranslate"><span class="pre">b</span></code>。</p>
 <p>例如，在下面的交互中，我们可以直接引用<code class="docutils literal notranslate"><span class="pre">b</span></code>，但是
 不能使用限定名称 <code class="docutils literal notranslate"><span class="pre">Mods.b</span></code>：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># #use &quot;mods.ml&quot;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># #use "mods.ml"
 
 # b;;
-val b : string = &quot;bigred&quot;
+val b : string = "bigred"
 
 # Mods.b;;
 Error: Unbound module Mods
 </pre></div>
 </div>
 <p>而在这种互动中，情况正好相反：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># #directory &quot;_build&quot;;;
-# #load &quot;mods.cmo&quot;;;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># #directory "_build";;
+# #load "mods.cmo";;
 
 # Mods.b;;
-- : string = &quot;bigred&quot;
+- : string = "bigred"
 
 # b;;
 Error: Unbound value b

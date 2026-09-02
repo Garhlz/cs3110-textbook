@@ -628,16 +628,16 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
 
   <span class="c">(** [bind p c] registers callback [c] with promise [p].</span>
 <span class="c">      When the promise is fulfilled, the callback will be run</span>
-<span class="c">      on the promises&#39;s contents.  If the promise is never</span>
+<span class="c">      on the promises's contents.  If the promise is never</span>
 <span class="c">      fulfilled, the callback will never run. *)</span>
-  <span class="k">val</span> <span class="n">bind</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span>
+  <span class="k">val</span> <span class="n">bind</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span>
 <span class="k">end</span>
 </pre></div>
 </div>
 <p>接下来，我们重新开发整个 <code class="docutils literal notranslate"><span class="pre">Promise</span></code> 结构。  我们开始
 像以前一样关闭：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Promise</span> <span class="o">:</span> <span class="nc">PROMISE</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span> <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Rejected</span> <span class="k">of</span> <span class="n">exn</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span> <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Rejected</span> <span class="k">of</span> <span class="n">exn</span>
   <span class="o">...</span>
 </pre></div>
 </div>
@@ -645,12 +645,12 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
 第一个字段是 Promise 的状态，对应于我们之前使用的 <code class="docutils literal notranslate"><span class="pre">ref</span></code>。
 第二个字段更有趣，下面会讨论。</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="c">(** RI: the input may not be [Pending]. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(** RI: if [state &lt;&gt; Pending] then [handlers = []]. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="k">mutable</span> <span class="n">state</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span><span class="o">;</span>
-    <span class="k">mutable</span> <span class="n">handlers</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">handler</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">mutable</span> <span class="n">state</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span><span class="o">;</span>
+    <span class="k">mutable</span> <span class="n">handlers</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">handler</span> <span class="kt">list</span>
   <span class="o">}</span>
 </pre></div>
 </div>
@@ -665,14 +665,14 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
 处理程序列表就必须为空。</p>
 <p>这个辅助函数会把一个处理程序加入 Promise 的处理程序列表，后面会用到：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="k">let</span> <span class="n">enqueue</span>
-      <span class="o">(</span><span class="n">handler</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="kt">unit</span><span class="o">)</span>
-      <span class="o">(</span><span class="n">promise</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span>
+      <span class="o">(</span><span class="n">handler</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="kt">unit</span><span class="o">)</span>
+      <span class="o">(</span><span class="n">promise</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span>
     <span class="o">=</span>
     <span class="n">promise</span><span class="o">.</span><span class="n">handlers</span> <span class="o">&lt;-</span> <span class="n">handler</span> <span class="o">::</span> <span class="n">promise</span><span class="o">.</span><span class="n">handlers</span>
 </pre></div>
 </div>
 <p>我们继续在内部把解析器和 Promise 视为同一种表示：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span>
 </pre></div>
 </div>
 <p>因为我们将表示类型从 <code class="docutils literal notranslate"><span class="pre">ref</span></code> 更改为记录，
@@ -683,7 +683,7 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
   <span class="k">let</span> <span class="n">write_once</span> <span class="n">p</span> <span class="n">s</span> <span class="o">=</span>
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span>
     <span class="k">then</span> <span class="n">p</span><span class="o">.</span><span class="n">state</span> <span class="o">&lt;-</span> <span class="n">s</span>
-    <span class="k">else</span> <span class="n">invalid_arg</span> <span class="s2">&quot;cannot write twice&quot;</span>
+    <span class="k">else</span> <span class="n">invalid_arg</span> <span class="s2">"cannot write twice"</span>
 
   <span class="k">let</span> <span class="n">make</span> <span class="bp">()</span> <span class="o">=</span>
     <span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="o">{</span><span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span><span class="o">;</span> <span class="n">handlers</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span> <span class="k">in</span>
@@ -707,7 +707,7 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
 最后，我们处理所有正在等待这个 Promise 的处理程序。
 每个处理程序都需要一个输入状态，我们会把 Promise 刚刚设置的新状态传给它们。</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="c">(** Requires: [st] may not be [Pending]. *)</span>
-  <span class="k">let</span> <span class="n">resolve</span> <span class="o">(</span><span class="n">r</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">(</span><span class="n">st</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span><span class="o">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">resolve</span> <span class="o">(</span><span class="n">r</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">(</span><span class="n">st</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span><span class="o">)</span> <span class="o">=</span>
     <span class="k">assert</span> <span class="o">(</span><span class="n">st</span> <span class="o">&lt;&gt;</span> <span class="nc">Pending</span><span class="o">);</span>
     <span class="k">let</span> <span class="n">handlers</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">handlers</span> <span class="k">in</span>
     <span class="n">r</span><span class="o">.</span><span class="n">handlers</span> <span class="o">&lt;-</span> <span class="bp">[]</span><span class="o">;</span>
@@ -729,8 +729,8 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
 我们无法在输入 Promise 上排队处理程序，因为表示不变式表明非挂起的 Promise（例如我们的输入 Promise）<em>必须</em>具有空的处理程序列表。
 运行回调会产生一个新的 Promise，我们立即返回：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="k">let</span> <span class="n">bind</span>
-      <span class="o">(</span><span class="n">input_promise</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span><span class="o">)</span>
-      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span>
+      <span class="o">(</span><span class="n">input_promise</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span><span class="o">)</span>
+      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span>
     <span class="o">=</span>
     <span class="k">match</span> <span class="n">input_promise</span><span class="o">.</span><span class="n">state</span> <span class="k">with</span>
     <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">callback</span> <span class="n">x</span>
@@ -744,8 +744,8 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="k">let</span> <span class="n">fail</span> <span class="n">exc</span> <span class="o">=</span> <span class="o">{</span><span class="n">state</span> <span class="o">=</span> <span class="nc">Rejected</span> <span class="n">exc</span><span class="o">;</span> <span class="n">handlers</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span>
 
   <span class="k">let</span> <span class="n">bind</span>
-      <span class="o">(</span><span class="n">input_promise</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span><span class="o">)</span>
-      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span>
+      <span class="o">(</span><span class="n">input_promise</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span><span class="o">)</span>
+      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span>
     <span class="o">=</span>
     <span class="k">match</span> <span class="n">input_promise</span><span class="o">.</span><span class="n">state</span> <span class="k">with</span>
     <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">try</span> <span class="n">callback</span> <span class="n">x</span> <span class="k">with</span> <span class="n">exc</span> <span class="o">-&gt;</span> <span class="n">fail</span> <span class="n">exc</span><span class="o">)</span>
@@ -778,9 +778,9 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">state</span> <span class="pre">-&gt;</span> <span class="pre">unit</span></code>。这就是为什么我们的辅助函数的输出实际上是
 匿名函数。该匿名函数将状态作为其输入：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="k">let</span> <span class="n">handler_of_callback</span>
-      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span>
-      <span class="o">(</span><span class="n">resolver</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">handler</span> <span class="o">=</span>
-      <span class="k">fun</span> <span class="o">(</span><span class="n">state</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span><span class="o">)</span> <span class="o">-&gt;</span>
+      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span>
+      <span class="o">(</span><span class="n">resolver</span> <span class="o">:</span> <span class="k">'</span><span class="n">b</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">handler</span> <span class="o">=</span>
+      <span class="k">fun</span> <span class="o">(</span><span class="n">state</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span><span class="o">)</span> <span class="o">-&gt;</span>
 </pre></div>
 </div>
 <p>我们继续以该输入状态为例。
@@ -788,11 +788,11 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
 如果状态是已拒绝，那么处理程序应该把这个拒绝传播给解析器，
 从而让 <code class="docutils literal notranslate"><span class="pre">bind</span></code> 返回的 Promise 也被拒绝。</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="k">let</span> <span class="n">handler_of_callback</span>
-      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span>
-      <span class="o">(</span><span class="n">resolver</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">handler</span> <span class="o">=</span>
-      <span class="k">fun</span> <span class="o">(</span><span class="n">state</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span><span class="o">)</span> <span class="o">-&gt;</span>
+      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span>
+      <span class="o">(</span><span class="n">resolver</span> <span class="o">:</span> <span class="k">'</span><span class="n">b</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">handler</span> <span class="o">=</span>
+      <span class="k">fun</span> <span class="o">(</span><span class="n">state</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span><span class="o">)</span> <span class="o">-&gt;</span>
       <span class="k">match</span> <span class="n">state</span> <span class="k">with</span>
-      <span class="o">|</span> <span class="nc">Pending</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;handler RI violated&quot;</span>
+      <span class="o">|</span> <span class="nc">Pending</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"handler RI violated"</span>
       <span class="o">|</span> <span class="nc">Rejected</span> <span class="n">exc</span> <span class="o">-&gt;</span> <span class="n">reject</span> <span class="n">resolver</span> <span class="n">exc</span>
 </pre></div>
 </div>
@@ -814,9 +814,9 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
 </div>
 <p>其中 <code class="docutils literal notranslate"><span class="pre">copying_handler</span></code> 是一个新的辅助函数，它创建一个非常简单的处理程序
 进行传播：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="k">let</span> <span class="n">copying_handler</span> <span class="o">(</span><span class="n">resolver</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">handler</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="k">let</span> <span class="n">copying_handler</span> <span class="o">(</span><span class="n">resolver</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">handler</span>
     <span class="o">=</span> <span class="k">function</span>
-      <span class="o">|</span> <span class="nc">Pending</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;handler RI violated&quot;</span>
+      <span class="o">|</span> <span class="nc">Pending</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"handler RI violated"</span>
       <span class="o">|</span> <span class="nc">Rejected</span> <span class="n">exc</span> <span class="o">-&gt;</span> <span class="n">reject</span> <span class="n">resolver</span> <span class="n">exc</span>
       <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">resolve</span> <span class="n">resolver</span> <span class="n">x</span>
 </pre></div>

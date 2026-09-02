@@ -633,19 +633,19 @@ document.write(`
 向左箭头。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">c</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="o">}</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">c</span> <span class="o">=</span> <span class="s2">"red"</span><span class="o">}</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val p : point = {x = 0; y = 0; c = &quot;red&quot;}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val p : point = {x = 0; y = 0; c = "red"}
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">c</span> <span class="o">&lt;-</span> <span class="s2">&quot;white&quot;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">c</span> <span class="o">&lt;-</span> <span class="s2">"white"</span>
 </pre></div>
 </div>
 </div>
@@ -662,7 +662,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : point = {x = 0; y = 0; c = &quot;white&quot;}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : point = {x = 0; y = 0; c = "white"}
 </pre></div>
 </div>
 </div>
@@ -675,7 +675,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[5]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">8</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[5]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">8</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;-</span> <span class="mi">3</span><span class="p">;;</span>
     <span class="o">^^^^^^^^</span>
 <span class="ne">Error</span>: The record field x is not mutable
@@ -695,7 +695,7 @@ document.write(`
 <h2><span class="section-number">6.2.1. </span>Refs 是可变字段<a class="headerlink" href="#refs" title="Permalink to this heading">#</a></h2>
 <p>事实证明，refs 实际上是作为可变字段实现的。在
 <a class="reference external" href="https://ocaml.org/api/Stdlib.html"><code class="docutils literal notranslate"><span class="pre">Stdlib</span></code></a> 我们找到以下声明：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="k">mutable</span> <span class="n">contents</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">}</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="k">mutable</span> <span class="n">contents</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">}</span>
 </pre></div>
 </div>
 <p>这就是为什么当顶层输出一个 ref 时，它看起来像一条记录：它<em>是</em>一个
@@ -721,7 +721,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ref : &#39;a -&gt; &#39;a ref = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ref : 'a -&gt; 'a ref = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -733,7 +733,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( ! ) : &#39;a ref -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( ! ) : 'a ref -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -745,7 +745,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( := ) : &#39;a ref -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( := ) : 'a ref -&gt; 'a -&gt; unit = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -761,26 +761,26 @@ document.write(`
 做了参考文献。节点和列表的类型已简化：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** An [&#39;a node] is a node of a mutable singly-linked list. It contains a value</span>
-<span class="c">    of type [&#39;a] and optionally has a pointer to the next node. *)</span>
-<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span>
-  <span class="k">mutable</span> <span class="n">next</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span><span class="o">;</span>
-  <span class="n">value</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** An ['a node] is a node of a mutable singly-linked list. It contains a value</span>
+<span class="c">    of type ['a] and optionally has a pointer to the next node. *)</span>
+<span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">mutable</span> <span class="n">next</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span><span class="o">;</span>
+  <span class="n">value</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span>
 <span class="o">}</span>
 
-<span class="c">(** An [&#39;a mlist] is a mutable singly-linked list with elements of type [&#39;a].</span>
+<span class="c">(** An ['a mlist] is a mutable singly-linked list with elements of type ['a].</span>
 <span class="c">    RI: The list does not contain any cycles. *)</span>
-<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="o">{</span>
-  <span class="k">mutable</span> <span class="n">first</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span><span class="o">;</span>
+<span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">mutable</span> <span class="n">first</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span><span class="o">;</span>
 <span class="o">}</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a node = { mutable next : &#39;a node option; value : &#39;a; }
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a node = { mutable next : 'a node option; value : 'a; }
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a mlist = { mutable first : &#39;a node option; }
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a mlist = { mutable first : 'a node option; }
 </pre></div>
 </div>
 </div>
@@ -793,17 +793,17 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [insert_first lst n] mutates mlist [lst] by inserting value [v] as the</span>
 <span class="c">    first value in the list. *)</span>
-<span class="k">let</span> <span class="n">insert_first</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">=</span>
+<span class="k">let</span> <span class="n">insert_first</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">=</span>
   <span class="n">lst</span><span class="o">.</span><span class="n">first</span> <span class="o">&lt;-</span> <span class="nc">Some</span> <span class="o">{</span><span class="n">value</span> <span class="o">=</span> <span class="n">v</span><span class="o">;</span> <span class="n">next</span> <span class="o">=</span> <span class="n">lst</span><span class="o">.</span><span class="n">first</span><span class="o">}</span>
 
 <span class="c">(** [empty ()] is an empty singly-linked list. *)</span>
-<span class="k">let</span> <span class="n">empty</span> <span class="bp">()</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="o">{</span>
+<span class="k">let</span> <span class="n">empty</span> <span class="bp">()</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="o">{</span>
   <span class="n">first</span> <span class="o">=</span> <span class="nc">None</span>
 <span class="o">}</span>
 
 <span class="c">(** [to_list lst] is an OCaml list containing the same values as [lst]</span>
 <span class="c">    in the same order. Not tail recursive. *)</span>
-<span class="k">let</span> <span class="n">to_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span>
+<span class="k">let</span> <span class="n">to_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span>
   <span class="k">let</span> <span class="k">rec</span> <span class="n">helper</span> <span class="o">=</span> <span class="k">function</span>
     <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">[]</span>
     <span class="o">|</span> <span class="nc">Some</span> <span class="o">{</span><span class="n">next</span><span class="o">;</span> <span class="n">value</span><span class="o">}</span> <span class="o">-&gt;</span> <span class="n">value</span> <span class="o">::</span> <span class="n">helper</span> <span class="n">next</span>
@@ -813,13 +813,13 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert_first : &#39;a mlist -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert_first : 'a mlist -&gt; 'a -&gt; unit = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; &#39;a mlist = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; 'a mlist = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val to_list : &#39;a mlist -&gt; &#39;a list = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val to_list : 'a mlist -&gt; 'a list = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -833,29 +833,29 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">MutableStack</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="c">(** [&#39;a t] is the type of mutable stacks whose elements have type [&#39;a].</span>
+  <span class="c">(** ['a t] is the type of mutable stacks whose elements have type ['a].</span>
 <span class="c">      The stack is mutable not in the sense that its elements can</span>
 <span class="c">      be changed, but in the sense that it is not persistent:</span>
 <span class="c">      the operations [push] and [pop] destructively modify the stack. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 
   <span class="c">(** Raised if [peek] or [pop] encounter the empty stack. *)</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
 
   <span class="c">(** [empty ()] is the empty stack. *)</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 
   <span class="c">(** [push x s] modifies [s] to make [x] its top element.</span>
 <span class="c">      The rest of the elements are unchanged. *)</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(** [peek s] is the top element of [s].</span>
 <span class="c">      Raises: [Empty] if [s] is empty. *)</span>
-  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
 
   <span class="c">(** [pop s] removes the top element of [s].</span>
 <span class="c">      Raises: [Empty] if [s] is empty. *)</span>
-  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -863,12 +863,12 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type MutableStack =
   sig
-    type &#39;a t
+    type 'a t
     exception Empty
-    val empty : unit -&gt; &#39;a t
-    val push : &#39;a -&gt; &#39;a t -&gt; unit
-    val peek : &#39;a t -&gt; &#39;a
-    val pop : &#39;a t -&gt; unit
+    val empty : unit -&gt; 'a t
+    val push : 'a -&gt; 'a t -&gt; unit
+    val peek : 'a t -&gt; 'a
+    val pop : 'a t -&gt; unit
   end
 </pre></div>
 </div>
@@ -878,19 +878,19 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">MutableRecordStack</span> <span class="o">:</span> <span class="nc">MutableStack</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="c">(** An [&#39;a node] is a node of a mutable linked list.  It has</span>
-<span class="c">     a field [value] that contains the node&#39;s value, and</span>
+  <span class="c">(** An ['a node] is a node of a mutable linked list.  It has</span>
+<span class="c">     a field [value] that contains the node's value, and</span>
 <span class="c">     a mutable field [next] that is [None] if the node has</span>
 <span class="c">     no successor, or [Some n] if the successor is [n]. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span><span class="n">value</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span> <span class="k">mutable</span> <span class="n">next</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span><span class="o">}</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span><span class="n">value</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">;</span> <span class="k">mutable</span> <span class="n">next</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span><span class="o">}</span>
 
- <span class="c">(** AF: An [&#39;a t] is a stack represented by a mutable linked list.</span>
+ <span class="c">(** AF: An ['a t] is a stack represented by a mutable linked list.</span>
 <span class="c">     The mutable field [top] is the first node of the list,</span>
 <span class="c">     which is the top of the stack. The empty stack is represented</span>
 <span class="c">     by {top = None}.  The node {top = Some n} represents the</span>
 <span class="c">     stack whose top is [n], and whose remaining elements are</span>
 <span class="c">     the successors of [n]. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="o">{</span><span class="k">mutable</span> <span class="n">top</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span><span class="o">}</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="o">{</span><span class="k">mutable</span> <span class="n">top</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span><span class="o">}</span>
 
   <span class="k">exception</span> <span class="nc">Empty</span>
 

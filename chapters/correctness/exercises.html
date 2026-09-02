@@ -721,9 +721,9 @@ OCaml 函数从键到值。记录 AF。你不需要 RI。你的
 <p>重做前面的练习，但使用该函数的简化版本。
 简化版本需要更少的代码，但需要额外的递归
 打电话。</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">expsq&#39;</span> <span class="n">x</span> <span class="n">n</span> <span class="o">=</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">expsq'</span> <span class="n">x</span> <span class="n">n</span> <span class="o">=</span>
   <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">1</span>
-  <span class="k">else</span> <span class="o">(</span><span class="k">if</span> <span class="n">n</span> <span class="ow">mod</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">x</span><span class="o">)</span> <span class="o">*</span> <span class="n">expsq&#39;</span> <span class="o">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="o">)</span> <span class="o">(</span><span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="o">)</span>
+  <span class="k">else</span> <span class="o">(</span><span class="k">if</span> <span class="n">n</span> <span class="ow">mod</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">x</span><span class="o">)</span> <span class="o">*</span> <span class="n">expsq'</span> <span class="o">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="o">)</span> <span class="o">(</span><span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="o">)</span>
 </pre></div>
 </div>
 <!--------------------------------------------------------------------------->
@@ -780,8 +780,8 @@ OCaml 函数从键到值。记录 AF。你不需要 RI。你的
 函数参数具有结合性和交换性。但这并不能解释为什么
 <code class="docutils literal notranslate"><span class="pre">concat</span></code> 的这两个实现产生相同的结果，因为 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">^</span> <span class="pre">)</span></code> 是
 不可交换：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">concat_l</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_left</span> <span class="o">(</span> <span class="o">^</span> <span class="o">)</span> <span class="s2">&quot;&quot;</span> <span class="n">lst</span>
-<span class="k">let</span> <span class="n">concat_r</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="o">(</span> <span class="o">^</span> <span class="o">)</span> <span class="n">lst</span> <span class="s2">&quot;&quot;</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">concat_l</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_left</span> <span class="o">(</span> <span class="o">^</span> <span class="o">)</span> <span class="s2">""</span> <span class="n">lst</span>
+<span class="k">let</span> <span class="n">concat_r</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="o">(</span> <span class="o">^</span> <span class="o">)</span> <span class="n">lst</span> <span class="s2">""</span>
 </pre></div>
 </div>
 <p>制定并证明关于 <code class="docutils literal notranslate"><span class="pre">fold_left</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fold_right</span></code> 何时产生的新定理
@@ -811,12 +811,12 @@ OCaml 函数从键到值。记录 AF。你不需要 RI。你的
 一个元素出现的次数就是它的<em>重数</em>。不存在于的元素
 该包的多重性为 0。这是包的 OCaml 签名：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Bag</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">mult</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
-  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">mult</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 </pre></div>
 </div>

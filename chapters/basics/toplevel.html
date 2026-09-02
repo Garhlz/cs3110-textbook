@@ -750,7 +750,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[7]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[7]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="n">inc</span> <span class="mi">3</span>
     <span class="o">^^^</span>
 <span class="ne">Error</span>: Unbound value inc
@@ -760,7 +760,7 @@ document.write(`
 </div>
 </div>
 <p>之所以会报错，是因为顶层目前还不知道有一个叫做 <code class="docutils literal notranslate"><span class="pre">inc</span></code> 的函数。现在向顶层输入以下指令：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="o">#</span><span class="n">use</span> <span class="s2">&quot;mycode.ml&quot;</span><span class="o">;;</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="o">#</span><span class="n">use</span> <span class="s2">"mycode.ml"</span><span class="o">;;</span>
 </pre></div>
 </div>
 <p>注意，上面第一个 <code class="docutils literal notranslate"><span class="pre">#</span></code> 是顶层提示符本身。第二个 <code class="docutils literal notranslate"><span class="pre">#</span></code> 才是你需要输入的，用来告诉顶层“这是一个指令”。如果没有第二个 <code class="docutils literal notranslate"><span class="pre">#</span></code>，顶层会以为你想去应用一个名为 <code class="docutils literal notranslate"><span class="pre">use</span></code> 的函数。</p>

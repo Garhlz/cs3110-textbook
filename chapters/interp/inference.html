@@ -727,8 +727,8 @@ env |- b : bool -| {}
 <p><strong>如果。</strong></p>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/0EHUTbWnYWw" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 <p>以下是 <code class="docutils literal notranslate"><span class="pre">if</span></code> 表达式的规则：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- if e1 then e2 else e3 : &#39;t -| C1, C2, C3, t1 = bool, &#39;t = t2, &#39;t = t3
-  if fresh &#39;t
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- if e1 then e2 else e3 : 't -| C1, C2, C3, t1 = bool, 't = t2, 't = t3
+  if fresh 't
   and env |- e1 : t1 -| C1
   and env |- e2 : t2 -| C2
   and env |- e3 : t3 -| C3
@@ -748,13 +748,13 @@ env |- b : bool -| {}
 约束 <code class="docutils literal notranslate"><span class="pre">'t</span> <span class="pre">=</span> <span class="pre">t2</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'t</span> <span class="pre">=</span> <span class="pre">t3</span></code> 表示两个分支都必须具有该约束
 类型。</p>
 <p>因此，我们需要将类型变量添加到类型语法中：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>t ::= &#39;x | int | bool | t1 -&gt; t2
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>t ::= 'x | int | bool | t1 -&gt; t2
 </pre></div>
 </div>
 <p>一些示例类型变量包括 <code class="docutils literal notranslate"><span class="pre">'a</span></code>、<code class="docutils literal notranslate"><span class="pre">'foobar</span></code> 和 <code class="docutils literal notranslate"><span class="pre">'t</span></code>。最后，<code class="docutils literal notranslate"><span class="pre">t</span></code>
 是一个标识符，而不是元变量。</p>
 <p>这是一个例子：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- if true then 1 else 0 : &#39;t -| bool = bool, &#39;t = int
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- if true then 1 else 0 : 't -| bool = bool, 't = int
   {} |- true : bool -| {}
   {} |- 1 : int -| {}
   {} |- 0 : int -| {}
@@ -767,9 +767,9 @@ env |- b : bool -| {}
 <p><strong>匿名函数。</strong></p>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/y2Y2aRnxncE" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 <p>由于 <code class="docutils literal notranslate"><span class="pre">x</span></code> 上没有类型注释，因此必须推断其类型：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- fun x -&gt; e : &#39;t1 -&gt; t2 -| C
-  if fresh &#39;t1
-  and env, x : &#39;t1 |- e : t2 -| C
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- fun x -&gt; e : 't1 -&gt; t2 -| C
+  if fresh 't1
+  and env, x : 't1 |- e : t2 -| C
 </pre></div>
 </div>
 <p>我们引入一个新的类型变量 <code class="docutils literal notranslate"><span class="pre">'t1</span></code> 来代表 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的类型，并推断
@@ -778,11 +778,11 @@ env |- b : bool -| {}
 约束将成为 <code class="docutils literal notranslate"><span class="pre">C</span></code> 的一部分。</p>
 <p>这是一个我们可以立即看到 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">:</span> <span class="pre">bool</span></code> 的函数，但是让我们开始工作
 通过推论：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- fun x -&gt; if x then 1 else 0 : &#39;t1 -&gt; &#39;t -| &#39;t1 = bool, &#39;t = int
-  {}, x : &#39;t1 |- if x then 1 else 0 : &#39;t -| &#39;t1 = bool, &#39;t = int
-    {}, x : &#39;t1 |- x : &#39;t1 -| {}
-    {}, x : &#39;t1 |- 1 : int -| {}
-    {}, x : &#39;t1 |- 0 : int -| {}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- fun x -&gt; if x then 1 else 0 : 't1 -&gt; 't -| 't1 = bool, 't = int
+  {}, x : 't1 |- if x then 1 else 0 : 't -| 't1 = bool, 't = int
+    {}, x : 't1 |- x : 't1 -| {}
+    {}, x : 't1 |- 1 : int -| {}
+    {}, x : 't1 |- 0 : int -| {}
 </pre></div>
 </div>
 <p>函数的推断类型为 <code class="docutils literal notranslate"><span class="pre">'t1</span> <span class="pre">-&gt;</span> <span class="pre">'t</span></code>，约束为 <code class="docutils literal notranslate"><span class="pre">'t1</span> <span class="pre">=</span> <span class="pre">bool</span></code>
@@ -791,8 +791,8 @@ env |- b : bool -| {}
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/2HRcvmQBWIM" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 <p>必须推断整个应用程序的类型，因为我们还不知道
 有关任一子表达式类型的任何信息：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- e1 e2 : &#39;t -| C1, C2, t1 = t2 -&gt; &#39;t
-  if fresh &#39;t
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- e1 e2 : 't -| C1, C2, t1 = t2 -&gt; 't
+  if fresh 't
   and env |- e1 : t1 -| C1
   and env |- e2 : t2 -| C2
 </pre></div>
@@ -805,7 +805,7 @@ env |- b : bool -| {}
 <code class="docutils literal notranslate"><span class="pre">'t</span></code>。</p>
 <p>令 <code class="docutils literal notranslate"><span class="pre">I</span></code> 为绑定布尔运算符的_初始环境_。让我们
 推断 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code> 的部分应用的类型：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- ( + ) 1 : &#39;t -| int -&gt; int -&gt; int = int -&gt; &#39;t
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- ( + ) 1 : 't -| int -&gt; int -&gt; int = int -&gt; 't
   I |- ( + ) : int -&gt; int -&gt; int -| {}
   I |- 1 : int -| {}
 </pre></div>
@@ -813,14 +813,14 @@ env |- b : bool -| {}
 <p>从由此产生的约束中，我们看到</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>int -&gt; int -&gt; int
 =
-int -&gt; &#39;t
+int -&gt; 't
 </pre></div>
 </div>
 <p>从每个函数类型的左侧剥离 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span></code> ，
 我们只剩下</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>int -&gt; int
 =
-&#39;t
+'t
 </pre></div>
 </div>
 <p>因此，<code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span> <span class="pre">1</span></code> 的类型是 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>。</p>
@@ -861,11 +861,11 @@ int -&gt; &#39;t
 例如，<code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">{t2/'x}</span></code> 表示类型 <code class="docutils literal notranslate"><span class="pre">t1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">t2</span></code>
 替换 <code class="docutils literal notranslate"><span class="pre">'x</span></code>。</p>
 <p>我们可以如下定义类型的替换：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>int {t / &#39;x} = int
-bool {t / &#39;x} = bool
-&#39;x {t / &#39;x} = t
-&#39;y {t / &#39;x} = &#39;y
-(t1 -&gt; t2) {t / &#39;x} =  (t1 {t / &#39;x} ) -&gt; (t2 {t / &#39;x} )
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>int {t / 'x} = int
+bool {t / 'x} = bool
+'x {t / 'x} = t
+'y {t / 'x} = 'y
+(t1 -&gt; t2) {t / 'x} =  (t1 {t / 'x} ) -&gt; (t2 {t / 'x} )
 </pre></div>
 </div>
 <p>给定两个替换 <code class="docutils literal notranslate"><span class="pre">S1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">S2</span></code>，我们写 <code class="docutils literal notranslate"><span class="pre">S1;</span> <span class="pre">S2</span></code> 来表示
@@ -886,13 +886,13 @@ bool {t / &#39;x} = bool
 <p>如果 <code class="docutils literal notranslate"><span class="pre">t_1</span> <span class="pre">S</span></code> 产生相同的结果，则替换<em>统一</em>约束 <code class="docutils literal notranslate"><span class="pre">t_1</span> <span class="pre">=</span> <span class="pre">t_2</span></code>
 输入 <code class="docutils literal notranslate"><span class="pre">t_2</span> <span class="pre">S</span></code>。例如，替换 <code class="docutils literal notranslate"><span class="pre">S</span> <span class="pre">=</span> <span class="pre">{int</span> <span class="pre">-&gt;</span> <span class="pre">int</span> <span class="pre">/</span> <span class="pre">'y};</span> <span class="pre">{int</span> <span class="pre">/</span> <span class="pre">'x}</span></code>
 统一约束 <code class="docutils literal notranslate"><span class="pre">'x</span> <span class="pre">-&gt;</span> <span class="pre">('x</span> <span class="pre">-&gt;</span> <span class="pre">int)</span> <span class="pre">=</span> <span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">'y</span></code>，因为</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(&#39;x -&gt; (&#39;x -&gt; int)) S
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>('x -&gt; ('x -&gt; int)) S
 =
 int -&gt; (int -&gt; int)
 </pre></div>
 </div>
 <p>和</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(int -&gt; &#39;y) S
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(int -&gt; 'y) S
 =
 int -&gt; (int -&gt; int)
 </pre></div>
@@ -997,13 +997,13 @@ t ::= int | bool | t1 -&gt; t2
 使用函数规则进行推理，引入新类型
 参数的变量：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)  &lt;-- Here
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)  &lt;-- Here
 </pre></div>
 </div>
 <p>我们再次有了一个函数，因此有了一个新的类型变量：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)  &lt;-- Here
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)
+    I, f : 'a, x : 'b |- f (( + ) x 1)  &lt;-- Here
 </pre></div>
 </div>
 <p>现在我们有了一个应用程序表达式。在处理它之前，我们需要
@@ -1011,50 +1011,50 @@ t ::= int | bool | t1 -&gt; t2
 终于可以完成对环境变量类型的判断了，
 和一个空的约束集。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
-      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}  &lt;-- Here
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)
+    I, f : 'a, x : 'b |- f (( + ) x 1)
+      I, f : 'a, x : 'b |- f : 'a -| {}  &lt;-- Here
 </pre></div>
 </div>
 <p>接下来是第二个子表达式。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
-      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
-      I, f : &#39;a, x : &#39;b |- ( + ) x 1  &lt;-- Here
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)
+    I, f : 'a, x : 'b |- f (( + ) x 1)
+      I, f : 'a, x : 'b |- f : 'a -| {}
+      I, f : 'a, x : 'b |- ( + ) x 1  &lt;-- Here
 </pre></div>
 </div>
 <p>这是另一个应用程序，因此我们需要处理它的子表达式。召回
 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span> <span class="pre">x</span> <span class="pre">1</span></code> 被解析为 <code class="docutils literal notranslate"><span class="pre">((</span> <span class="pre">+</span> <span class="pre">)</span> <span class="pre">x)</span> <span class="pre">1</span></code>。所以第一个子表达式是
 处理起来很复杂。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
-      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
-      I, f : &#39;a, x : &#39;b |- ( + ) x 1
-        I, f : &#39;a, x : &#39;b |- ( + ) x  &lt;-- Here
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)
+    I, f : 'a, x : 'b |- f (( + ) x 1)
+      I, f : 'a, x : 'b |- f : 'a -| {}
+      I, f : 'a, x : 'b |- ( + ) x 1
+        I, f : 'a, x : 'b |- ( + ) x  &lt;-- Here
 </pre></div>
 </div>
 <p>又一个应用程序。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
-      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
-      I, f : &#39;a, x : &#39;b |- ( + ) x 1
-        I, f : &#39;a, x : &#39;b |- ( + ) x
-          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}  &lt;-- Here
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)
+    I, f : 'a, x : 'b |- f (( + ) x 1)
+      I, f : 'a, x : 'b |- f : 'a -| {}
+      I, f : 'a, x : 'b |- ( + ) x 1
+        I, f : 'a, x : 'b |- ( + ) x
+          I, f : 'a, x : 'b |- ( + ) : int -&gt; int -&gt; int -| {}  &lt;-- Here
 </pre></div>
 </div>
 <p>这个很简单，因为我们只需在中查找名称 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code>
 环境。接下来也很简单，因为我们只需查找 <code class="docutils literal notranslate"><span class="pre">x</span></code> 即可。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
-      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
-      I, f : &#39;a, x : &#39;b |- ( + ) x 1
-        I, f : &#39;a, x : &#39;b |- ( + ) x
-          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
-          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}  &lt;-- Here
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)
+    I, f : 'a, x : 'b |- f (( + ) x 1)
+      I, f : 'a, x : 'b |- f : 'a -| {}
+      I, f : 'a, x : 'b |- ( + ) x 1
+        I, f : 'a, x : 'b |- ( + ) x
+          I, f : 'a, x : 'b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : 'a, x : 'b |- x : 'b -| {}  &lt;-- Here
 </pre></div>
 </div>
 <p>最后，我们准备好解析函数应用程序了！我们推出一个新鲜的
@@ -1063,155 +1063,155 @@ t ::= int | bool | t1 -&gt; t2
 右侧子表达式的 <code class="docutils literal notranslate"><span class="pre">'b</span></code> 箭头指向新类型变量 <code class="docutils literal notranslate"><span class="pre">'c</span></code>，即
 是，<code class="docutils literal notranslate"><span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">'c</span></code>。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
-      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
-      I, f : &#39;a, x : &#39;b |- ( + ) x 1
-        I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c  &lt;-- Here
-          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
-          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)
+    I, f : 'a, x : 'b |- f (( + ) x 1)
+      I, f : 'a, x : 'b |- f : 'a -| {}
+      I, f : 'a, x : 'b |- ( + ) x 1
+        I, f : 'a, x : 'b |- ( + ) x : 'c -| int -&gt; int -&gt; int = 'b -&gt; 'c  &lt;-- Here
+          I, f : 'a, x : 'b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : 'a, x : 'b |- x : 'b -| {}
 </pre></div>
 </div>
 <p>现在我们已经准备好将参数传递给该函数了。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
-      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
-      I, f : &#39;a, x : &#39;b |- ( + ) x 1
-        I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
-          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
-        I, f : &#39;a, x : &#39;b |- 1 : int -| {}  &lt;-- Here
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)
+    I, f : 'a, x : 'b |- f (( + ) x 1)
+      I, f : 'a, x : 'b |- f : 'a -| {}
+      I, f : 'a, x : 'b |- ( + ) x 1
+        I, f : 'a, x : 'b |- ( + ) x : 'c -| int -&gt; int -&gt; int = 'b -&gt; 'c
+          I, f : 'a, x : 'b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : 'a, x : 'b |- x : 'b -| {}
+        I, f : 'a, x : 'b |- 1 : int -| {}  &lt;-- Here
 </pre></div>
 </div>
 <p>我们再次可以使用新类型变量来解析函数应用程序
 和约束。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1)
-      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
-      I, f : &#39;a, x : &#39;b |- ( + ) x 1 : &#39;d -| &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c  &lt;-- Here
-        I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
-          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
-        I, f : &#39;a, x : &#39;b |- 1 : int -| {}
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)
+    I, f : 'a, x : 'b |- f (( + ) x 1)
+      I, f : 'a, x : 'b |- f : 'a -| {}
+      I, f : 'a, x : 'b |- ( + ) x 1 : 'd -| 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c  &lt;-- Here
+        I, f : 'a, x : 'b |- ( + ) x : 'c -| int -&gt; int -&gt; int = 'b -&gt; 'c
+          I, f : 'a, x : 'b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : 'a, x : 'b |- x : 'b -| {}
+        I, f : 'a, x : 'b |- 1 : int -| {}
 </pre></div>
 </div>
 <p>再一次，一个函数应用程序，一个新的类型变量和一个新的
 约束。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1)
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1) : &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c   &lt;-- Here
-      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
-      I, f : &#39;a, x : &#39;b |- ( + ) x 1 : &#39;d -| &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-        I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
-          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
-        I, f : &#39;a, x : &#39;b |- 1 : int -| {}
+  I, f : 'a |- fun x -&gt; f (( + ) x 1)
+    I, f : 'a, x : 'b |- f (( + ) x 1) : 'e -| 'a = 'd -&gt; 'e, 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c   &lt;-- Here
+      I, f : 'a, x : 'b |- f : 'a -| {}
+      I, f : 'a, x : 'b |- ( + ) x 1 : 'd -| 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c
+        I, f : 'a, x : 'b |- ( + ) x : 'c -| int -&gt; int -&gt; int = 'b -&gt; 'c
+          I, f : 'a, x : 'b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : 'a, x : 'b |- x : 'b -| {}
+        I, f : 'a, x : 'b |- 1 : int -| {}
 </pre></div>
 </div>
 <p>现在我们终于完成了一个匿名函数。  其推断类型
 是其参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的新类型变量 <code class="docutils literal notranslate"><span class="pre">'b</span></code>，箭头为推断的
 输入其主体的 <code class="docutils literal notranslate"><span class="pre">e</span></code> 。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1)
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1) : &#39;b -&gt; &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c   &lt;-- Here
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1) : &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-      I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
-      I, f : &#39;a, x : &#39;b |- ( + ) x 1 : &#39;d -| &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-        I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-          I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
-          I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
-        I, f : &#39;a, x : &#39;b |- 1 : int -| {}
+  I, f : 'a |- fun x -&gt; f (( + ) x 1) : 'b -&gt; 'e -| 'a = 'd -&gt; 'e, 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c   &lt;-- Here
+    I, f : 'a, x : 'b |- f (( + ) x 1) : 'e -| 'a = 'd -&gt; 'e, 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c
+      I, f : 'a, x : 'b |- f : 'a -| {}
+      I, f : 'a, x : 'b |- ( + ) x 1 : 'd -| 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c
+        I, f : 'a, x : 'b |- ( + ) x : 'c -| int -&gt; int -&gt; int = 'b -&gt; 'c
+          I, f : 'a, x : 'b |- ( + ) : int -&gt; int -&gt; int -| {}
+          I, f : 'a, x : 'b |- x : 'b -| {}
+        I, f : 'a, x : 'b |- 1 : int -| {}
 </pre></div>
 </div>
 <p>现在可以用同样的方式完成最后一个匿名函数：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1) : &#39;a -&gt; &#39;b -&gt; &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c  &lt;-- Here
-  I, f : &#39;a |- fun x -&gt; f (( + ) x 1) : &#39;b -&gt; &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-    I, f : &#39;a, x : &#39;b |- f (( + ) x 1) : &#39;e -| &#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-       I, f : &#39;a, x : &#39;b |- f : &#39;a -| {}
-       I, f : &#39;a, x : &#39;b |- ( + ) x 1 : &#39;d -| &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-         I, f : &#39;a, x : &#39;b |- ( + ) x : &#39;c -| int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
-           I, f : &#39;a, x : &#39;b |- ( + ) : int -&gt; int -&gt; int -| {}
-           I, f : &#39;a, x : &#39;b |- x : &#39;b -| {}
-         I, f : &#39;a, x : &#39;b |- 1 : int -| {}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I |- fun f -&gt; fun x -&gt; f (( + ) x 1) : 'a -&gt; 'b -&gt; 'e -| 'a = 'd -&gt; 'e, 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c  &lt;-- Here
+  I, f : 'a |- fun x -&gt; f (( + ) x 1) : 'b -&gt; 'e -| 'a = 'd -&gt; 'e, 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c
+    I, f : 'a, x : 'b |- f (( + ) x 1) : 'e -| 'a = 'd -&gt; 'e, 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c
+       I, f : 'a, x : 'b |- f : 'a -| {}
+       I, f : 'a, x : 'b |- ( + ) x 1 : 'd -| 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c
+         I, f : 'a, x : 'b |- ( + ) x : 'c -| int -&gt; int -&gt; int = 'b -&gt; 'c
+           I, f : 'a, x : 'b |- ( + ) : int -&gt; int -&gt; int -| {}
+           I, f : 'a, x : 'b |- x : 'b -| {}
+         I, f : 'a, x : 'b |- 1 : int -| {}
 </pre></div>
 </div>
 <p>作为约束生成的结果，我们知道表达式的类型是
 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">'e</span></code>，其中</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&#39;a = &#39;d -&gt; &#39;e
-&#39;c = int -&gt; &#39;d
-int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>'a = 'd -&gt; 'e
+'c = int -&gt; 'd
+int -&gt; int -&gt; int = 'b -&gt; 'c
 </pre></div>
 </div>
 <p>为了求解该方程组，我们使用统一算法：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>unify(&#39;a = &#39;d -&gt; &#39;e, &#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c)
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>unify('a = 'd -&gt; 'e, 'c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c)
 </pre></div>
 </div>
 <p>第一个约束产生一个替换 <code class="docutils literal notranslate"><span class="pre">{('d</span> <span class="pre">-&gt;</span> <span class="pre">'e)</span> <span class="pre">/</span> <span class="pre">'a}</span></code>，我们记录下来
 作为解决方案的一部分，并将其应用于其余约束：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 =
-{(&#39;d -&gt; &#39;e) / &#39;a}; unify((&#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c) {(&#39;d -&gt; &#39;e) / &#39;a})
+{('d -&gt; 'e) / 'a}; unify(('c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c) {('d -&gt; 'e) / 'a})
 =
-{(&#39;d -&gt; &#39;e) / &#39;a}; unify(&#39;c = int -&gt; &#39;d, int -&gt; int -&gt; int = &#39;b -&gt; &#39;c)
+{('d -&gt; 'e) / 'a}; unify('c = int -&gt; 'd, int -&gt; int -&gt; int = 'b -&gt; 'c)
 </pre></div>
 </div>
 <p>第二个约束的行为与第一个约束类似：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 =
-{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; unify((int -&gt; int -&gt; int = &#39;b -&gt; &#39;c) {(int -&gt; &#39;d) / &#39;c})
+{('d -&gt; 'e) / 'a}; {(int -&gt; 'd) / 'c}; unify((int -&gt; int -&gt; int = 'b -&gt; 'c) {(int -&gt; 'd) / 'c})
 =
-{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; unify(int -&gt; int -&gt; int = &#39;b -&gt; int -&gt; &#39;d)
+{('d -&gt; 'e) / 'a}; {(int -&gt; 'd) / 'c}; unify(int -&gt; int -&gt; int = 'b -&gt; int -&gt; 'd)
 </pre></div>
 </div>
 <p>函数约束分解为两个较小的约束：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 =
-{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; unify(int = &#39;b, int -&gt; int = int -&gt; &#39;d)
+{('d -&gt; 'e) / 'a}; {(int -&gt; 'd) / 'c}; unify(int = 'b, int -&gt; int = int -&gt; 'd)
 </pre></div>
 </div>
 <p>我们得到另一个替换：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 =
-{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; unify((int -&gt; int = int -&gt; &#39;d) {int / &#39;b})
+{('d -&gt; 'e) / 'a}; {(int -&gt; 'd) / 'c}; {int / 'b}; unify((int -&gt; int = int -&gt; 'd) {int / 'b})
 =
-{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; unify(int -&gt; int = int -&gt; &#39;d)
+{('d -&gt; 'e) / 'a}; {(int -&gt; 'd) / 'c}; {int / 'b}; unify(int -&gt; int = int -&gt; 'd)
 </pre></div>
 </div>
 <p>然后我们打破另一个函数约束：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 =
-{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; unify(int = int, int = &#39;d)
+{('d -&gt; 'e) / 'a}; {(int -&gt; 'd) / 'c}; {int / 'b}; unify(int = int, int = 'd)
 </pre></div>
 </div>
 <p>由此产生的第一个新约束是微不足道的，只是被删除：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
 =
-{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; unify(int = &#39;d)
+{('d -&gt; 'e) / 'a}; {(int -&gt; 'd) / 'c}; {int / 'b}; unify(int = 'd)
 </pre></div>
 </div>
 <p>最后一个约束给了我们另一个替代：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>=
-{(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; {int / &#39;d}
+{('d -&gt; 'e) / 'a}; {(int -&gt; 'd) / 'c}; {int / 'b}; {int / 'd}
 </pre></div>
 </div>
 <p>最后，我们将统一的替换输出应用于推断的类型
 通过约束生成：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(&#39;a -&gt; &#39;b -&gt; &#39;e) {(&#39;d -&gt; &#39;e) / &#39;a}; {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; {int / &#39;d}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>('a -&gt; 'b -&gt; 'e) {('d -&gt; 'e) / 'a}; {(int -&gt; 'd) / 'c}; {int / 'b}; {int / 'd}
 =
-((&#39;d -&gt; &#39;e) -&gt; &#39;b -&gt; &#39;e) {(int -&gt; &#39;d) / &#39;c}; {int / &#39;b}; {int / &#39;d}
+(('d -&gt; 'e) -&gt; 'b -&gt; 'e) {(int -&gt; 'd) / 'c}; {int / 'b}; {int / 'd}
 =
-((&#39;d -&gt; &#39;e) -&gt; &#39;b -&gt; &#39;e) {int / &#39;b}; {int / &#39;d}
+(('d -&gt; 'e) -&gt; 'b -&gt; 'e) {int / 'b}; {int / 'd}
 =
-((&#39;d -&gt; &#39;e) -&gt; int -&gt; &#39;e) {int / &#39;d}
+(('d -&gt; 'e) -&gt; int -&gt; 'e) {int / 'd}
 =
-(int -&gt; &#39;e) -&gt; int -&gt; &#39;e
+(int -&gt; 'e) -&gt; int -&gt; 'e
 </pre></div>
 </div>
 <p>事实上，这与 OCaml 为原始数据推断出的类型相同
 表达式：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">fun</span> <span class="n">f</span> <span class="o">-&gt;</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="o">((</span> <span class="o">+</span> <span class="o">)</span> <span class="n">x</span> <span class="mi">1</span><span class="o">);;</span>
-<span class="o">-</span> <span class="o">:</span> <span class="o">(</span><span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
+<span class="o">-</span> <span class="o">:</span> <span class="o">(</span><span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>除了 OCaml 使用不同的类型变量标识符之外。 OCaml 对我们很好
@@ -1267,16 +1267,16 @@ int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
 适用于 <code class="docutils literal notranslate"><span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">bool</span></code>。但上面的规则并非如此
 允许对这两种类型的应用。当我们使用它时，我们会生成
 以下类型和约束：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let id = fun x -&gt; x in (let a = id 0 in id true) : &#39;c -| &#39;a -&gt; &#39;a = int -&gt; &#39;b, &#39;a -&gt; &#39;a = bool -&gt; &#39;c
-  {} |- fun x -&gt; x : &#39;a -| {}
-    x : &#39;a |- x : &#39;a -| {}
-  id : &#39;a -&gt; &#39;a |- let a = id 0 in id true : &#39;c -| &#39;a -&gt; &#39;a = int -&gt; &#39;b, &#39;a -&gt; &#39;a = bool -&gt; &#39;c   &lt;--- POINT 1
-    id : &#39;a -&gt; &#39;a |- id 0 : &#39;b -| &#39;a -&gt; &#39;a = int -&gt; &#39;b
-      id : &#39;a -&gt; &#39;a |- id : &#39;a -&gt; &#39;a -| {}
-      id : &#39;a -&gt; &#39;a |- 0 : int -| {}
-    id : &#39;a -&gt; &#39;a, a : &#39;b |- id true : &#39;c -| &#39;a -&gt; &#39;a = bool -&gt; &#39;c   &lt;--- POINT 2
-      id : &#39;a -&gt; &#39;a, a : &#39;b |- id : &#39;a -&gt; &#39;a -| {}
-      id : &#39;a -&gt; &#39;a, a : &#39;b |- true : bool -| {}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let id = fun x -&gt; x in (let a = id 0 in id true) : 'c -| 'a -&gt; 'a = int -&gt; 'b, 'a -&gt; 'a = bool -&gt; 'c
+  {} |- fun x -&gt; x : 'a -| {}
+    x : 'a |- x : 'a -| {}
+  id : 'a -&gt; 'a |- let a = id 0 in id true : 'c -| 'a -&gt; 'a = int -&gt; 'b, 'a -&gt; 'a = bool -&gt; 'c   &lt;--- POINT 1
+    id : 'a -&gt; 'a |- id 0 : 'b -| 'a -&gt; 'a = int -&gt; 'b
+      id : 'a -&gt; 'a |- id : 'a -&gt; 'a -| {}
+      id : 'a -&gt; 'a |- 0 : int -| {}
+    id : 'a -&gt; 'a, a : 'b |- id true : 'c -| 'a -&gt; 'a = bool -&gt; 'c   &lt;--- POINT 2
+      id : 'a -&gt; 'a, a : 'b |- id : 'a -&gt; 'a -| {}
+      id : 'a -&gt; 'a, a : 'b |- true : bool -| {}
 </pre></div>
 </div>
 <p>请注意，我们确实为 <code class="docutils literal notranslate"><span class="pre">id</span></code> 推断出类型 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code>，你可以在
@@ -1309,12 +1309,12 @@ int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
 两个参数并返回第一个。在 OCaml 中，我们可以将其写为
 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">y</span> <span class="pre">-&gt;</span> <span class="pre">x</span></code>。请注意，utop 正如我们所期望的那样推断出它的类型：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">f</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">;;</span>
-<span class="k">val</span> <span class="n">f</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
+<span class="k">val</span> <span class="n">f</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>但我们实际上可以用类型方案手动写下注释：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">f</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">.</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">;;</span>
-<span class="k">val</span> <span class="n">f</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">f</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="k">'</span><span class="n">b</span> <span class="o">.</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">;;</span>
+<span class="k">val</span> <span class="n">f</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>请注意，OCaml 接受我们的手动类型注释，但不包括
@@ -1322,8 +1322,8 @@ int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
 ** 一般来说，只要 OCaml 推断出类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 并且该类型已经具有
 在其中输入变量，实际上它是一个类型方案。例如，类型
 <code class="docutils literal notranslate"><span class="pre">List.length</span></code> 实际上是一个类型方案：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">mylen</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">.</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span><span class="o">;;</span>
-<span class="k">val</span> <span class="n">mylen</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">mylen</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">.</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span><span class="o">;;</span>
+<span class="k">val</span> <span class="n">mylen</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>OCaml 只是不费心输出类型变量的列表
@@ -1355,9 +1355,9 @@ int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
 <p>以下是这两个修订后的规则如何协同工作以获得我们之前的示例
 正确的识别函数：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let id = fun x -&gt; x in (let a = id 0 in id true)
-  {} |- fun x -&gt; x : &#39;a -&gt; &#39;a -| {}
-    x : &#39;a |- x : &#39;a -| {}
-  id : &#39;a . &#39;a -&gt; &#39;a |- let a = id 0 in id true   &lt;--- POINT 1
+  {} |- fun x -&gt; x : 'a -&gt; 'a -| {}
+    x : 'a |- x : 'a -| {}
+  id : 'a . 'a -&gt; 'a |- let a = id 0 in id true   &lt;--- POINT 1
 </pre></div>
 </div>
 <p>让我们在第 1 点暂停。当 <code class="docutils literal notranslate"><span class="pre">id</span></code> 被 <code class="docutils literal notranslate"><span class="pre">let</span></code> 放入环境中时
@@ -1365,40 +1365,40 @@ int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
 类型到类型方案。这记录了 <code class="docutils literal notranslate"><span class="pre">id</span></code> 的每个应用程序的事实
 应该为 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 使用它自己的值。正在进行：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let id = fun x -&gt; x in (let a = id 0 in id true)
-  {} |- fun x -&gt; x : &#39;a -&gt; &#39;a -| {}
-    x : &#39;a |- x : &#39;a -| {}
-  id : &#39;a . &#39;a -&gt; &#39;a |- let a = id 0 in id true   &lt;--- POINT 1
-    id : &#39;a . &#39;a -&gt; &#39;a |- id 0
-      id : &#39;a . &#39;a -&gt; &#39;a |- id : &#39;b -&gt; &#39;b -| {}   &lt;--- POINT 3
+  {} |- fun x -&gt; x : 'a -&gt; 'a -| {}
+    x : 'a |- x : 'a -| {}
+  id : 'a . 'a -&gt; 'a |- let a = id 0 in id true   &lt;--- POINT 1
+    id : 'a . 'a -&gt; 'a |- id 0
+      id : 'a . 'a -&gt; 'a |- id : 'b -&gt; 'b -| {}   &lt;--- POINT 3
 </pre></div>
 </div>
 <p>在第 3 点暂停，当 <code class="docutils literal notranslate"><span class="pre">id</span></code> 应用于 <code class="docutils literal notranslate"><span class="pre">0</span></code> 时，我们实例化其类型
 变量 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 与新类型变量 <code class="docutils literal notranslate"><span class="pre">'b</span></code>。让我们完成：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let id = fun x -&gt; x in (let a = id 0 in id true) : &#39;e -| &#39;b -&gt; &#39;b = int -&gt; &#39;c, &#39;d -&gt; &#39;d = bool -&gt; &#39;e
-  {} |- fun x -&gt; x : &#39;a -&gt; &#39;a -| {}
-    x : &#39;a |- x : &#39;a -| {}
-  id : &#39;a . &#39;a -&gt; &#39;a |- let a = id 0 in id true : &#39;e -| &#39;b -&gt; &#39;b = int -&gt; &#39;c, &#39;d -&gt; &#39;d = bool -&gt; &#39;e   &lt;--- POINT 1
-    id : &#39;a . &#39;a -&gt; &#39;a |- id 0 : &#39;c -| &#39;b -&gt; &#39;b = int -&gt; &#39;c
-      id : &#39;a . &#39;a -&gt; &#39;a |- id : &#39;b -&gt; &#39;b -| {}   &lt;--- POINT 3
-      id : &#39;a . &#39;a -&gt; &#39;a |- 0 : int -| {}
-    id : &#39;a . &#39;a -&gt; &#39;a, a : &#39;b |- id true : &#39;e -| &#39;d -&gt; &#39;d = bool -&gt; &#39;e   &lt;--- POINT 2
-      id : &#39;a . &#39;a -&gt; &#39;a, a : &#39;b |- id : &#39;d -&gt; &#39;d -| {}   &lt;--- POINT 4
-      id : &#39;a . &#39;a -&gt; &#39;a, a : &#39;b |- true : bool -| {}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{} |- let id = fun x -&gt; x in (let a = id 0 in id true) : 'e -| 'b -&gt; 'b = int -&gt; 'c, 'd -&gt; 'd = bool -&gt; 'e
+  {} |- fun x -&gt; x : 'a -&gt; 'a -| {}
+    x : 'a |- x : 'a -| {}
+  id : 'a . 'a -&gt; 'a |- let a = id 0 in id true : 'e -| 'b -&gt; 'b = int -&gt; 'c, 'd -&gt; 'd = bool -&gt; 'e   &lt;--- POINT 1
+    id : 'a . 'a -&gt; 'a |- id 0 : 'c -| 'b -&gt; 'b = int -&gt; 'c
+      id : 'a . 'a -&gt; 'a |- id : 'b -&gt; 'b -| {}   &lt;--- POINT 3
+      id : 'a . 'a -&gt; 'a |- 0 : int -| {}
+    id : 'a . 'a -&gt; 'a, a : 'b |- id true : 'e -| 'd -&gt; 'd = bool -&gt; 'e   &lt;--- POINT 2
+      id : 'a . 'a -&gt; 'a, a : 'b |- id : 'd -&gt; 'd -| {}   &lt;--- POINT 4
+      id : 'a . 'a -&gt; 'a, a : 'b |- true : bool -| {}
 </pre></div>
 </div>
 <p>在第 4 点，当 <code class="docutils literal notranslate"><span class="pre">id</span></code> 应用于 <code class="docutils literal notranslate"><span class="pre">true</span></code> 时，我们再次实例化其类型
 变量 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 具有新的类型变量，这次是 <code class="docutils literal notranslate"><span class="pre">'d</span></code>。所以约束条件
 第 1 点和第 2 点收集的数据不再矛盾，因为它们是
 谈论不同类型的变量。这些限制是：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&#39;b -&gt; &#39;b = int -&gt; &#39;c
-&#39;d -&gt; &#39;d = bool -&gt; &#39;e
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>'b -&gt; 'b = int -&gt; 'c
+'d -&gt; 'd = bool -&gt; 'e
 </pre></div>
 </div>
 <p>因此，统一算法将得出结论：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&#39;b = int
-&#39;c = int
-&#39;d = bool
-&#39;e = bool
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>'b = int
+'c = int
+'d = bool
+'e = bool
 </pre></div>
 </div>
 <p>因此整个表达式被成功推断为类型 <code class="docutils literal notranslate"><span class="pre">bool</span></code>。</p>
@@ -1445,7 +1445,7 @@ int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
 给 <code class="docutils literal notranslate"><span class="pre">x</span></code> 则为 <code class="docutils literal notranslate"><span class="pre">'a1</span> <span class="pre">...</span> <span class="pre">'an</span> <span class="pre">.</span> <span class="pre">u1</span></code>。</p>
 <p>将所有这些放在一起，我们最终得到：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>generalize(C1, env, x : t1) =
-  env1, x : &#39;a1 ... &#39;an . u1
+  env1, x : 'a1 ... 'an . u1
 </pre></div>
 </div>
 <p>回到上面的识别函数的例子，我们有
@@ -1479,13 +1479,13 @@ int -&gt; int -&gt; int = &#39;b -&gt; &#39;c
 不再持有不止一种类型。让我们再重做一下这个例子，
 停下来看看顶层输出：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">id</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">;;</span>
-<span class="k">val</span> <span class="n">id</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>   <span class="c">(* as expected *)</span>
+<span class="k">val</span> <span class="n">id</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>   <span class="c">(* as expected *)</span>
 
 <span class="o">#</span> <span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="n">ref</span> <span class="n">id</span><span class="o">;;</span>
-<span class="k">val</span> <span class="n">r</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="o">_</span><span class="n">weak1</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="o">_</span><span class="n">weak1</span><span class="o">)</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>   <span class="c">(* what is _weak? *)</span>
+<span class="k">val</span> <span class="n">r</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="o">_</span><span class="n">weak1</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="o">_</span><span class="n">weak1</span><span class="o">)</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>   <span class="c">(* what is _weak? *)</span>
 
 <span class="o">#</span> <span class="n">r</span><span class="o">;;</span>
-<span class="o">-</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="o">_</span><span class="n">weak1</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="o">_</span><span class="n">weak1</span><span class="o">)</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>   <span class="c">(* it&#39;s consistent at least *)</span>
+<span class="o">-</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="o">_</span><span class="n">weak1</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="o">_</span><span class="n">weak1</span><span class="o">)</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>   <span class="c">(* it's consistent at least *)</span>
 
 <span class="o">#</span> <span class="n">r</span> <span class="o">:=</span> <span class="n">succ</span><span class="o">;;</span>
 <span class="o">-</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span> <span class="bp">()</span>

@@ -891,7 +891,7 @@ val odd : int -&gt; bool = &lt;fun&gt;
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val id : &#39;a -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val id : 'a -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -904,7 +904,7 @@ val odd : int -&gt; bool = &lt;fun&gt;
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val id : &#39;a -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val id : 'a -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -915,7 +915,7 @@ val odd : int -&gt; bool = &lt;fun&gt;
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">id</span> <span class="mi">42</span><span class="o">;;</span>
 <span class="n">id</span> <span class="bp">true</span><span class="o">;;</span>
-<span class="n">id</span> <span class="s2">&quot;bigred&quot;</span><span class="o">;;</span>
+<span class="n">id</span> <span class="s2">"bigred"</span><span class="o">;;</span>
 </pre></div>
 </div>
 </div>
@@ -926,7 +926,7 @@ val odd : int -&gt; bool = &lt;fun&gt;
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : bool = true
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = &quot;bigred&quot;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = "bigred"
 </pre></div>
 </div>
 </div>
@@ -953,7 +953,7 @@ val odd : int -&gt; bool = &lt;fun&gt;
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[14]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">7</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[14]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">7</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="n">id_int</span> <span class="n">true</span>
            <span class="o">^^^^</span>
 <span class="ne">Error</span>: The constructor true has type bool
@@ -965,12 +965,12 @@ val odd : int -&gt; bool = &lt;fun&gt;
 <p>另一种写 <code class="docutils literal notranslate"><span class="pre">id_int</span></code> 的方式是直接基于 <code class="docutils literal notranslate"><span class="pre">id</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id_int&#39;</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">id</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id_int'</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">id</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val id_int&#39; : int -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val id_int' : int -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -980,12 +980,12 @@ val odd : int -&gt; bool = &lt;fun&gt;
 <p>反过来则不成立。如果我们需要的是一个 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型的函数，却试图拿一个 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> 类型的函数来顶替，那么只要有人传入了别的类型，比如 <code class="docutils literal notranslate"><span class="pre">bool</span></code>，问题就会立刻暴露出来。为了防止这种情况，OCaml 在下面这段代码上会做一件可能有点出人意料的事：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id&#39;</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id'</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val id&#39; : int -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val id' : int -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -993,13 +993,13 @@ val odd : int -&gt; bool = &lt;fun&gt;
 <p>函数 <code class="docutils literal notranslate"><span class="pre">id'</span></code> 实际上并不是恒等函数，而是“加一函数”。因此，给它传 <code class="docutils literal notranslate"><span class="pre">bool</span></code>、<code class="docutils literal notranslate"><span class="pre">string</span></code> 或某个复杂数据结构都不安全；<code class="docutils literal notranslate"><span class="pre">+</span></code> 能安全处理的只有整数。所以 OCaml 会把类型变量 <code class="docutils literal notranslate"><span class="pre">'a</span></code> <em>实例化</em>为 <code class="docutils literal notranslate"><span class="pre">int</span></code>，从而阻止我们把 <code class="docutils literal notranslate"><span class="pre">id'</span></code> 应用于非整数：</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">id&#39;</span> <span class="bp">true</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">id'</span> <span class="bp">true</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[17]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">8</span><span class="p">:</span>
-<span class="mi">1</span> <span class="o">|</span> <span class="nb">id</span><span class="s1">&#39; true</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[17]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">8</span><span class="p">:</span>
+<span class="mi">1</span> <span class="o">|</span> <span class="nb">id</span><span class="s1">' true</span>
         <span class="o">^^^^</span>
 <span class="ne">Error</span>: The constructor true has type bool
        <span class="n">but</span> <span class="n">an</span> <span class="n">expression</span> <span class="n">was</span> <span class="n">expected</span> <span class="n">of</span> <span class="nb">type</span> <span class="nb">int</span>
@@ -1010,42 +1010,42 @@ val odd : int -&gt; bool = &lt;fun&gt;
 <p>这就引出了另一种、更机械的理解方式，也就是从<strong>应用</strong>（application）的角度来思考。这里说的“应用”，就是函数应用于参数时的那种应用：当我们对 <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">5</span></code> 求值时，参数 <code class="docutils literal notranslate"><span class="pre">x</span></code> 被值 <code class="docutils literal notranslate"><span class="pre">5</span></code> <em>实例化</em>。同样地，<code class="docutils literal notranslate"><span class="pre">id</span></code> 类型里的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 也在这个应用过程中被类型 <code class="docutils literal notranslate"><span class="pre">int</span></code> 实例化。所以，当我们写下</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id_int&#39;</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">id</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">id_int'</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">id</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val id_int&#39; : int -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val id_int' : int -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
 </div>
 <p>实际上就是把 <code class="docutils literal notranslate"><span class="pre">id</span></code> 类型中的 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 实例化成了 <code class="docutils literal notranslate"><span class="pre">int</span></code>。而且，就像我们没法“反向取消”一个函数应用一样，例如给定 <code class="docutils literal notranslate"><span class="pre">5</span></code>，我们没法倒推出它来自 <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">5</span></code>；同样，我们也没法撤销这次类型实例化，把 <code class="docutils literal notranslate"><span class="pre">int</span></code> 再变回 <code class="docutils literal notranslate"><span class="pre">'a</span></code>。</p>
 <p>更精确地说，假设我们有一个 <code class="docutils literal notranslate"><span class="pre">let</span></code> 定义（或表达式）：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">e</span> <span class="o">[</span><span class="k">in</span> <span class="n">e&#39;</span><span class="o">]</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">e</span> <span class="o">[</span><span class="k">in</span> <span class="n">e'</span><span class="o">]</span>
 </pre></div>
 </div>
 <p>而且 OCaml 为 <code class="docutils literal notranslate"><span class="pre">x</span></code> 推断出了某个类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>，其中包含一些类型变量 <code class="docutils literal notranslate"><span class="pre">'a</span></code>、<code class="docutils literal notranslate"><span class="pre">'b</span></code> 等。那么这些类型变量是允许被实例化的。我们可以通过把函数应用到某些参数上来暴露出应当如何实例化（例如 <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">5</span></code>），也可以通过类型注解来实例化（例如 <code class="docutils literal notranslate"><span class="pre">id_int'</span></code>），等等。不过这种实例化必须保持一致。比如，我们不能把一个类型为 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 的函数实例化为 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">-&gt;</span> <span class="pre">'b</span> <span class="pre">-&gt;</span> <span class="pre">string</span></code>，因为 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 在它两次出现的位置上就不再是同一个类型了：</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">first</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">;;</span>
-<span class="k">let</span> <span class="n">first_int</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">first</span><span class="o">;;</span>
-<span class="k">let</span> <span class="n">bad_first</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">string</span> <span class="o">=</span> <span class="n">first</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">first_int</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">first</span><span class="o">;;</span>
+<span class="k">let</span> <span class="n">bad_first</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">string</span> <span class="o">=</span> <span class="n">first</span><span class="o">;;</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val first : &#39;a -&gt; &#39;b -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val first : 'a -&gt; 'b -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val first_int : int -&gt; &#39;b -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val first_int : int -&gt; 'b -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[19]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">38</span><span class="o">-</span><span class="mi">43</span><span class="p">:</span>
-<span class="mi">3</span> <span class="o">|</span> <span class="n">let</span> <span class="n">bad_first</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">-&gt;</span> <span class="s1">&#39;b -&gt; string = first;;</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[19]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">38</span><span class="o">-</span><span class="mi">43</span><span class="p">:</span>
+<span class="mi">3</span> <span class="o">|</span> <span class="n">let</span> <span class="n">bad_first</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">-&gt;</span> <span class="s1">'b -&gt; string = first;;</span>
                                           <span class="o">^^^^^</span>
-<span class="ne">Error</span>: The value first has type int -&gt; &#39;b -&gt; int
-       <span class="n">but</span> <span class="n">an</span> <span class="n">expression</span> <span class="n">was</span> <span class="n">expected</span> <span class="n">of</span> <span class="nb">type</span> <span class="nb">int</span> <span class="o">-&gt;</span> <span class="s1">&#39;b -&gt; string</span>
+<span class="ne">Error</span>: The value first has type int -&gt; 'b -&gt; int
+       <span class="n">but</span> <span class="n">an</span> <span class="n">expression</span> <span class="n">was</span> <span class="n">expected</span> <span class="n">of</span> <span class="nb">type</span> <span class="nb">int</span> <span class="o">-&gt;</span> <span class="s1">'b -&gt; string</span>
        <span class="n">Type</span> <span class="nb">int</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">compatible</span> <span class="k">with</span> <span class="nb">type</span> <span class="n">string</span>
 </pre></div>
 </div>
@@ -1377,7 +1377,7 @@ val odd : int -&gt; bool = &lt;fun&gt;
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val count_forever : &#39;a -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val count_forever : 'a -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1523,7 +1523,7 @@ val odd : int -&gt; bool = &lt;fun&gt;
 <p>要解决这个问题，我们得求助于 OCaml 的大整数库 <a class="reference external" href="https://antoinemine.github.io/Zarith/doc/latest/Z.html">Zarith</a>。下面会用到一些超出目前课程范围的 OCaml 特性，但应该都不会太令人意外。（如果你想亲自运行这段代码，先用 <code class="docutils literal notranslate"><span class="pre">opam</span> <span class="pre">install</span> <span class="pre">zarith</span></code> 在 OPAM 里安装 Zarith。）</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">require</span> <span class="s2">&quot;zarith.top&quot;</span><span class="o">;;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">require</span> <span class="s2">"zarith.top"</span><span class="o">;;</span>
 </pre></div>
 </div>
 </div>

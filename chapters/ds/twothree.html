@@ -627,19 +627,19 @@ Cormen 等人在<em>算法导论</em>中认为 2-3 树由 John Hopcroft 发明�
 2 节点包含一个值，3 节点包含两个值：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span>
   <span class="o">|</span> <span class="nc">Leaf</span>
   <span class="o">|</span> <span class="nc">Two</span> <span class="k">of</span> <span class="o">{</span>
-      <span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="c">(* left subtree *)</span>
-      <span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span>    <span class="c">(* value *)</span>
-      <span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>  <span class="c">(* right subtree *)</span>
+      <span class="n">lt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="c">(* left subtree *)</span>
+      <span class="n">v</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">;</span>    <span class="c">(* value *)</span>
+      <span class="n">rt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>  <span class="c">(* right subtree *)</span>
     <span class="o">}</span>
   <span class="o">|</span> <span class="nc">Three</span> <span class="k">of</span> <span class="o">{</span>
-      <span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="c">(* left subtree *)</span>
-      <span class="n">vl</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span>   <span class="c">(* left value *)</span>
-      <span class="n">mt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="c">(* middle subtree *)</span>
-      <span class="n">vr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span>   <span class="c">(* right value *)</span>
-      <span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>  <span class="c">(* right subtree *)</span>
+      <span class="n">lt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="c">(* left subtree *)</span>
+      <span class="n">vl</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">;</span>   <span class="c">(* left value *)</span>
+      <span class="n">mt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="c">(* middle subtree *)</span>
+      <span class="n">vr</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">;</span>   <span class="c">(* right value *)</span>
+      <span class="n">rt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>  <span class="c">(* right subtree *)</span>
     <span class="o">}</span>
 
 <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="nc">Leaf</span>
@@ -647,13 +647,13 @@ Cormen 等人在<em>算法导论</em>中认为 2-3 树由 John Hopcroft 发明�
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a t =
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a t =
     Leaf
-  | Two of { lt : &#39;a t; v : &#39;a; rt : &#39;a t; }
-  | Three of { lt : &#39;a t; vl : &#39;a; mt : &#39;a t; vr : &#39;a; rt : &#39;a t; }
+  | Two of { lt : 'a t; v : 'a; rt : 'a t; }
+  | Three of { lt : 'a t; vl : 'a; mt : 'a t; vr : 'a; rt : 'a t; }
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;a t = Leaf
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : 'a t = Leaf
 </pre></div>
 </div>
 </div>
@@ -697,7 +697,7 @@ Cormen 等人在<em>算法导论</em>中认为 2-3 树由 John Hopcroft 发明�
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val mem : &#39;a -&gt; &#39;a t -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val mem : 'a -&gt; 'a t -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -790,12 +790,12 @@ a   b           a   b c   d            c   d
 更简洁的实现是可能的。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">impossible</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">failwith</span> <span class="s2">&quot;impossible: grow returns Two&quot;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">impossible</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">failwith</span> <span class="s2">"impossible: grow returns Two"</span>
 
-<span class="c">(** [ins x t] inserts [x] into [t] using Appel&#39;s algorithm. Returns:</span>
+<span class="c">(** [ins x t] inserts [x] into [t] using Appel's algorithm. Returns:</span>
 <span class="c">    [new_t, grew], where [new_t] is the new tree (including [x]) and [grew] is</span>
 <span class="c">    whether the tree height grew. *)</span>
-<span class="k">let</span> <span class="k">rec</span> <span class="n">ins</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">t</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">ins</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">t</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">t</span> <span class="k">with</span>
   <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span>
       <span class="c">(* Insertion into a leaf creates a new 2-node, which grows the</span>
@@ -823,7 +823,7 @@ a   b           a   b c   d            c   d
 <span class="c">    [new_t] is the new tree (including [lt], [v], and [rt]) and [grew] is</span>
 <span class="c">    whether the tree height grew as a result of the insert. Requires:</span>
 <span class="c">    [x &lt;&gt; v]. *)</span>
-<span class="k">and</span> <span class="n">ins_sub2</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+<span class="k">and</span> <span class="n">ins_sub2</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
   <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">v</span> <span class="k">then</span>
     <span class="c">(* [x] belongs in [lt]. *)</span>
     <span class="n">ins_sub2_left</span> <span class="n">x</span> <span class="n">lt</span> <span class="n">v</span> <span class="n">rt</span>
@@ -832,13 +832,13 @@ a   b           a   b c   d            c   d
   <span class="k">else</span>
     <span class="c">(* [x] belongs in neither [lt] nor [rt], but then we should never have</span>
 <span class="c">        called [ins_sub2] on it. *)</span>
-    <span class="n">failwith</span> <span class="s2">&quot;precondition violated&quot;</span>
+    <span class="n">failwith</span> <span class="s2">"precondition violated"</span>
 
 <span class="c">(** [ins_sub2_left x lt v rt] inserts [x] into the left subtree of a 2-node,</span>
 <span class="c">    where that two-node is [Two {lt; v; rt}]. Returns [new_t, grew], where</span>
 <span class="c">    [new_t] is the new tree (including [lt], [v], and [rt]) and [grew] is</span>
 <span class="c">    whether the tree height grew as a result of the insert. *)</span>
-<span class="k">and</span> <span class="n">ins_sub2_left</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+<span class="k">and</span> <span class="n">ins_sub2_left</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">lt</span> <span class="k">with</span>
   <span class="o">|</span> <span class="n">new_lt</span><span class="o">,</span> <span class="bp">false</span> <span class="o">-&gt;</span>
       <span class="c">(* [x] was inserted into [lt] without growing the height, so we can</span>
@@ -860,7 +860,7 @@ a   b           a   b c   d            c   d
 <span class="c">    where that two-node is [Two {lt; v; rt}]. Returns [new_t, grew], where</span>
 <span class="c">    [new_t] is the new tree (including [lt], [v], and [rt]) and [grew] is</span>
 <span class="c">    whether the tree height grew as a result of the insert. *)</span>
-<span class="k">and</span> <span class="n">ins_sub2_right</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+<span class="k">and</span> <span class="n">ins_sub2_right</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">rt</span> <span class="k">with</span>
   <span class="o">|</span> <span class="n">new_rt</span><span class="o">,</span> <span class="bp">false</span> <span class="o">-&gt;</span>
       <span class="c">(* [x] was inserted into [rt] without growing the height, so we can</span>
@@ -880,8 +880,8 @@ a   b           a   b c   d            c   d
 <span class="c">    [new_t, grew], where [new_t] is the new tree (including [lt], [vl], [mt],</span>
 <span class="c">    [vr], and [rt]) and [grew] is whether the tree height grew as a result of</span>
 <span class="c">    the insert. Requires: [x &lt;&gt; vl &amp;&amp; x &lt;&gt; vr]. *)</span>
-<span class="k">and</span> <span class="n">ins_sub3</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
-    <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+<span class="k">and</span> <span class="n">ins_sub3</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
   <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">vl</span> <span class="k">then</span>
     <span class="c">(* [x] belongs in [lt]. *)</span>
     <span class="n">ins_sub3_left</span> <span class="n">x</span> <span class="n">lt</span> <span class="n">vl</span> <span class="n">mt</span> <span class="n">vr</span> <span class="n">rt</span>
@@ -894,7 +894,7 @@ a   b           a   b c   d            c   d
   <span class="k">else</span>
     <span class="c">(* [x] belongs in neither [lt] nor [mt] nor [rt], but then we should never</span>
 <span class="c">        have called [ins_sub3] on it. *)</span>
-    <span class="n">failwith</span> <span class="s2">&quot;precondition violated&quot;</span>
+    <span class="n">failwith</span> <span class="s2">"precondition violated"</span>
 
 <span class="c">(** [ins_sub3_left x lt vl mt vr rt] inserts [x] into the left subtree of a</span>
 <span class="c">    3-node, where that 3-node is [Three {lt; vl; mt; vr; rt}]. Returns</span>
@@ -902,12 +902,12 @@ a   b           a   b c   d            c   d
 <span class="c">    [vr], and [rt]) and [grew] is whether the tree height grew as a result of</span>
 <span class="c">    the insert. *)</span>
 <span class="k">and</span> <span class="n">ins_sub3_left</span>
-    <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+    <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">lt</span> <span class="k">with</span>
   <span class="o">|</span> <span class="n">new_lt</span><span class="o">,</span> <span class="bp">false</span> <span class="o">-&gt;</span>
       <span class="c">(* [x] was inserted into [lt] without growing the height, so we can</span>
@@ -937,12 +937,12 @@ a   b           a   b c   d            c   d
 <span class="c">    [vr], and [rt]) and [grew] is whether the tree height grew as a result of</span>
 <span class="c">    the insert. *)</span>
 <span class="k">and</span> <span class="n">ins_sub3_right</span>
-    <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+    <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">rt</span> <span class="k">with</span>
   <span class="o">|</span> <span class="n">new_rt</span><span class="o">,</span> <span class="bp">false</span> <span class="o">-&gt;</span>
       <span class="c">(* [x] was inserted into [rt] without growing the height, so we can</span>
@@ -972,12 +972,12 @@ a   b           a   b c   d            c   d
 <span class="c">    [vr], and [rt]) and [grew] is whether the tree height grew as a result of</span>
 <span class="c">    the insert. *)</span>
 <span class="k">and</span> <span class="n">ins_sub3_middle</span>
-    <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
-    <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
+    <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">lt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vl</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">mt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">vr</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span>
+    <span class="o">(</span><span class="n">rt</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="kt">bool</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">ins</span> <span class="n">x</span> <span class="n">mt</span> <span class="k">with</span>
   <span class="o">|</span> <span class="n">new_mt</span><span class="o">,</span> <span class="bp">false</span> <span class="o">-&gt;</span>
       <span class="c">(* [x] was inserted into [mt] without growing the height, so we can</span>
@@ -1008,23 +1008,23 @@ a   b           a   b c   d            c   d
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val impossible : unit -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val impossible : unit -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ins : &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool = &lt;fun&gt;
-val ins_sub2 : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool = &lt;fun&gt;
-val ins_sub2_left : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool = &lt;fun&gt;
-val ins_sub2_right : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool = &lt;fun&gt;
-val ins_sub3 : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool = &lt;fun&gt;
-val ins_sub3_left : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool =
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ins : 'a -&gt; 'a t -&gt; 'a t * bool = &lt;fun&gt;
+val ins_sub2 : 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a t * bool = &lt;fun&gt;
+val ins_sub2_left : 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a t * bool = &lt;fun&gt;
+val ins_sub2_right : 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a t * bool = &lt;fun&gt;
+val ins_sub3 : 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a t * bool = &lt;fun&gt;
+val ins_sub3_left : 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a t * bool =
   &lt;fun&gt;
-val ins_sub3_right : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool =
+val ins_sub3_right : 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a t * bool =
   &lt;fun&gt;
-val ins_sub3_middle : &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t * bool =
+val ins_sub3_middle : 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a -&gt; 'a t -&gt; 'a t * bool =
   &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert : &#39;a -&gt; &#39;a t -&gt; &#39;a t = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert : 'a -&gt; 'a t -&gt; 'a t = &lt;fun&gt;
 </pre></div>
 </div>
 </div>

@@ -741,7 +741,7 @@ Unix 操作系统中无数错误和安全问题的根源
 无论规范写得多么清晰和好，通常都会有一个例子
 对客户有用。</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [find lst x] is the index of [x] in [lst], starting from zero.</span>
-<span class="c">    Example: [find [&quot;b&quot;,&quot;a&quot;,&quot;c&quot;] &quot;a&quot; = 1]. *)</span>
+<span class="c">    Example: [find ["b","a","c"] "a" = 1]. *)</span>
 </pre></div>
 </div>
 </section>
@@ -751,7 +751,7 @@ Unix 操作系统中无数错误和安全问题的根源
 在两个人之间进行：一个<em>说明符</em>和一个<em>狡猾的程序员。</em></p>
 <p>假设说明符编写了以下说明：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** Returns a list. *)</span>
-<span class="k">val</span> <span class="n">reverse</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">val</span> <span class="n">reverse</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 </pre></div>
 </div>
 <p>该规范显然是不完整的。  例如，一个狡猾的程序员可能会遇到
@@ -762,7 +762,7 @@ Unix 操作系统中无数错误和安全问题的根源
 </div>
 <p>规范制定者意识到这一点后，将规范细化如下：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [reverse lst] returns a list that is the same length as [lst]. *)</span>
-<span class="k">val</span> <span class="n">reverse</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">val</span> <span class="n">reverse</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 </pre></div>
 </div>
 <p>但狡猾的程序员发现规范仍然允许损坏
@@ -777,7 +777,7 @@ Unix 操作系统中无数错误和安全问题的根源
 <span class="c">    - for all [i], [nth m i = nth lst (n - i - 1)],</span>
 <span class="c">      where [n] is the length of [lst].</span>
 <span class="c">    For example, [reverse [1; 2; 3]] is [[3; 2; 1]], and [reverse []] is [[]]. *)</span>
-<span class="k">val</span> <span class="n">reverse</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">val</span> <span class="n">reverse</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 </pre></div>
 </div>
 <p>有了这个规范，狡猾的程序员就被迫提供一个可用的

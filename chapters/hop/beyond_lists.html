@@ -616,14 +616,14 @@ document.write(`
 <p>像 map 和 fold 这样的函数并不局限于列表。它们对几乎任何类型的数据集合都有意义。例如，回想一下树的表示：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span>
   <span class="o">|</span> <span class="nc">Leaf</span>
-  <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span>
+  <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">tree</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">tree</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a tree = Leaf | Node of &#39;a * &#39;a tree * &#39;a tree
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a tree = Leaf | Node of 'a * 'a tree * 'a tree
 </pre></div>
 </div>
 </div>
@@ -640,7 +640,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val map_tree : (&#39;a -&gt; &#39;b) -&gt; &#39;a tree -&gt; &#39;b tree = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val map_tree : ('a -&gt; 'b) -&gt; 'a tree -&gt; 'b tree = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -651,9 +651,9 @@ document.write(`
 <p>这个只稍微难一点。让我们为 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">tree</span></code> 开发一个 fold 函数，类似 <code class="docutils literal notranslate"><span class="pre">fold_right</span></code> 之于 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">list</span></code>。一种理解 <code class="docutils literal notranslate"><span class="pre">List.fold_right</span></code> 的思路是：列表中的 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 值被替换为 <code class="docutils literal notranslate"><span class="pre">acc</span></code> 参数，每个 <code class="docutils literal notranslate"><span class="pre">::</span></code> 构造函数被替换为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 参数。例如，<code class="docutils literal notranslate"><span class="pre">[a;</span> <span class="pre">b;</span> <span class="pre">c]</span></code> 是 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">::</span> <span class="pre">(b</span> <span class="pre">::</span> <span class="pre">(c</span> <span class="pre">::</span> <span class="pre">[]))</span></code> 的语法糖。因此，如果我们把 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">0</span></code>，把 <code class="docutils literal notranslate"><span class="pre">::</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code>，就得到 <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">(b</span> <span class="pre">+</span> <span class="pre">(c</span> <span class="pre">+</span> <span class="pre">0))</span></code>。沿着这条思路，我们可以重写 <code class="docutils literal notranslate"><span class="pre">fold_right</span></code>，帮助自己更清晰地思考：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mylist</span> <span class="o">=</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">mylist</span> <span class="o">=</span>
   <span class="o">|</span> <span class="nc">Nil</span>
-  <span class="o">|</span> <span class="nc">Cons</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mylist</span>
+  <span class="o">|</span> <span class="nc">Cons</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">mylist</span>
 
 <span class="k">let</span> <span class="k">rec</span> <span class="n">fold_mylist</span> <span class="n">f</span> <span class="n">acc</span> <span class="o">=</span> <span class="k">function</span>
   <span class="o">|</span> <span class="nc">Nil</span> <span class="o">-&gt;</span> <span class="n">acc</span>
@@ -662,10 +662,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a mylist = Nil | Cons of &#39;a * &#39;a mylist
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a mylist = Nil | Cons of 'a * 'a mylist
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fold_mylist : (&#39;a -&gt; &#39;b -&gt; &#39;b) -&gt; &#39;b -&gt; &#39;a mylist -&gt; &#39;b = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fold_mylist : ('a -&gt; 'b -&gt; 'b) -&gt; 'b -&gt; 'a mylist -&gt; 'b = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -682,7 +682,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fold_tree : (&#39;a -&gt; &#39;b -&gt; &#39;b -&gt; &#39;b) -&gt; &#39;b -&gt; &#39;a tree -&gt; &#39;b = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fold_tree : ('a -&gt; 'b -&gt; 'b -&gt; 'b) -&gt; 'b -&gt; 'a tree -&gt; 'b = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -698,13 +698,13 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val size : &#39;a tree -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val size : 'a tree -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val depth : &#39;a tree -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val depth : 'a tree -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val preorder : &#39;a tree -&gt; &#39;a list = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val preorder : 'a tree -&gt; 'a list = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -736,7 +736,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val filter_tree : (&#39;a -&gt; bool) -&gt; &#39;a tree -&gt; &#39;a tree = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val filter_tree : ('a -&gt; bool) -&gt; 'a tree -&gt; 'a tree = &lt;fun&gt;
 </pre></div>
 </div>
 </div>

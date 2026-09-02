@@ -616,12 +616,12 @@ document.write(`
 <p>另一种定义双参数函数的方式是写一个接受元组的函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add&#39;</span> <span class="n">t</span> <span class="o">=</span> <span class="n">fst</span> <span class="n">t</span> <span class="o">+</span> <span class="n">snd</span> <span class="n">t</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add'</span> <span class="n">t</span> <span class="o">=</span> <span class="n">fst</span> <span class="n">t</span> <span class="o">+</span> <span class="n">snd</span> <span class="n">t</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val add&#39; : int * int -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val add' : int * int -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -629,12 +629,12 @@ document.write(`
 <p>我们还可以在函数定义中使用元组模式，而不是使用 <code class="docutils literal notranslate"><span class="pre">fst</span></code> 和 <code class="docutils literal notranslate"><span class="pre">snd</span></code>，得到第三种实现：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add&#39;&#39;</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">add''</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val add&#39;&#39; : int * int -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val add'' : int * int -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -650,10 +650,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val curry : (&#39;a * &#39;b -&gt; &#39;c) -&gt; &#39;a -&gt; &#39;b -&gt; &#39;c = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val curry : ('a * 'b -&gt; 'c) -&gt; 'a -&gt; 'b -&gt; 'c = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val uncurry : (&#39;a -&gt; &#39;b -&gt; &#39;c) -&gt; &#39;a * &#39;b -&gt; &#39;c = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val uncurry : ('a -&gt; 'b -&gt; 'c) -&gt; 'a * 'b -&gt; 'c = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -661,7 +661,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">uncurried_add</span> <span class="o">=</span> <span class="n">uncurry</span> <span class="n">add</span>
-<span class="k">let</span> <span class="n">curried_add</span> <span class="o">=</span> <span class="n">curry</span> <span class="n">add&#39;&#39;</span>
+<span class="k">let</span> <span class="n">curried_add</span> <span class="o">=</span> <span class="n">curry</span> <span class="n">add''</span>
 </pre></div>
 </div>
 </div>

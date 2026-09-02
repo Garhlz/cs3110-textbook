@@ -70,7 +70,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
     <link rel="next" title="5.10. 总结" href="summary.html" />
-    <link rel="prev" title="5.8. Include" href="includes.html" />
+    <link rel="prev" title="5.8. Include：纳入定义" href="includes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-CN"/>
   </head>
@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exercises.html">5.11. 练习</a></li>
@@ -626,9 +626,9 @@ document.write(`
 <p>我们在上一节中遇到的问题是需要将代码添加到两个不同的模块中，而这段代码因为与所添加模块的细节有关，所以无法直接写成通用函数。OCaml 中称为<em>函子</em>（functors）的语言特性提供了这样的参数化能力。</p>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p><strong>为什么命名为”函子”？</strong> 在<a class="reference external" href="https://en.wikipedia.org/wiki/Category_theory">范畴论</a>中，一个<em>范畴</em>包含<em>态射</em>（morphism，即我们所熟知的”函数”的泛化），而<em>函子</em>是范畴之间的映射。类似地，OCaml 模块包含函数，而 OCaml 函子则从模块映射到模块。</p>
+<p><strong>为什么叫“函子”？</strong> 在<a class="reference external" href="https://en.wikipedia.org/wiki/Category_theory">范畴论</a>中，一个<em>范畴</em>包含若干<em>态射</em>（morphism，可以看作我们所熟悉的函数的推广），而<em>函子</em>是范畴之间的映射。类似地，OCaml 模块包含函数，OCaml 函子则把模块映射为模块。</p>
 </div>
-<p>不幸的是，这个名字听起来令人生畏，但<strong>函子本质上只是一个从模块到模块的”函数”</strong>。上面句子中”函数”打引号，只是因为它和我们见过的其他函数不可互换。OCaml 的类型系统是<em>分层</em>的：模块值与其他类型的值属于不同层次，因此从模块到模块的函数，其编写和使用方式不能与从普通值到普通值的函数相同。但从概念上讲，函子实际上就是函数。</p>
+<p>“函子”这个名字听起来颇为吓人，但<strong>函子本质上只是一个从模块到模块的“函数”</strong>。这里给“函数”加上引号，是因为函子不能与此前见过的普通函数互换。OCaml 的类型系统是<em>分层</em>的：模块值与其他值处在不同层次，因此从模块到模块的函数，不能像作用于普通值的函数那样编写和使用。不过从概念上说，函子的确就是函数。</p>
 <p>这是函子的一个小例子：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -651,16 +651,9 @@ document.write(`
 </div>
 </div>
 </div>
-<p>函子的名称是 <code class="docutils literal notranslate"><span class="pre">IncX</span></code>。它本质上是一个从模块到
-模块。作为一个函数，它接受输入并产生输出。它的输入是
-名为<code class="docutils literal notranslate"><span class="pre">M</span></code>，其输入类型为<code class="docutils literal notranslate"><span class="pre">X</span></code>。它的输出是这样的结构
-出现在等号的右侧：<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">M.x</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">end</span></code>。</p>
-<p>考虑 <code class="docutils literal notranslate"><span class="pre">IncX</span></code> 的另一种方式是它是一个<em>参数化结构</em>。
-它采用的参数名为 <code class="docutils literal notranslate"><span class="pre">M</span></code> 且类型为 <code class="docutils literal notranslate"><span class="pre">X</span></code>。该结构本身有
-其中有一个名为 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的值。 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的值取决于
-参数<code class="docutils literal notranslate"><span class="pre">M</span></code>。</p>
-<p>由于函子本质上是函数，因此我们”应用”它们。这是一个例子
-应用<code class="docutils literal notranslate"><span class="pre">IncX</span></code>：</p>
+<p>这个函子名为 <code class="docutils literal notranslate"><span class="pre">IncX</span></code>，本质上是一个从模块到模块的函数：它接收输入并产生输出。输入参数名为 <code class="docutils literal notranslate"><span class="pre">M</span></code>，类型是 <code class="docutils literal notranslate"><span class="pre">X</span></code>；输出则是等号右侧的结构 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">M.x</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">end</span></code>。</p>
+<p>也可以把 <code class="docutils literal notranslate"><span class="pre">IncX</span></code> 看作一个<em>参数化结构</em>。它接收类型为 <code class="docutils literal notranslate"><span class="pre">X</span></code>、名为 <code class="docutils literal notranslate"><span class="pre">M</span></code> 的参数，结构内部定义了值 <code class="docutils literal notranslate"><span class="pre">x</span></code>，而 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的具体值取决于参数 <code class="docutils literal notranslate"><span class="pre">M</span></code>。</p>
+<p>函子既然是一种函数，自然也可以被“应用”。下面是应用 <code class="docutils literal notranslate"><span class="pre">IncX</span></code> 的例子：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">A</span> <span class="o">=</span> <span class="k">struct</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">end</span>
@@ -738,9 +731,7 @@ document.write(`
 输入并产生输出 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">A.x</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">end</span></code>。由于 <code class="docutils literal notranslate"><span class="pre">A.x</span></code> 是 <code class="docutils literal notranslate"><span class="pre">0</span></code>，
 结果是<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">end</span></code>。因此 <code class="docutils literal notranslate"><span class="pre">B</span></code> 绑定到 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">end</span></code>。
 同样，<code class="docutils literal notranslate"><span class="pre">C</span></code> 最终被绑定到 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">2</span> <span class="pre">end</span></code>。</p>
-<p>尽管函子 <code class="docutils literal notranslate"><span class="pre">IncX</span></code> 返回一个与其输入非常相似的模块
-模块，情况不一定如此。事实上，函子可以返回任何模块
-喜欢，也许与它的输入结构非常不同：</p>
+<p>虽然函子 <code class="docutils literal notranslate"><span class="pre">IncX</span></code> 返回的模块与输入模块十分相似，但函子并不必须如此。它可以返回任意模块，输出结构甚至可以与输入大相径庭：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">AddX</span> <span class="o">(</span><span class="nc">M</span> <span class="o">:</span> <span class="nc">X</span><span class="o">)</span> <span class="o">=</span> <span class="k">struct</span>
@@ -790,7 +781,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[11]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">7</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[11]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">7</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="n">Add42</span><span class="o">.</span><span class="n">x</span>
     <span class="o">^^^^^^^</span>
 <span class="ne">Error</span>: Unbound value Add42.x
@@ -935,7 +926,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">P0</span> <span class="o">=</span> <span class="nc">Pair1</span> <span class="o">(</span><span class="k">struct</span> <span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="kt">int</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">end</span><span class="o">)</span>
-<span class="k">module</span> <span class="nc">PA</span> <span class="o">=</span> <span class="nc">Pair1</span> <span class="o">(</span><span class="k">struct</span> <span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="kt">char</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="sc">&#39;a&#39;</span> <span class="k">end</span><span class="o">)</span>
+<span class="k">module</span> <span class="nc">PA</span> <span class="o">=</span> <span class="nc">Pair1</span> <span class="o">(</span><span class="k">struct</span> <span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="kt">char</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="sc">'a'</span> <span class="k">end</span><span class="o">)</span>
 </pre></div>
 </div>
 </div>
@@ -1002,8 +993,7 @@ document.write(`
 <p>标准库的 Map 模块实现了一个映射（从键到键的绑定）
 值）使用平衡二叉树。它以一种重要的方式使用函子。在
 本节我们研究如何使用它。你可以看到
-<a class="reference external" href="https://github.com/ocaml/ocaml/blob/trunk/stdlib/map.ml">implementation of that module on GitHub</a> 及其
-<a class="reference external" href="https://github.com/ocaml/ocaml/blob/trunk/stdlib/map.mli">interface</a>。</p>
+<a class="reference external" href="https://github.com/ocaml/ocaml/blob/trunk/stdlib/map.ml">该模块在 GitHub 上的实现</a>及其<a class="reference external" href="https://github.com/ocaml/ocaml/blob/trunk/stdlib/map.mli">接口</a>。</p>
 <p>Map 模块定义了一个函子 <code class="docutils literal notranslate"><span class="pre">Make</span></code> ，它创建一个实现
 映射特定类型的键。该类型是 <code class="docutils literal notranslate"><span class="pre">Make</span></code> 的输入结构。
 该输入结构的类型是 <code class="docutils literal notranslate"><span class="pre">Map.OrderedType</span></code>，这些类型
@@ -1043,17 +1033,17 @@ document.write(`
 </pre></div>
 </div>
 <p>唉，历史上许多语言都使用过类似的比较函数
-规范，例如 C 标准库的 <a class="reference external" href="http://www.gnu.org/software/libc/manual/html_node/String_002fArray-Comparison.html"><code class="docutils literal notranslate"><span class="pre">strcmp</span></code> function</a>。</p>
+约定，例如 C 标准库的 <a class="reference external" href="http://www.gnu.org/software/libc/manual/html_node/String_002fArray-Comparison.html"><code class="docutils literal notranslate"><span class="pre">strcmp</span></code> 函数</a>。</p>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Map.Make</span></code> 的输出支持我们期望的所有常用操作
 一本字典：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">S</span> <span class="o">=</span> <span class="k">sig</span>
   <span class="k">type</span> <span class="n">key</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span><span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">mem</span><span class="o">:</span> <span class="n">key</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">add</span><span class="o">:</span> <span class="n">key</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">find</span><span class="o">:</span> <span class="n">key</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span><span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">mem</span><span class="o">:</span> <span class="n">key</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">add</span><span class="o">:</span> <span class="n">key</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">find</span><span class="o">:</span> <span class="n">key</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
   <span class="o">...</span>
 <span class="k">end</span>
 </pre></div>
@@ -1079,51 +1069,51 @@ document.write(`
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module IntMap :
   sig
     type key = Int.t
-    type &#39;a t = &#39;a Map.Make(Int).t
-    val empty : &#39;a t
-    val add : key -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val add_to_list : key -&gt; &#39;a -&gt; &#39;a list t -&gt; &#39;a list t
-    val update : key -&gt; (&#39;a option -&gt; &#39;a option) -&gt; &#39;a t -&gt; &#39;a t
-    val singleton : key -&gt; &#39;a -&gt; &#39;a t
-    val remove : key -&gt; &#39;a t -&gt; &#39;a t
+    type 'a t = 'a Map.Make(Int).t
+    val empty : 'a t
+    val add : key -&gt; 'a -&gt; 'a t -&gt; 'a t
+    val add_to_list : key -&gt; 'a -&gt; 'a list t -&gt; 'a list t
+    val update : key -&gt; ('a option -&gt; 'a option) -&gt; 'a t -&gt; 'a t
+    val singleton : key -&gt; 'a -&gt; 'a t
+    val remove : key -&gt; 'a t -&gt; 'a t
     val merge :
-      (key -&gt; &#39;a option -&gt; &#39;b option -&gt; &#39;c option) -&gt; &#39;a t -&gt; &#39;b t -&gt; &#39;c t
-    val union : (key -&gt; &#39;a -&gt; &#39;a -&gt; &#39;a option) -&gt; &#39;a t -&gt; &#39;a t -&gt; &#39;a t
-    val cardinal : &#39;a t -&gt; int
-    val bindings : &#39;a t -&gt; (key * &#39;a) list
-    val min_binding : &#39;a t -&gt; key * &#39;a
-    val min_binding_opt : &#39;a t -&gt; (key * &#39;a) option
-    val max_binding : &#39;a t -&gt; key * &#39;a
-    val max_binding_opt : &#39;a t -&gt; (key * &#39;a) option
-    val choose : &#39;a t -&gt; key * &#39;a
-    val choose_opt : &#39;a t -&gt; (key * &#39;a) option
-    val find : key -&gt; &#39;a t -&gt; &#39;a
-    val find_opt : key -&gt; &#39;a t -&gt; &#39;a option
-    val find_first : (key -&gt; bool) -&gt; &#39;a t -&gt; key * &#39;a
-    val find_first_opt : (key -&gt; bool) -&gt; &#39;a t -&gt; (key * &#39;a) option
-    val find_last : (key -&gt; bool) -&gt; &#39;a t -&gt; key * &#39;a
-    val find_last_opt : (key -&gt; bool) -&gt; &#39;a t -&gt; (key * &#39;a) option
-    val iter : (key -&gt; &#39;a -&gt; unit) -&gt; &#39;a t -&gt; unit
-    val fold : (key -&gt; &#39;a -&gt; &#39;acc -&gt; &#39;acc) -&gt; &#39;a t -&gt; &#39;acc -&gt; &#39;acc
-    val map : (&#39;a -&gt; &#39;b) -&gt; &#39;a t -&gt; &#39;b t
-    val mapi : (key -&gt; &#39;a -&gt; &#39;b) -&gt; &#39;a t -&gt; &#39;b t
-    val filter : (key -&gt; &#39;a -&gt; bool) -&gt; &#39;a t -&gt; &#39;a t
-    val filter_map : (key -&gt; &#39;a -&gt; &#39;b option) -&gt; &#39;a t -&gt; &#39;b t
-    val partition : (key -&gt; &#39;a -&gt; bool) -&gt; &#39;a t -&gt; &#39;a t * &#39;a t
-    val split : key -&gt; &#39;a t -&gt; &#39;a t * &#39;a option * &#39;a t
-    val is_empty : &#39;a t -&gt; bool
-    val mem : key -&gt; &#39;a t -&gt; bool
-    val equal : (&#39;a -&gt; &#39;a -&gt; bool) -&gt; &#39;a t -&gt; &#39;a t -&gt; bool
-    val compare : (&#39;a -&gt; &#39;a -&gt; int) -&gt; &#39;a t -&gt; &#39;a t -&gt; int
-    val for_all : (key -&gt; &#39;a -&gt; bool) -&gt; &#39;a t -&gt; bool
-    val exists : (key -&gt; &#39;a -&gt; bool) -&gt; &#39;a t -&gt; bool
-    val to_list : &#39;a t -&gt; (key * &#39;a) list
-    val of_list : (key * &#39;a) list -&gt; &#39;a t
-    val to_seq : &#39;a t -&gt; (key * &#39;a) Seq.t
-    val to_rev_seq : &#39;a t -&gt; (key * &#39;a) Seq.t
-    val to_seq_from : key -&gt; &#39;a t -&gt; (key * &#39;a) Seq.t
-    val add_seq : (key * &#39;a) Seq.t -&gt; &#39;a t -&gt; &#39;a t
-    val of_seq : (key * &#39;a) Seq.t -&gt; &#39;a t
+      (key -&gt; 'a option -&gt; 'b option -&gt; 'c option) -&gt; 'a t -&gt; 'b t -&gt; 'c t
+    val union : (key -&gt; 'a -&gt; 'a -&gt; 'a option) -&gt; 'a t -&gt; 'a t -&gt; 'a t
+    val cardinal : 'a t -&gt; int
+    val bindings : 'a t -&gt; (key * 'a) list
+    val min_binding : 'a t -&gt; key * 'a
+    val min_binding_opt : 'a t -&gt; (key * 'a) option
+    val max_binding : 'a t -&gt; key * 'a
+    val max_binding_opt : 'a t -&gt; (key * 'a) option
+    val choose : 'a t -&gt; key * 'a
+    val choose_opt : 'a t -&gt; (key * 'a) option
+    val find : key -&gt; 'a t -&gt; 'a
+    val find_opt : key -&gt; 'a t -&gt; 'a option
+    val find_first : (key -&gt; bool) -&gt; 'a t -&gt; key * 'a
+    val find_first_opt : (key -&gt; bool) -&gt; 'a t -&gt; (key * 'a) option
+    val find_last : (key -&gt; bool) -&gt; 'a t -&gt; key * 'a
+    val find_last_opt : (key -&gt; bool) -&gt; 'a t -&gt; (key * 'a) option
+    val iter : (key -&gt; 'a -&gt; unit) -&gt; 'a t -&gt; unit
+    val fold : (key -&gt; 'a -&gt; 'acc -&gt; 'acc) -&gt; 'a t -&gt; 'acc -&gt; 'acc
+    val map : ('a -&gt; 'b) -&gt; 'a t -&gt; 'b t
+    val mapi : (key -&gt; 'a -&gt; 'b) -&gt; 'a t -&gt; 'b t
+    val filter : (key -&gt; 'a -&gt; bool) -&gt; 'a t -&gt; 'a t
+    val filter_map : (key -&gt; 'a -&gt; 'b option) -&gt; 'a t -&gt; 'b t
+    val partition : (key -&gt; 'a -&gt; bool) -&gt; 'a t -&gt; 'a t * 'a t
+    val split : key -&gt; 'a t -&gt; 'a t * 'a option * 'a t
+    val is_empty : 'a t -&gt; bool
+    val mem : key -&gt; 'a t -&gt; bool
+    val equal : ('a -&gt; 'a -&gt; bool) -&gt; 'a t -&gt; 'a t -&gt; bool
+    val compare : ('a -&gt; 'a -&gt; int) -&gt; 'a t -&gt; 'a t -&gt; int
+    val for_all : (key -&gt; 'a -&gt; bool) -&gt; 'a t -&gt; bool
+    val exists : (key -&gt; 'a -&gt; bool) -&gt; 'a t -&gt; bool
+    val to_list : 'a t -&gt; (key * 'a) list
+    val of_list : (key * 'a) list -&gt; 'a t
+    val to_seq : 'a t -&gt; (key * 'a) Seq.t
+    val to_rev_seq : 'a t -&gt; (key * 'a) Seq.t
+    val to_seq_from : key -&gt; 'a t -&gt; (key * 'a) Seq.t
+    val add_seq : (key * 'a) Seq.t -&gt; 'a t -&gt; 'a t
+    val of_seq : (key * 'a) Seq.t -&gt; 'a t
   end
 </pre></div>
 </div>
@@ -1139,7 +1129,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">IntMap</span><span class="o">;;</span>
-<span class="k">let</span> <span class="n">m1</span> <span class="o">=</span> <span class="n">add</span> <span class="mi">1</span> <span class="s2">&quot;one&quot;</span> <span class="n">empty</span>
+<span class="k">let</span> <span class="n">m1</span> <span class="o">=</span> <span class="n">add</span> <span class="mi">1</span> <span class="s2">"one"</span> <span class="n">empty</span>
 </pre></div>
 </div>
 </div>
@@ -1156,7 +1146,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = &quot;one&quot;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = "one"
 </pre></div>
 </div>
 </div>
@@ -1182,9 +1172,9 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: Not_found.
 
-<span class="n">Raised</span> <span class="n">at</span> <span class="n">Stdlib__Map</span><span class="o">.</span><span class="n">Make</span><span class="o">.</span><span class="n">find</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;map.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">141</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">10</span><span class="o">-</span><span class="mi">25</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[22]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">10</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+<span class="n">Raised</span> <span class="n">at</span> <span class="n">Stdlib__Map</span><span class="o">.</span><span class="n">Make</span><span class="o">.</span><span class="n">find</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"map.ml"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">141</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">10</span><span class="o">-</span><span class="mi">25</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"[22]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">10</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"toplevel/byte/topeval.ml"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
 </pre></div>
 </div>
 </div>
@@ -1196,7 +1186,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : (IntMap.key * string) list = [(1, &quot;one&quot;)]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : (IntMap.key * string) list = [(1, "one")]
 </pre></div>
 </div>
 </div>
@@ -1229,13 +1219,13 @@ document.write(`
 <p>但键必须是 <code class="docutils literal notranslate"><span class="pre">int</span></code>，而不是任何其他类型：</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">m3</span> <span class="o">=</span> <span class="n">add</span> <span class="bp">true</span> <span class="s2">&quot;one&quot;</span> <span class="n">empty</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">m3</span> <span class="o">=</span> <span class="n">add</span> <span class="bp">true</span> <span class="s2">"one"</span> <span class="n">empty</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[26]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">13</span><span class="o">-</span><span class="mi">17</span><span class="p">:</span>
-<span class="mi">1</span> <span class="o">|</span> <span class="n">let</span> <span class="n">m3</span> <span class="o">=</span> <span class="n">add</span> <span class="n">true</span> <span class="s2">&quot;one&quot;</span> <span class="n">empty</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[26]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">13</span><span class="o">-</span><span class="mi">17</span><span class="p">:</span>
+<span class="mi">1</span> <span class="o">|</span> <span class="n">let</span> <span class="n">m3</span> <span class="o">=</span> <span class="n">add</span> <span class="n">true</span> <span class="s2">"one"</span> <span class="n">empty</span>
                  <span class="o">^^^^</span>
 <span class="ne">Error</span>: The constructor true has type bool
        <span class="n">but</span> <span class="n">an</span> <span class="n">expression</span> <span class="n">was</span> <span class="n">expected</span> <span class="n">of</span> <span class="nb">type</span> <span class="n">IntMap</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="nb">int</span>
@@ -1246,14 +1236,14 @@ document.write(`
 <p>这是因为 <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> 模块是专门为整数键创建的，并会相应地排序。
 再次强调，顺序至关重要，因为底层数据结构是二叉搜索树，
 需要通过键比较来确定键在树中的存储位置。你甚至可以看到
-在 <a class="reference external" href="https://github.com/ocaml/ocaml/blob/4.12/stdlib/map.ml">standard library source code (v4.12)</a> 中，其中
+在<a class="reference external" href="https://github.com/ocaml/ocaml/blob/4.12/stdlib/map.ml">标准库源代码（v4.12）</a>中，其中
 以下是经过轻微编辑的摘录：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Make</span> <span class="o">(</span><span class="nc">Ord</span> <span class="o">:</span> <span class="nc">OrderedType</span><span class="o">)</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="k">type</span> <span class="n">key</span> <span class="o">=</span> <span class="nn">Ord</span><span class="p">.</span><span class="n">t</span>
 
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span>
     <span class="o">|</span> <span class="nc">Empty</span>
-    <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="o">{</span><span class="n">l</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="n">v</span> <span class="o">:</span> <span class="n">key</span><span class="o">;</span> <span class="n">d</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span> <span class="n">r</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="n">h</span> <span class="o">:</span> <span class="kt">int</span><span class="o">}</span>
+    <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="o">{</span><span class="n">l</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="n">v</span> <span class="o">:</span> <span class="n">key</span><span class="o">;</span> <span class="n">d</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">;</span> <span class="n">r</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="n">h</span> <span class="o">:</span> <span class="kt">int</span><span class="o">}</span>
       <span class="c">(** Left subtree, key, value/data, right subtree, height of node. *)</span>
 
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="nc">Empty</span>
@@ -1283,7 +1273,7 @@ document.write(`
 可以用来比较它们。客户端负责实现
 那个模块。</p>
 <p>Java Collections Framework 在 <code class="docutils literal notranslate"><span class="pre">TreeMap</span></code> 类中解决了类似的问题，
-其中有一个 <a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html#TreeMap-java.util.Comparator-">constructor that takes a Comparator</a>。在那里，
+它提供了一个<a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html#TreeMap-java.util.Comparator-">接收 <code class="docutils literal notranslate"><span class="pre">Comparator</span></code> 的构造函数</a>。在这里，
 客户端负责实现一个用于比较的类，而不是一个结构。
 虽然语言特性不同，但思想是一样的。</p>
 </section>
@@ -1335,51 +1325,51 @@ document.write(`
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module NameMap :
   sig
     type key = Name.t
-    type &#39;a t = &#39;a Map.Make(Name).t
-    val empty : &#39;a t
-    val add : key -&gt; &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val add_to_list : key -&gt; &#39;a -&gt; &#39;a list t -&gt; &#39;a list t
-    val update : key -&gt; (&#39;a option -&gt; &#39;a option) -&gt; &#39;a t -&gt; &#39;a t
-    val singleton : key -&gt; &#39;a -&gt; &#39;a t
-    val remove : key -&gt; &#39;a t -&gt; &#39;a t
+    type 'a t = 'a Map.Make(Name).t
+    val empty : 'a t
+    val add : key -&gt; 'a -&gt; 'a t -&gt; 'a t
+    val add_to_list : key -&gt; 'a -&gt; 'a list t -&gt; 'a list t
+    val update : key -&gt; ('a option -&gt; 'a option) -&gt; 'a t -&gt; 'a t
+    val singleton : key -&gt; 'a -&gt; 'a t
+    val remove : key -&gt; 'a t -&gt; 'a t
     val merge :
-      (key -&gt; &#39;a option -&gt; &#39;b option -&gt; &#39;c option) -&gt; &#39;a t -&gt; &#39;b t -&gt; &#39;c t
-    val union : (key -&gt; &#39;a -&gt; &#39;a -&gt; &#39;a option) -&gt; &#39;a t -&gt; &#39;a t -&gt; &#39;a t
-    val cardinal : &#39;a t -&gt; int
-    val bindings : &#39;a t -&gt; (key * &#39;a) list
-    val min_binding : &#39;a t -&gt; key * &#39;a
-    val min_binding_opt : &#39;a t -&gt; (key * &#39;a) option
-    val max_binding : &#39;a t -&gt; key * &#39;a
-    val max_binding_opt : &#39;a t -&gt; (key * &#39;a) option
-    val choose : &#39;a t -&gt; key * &#39;a
-    val choose_opt : &#39;a t -&gt; (key * &#39;a) option
-    val find : key -&gt; &#39;a t -&gt; &#39;a
-    val find_opt : key -&gt; &#39;a t -&gt; &#39;a option
-    val find_first : (key -&gt; bool) -&gt; &#39;a t -&gt; key * &#39;a
-    val find_first_opt : (key -&gt; bool) -&gt; &#39;a t -&gt; (key * &#39;a) option
-    val find_last : (key -&gt; bool) -&gt; &#39;a t -&gt; key * &#39;a
-    val find_last_opt : (key -&gt; bool) -&gt; &#39;a t -&gt; (key * &#39;a) option
-    val iter : (key -&gt; &#39;a -&gt; unit) -&gt; &#39;a t -&gt; unit
-    val fold : (key -&gt; &#39;a -&gt; &#39;acc -&gt; &#39;acc) -&gt; &#39;a t -&gt; &#39;acc -&gt; &#39;acc
-    val map : (&#39;a -&gt; &#39;b) -&gt; &#39;a t -&gt; &#39;b t
-    val mapi : (key -&gt; &#39;a -&gt; &#39;b) -&gt; &#39;a t -&gt; &#39;b t
-    val filter : (key -&gt; &#39;a -&gt; bool) -&gt; &#39;a t -&gt; &#39;a t
-    val filter_map : (key -&gt; &#39;a -&gt; &#39;b option) -&gt; &#39;a t -&gt; &#39;b t
-    val partition : (key -&gt; &#39;a -&gt; bool) -&gt; &#39;a t -&gt; &#39;a t * &#39;a t
-    val split : key -&gt; &#39;a t -&gt; &#39;a t * &#39;a option * &#39;a t
-    val is_empty : &#39;a t -&gt; bool
-    val mem : key -&gt; &#39;a t -&gt; bool
-    val equal : (&#39;a -&gt; &#39;a -&gt; bool) -&gt; &#39;a t -&gt; &#39;a t -&gt; bool
-    val compare : (&#39;a -&gt; &#39;a -&gt; int) -&gt; &#39;a t -&gt; &#39;a t -&gt; int
-    val for_all : (key -&gt; &#39;a -&gt; bool) -&gt; &#39;a t -&gt; bool
-    val exists : (key -&gt; &#39;a -&gt; bool) -&gt; &#39;a t -&gt; bool
-    val to_list : &#39;a t -&gt; (key * &#39;a) list
-    val of_list : (key * &#39;a) list -&gt; &#39;a t
-    val to_seq : &#39;a t -&gt; (key * &#39;a) Seq.t
-    val to_rev_seq : &#39;a t -&gt; (key * &#39;a) Seq.t
-    val to_seq_from : key -&gt; &#39;a t -&gt; (key * &#39;a) Seq.t
-    val add_seq : (key * &#39;a) Seq.t -&gt; &#39;a t -&gt; &#39;a t
-    val of_seq : (key * &#39;a) Seq.t -&gt; &#39;a t
+      (key -&gt; 'a option -&gt; 'b option -&gt; 'c option) -&gt; 'a t -&gt; 'b t -&gt; 'c t
+    val union : (key -&gt; 'a -&gt; 'a -&gt; 'a option) -&gt; 'a t -&gt; 'a t -&gt; 'a t
+    val cardinal : 'a t -&gt; int
+    val bindings : 'a t -&gt; (key * 'a) list
+    val min_binding : 'a t -&gt; key * 'a
+    val min_binding_opt : 'a t -&gt; (key * 'a) option
+    val max_binding : 'a t -&gt; key * 'a
+    val max_binding_opt : 'a t -&gt; (key * 'a) option
+    val choose : 'a t -&gt; key * 'a
+    val choose_opt : 'a t -&gt; (key * 'a) option
+    val find : key -&gt; 'a t -&gt; 'a
+    val find_opt : key -&gt; 'a t -&gt; 'a option
+    val find_first : (key -&gt; bool) -&gt; 'a t -&gt; key * 'a
+    val find_first_opt : (key -&gt; bool) -&gt; 'a t -&gt; (key * 'a) option
+    val find_last : (key -&gt; bool) -&gt; 'a t -&gt; key * 'a
+    val find_last_opt : (key -&gt; bool) -&gt; 'a t -&gt; (key * 'a) option
+    val iter : (key -&gt; 'a -&gt; unit) -&gt; 'a t -&gt; unit
+    val fold : (key -&gt; 'a -&gt; 'acc -&gt; 'acc) -&gt; 'a t -&gt; 'acc -&gt; 'acc
+    val map : ('a -&gt; 'b) -&gt; 'a t -&gt; 'b t
+    val mapi : (key -&gt; 'a -&gt; 'b) -&gt; 'a t -&gt; 'b t
+    val filter : (key -&gt; 'a -&gt; bool) -&gt; 'a t -&gt; 'a t
+    val filter_map : (key -&gt; 'a -&gt; 'b option) -&gt; 'a t -&gt; 'b t
+    val partition : (key -&gt; 'a -&gt; bool) -&gt; 'a t -&gt; 'a t * 'a t
+    val split : key -&gt; 'a t -&gt; 'a t * 'a option * 'a t
+    val is_empty : 'a t -&gt; bool
+    val mem : key -&gt; 'a t -&gt; bool
+    val equal : ('a -&gt; 'a -&gt; bool) -&gt; 'a t -&gt; 'a t -&gt; bool
+    val compare : ('a -&gt; 'a -&gt; int) -&gt; 'a t -&gt; 'a t -&gt; int
+    val for_all : (key -&gt; 'a -&gt; bool) -&gt; 'a t -&gt; bool
+    val exists : (key -&gt; 'a -&gt; bool) -&gt; 'a t -&gt; bool
+    val to_list : 'a t -&gt; (key * 'a) list
+    val of_list : (key * 'a) list -&gt; 'a t
+    val to_seq : 'a t -&gt; (key * 'a) Seq.t
+    val to_rev_seq : 'a t -&gt; (key * 'a) Seq.t
+    val to_seq_from : key -&gt; 'a t -&gt; (key * 'a) Seq.t
+    val add_seq : (key * 'a) Seq.t -&gt; 'a t -&gt; 'a t
+    val of_seq : (key * 'a) Seq.t -&gt; 'a t
   end
 </pre></div>
 </div>
@@ -1389,9 +1379,9 @@ document.write(`
 <p>现在我们可以使用该映射将姓名与出生年份关联起来：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">k1</span> <span class="o">=</span> <span class="o">{</span><span class="n">last</span> <span class="o">=</span> <span class="s2">&quot;Kardashian&quot;</span><span class="o">;</span> <span class="n">first</span> <span class="o">=</span> <span class="s2">&quot;Kourtney&quot;</span><span class="o">}</span>
-<span class="k">let</span> <span class="n">k2</span> <span class="o">=</span> <span class="o">{</span><span class="n">last</span> <span class="o">=</span> <span class="s2">&quot;Kardashian&quot;</span><span class="o">;</span> <span class="n">first</span> <span class="o">=</span> <span class="s2">&quot;Kimberly&quot;</span><span class="o">}</span>
-<span class="k">let</span> <span class="n">k3</span> <span class="o">=</span> <span class="o">{</span><span class="n">last</span> <span class="o">=</span> <span class="s2">&quot;Kardashian&quot;</span><span class="o">;</span> <span class="n">first</span> <span class="o">=</span> <span class="s2">&quot;Khloe&quot;</span><span class="o">}</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">k1</span> <span class="o">=</span> <span class="o">{</span><span class="n">last</span> <span class="o">=</span> <span class="s2">"Kardashian"</span><span class="o">;</span> <span class="n">first</span> <span class="o">=</span> <span class="s2">"Kourtney"</span><span class="o">}</span>
+<span class="k">let</span> <span class="n">k2</span> <span class="o">=</span> <span class="o">{</span><span class="n">last</span> <span class="o">=</span> <span class="s2">"Kardashian"</span><span class="o">;</span> <span class="n">first</span> <span class="o">=</span> <span class="s2">"Kimberly"</span><span class="o">}</span>
+<span class="k">let</span> <span class="n">k3</span> <span class="o">=</span> <span class="o">{</span><span class="n">last</span> <span class="o">=</span> <span class="s2">"Kardashian"</span><span class="o">;</span> <span class="n">first</span> <span class="o">=</span> <span class="s2">"Khloe"</span><span class="o">}</span>
 
 <span class="k">let</span> <span class="n">nm</span> <span class="o">=</span>
   <span class="nn">NameMap</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">add</span> <span class="n">k1</span> <span class="mi">1979</span> <span class="o">|&gt;</span> <span class="n">add</span> <span class="n">k2</span> <span class="mi">1980</span> <span class="o">|&gt;</span> <span class="n">add</span> <span class="n">k3</span> <span class="mi">1984</span><span class="o">)</span>
@@ -1401,22 +1391,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val k1 : name = {first = &quot;Kourtney&quot;; last = &quot;Kardashian&quot;}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val k1 : name = {first = "Kourtney"; last = "Kardashian"}
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val k2 : name = {first = &quot;Kimberly&quot;; last = &quot;Kardashian&quot;}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val k2 : name = {first = "Kimberly"; last = "Kardashian"}
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val k3 : name = {first = &quot;Khloe&quot;; last = &quot;Kardashian&quot;}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val k3 : name = {first = "Khloe"; last = "Kardashian"}
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val nm : int NameMap.t = &lt;abstr&gt;
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst : (NameMap.key * int) list =
-  [({first = &quot;Khloe&quot;; last = &quot;Kardashian&quot;}, 1984);
-   ({first = &quot;Kimberly&quot;; last = &quot;Kardashian&quot;}, 1980);
-   ({first = &quot;Kourtney&quot;; last = &quot;Kardashian&quot;}, 1979)]
+  [({first = "Khloe"; last = "Kardashian"}, 1984);
+   ({first = "Kimberly"; last = "Kardashian"}, 1980);
+   ({first = "Kourtney"; last = "Kardashian"}, 1979)]
 </pre></div>
 </div>
 </div>
@@ -1424,7 +1414,7 @@ document.write(`
 <p>请注意该列表中键的顺序与我们的顺序不同
 他们补充道。该列表根据我们的 <code class="docutils literal notranslate"><span class="pre">Name.compare</span></code> 函数排序
 写道。 <code class="docutils literal notranslate"><span class="pre">Map.S</span></code> 签名中的其他几个函数也将处理
-按排序顺序映射绑定—，例如<code class="docutils literal notranslate"><span class="pre">map</span></code>、<code class="docutils literal notranslate"><span class="pre">fold</span></code> 和<code class="docutils literal notranslate"><span class="pre">iter</span></code>。</p>
+按照排序顺序处理映射绑定，例如 <code class="docutils literal notranslate"><span class="pre">map</span></code>、<code class="docutils literal notranslate"><span class="pre">fold</span></code> 和 <code class="docutils literal notranslate"><span class="pre">iter</span></code>。</p>
 </section>
 <section id="id6">
 <h3><span class="section-number">5.9.3.3. </span><code class="docutils literal notranslate"><span class="pre">Map</span></code> 如何使用模块类型约束<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
@@ -1470,13 +1460,13 @@ document.write(`
 <p>现在不可能向映射添加绑定：</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">m</span> <span class="o">=</span> <span class="nn">UnusableMap</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">add</span> <span class="mi">0</span> <span class="s2">&quot;zero&quot;</span><span class="o">)</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">m</span> <span class="o">=</span> <span class="nn">UnusableMap</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">add</span> <span class="mi">0</span> <span class="s2">"zero"</span><span class="o">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[31]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">34</span><span class="o">-</span><span class="mi">35</span><span class="p">:</span>
-<span class="mi">1</span> <span class="o">|</span> <span class="n">let</span> <span class="n">m</span> <span class="o">=</span> <span class="n">UnusableMap</span><span class="o">.</span><span class="p">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">add</span> <span class="mi">0</span> <span class="s2">&quot;zero&quot;</span><span class="p">)</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[31]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">34</span><span class="o">-</span><span class="mi">35</span><span class="p">:</span>
+<span class="mi">1</span> <span class="o">|</span> <span class="n">let</span> <span class="n">m</span> <span class="o">=</span> <span class="n">UnusableMap</span><span class="o">.</span><span class="p">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">add</span> <span class="mi">0</span> <span class="s2">"zero"</span><span class="p">)</span>
                                       <span class="o">^</span>
 <span class="ne">Error</span>: The constant 0 has type int but an expression was expected of type
          <span class="n">UnusableMap</span><span class="o">.</span><span class="n">key</span>
@@ -1503,15 +1493,15 @@ document.write(`
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">exception</span> <span class="nc">Empty</span>
 
 <span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
-  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListStack</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">push</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
   <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">x</span>
@@ -1519,7 +1509,7 @@ document.write(`
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">VariantStack</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="nc">E</span> <span class="o">|</span> <span class="nc">S</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="nc">E</span> <span class="o">|</span> <span class="nc">S</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="nc">E</span>
   <span class="k">let</span> <span class="n">push</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span> <span class="nc">S</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">s</span><span class="o">)</span>
   <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="k">function</span> <span class="nc">E</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span> <span class="o">|</span> <span class="nc">S</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="o">_)</span> <span class="o">-&gt;</span> <span class="n">x</span>
@@ -1539,31 +1529,31 @@ document.write(`
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Stack =
   sig
-    type &#39;a t
-    val empty : &#39;a t
-    val push : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val peek : &#39;a t -&gt; &#39;a
-    val pop : &#39;a t -&gt; &#39;a t
+    type 'a t
+    val empty : 'a t
+    val push : 'a -&gt; 'a t -&gt; 'a t
+    val peek : 'a t -&gt; 'a
+    val pop : 'a t -&gt; 'a t
   end
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStack :
   sig
-    type &#39;a t = &#39;a list
-    val empty : &#39;a list
-    val push : &#39;a -&gt; &#39;a list -&gt; &#39;a list
-    val peek : &#39;a list -&gt; &#39;a
-    val pop : &#39;a list -&gt; &#39;a list
+    type 'a t = 'a list
+    val empty : 'a list
+    val push : 'a -&gt; 'a list -&gt; 'a list
+    val peek : 'a list -&gt; 'a
+    val pop : 'a list -&gt; 'a list
   end
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module VariantStack :
   sig
-    type &#39;a t = E | S of &#39;a * &#39;a t
-    val empty : &#39;a t
-    val push : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val peek : &#39;a t -&gt; &#39;a
-    val pop : &#39;a t -&gt; &#39;a t
+    type 'a t = E | S of 'a * 'a t
+    val empty : 'a t
+    val push : 'a -&gt; 'a t -&gt; 'a t
+    val peek : 'a t -&gt; 'a
+    val pop : 'a t -&gt; 'a t
   end
 </pre></div>
 </div>
@@ -1573,7 +1563,7 @@ document.write(`
 <p>假设我们想为 <code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 编写一个 OUnit 测试：</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;peek (push x empty) = x&quot;</span> <span class="o">&gt;::</span> <span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">test</span> <span class="o">=</span> <span class="s2">"peek (push x empty) = x"</span> <span class="o">&gt;::</span> <span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span>
   <span class="n">assert_equal</span> <span class="mi">1</span> <span class="nn">ListStack</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">1</span> <span class="o">|&gt;</span> <span class="n">peek</span><span class="o">)</span>
 </pre></div>
 </div>
@@ -1582,7 +1572,7 @@ document.write(`
 <p>不幸的是，要测试 <code class="docutils literal notranslate"><span class="pre">VariantStack</span></code>，我们必须复制该代码：</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">test&#39;</span> <span class="o">=</span> <span class="s2">&quot;peek (push x empty) = x&quot;</span> <span class="o">&gt;::</span> <span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">test'</span> <span class="o">=</span> <span class="s2">"peek (push x empty) = x"</span> <span class="o">&gt;::</span> <span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span>
   <span class="n">assert_equal</span> <span class="mi">1</span> <span class="nn">VariantStack</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">1</span> <span class="o">|&gt;</span> <span class="n">peek</span><span class="o">)</span>
 </pre></div>
 </div>
@@ -1599,7 +1589,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">StackTester</span> <span class="o">(</span><span class="nc">S</span> <span class="o">:</span> <span class="nc">Stack</span><span class="o">)</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="o">[</span>
-    <span class="s2">&quot;peek (push x empty) = x&quot;</span> <span class="o">&gt;::</span> <span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span>
+    <span class="s2">"peek (push x empty) = x"</span> <span class="o">&gt;::</span> <span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span>
       <span class="n">assert_equal</span> <span class="mi">1</span> <span class="nn">S</span><span class="p">.</span><span class="o">(</span><span class="n">empty</span> <span class="o">|&gt;</span> <span class="n">push</span> <span class="mi">1</span> <span class="o">|&gt;</span> <span class="n">peek</span><span class="o">)</span>
   <span class="o">]</span>
 <span class="k">end</span>
@@ -1650,11 +1640,11 @@ document.write(`
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">elements</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">elements</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">SetOfList</span> <span class="o">(</span><span class="nc">S</span> <span class="o">:</span> <span class="nc">Set</span><span class="o">)</span> <span class="o">=</span> <span class="k">struct</span>
@@ -1672,7 +1662,7 @@ document.write(`
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSet</span> <span class="o">:</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span>
   <span class="k">let</span> <span class="n">add</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
@@ -1681,7 +1671,7 @@ document.write(`
 
 <span class="k">module</span> <span class="nc">UniqListSet</span> <span class="o">:</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="c">(** All values in the list must be unique. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span>
   <span class="k">let</span> <span class="n">add</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span> <span class="k">if</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">s</span> <span class="k">then</span> <span class="n">s</span> <span class="k">else</span> <span class="n">x</span> <span class="o">::</span> <span class="n">s</span>
@@ -1699,10 +1689,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module OfList : sig val of_list : &#39;a list -&gt; &#39;a ListSet.t end
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module OfList : sig val of_list : 'a list -&gt; 'a ListSet.t end
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module UniqOfList : sig val of_list : &#39;a list -&gt; &#39;a UniqListSet.t end
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module UniqOfList : sig val of_list : 'a list -&gt; 'a UniqListSet.t end
 </pre></div>
 </div>
 </div>
@@ -1726,12 +1716,12 @@ document.write(`
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module SetWithOfList :
   (S : Set) -&gt;
     sig
-      type &#39;a t = &#39;a S.t
-      val empty : &#39;a t
-      val mem : &#39;a -&gt; &#39;a t -&gt; bool
-      val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-      val elements : &#39;a t -&gt; &#39;a list
-      val of_list : &#39;a list -&gt; &#39;a S.t
+      type 'a t = 'a S.t
+      val empty : 'a t
+      val mem : 'a -&gt; 'a t -&gt; bool
+      val add : 'a -&gt; 'a t -&gt; 'a t
+      val elements : 'a t -&gt; 'a list
+      val of_list : 'a list -&gt; 'a S.t
     end
 </pre></div>
 </div>
@@ -1751,23 +1741,23 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module SetL :
   sig
-    type &#39;a t = &#39;a ListSet.t
-    val empty : &#39;a t
-    val mem : &#39;a -&gt; &#39;a t -&gt; bool
-    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val elements : &#39;a t -&gt; &#39;a list
-    val of_list : &#39;a list -&gt; &#39;a ListSet.t
+    type 'a t = 'a ListSet.t
+    val empty : 'a t
+    val mem : 'a -&gt; 'a t -&gt; bool
+    val add : 'a -&gt; 'a t -&gt; 'a t
+    val elements : 'a t -&gt; 'a list
+    val of_list : 'a list -&gt; 'a ListSet.t
   end
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module UniqSetL :
   sig
-    type &#39;a t = &#39;a UniqListSet.t
-    val empty : &#39;a t
-    val mem : &#39;a -&gt; &#39;a t -&gt; bool
-    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val elements : &#39;a t -&gt; &#39;a list
-    val of_list : &#39;a list -&gt; &#39;a UniqListSet.t
+    type 'a t = 'a UniqListSet.t
+    val empty : 'a t
+    val mem : 'a -&gt; 'a t -&gt; bool
+    val add : 'a -&gt; 'a t -&gt; 'a t
+    val elements : 'a t -&gt; 'a list
+    val of_list : 'a list -&gt; 'a UniqListSet.t
   end
 </pre></div>
 </div>
@@ -1828,7 +1818,7 @@ Java 中的扩展。我们创建了一个基本模块并扩展了其功能
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">上一页</p>
-        <p class="prev-next-title"><span class="section-number">5.8. </span>Include</p>
+        <p class="prev-next-title"><span class="section-number">5.8. </span>Include：纳入定义</p>
       </div>
     </a>
     <a class="right-next"

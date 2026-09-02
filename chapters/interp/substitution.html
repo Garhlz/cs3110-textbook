@@ -701,8 +701,8 @@ bop ::= + | * | &lt;=
 任何程序员都应该依赖的东西。</p>
 <p>许多人会期望从左到右的评估，所以让我们定义 <code class="docutils literal notranslate"><span class="pre">--&gt;</span></code>
 的关系。我们首先说左边可以迈出一步：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e1 bop e2 --&gt; e1&#39; bop e2
-  if e1 --&gt; e1&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e1 bop e2 --&gt; e1' bop e2
+  if e1 --&gt; e1'
 </pre></div>
 </div>
 <p>与 SimPL 的类型系统类似，该规则表示两个表达式是
@@ -710,8 +710,8 @@ bop ::= + | * | &lt;=
 <code class="docutils literal notranslate"><span class="pre">--&gt;</span></code> 关系。这就是它成为归纳定义的原因。</p>
 <p>如果左侧完成评估，则右侧可以开始
 步进：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>v1 bop e2 --&gt; v1 bop e2&#39;
-  if e2 --&gt; e2&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>v1 bop e2 --&gt; v1 bop e2'
+  if e2 --&gt; e2'
 </pre></div>
 </div>
 <p>最后当两边都达到一个值时，二元运算符
@@ -744,8 +744,8 @@ bop ::= + | * | &lt;=
 进行评估，因为这就是大多数语言的工作方式。那我们来写评价吧
 该语义的规则。</p>
 <p>首先，守卫被评估为一个值：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>if e1 then e2 else e3 --&gt; if e1&#39; then e2 else e3
-  if e1 --&gt; e1&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>if e1 then e2 else e3 --&gt; if e1' then e2 else e3
+  if e1 --&gt; e1'
 </pre></div>
 </div>
 <p>然后，在guard的基础上，简化了if表达式
@@ -758,8 +758,8 @@ if false then e2 else e3 --&gt; e3
 <p><strong>Let 表达式。</strong> 让 SimPL Let 表达式以相同的方式求值
 如 OCaml let 表达式：首先是绑定表达式，然后是主体。</p>
 <p>绑定表达式的步进规则是：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>let x = e1 in e2 --&gt; let x = e1&#39; in e2
-  if e1 --&gt; e1&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>let x = e1 in e2 --&gt; let x = e1' in e2
+  if e1 --&gt; e1'
 </pre></div>
 </div>
 <p>接下来，如果绑定表达式达到了一个值，我们要替换它
@@ -813,13 +813,13 @@ Error: Unbound value x
 
 <span class="c">(** [subst e v x] is [e{v/x}]. *)</span>
 <span class="k">let</span> <span class="n">subst</span> <span class="o">_</span> <span class="o">_</span> <span class="o">_</span> <span class="o">=</span>
-  <span class="n">failwith</span> <span class="s2">&quot;See next section&quot;</span>
+  <span class="n">failwith</span> <span class="s2">"See next section"</span>
 
 <span class="c">(** [step] is the [--&gt;] relation, that is, a single step of</span>
 <span class="c">    evaluation. *)</span>
 <span class="k">let</span> <span class="k">rec</span> <span class="n">step</span> <span class="o">:</span> <span class="n">expr</span> <span class="o">-&gt;</span> <span class="n">expr</span> <span class="o">=</span> <span class="k">function</span>
-  <span class="o">|</span> <span class="nc">Int</span> <span class="o">_</span> <span class="o">|</span> <span class="nc">Bool</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Does not step&quot;</span>
-  <span class="o">|</span> <span class="nc">Var</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Unbound variable&quot;</span>
+  <span class="o">|</span> <span class="nc">Int</span> <span class="o">_</span> <span class="o">|</span> <span class="nc">Bool</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Does not step"</span>
+  <span class="o">|</span> <span class="nc">Var</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Unbound variable"</span>
   <span class="o">|</span> <span class="nc">Binop</span> <span class="o">(</span><span class="n">bop</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span> <span class="k">when</span> <span class="n">is_value</span> <span class="n">e1</span> <span class="o">&amp;&amp;</span> <span class="n">is_value</span> <span class="n">e2</span> <span class="o">-&gt;</span>
     <span class="n">step_bop</span> <span class="n">bop</span> <span class="n">e1</span> <span class="n">e2</span>
   <span class="o">|</span> <span class="nc">Binop</span> <span class="o">(</span><span class="n">bop</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span> <span class="k">when</span> <span class="n">is_value</span> <span class="n">e1</span> <span class="o">-&gt;</span>
@@ -829,7 +829,7 @@ Error: Unbound value x
   <span class="o">|</span> <span class="nc">Let</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nc">Let</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">step</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span>
   <span class="o">|</span> <span class="nc">If</span> <span class="o">(</span><span class="nc">Bool</span> <span class="bp">true</span><span class="o">,</span> <span class="n">e2</span><span class="o">,</span> <span class="o">_)</span> <span class="o">-&gt;</span> <span class="n">e2</span>
   <span class="o">|</span> <span class="nc">If</span> <span class="o">(</span><span class="nc">Bool</span> <span class="bp">false</span><span class="o">,</span> <span class="o">_,</span> <span class="n">e3</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">e3</span>
-  <span class="o">|</span> <span class="nc">If</span> <span class="o">(</span><span class="nc">Int</span> <span class="o">_,</span> <span class="o">_,</span> <span class="o">_)</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Guard of if must have type bool&quot;</span>
+  <span class="o">|</span> <span class="nc">If</span> <span class="o">(</span><span class="nc">Int</span> <span class="o">_,</span> <span class="o">_,</span> <span class="o">_)</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Guard of if must have type bool"</span>
   <span class="o">|</span> <span class="nc">If</span> <span class="o">(</span><span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">,</span> <span class="n">e3</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nc">If</span> <span class="o">(</span><span class="n">step</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">,</span> <span class="n">e3</span><span class="o">)</span>
 
 <span class="c">(** [step_bop bop v1 v2] implements the primitive operation</span>
@@ -838,7 +838,7 @@ Error: Unbound value x
   <span class="o">|</span> <span class="nc">Add</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">a</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="nc">Int</span> <span class="o">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">)</span>
   <span class="o">|</span> <span class="nc">Mult</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">a</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="nc">Int</span> <span class="o">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="o">)</span>
   <span class="o">|</span> <span class="nc">Leq</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">a</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="nc">Bool</span> <span class="o">(</span><span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="o">)</span>
-  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Operator and operand type mismatch&quot;</span>
+  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Operator and operand type mismatch"</span>
 </pre></div>
 </div>
 <p>在该实现中我们必须处理的唯一新问题是两个地方
@@ -858,8 +858,8 @@ Error: Unbound value x
 可以用这两个规则来定义：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e --&gt;* e
 
-e --&gt;* e&#39;&#39;
-  if e --&gt; e&#39; and e&#39; --&gt;* e&#39;&#39;
+e --&gt;* e''
+  if e --&gt; e' and e' --&gt;* e''
 </pre></div>
 </div>
 <p>当然，在实现解释器时，我们真正想要的是
@@ -926,7 +926,7 @@ if e1 then e2 else e3 ==&gt; v3
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [eval_big e] is the [e ==&gt; v] relation. *)</span>
 <span class="k">let</span> <span class="k">rec</span> <span class="n">eval_big</span> <span class="o">(</span><span class="n">e</span> <span class="o">:</span> <span class="n">expr</span><span class="o">)</span> <span class="o">:</span> <span class="n">expr</span> <span class="o">=</span> <span class="k">match</span> <span class="n">e</span> <span class="k">with</span>
   <span class="o">|</span> <span class="nc">Int</span> <span class="o">_</span> <span class="o">|</span> <span class="nc">Bool</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">e</span>
-  <span class="o">|</span> <span class="nc">Var</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Unbound variable&quot;</span>
+  <span class="o">|</span> <span class="nc">Var</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Unbound variable"</span>
   <span class="o">|</span> <span class="nc">Binop</span> <span class="o">(</span><span class="n">bop</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">eval_bop</span> <span class="n">bop</span> <span class="n">e1</span> <span class="n">e2</span>
   <span class="o">|</span> <span class="nc">Let</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">subst</span> <span class="n">e2</span> <span class="o">(</span><span class="n">eval_big</span> <span class="n">e1</span><span class="o">)</span> <span class="n">x</span> <span class="o">|&gt;</span> <span class="n">eval_big</span>
   <span class="o">|</span> <span class="nc">If</span> <span class="o">(</span><span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">,</span> <span class="n">e3</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">eval_if</span> <span class="n">e1</span> <span class="n">e2</span> <span class="n">e3</span>
@@ -936,13 +936,13 @@ if e1 then e2 else e3 ==&gt; v3
   <span class="o">|</span> <span class="nc">Add</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">a</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="nc">Int</span> <span class="o">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">)</span>
   <span class="o">|</span> <span class="nc">Mult</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">a</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="nc">Int</span> <span class="o">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="o">)</span>
   <span class="o">|</span> <span class="nc">Leq</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">a</span><span class="o">,</span> <span class="nc">Int</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="nc">Bool</span> <span class="o">(</span><span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="o">)</span>
-  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Operator and operand type mismatch&quot;</span>
+  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Operator and operand type mismatch"</span>
 
 <span class="c">(** [eval_if e1 e2 e3] is the [e] such that [if e1 then e2 else e3 ==&gt; e]. *)</span>
 <span class="k">and</span> <span class="n">eval_if</span> <span class="n">e1</span> <span class="n">e2</span> <span class="n">e3</span> <span class="o">=</span> <span class="k">match</span> <span class="n">eval_big</span> <span class="n">e1</span> <span class="k">with</span>
   <span class="o">|</span> <span class="nc">Bool</span> <span class="bp">true</span> <span class="o">-&gt;</span> <span class="n">eval_big</span> <span class="n">e2</span>
   <span class="o">|</span> <span class="nc">Bool</span> <span class="bp">false</span> <span class="o">-&gt;</span> <span class="n">eval_big</span> <span class="n">e3</span>
-  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Guard of if must have type bool&quot;</span>
+  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Guard of if must have type bool"</span>
 </pre></div>
 </div>
 <p>分解每个部分的函数是很好的工程实践
@@ -1077,10 +1077,10 @@ OCaml 因为阴影。以下是它如何根据我们的定义进行评估
   <span class="o">|</span> <span class="nc">Int</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">e</span>
   <span class="o">|</span> <span class="nc">Binop</span> <span class="o">(</span><span class="n">bop</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nc">Binop</span> <span class="o">(</span><span class="n">bop</span><span class="o">,</span> <span class="n">subst</span> <span class="n">e1</span> <span class="n">v</span> <span class="n">x</span><span class="o">,</span> <span class="n">subst</span> <span class="n">e2</span> <span class="n">v</span> <span class="n">x</span><span class="o">)</span>
   <span class="o">|</span> <span class="nc">Let</span> <span class="o">(</span><span class="n">y</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span> <span class="o">-&gt;</span>
-    <span class="k">let</span> <span class="n">e1&#39;</span> <span class="o">=</span> <span class="n">subst</span> <span class="n">e1</span> <span class="n">v</span> <span class="n">x</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="n">e1'</span> <span class="o">=</span> <span class="n">subst</span> <span class="n">e1</span> <span class="n">v</span> <span class="n">x</span> <span class="k">in</span>
     <span class="k">if</span> <span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
-    <span class="k">then</span> <span class="nc">Let</span> <span class="o">(</span><span class="n">y</span><span class="o">,</span> <span class="n">e1&#39;</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span>
-    <span class="k">else</span> <span class="nc">Let</span> <span class="o">(</span><span class="n">y</span><span class="o">,</span> <span class="n">e1&#39;</span><span class="o">,</span> <span class="n">subst</span> <span class="n">e2</span> <span class="n">v</span> <span class="n">x</span><span class="o">)</span>
+    <span class="k">then</span> <span class="nc">Let</span> <span class="o">(</span><span class="n">y</span><span class="o">,</span> <span class="n">e1'</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span>
+    <span class="k">else</span> <span class="nc">Let</span> <span class="o">(</span><span class="n">y</span><span class="o">,</span> <span class="n">e1'</span><span class="o">,</span> <span class="n">subst</span> <span class="n">e2</span> <span class="n">v</span> <span class="n">x</span><span class="o">)</span>
   <span class="o">|</span> <span class="nc">If</span> <span class="o">(</span><span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">,</span> <span class="n">e3</span><span class="o">)</span> <span class="o">-&gt;</span>
     <span class="nc">If</span> <span class="o">(</span><span class="n">subst</span> <span class="n">e1</span> <span class="n">v</span> <span class="n">x</span><span class="o">,</span> <span class="n">subst</span> <span class="n">e2</span> <span class="n">v</span> <span class="n">x</span><span class="o">,</span> <span class="n">subst</span> <span class="n">e3</span> <span class="n">v</span> <span class="n">x</span><span class="o">)</span>
 </pre></div>
@@ -1148,8 +1148,8 @@ y{e/x} = y
 <p>函数中的替换怎么样？在 SimPL 中，当我们
 到达同名的绑定变量；否则，我们继续。在
 lambda 演算，这个想法可以表述如下：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(fun x -&gt; e&#39;){e/x} = fun x -&gt; e&#39;
-(fun y -&gt; e&#39;){e/x} = fun y -&gt; e&#39;{e/x}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(fun x -&gt; e'){e/x} = fun x -&gt; e'
+(fun y -&gt; e'){e/x} = fun y -&gt; e'{e/x}
 </pre></div>
 </div>
 <p>也许令人惊讶的是，这个定义被证明是错误的。原因如下：它
@@ -1185,8 +1185,8 @@ lambda 演算，这个想法可以表述如下：</p>
 答案称为<em>避免捕获的替换</em>，数学家们一直没有找到它的正确定义
 几个世纪。</p>
 <p>正确的定义如下：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(fun x -&gt; e&#39;){e/x} = fun x -&gt; e&#39;
-(fun y -&gt; e&#39;){e/x} = fun y -&gt; e&#39;{e/x}  if y is not in FV(e)
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(fun x -&gt; e'){e/x} = fun x -&gt; e'
+(fun y -&gt; e'){e/x} = fun y -&gt; e'{e/x}  if y is not in FV(e)
 </pre></div>
 </div>
 <p>其中 <code class="docutils literal notranslate"><span class="pre">FV(e)</span></code> 表示 <code class="docutils literal notranslate"><span class="pre">e</span></code> 的“自由变量”，即变量
@@ -1229,7 +1229,7 @@ FV(fun x -&gt; e) = FV(e) - {x}
 每次调用时的名称：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">gensym</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">counter</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">0</span> <span class="k">in</span>
-  <span class="k">fun</span> <span class="bp">()</span> <span class="o">-&gt;</span> <span class="n">incr</span> <span class="n">counter</span><span class="o">;</span> <span class="s2">&quot;$x&quot;</span> <span class="o">^</span> <span class="n">string_of_int</span> <span class="o">!</span><span class="n">counter</span>
+  <span class="k">fun</span> <span class="bp">()</span> <span class="o">-&gt;</span> <span class="n">incr</span> <span class="n">counter</span><span class="o">;</span> <span class="s2">"$x"</span> <span class="o">^</span> <span class="n">string_of_int</span> <span class="o">!</span><span class="n">counter</span>
 </pre></div>
 </div>
 </li>
@@ -1291,52 +1291,52 @@ v ::= fun x -&gt; e | i | b | (v1, v2) | Left v | Right v
 SimPL 和 lambda 演算中已有的一切。</p>
 <p><strong>小步关系。</strong> 这是我们已经知道的 Core OCaml 的片段
 模拟PL：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e1 bop e2 --&gt; e1&#39; bop e2
-	if e1 --&gt; e1&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e1 bop e2 --&gt; e1' bop e2
+	if e1 --&gt; e1'
 
-v1 bop e2 --&gt; v1 bop e2&#39;
-	if e2 --&gt; e2&#39;
+v1 bop e2 --&gt; v1 bop e2'
+	if e2 --&gt; e2'
 
 v1 bop v2 --&gt; v3
 	where v3 is the result of applying primitive operation bop
 	to v1 and v2
 
-if e1 then e2 else e3 --&gt; if e1&#39; then e2 else e3
-	if e1 --&gt; e1&#39;
+if e1 then e2 else e3 --&gt; if e1' then e2 else e3
+	if e1 --&gt; e1'
 
 if true then e2 else e3 --&gt; e2
 
 if false then e2 else e3 --&gt; e3
 
-let x = e1 in e2 --&gt; let x = e1&#39; in e2
-	if e1 --&gt; e1&#39;
+let x = e1 in e2 --&gt; let x = e1' in e2
+	if e1 --&gt; e1'
 
 let x = v in e2 --&gt; e2{v/x}
 </pre></div>
 </div>
 <p>这是与 lambda 演算相对应的 Core OCaml 片段：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e1 e2 --&gt; e1&#39; e2
-	if e1 --&gt; e1&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e1 e2 --&gt; e1' e2
+	if e1 --&gt; e1'
 
-v1 e2 --&gt; v1 e2&#39;
-	if e2 --&gt; e2&#39;
+v1 e2 --&gt; v1 e2'
+	if e2 --&gt; e2'
 
 (fun x -&gt; e) v2 --&gt; e{v2/x}
 </pre></div>
 </div>
 <p>以下是 Core OCaml 的新部分。首先，<strong>两人</strong>评估他们的第一个
 组件，然后是第二个组件：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(e1, e2) --&gt; (e1&#39;, e2)
-	if e1 --&gt; e1&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(e1, e2) --&gt; (e1', e2)
+	if e1 --&gt; e1'
 
-(v1, e2) --&gt; (v1, e2&#39;)
-	if e2 --&gt; e2&#39;
+(v1, e2) --&gt; (v1, e2')
+	if e2 --&gt; e2'
 
-fst e --&gt; fst e&#39;
-  if e --&gt; e&#39;
+fst e --&gt; fst e'
+  if e --&gt; e'
 
-snd e --&gt; snd e&#39;
-  if e --&gt; e&#39;
+snd e --&gt; snd e'
+  if e --&gt; e'
 
 fst (v1, v2) --&gt; v1
 
@@ -1344,18 +1344,18 @@ snd (v1, v2) --&gt; v2
 </pre></div>
 </div>
 <p><strong>构造函数</strong>评估它们携带的表达式：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Left e --&gt; Left e&#39;
-	if e --&gt; e&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Left e --&gt; Left e'
+	if e --&gt; e'
 
-Right e --&gt; Right e&#39;
-	if e --&gt; e&#39;
+Right e --&gt; Right e'
+	if e --&gt; e'
 </pre></div>
 </div>
 <p><strong>模式匹配</strong> 评估正在匹配的表达式，然后减少到 1
 分支机构：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>match e with Left x1 -&gt; e1 | Right x2 -&gt; e2
---&gt; match e&#39; with Left x1 -&gt; e1 | Right x2 -&gt; e2
-	if e --&gt; e&#39;
+--&gt; match e' with Left x1 -&gt; e1 | Right x2 -&gt; e2
+	if e --&gt; e'
 
 match Left v with Left x1 -&gt; e1 | Right x2 -&gt; e2
 --&gt; e1{v/x1}
@@ -1386,9 +1386,9 @@ y{v/x} = y
 
 (e1 e2){v/x} = e1{v/x} e2{v/x}
 
-(fun x -&gt; e&#39;){v/x} = (fun x -&gt; e&#39;)
+(fun x -&gt; e'){v/x} = (fun x -&gt; e')
 
-(fun y -&gt; e&#39;){v/x} = (fun y -&gt; e&#39;{v/x})
+(fun y -&gt; e'){v/x} = (fun y -&gt; e'{v/x})
   if y not in FV(v)
 </pre></div>
 </div>

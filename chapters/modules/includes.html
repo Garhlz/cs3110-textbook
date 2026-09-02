@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>5.8. Include &#8212; OCaml 编程：正确、高效、优美</title>
+    <title>5.8. Include：纳入定义 &#8212; OCaml 编程：正确、高效、优美</title>
   
   
   
@@ -70,7 +70,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
     <link rel="next" title="5.9. 函子" href="functors.html" />
-    <link rel="prev" title="5.7. 模块类型限制" href="module_type_constraints.html" />
+    <link rel="prev" title="5.7. 模块类型约束" href="module_type_constraints.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-CN"/>
   </head>
@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exercises.html">5.11. 练习</a></li>
@@ -586,7 +586,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Include</h1>
+    <h1>Include：纳入定义</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -596,7 +596,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">5.8.1. Include 的语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">5.8.1. <code class="docutils literal notranslate"><span class="pre">include</span></code> 的语义</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.8.2. 封装和 Include</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#include-open">5.8.3. Include 与 Open</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.8.4. 在多个模块中包含代码</a></li>
@@ -612,7 +612,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="include">
-<h1><span class="section-number">5.8. </span>Include<a class="headerlink" href="#include" title="Permalink to this heading">#</a></h1>
+<h1><span class="section-number">5.8. </span>Include：纳入定义<a class="headerlink" href="#include" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/SmG3ChuOLpQ" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 <p>复制和粘贴代码几乎总是一个坏主意。重复代码会让错误也被重复并扩散。
 那么我们为什么还是这么容易犯这个错误？也许是因为它看起来总是更轻松：
@@ -624,15 +624,15 @@ document.write(`
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">elements</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">elements</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListSet</span> <span class="o">:</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span>
   <span class="k">let</span> <span class="n">add</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
@@ -649,11 +649,11 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Set =
   sig
-    type &#39;a t
-    val empty : &#39;a t
-    val mem : &#39;a -&gt; &#39;a t -&gt; bool
-    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val elements : &#39;a t -&gt; &#39;a list
+    type 'a t
+    val empty : 'a t
+    val mem : 'a -&gt; 'a t -&gt; bool
+    val add : 'a -&gt; 'a t -&gt; 'a t
+    val elements : 'a t -&gt; 'a list
   end
 </pre></div>
 </div>
@@ -672,12 +672,10 @@ document.write(`
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>这有助于我们重用代码，因为子类继承了所有的方法
-它的超类。</p>
+<p>这样便能重用代码，因为子类会继承超类的所有方法。</p>
 <p>OCaml 的 <em>include</em> 与此类似。它让一个模块能够包含另一个模块定义的所有项，
-也让一个模块类型能够包含另一个模块类型给出的所有规格说明。</p>
-<p>下面是我们如何使用 <code class="docutils literal notranslate"><span class="pre">include</span></code> 来解决添加 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 的问题
-<code class="docutils literal notranslate"><span class="pre">ListSet</span></code>：</p>
+也让一个模块类型能够包含另一个模块类型给出的全部规范。</p>
+<p>下面用 <code class="docutils literal notranslate"><span class="pre">include</span></code> 为 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 添加 <code class="docutils literal notranslate"><span class="pre">of_list</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">=</span> <span class="k">struct</span>
@@ -690,30 +688,25 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtended :
   sig
-    type &#39;a t = &#39;a ListSet.t
-    val empty : &#39;a t
-    val mem : &#39;a -&gt; &#39;a t -&gt; bool
-    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val elements : &#39;a t -&gt; &#39;a list
-    val of_list : &#39;a list -&gt; &#39;a t
+    type 'a t = 'a ListSet.t
+    val empty : 'a t
+    val mem : 'a -&gt; 'a t -&gt; bool
+    val add : 'a -&gt; 'a t -&gt; 'a t
+    val elements : 'a t -&gt; 'a list
+    val of_list : 'a list -&gt; 'a t
   end
 </pre></div>
 </div>
 </div>
 </div>
-<p>这段代码表示 <code class="docutils literal notranslate"><span class="pre">ListSetExtended</span></code> 是一个包含所有
-<code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 模块的定义，以及 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 的定义。我们
-不必知道实现 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 的源代码即可实现此目的。</p>
+<p>这段代码表示，<code class="docutils literal notranslate"><span class="pre">ListSetExtended</span></code> 包含 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 中的所有定义，外加 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 的定义。即使看不到 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 的实现源码，我们也能做到这一点。</p>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p>你可能想知道为什么我们不能简单地实现 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 作为身份
-函数。请参阅下面有关封装的部分以获得答案。</p>
+<p>你可能会问，为什么不能直接把 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 实现成恒等函数。答案见下文关于封装的讨论。</p>
 </div>
 <section id="id1">
-<h2><span class="section-number">5.8.1. </span>Include 的语义<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
-<p>包含可以在结构和签名内部使用。当我们包含在里面时
-一个签名，我们必须包含另一个签名。当我们包括在内
-一个结构，我们必须包含另一个结构。</p>
+<h2><span class="section-number">5.8.1. </span><code class="docutils literal notranslate"><span class="pre">include</span></code> 的语义<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">include</span></code> 可以出现在结构或签名内部。在签名中只能 <code class="docutils literal notranslate"><span class="pre">include</span></code> 另一个签名，在结构中则只能 <code class="docutils literal notranslate"><span class="pre">include</span></code> 另一个结构。</p>
 <p><strong>包含一个结构</strong>实际上只是编写一个语法糖
 模块中定义的每个名称的本地定义。写入 <code class="docutils literal notranslate"><span class="pre">include</span> <span class="pre">ListSet</span></code>
 例如，正如我们上面所做的那样，其效果类似于编写以下内容：</p>
@@ -721,7 +714,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="c">(* BEGIN all the includes *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">t</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">empty</span>
   <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">mem</span>
   <span class="k">let</span> <span class="n">add</span> <span class="o">=</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">add</span>
@@ -735,12 +728,12 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtended :
   sig
-    type &#39;a t = &#39;a ListSet.t
-    val empty : &#39;a ListSet.t
-    val mem : &#39;a -&gt; &#39;a ListSet.t -&gt; bool
-    val add : &#39;a -&gt; &#39;a ListSet.t -&gt; &#39;a ListSet.t
-    val elements : &#39;a ListSet.t -&gt; &#39;a list
-    val of_list : &#39;a list -&gt; &#39;a ListSet.t
+    type 'a t = 'a ListSet.t
+    val empty : 'a ListSet.t
+    val mem : 'a -&gt; 'a ListSet.t -&gt; bool
+    val add : 'a -&gt; 'a ListSet.t -&gt; 'a ListSet.t
+    val elements : 'a ListSet.t -&gt; 'a list
+    val of_list : 'a list -&gt; 'a ListSet.t
   end
 </pre></div>
 </div>
@@ -751,12 +744,12 @@ document.write(`
 正如 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 中的每个定义。但是如果里面定义的一组名称
 <code class="docutils literal notranslate"><span class="pre">ListSet</span></code> 发生变化时， <code class="docutils literal notranslate"><span class="pre">include</span></code> 将反映该变化，而
 复制粘贴工作不会。</p>
-<p><strong>包括签名</strong>大致相同。例如，我们可以写：</p>
+<p><strong>纳入签名</strong>的原理大致相同。例如，可以写成：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">sig</span>
   <span class="k">include</span> <span class="nc">Set</span>
-  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -764,12 +757,12 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type SetExtended =
   sig
-    type &#39;a t
-    val empty : &#39;a t
-    val mem : &#39;a -&gt; &#39;a t -&gt; bool
-    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val elements : &#39;a t -&gt; &#39;a list
-    val of_list : &#39;a list -&gt; &#39;a t
+    type 'a t
+    val empty : 'a t
+    val mem : 'a -&gt; 'a t -&gt; bool
+    val add : 'a -&gt; 'a t -&gt; 'a t
+    val elements : 'a t -&gt; 'a list
+    val of_list : 'a list -&gt; 'a t
   end
 </pre></div>
 </div>
@@ -780,13 +773,13 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">sig</span>
   <span class="c">(* BEGIN all the includes *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">elements</span>  <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">elements</span>  <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="c">(* END all the includes *)</span>
-  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -794,12 +787,12 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type SetExtended =
   sig
-    type &#39;a t
-    val empty : &#39;a t
-    val mem : &#39;a -&gt; &#39;a t -&gt; bool
-    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val elements : &#39;a t -&gt; &#39;a list
-    val of_list : &#39;a list -&gt; &#39;a t
+    type 'a t
+    val empty : 'a t
+    val mem : 'a -&gt; 'a t -&gt; bool
+    val add : 'a -&gt; 'a t -&gt; 'a t
+    val elements : 'a t -&gt; 'a list
+    val of_list : 'a list -&gt; 'a t
   end
 </pre></div>
 </div>
@@ -836,7 +829,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[7]&quot;</span><span class="p">,</span> <span class="n">lines</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">39</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[7]"</span><span class="p">,</span> <span class="n">lines</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">39</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="o">.......................................</span><span class="n">struct</span>
 <span class="mi">2</span> <span class="o">|</span>   <span class="n">include</span> <span class="n">ListSet</span>
 <span class="mi">3</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">lst</span>
@@ -844,14 +837,14 @@ document.write(`
 <span class="ne">Error</span>: Signature mismatch:
        <span class="o">...</span>
        <span class="n">Values</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
-         <span class="n">val</span> <span class="n">of_list</span> <span class="p">:</span> <span class="s1">&#39;a -&gt; &#39;</span><span class="n">a</span>
+         <span class="n">val</span> <span class="n">of_list</span> <span class="p">:</span> <span class="s1">'a -&gt; '</span><span class="n">a</span>
        <span class="ow">is</span> <span class="ow">not</span> <span class="n">included</span> <span class="ow">in</span>
-         <span class="n">val</span> <span class="n">of_list</span> <span class="p">:</span> <span class="s1">&#39;a list -&gt; &#39;</span><span class="n">a</span> <span class="n">t</span>
-       <span class="n">The</span> <span class="nb">type</span> <span class="s1">&#39;a list -&gt; &#39;</span><span class="n">a</span> <span class="nb">list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">compatible</span> <span class="k">with</span> <span class="n">the</span> <span class="nb">type</span>
-         <span class="s1">&#39;a list -&gt; &#39;</span><span class="n">a</span> <span class="n">t</span>
-       <span class="n">Type</span> <span class="s1">&#39;a list is not compatible with type &#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="s1">&#39;a ListSet.t</span>
-       <span class="n">File</span> <span class="s2">&quot;[5]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">9</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">31</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
-       <span class="n">File</span> <span class="s2">&quot;[7]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">6</span><span class="o">-</span><span class="mi">13</span><span class="p">:</span> <span class="n">Actual</span> <span class="n">declaration</span>
+         <span class="n">val</span> <span class="n">of_list</span> <span class="p">:</span> <span class="s1">'a list -&gt; '</span><span class="n">a</span> <span class="n">t</span>
+       <span class="n">The</span> <span class="nb">type</span> <span class="s1">'a list -&gt; '</span><span class="n">a</span> <span class="nb">list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">compatible</span> <span class="k">with</span> <span class="n">the</span> <span class="nb">type</span>
+         <span class="s1">'a list -&gt; '</span><span class="n">a</span> <span class="n">t</span>
+       <span class="n">Type</span> <span class="s1">'a list is not compatible with type '</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="s1">'a ListSet.t</span>
+       <span class="n">File</span> <span class="s2">"[5]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">9</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">31</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
+       <span class="n">File</span> <span class="s2">"[7]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">6</span><span class="o">-</span><span class="mi">13</span><span class="p">:</span> <span class="n">Actual</span> <span class="n">declaration</span>
 </pre></div>
 </div>
 </div>
@@ -862,17 +855,17 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">:</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="k">include</span> <span class="nc">ListSet</span>
-  <span class="k">let</span> <span class="n">of_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="n">lst</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="n">lst</span>
 <span class="k">end</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[8]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">39</span><span class="o">-</span><span class="mi">42</span><span class="p">:</span>
-<span class="mi">3</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">of_list</span> <span class="p">(</span><span class="n">lst</span> <span class="p">:</span> <span class="s1">&#39;a list) : &#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="n">lst</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[8]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">39</span><span class="o">-</span><span class="mi">42</span><span class="p">:</span>
+<span class="mi">3</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">of_list</span> <span class="p">(</span><span class="n">lst</span> <span class="p">:</span> <span class="s1">'a list) : '</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="n">lst</span>
                                            <span class="o">^^^</span>
-<span class="ne">Error</span>: The value lst has type &#39;a list but an expression was expected of type
-         <span class="s1">&#39;a t = &#39;</span><span class="n">a</span> <span class="n">ListSet</span><span class="o">.</span><span class="n">t</span>
+<span class="ne">Error</span>: The value lst has type 'a list but an expression was expected of type
+         <span class="s1">'a t = '</span><span class="n">a</span> <span class="n">ListSet</span><span class="o">.</span><span class="n">t</span>
 </pre></div>
 </div>
 </div>
@@ -887,7 +880,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListSetImpl</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span>
   <span class="k">let</span> <span class="n">add</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
@@ -898,7 +891,7 @@ document.write(`
 
 <span class="k">module</span> <span class="k">type</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">sig</span>
   <span class="k">include</span> <span class="nc">Set</span>
-  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListSetExtendedImpl</span> <span class="o">=</span> <span class="k">struct</span>
@@ -913,11 +906,11 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetImpl :
   sig
-    type &#39;a t = &#39;a list
-    val empty : &#39;a list
-    val mem : &#39;a -&gt; &#39;a list -&gt; bool
-    val add : &#39;a -&gt; &#39;a list -&gt; &#39;a list
-    val elements : &#39;a list -&gt; &#39;a list
+    type 'a t = 'a list
+    val empty : 'a list
+    val mem : 'a -&gt; 'a list -&gt; bool
+    val add : 'a -&gt; 'a list -&gt; 'a list
+    val elements : 'a list -&gt; 'a list
   end
 </pre></div>
 </div>
@@ -926,23 +919,23 @@ document.write(`
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type SetExtended =
   sig
-    type &#39;a t
-    val empty : &#39;a t
-    val mem : &#39;a -&gt; &#39;a t -&gt; bool
-    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val elements : &#39;a t -&gt; &#39;a list
-    val of_list : &#39;a list -&gt; &#39;a t
+    type 'a t
+    val empty : 'a t
+    val mem : 'a -&gt; 'a t -&gt; bool
+    val add : 'a -&gt; 'a t -&gt; 'a t
+    val elements : 'a t -&gt; 'a list
+    val of_list : 'a list -&gt; 'a t
   end
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtendedImpl :
   sig
-    type &#39;a t = &#39;a list
-    val empty : &#39;a list
-    val mem : &#39;a -&gt; &#39;a list -&gt; bool
-    val add : &#39;a -&gt; &#39;a list -&gt; &#39;a list
-    val elements : &#39;a list -&gt; &#39;a list
-    val of_list : &#39;a -&gt; &#39;a
+    type 'a t = 'a list
+    val empty : 'a list
+    val mem : 'a -&gt; 'a list -&gt; bool
+    val add : 'a -&gt; 'a list -&gt; 'a list
+    val elements : 'a list -&gt; 'a list
+    val of_list : 'a -&gt; 'a
   end
 </pre></div>
 </div>
@@ -978,12 +971,12 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListSetExtendedImpl :
   sig
-    type &#39;a t = &#39;a list
-    val empty : &#39;a list
-    val mem : &#39;a -&gt; &#39;a list -&gt; bool
-    val add : &#39;a -&gt; &#39;a list -&gt; &#39;a list
-    val of_list : &#39;a list -&gt; &#39;a list
-    val elements : &#39;a list -&gt; &#39;a list
+    type 'a t = 'a list
+    val empty : 'a list
+    val mem : 'a -&gt; 'a list -&gt; bool
+    val add : 'a -&gt; 'a list -&gt; 'a list
+    val of_list : 'a list -&gt; 'a list
+    val elements : 'a list -&gt; 'a list
   end
 </pre></div>
 </div>
@@ -999,7 +992,7 @@ document.write(`
 <div class="admonition warning">
 <p class="admonition-title">警告</p>
 <p>这不同于你在 Java 中可能期待的行为；Java 使用一种语言特性
-调用 <a class="reference external" href="https://en.wikipedia.org/wiki/Dynamic_dispatch">dynamic dispatch</a> 来确定要执行哪个方法实现
+通过<a class="reference external" href="https://en.wikipedia.org/wiki/Dynamic_dispatch">动态分派</a>确定要执行哪一个方法实现
 调用。动态调度可以说是面向对象的<em>定义</em>特征
 语言。 OCaml 函数不是方法，并且它们不使用动态
 派遣。</p>
@@ -1061,7 +1054,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">UniqListSet</span> <span class="o">:</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="c">(** All values in the list must be unique. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">mem</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span>
   <span class="k">let</span> <span class="n">add</span> <span class="n">x</span> <span class="n">s</span> <span class="o">=</span> <span class="k">if</span> <span class="n">mem</span> <span class="n">x</span> <span class="n">s</span> <span class="k">then</span> <span class="n">s</span> <span class="k">else</span> <span class="n">x</span> <span class="o">::</span> <span class="n">s</span>
@@ -1087,7 +1080,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[13]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">34</span><span class="o">-</span><span class="mi">37</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[13]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">34</span><span class="o">-</span><span class="mi">37</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="n">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
                                       <span class="o">^^^</span>
 <span class="ne">Error</span>: Unbound value add
@@ -1105,7 +1098,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list : &#39;a list -&gt; &#39;a ListSet.t = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list : 'a list -&gt; 'a ListSet.t = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1113,21 +1106,21 @@ document.write(`
 <p>我们可以将 <code class="docutils literal notranslate"><span class="pre">add</span></code> 和 <code class="docutils literal notranslate"><span class="pre">empty</span></code> 作为参数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">of_list&#39;</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">of_list'</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
 
-<span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list&#39;</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">add</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">empty</span> <span class="n">lst</span>
-<span class="k">let</span> <span class="n">of_list_uniq</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list&#39;</span> <span class="nn">UniqListSet</span><span class="p">.</span><span class="n">add</span> <span class="nn">UniqListSet</span><span class="p">.</span><span class="n">empty</span> <span class="n">lst</span>
+<span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list'</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">add</span> <span class="nn">ListSet</span><span class="p">.</span><span class="n">empty</span> <span class="n">lst</span>
+<span class="k">let</span> <span class="n">of_list_uniq</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list'</span> <span class="nn">UniqListSet</span><span class="p">.</span><span class="n">add</span> <span class="nn">UniqListSet</span><span class="p">.</span><span class="n">empty</span> <span class="n">lst</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list&#39; : (&#39;a -&gt; &#39;b -&gt; &#39;b) -&gt; &#39;b -&gt; &#39;a list -&gt; &#39;b = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list' : ('a -&gt; 'b -&gt; 'b) -&gt; 'b -&gt; 'a list -&gt; 'b = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list : &#39;a list -&gt; &#39;a ListSet.t = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list : 'a list -&gt; 'a ListSet.t = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list_uniq : &#39;a list -&gt; &#39;a UniqListSet.t = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val of_list_uniq : 'a list -&gt; 'a UniqListSet.t = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1137,19 +1130,19 @@ document.write(`
 模块具有相同的名称，无论它们位于哪个模块中。
 <code class="docutils literal notranslate"><span class="pre">of_list</span></code> 函数位于任一模块之外，因此打开其中一个模块的客户端
 模块不会自动获得命名这些函数的能力。</p>
-<p>我们尝试使用include来解决这个问题。首先，我们编写一个模块
+<p>下面尝试用 <code class="docutils literal notranslate"><span class="pre">include</span></code> 解决这个问题。首先编写一个模块
 包含参数化实现：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">SetOfList</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">let</span> <span class="n">of_list&#39;</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
+  <span class="k">let</span> <span class="n">of_list'</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_right</span> <span class="n">add</span> <span class="n">lst</span> <span class="n">empty</span>
 <span class="k">end</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module SetOfList :
-  sig val of_list&#39; : (&#39;a -&gt; &#39;b -&gt; &#39;b) -&gt; &#39;b -&gt; &#39;a list -&gt; &#39;b end
+  sig val of_list' : ('a -&gt; 'b -&gt; 'b) -&gt; 'b -&gt; 'a list -&gt; 'b end
 </pre></div>
 </div>
 </div>
@@ -1160,13 +1153,13 @@ document.write(`
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">UniqListSetExtended</span> <span class="o">:</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="k">include</span> <span class="nc">UniqListSet</span>
   <span class="k">include</span> <span class="nc">SetOfList</span>
-  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list&#39;</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list'</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListSetExtended</span> <span class="o">:</span> <span class="nc">SetExtended</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="k">include</span> <span class="nc">ListSet</span>
   <span class="k">include</span> <span class="nc">SetOfList</span>
-  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list&#39;</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span>
+  <span class="k">let</span> <span class="n">of_list</span> <span class="n">lst</span> <span class="o">=</span> <span class="n">of_list'</span> <span class="n">add</span> <span class="n">empty</span> <span class="n">lst</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -1228,7 +1221,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">上一页</p>
-        <p class="prev-next-title"><span class="section-number">5.7. </span>模块类型限制</p>
+        <p class="prev-next-title"><span class="section-number">5.7. </span>模块类型约束</p>
       </div>
     </a>
     <a class="right-next"
@@ -1256,7 +1249,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">5.8.1. Include 的语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">5.8.1. <code class="docutils literal notranslate"><span class="pre">include</span></code> 的语义</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.8.2. 封装和 Include</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#include-open">5.8.3. Include 与 Open</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.8.4. 在多个模块中包含代码</a></li>

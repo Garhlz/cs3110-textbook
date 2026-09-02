@@ -624,7 +624,7 @@ I/O 代码完成。“阻塞”是指你的代码必须等待—也就是被阻�
 例如文件、网络或键盘。值 <code class="docutils literal notranslate"><span class="pre">Stdlib.stdin</span> <span class="pre">:</span> <span class="pre">in_channel</span></code> 代表<em>标准输入</em>
 通道，通常默认提供键盘输入。</p>
 <p>如果你在 utop 中运行以下代码，你将观察到阻塞行为：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># ignore(input_line stdin); print_endline &quot;done&quot;;;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># ignore(input_line stdin); print_endline "done";;
 &lt;type your own input here&gt;
 done
 - : unit = ()
@@ -646,9 +646,9 @@ I/O 操作会立即返回，无论输入或输出是否已经完成。
 相当于 OCaml 标准库的 <code class="docutils literal notranslate"><span class="pre">in_channel</span></code>，而 <code class="docutils literal notranslate"><span class="pre">Lwt_io.stdin</span></code>
 代表标准输入通道。</p>
 <p>在 utop 中运行此代码以观察非阻塞行为：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># #require &quot;lwt.unix&quot;;;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># #require "lwt.unix";;
 # open Lwt_io;;
-# ignore(read_line stdin); printl &quot;done&quot;;;
+# ignore(read_line stdin); printl "done";;
 done
 - : unit = ()
 # &lt;type your own input here&gt;
@@ -684,7 +684,7 @@ Utop 仍在执行—它没有被阻塞—但你的输入被发送给那个
 val p : string Lwt.t = &lt;abstr&gt;
 &lt;now you type Camels are bae followed by Enter&gt;
 # p;;
-- : string = &quot;Camels are bae&quot;
+- : string = "Camels are bae"
 </pre></div>
 </div>
 <p>但是，如果你仔细研究该输出，你会发现一些非常奇怪的事情
@@ -712,7 +712,7 @@ Lwt Promise 的方式。下面的代码展示了行为变化：</p>
 # p;;
 - : string Lwt.state = &lt;abstr&gt;
 # Lwt.state p;;
-- : string Lwt.state = Lwt.Return &quot;Camels are bae&quot;
+- : string Lwt.state = Lwt.Return "Camels are bae"
 </pre></div>
 </div>
 <p>如果你重新启用此“自动运行”功能，并直接尝试评估
@@ -722,7 +722,7 @@ Lwt Promise 的方式。下面的代码展示了行为变化：</p>
 - : unit = ()
 # read_line stdin;;
 Camels are bae
-- : string = &quot;Camels are bae&quot;
+- : string = "Camels are bae"
 </pre></div>
 </div>
 <p>由于潜在的混乱，我们今后将假设自动运行

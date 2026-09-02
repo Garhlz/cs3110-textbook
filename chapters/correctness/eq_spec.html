@@ -663,12 +663,12 @@ document.write(`
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -681,12 +681,12 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Stack =
   sig
-    type &#39;a t
-    val empty : &#39;a t
-    val is_empty : &#39;a t -&gt; bool
-    val peek : &#39;a t -&gt; &#39;a
-    val push : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val pop : &#39;a t -&gt; &#39;a t
+    type 'a t
+    val empty : 'a t
+    val is_empty : 'a t -&gt; bool
+    val peek : 'a t -&gt; 'a
+    val push : 'a -&gt; 'a t -&gt; 'a t
+    val pop : 'a t -&gt; 'a t
   end
 </pre></div>
 </div>
@@ -699,7 +699,7 @@ document.write(`
 禁止例外。</p>
 <p>过去我们用英语给出了这些操作规范，例如，</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="c">(** [push x s] is the stack [s] with [x] pushed on the top. *)</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span>
 </pre></div>
 </div>
 <p>但现在，我们将编写一些方程来描述操作的工作原理：</p>
@@ -738,7 +738,7 @@ document.write(`
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListStack</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
   <span class="k">let</span> <span class="n">peek</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">hd</span>
@@ -756,12 +756,12 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStack :
   sig
-    type &#39;a t = &#39;a list
-    val empty : &#39;a list
-    val is_empty : &#39;a list -&gt; bool
-    val peek : &#39;a list -&gt; &#39;a
-    val push : &#39;a -&gt; &#39;a list -&gt; &#39;a list
-    val pop : &#39;a list -&gt; &#39;a list
+    type 'a t = 'a list
+    val empty : 'a list
+    val is_empty : 'a list -&gt; bool
+    val peek : 'a list -&gt; 'a
+    val push : 'a -&gt; 'a list -&gt; 'a list
+    val pop : 'a list -&gt; 'a list
   end
 </pre></div>
 </div>
@@ -786,12 +786,12 @@ document.write(`
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Queue</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">front</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
-  <span class="k">val</span> <span class="n">enq</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">deq</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">front</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">enq</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">deq</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -804,12 +804,12 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Queue =
   sig
-    type &#39;a t
-    val empty : &#39;a t
-    val is_empty : &#39;a t -&gt; bool
-    val front : &#39;a t -&gt; &#39;a
-    val enq : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val deq : &#39;a t -&gt; &#39;a t
+    type 'a t
+    val empty : 'a t
+    val is_empty : 'a t -&gt; bool
+    val front : 'a t -&gt; 'a
+    val enq : 'a -&gt; 'a t -&gt; 'a t
+    val deq : 'a t -&gt; 'a t
   end
 </pre></div>
 </div>
@@ -827,12 +827,12 @@ document.write(`
 <p>队列操作的类型实际上与类型相同
 的堆栈操作。  在这里，将它们并排进行比较：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>            <span class="k">module</span> <span class="k">type</span> <span class="nc">Queue</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>                          <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>                   <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>        <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>              <span class="k">val</span> <span class="n">front</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>      <span class="k">val</span> <span class="n">enq</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>             <span class="k">val</span> <span class="n">deq</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>                          <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>                   <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>        <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>              <span class="k">val</span> <span class="n">front</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>      <span class="k">val</span> <span class="n">enq</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>             <span class="k">val</span> <span class="n">deq</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>                                <span class="k">end</span>
 </pre></div>
 </div>
@@ -864,7 +864,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListQueue</span> <span class="o">:</span> <span class="nc">Queue</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">is_empty</span> <span class="n">q</span> <span class="o">=</span> <span class="n">q</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">front</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">hd</span>
@@ -932,7 +932,7 @@ QED
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">BatchedQueue</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="c">(* AF: [(o, i)] represents the queue [o @ (List.rev i)].</span>
 <span class="c">     RI: if [o] is empty then [i] is empty. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="o">(</span><span class="bp">[]</span><span class="o">,</span> <span class="bp">[]</span><span class="o">)</span>
 
@@ -958,12 +958,12 @@ QED
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module BatchedQueue :
   sig
-    type &#39;a t = &#39;a list * &#39;a list
-    val empty : &#39;a list * &#39;b list
-    val is_empty : &#39;a list * &#39;b -&gt; bool
-    val enq : &#39;a -&gt; &#39;a list * &#39;a list -&gt; &#39;a list * &#39;a list
-    val front : &#39;a list * &#39;b -&gt; &#39;a
-    val deq : &#39;a list * &#39;a list -&gt; &#39;a list * &#39;a list
+    type 'a t = 'a list * 'a list
+    val empty : 'a list * 'b list
+    val is_empty : 'a list * 'b -&gt; bool
+    val enq : 'a -&gt; 'a list * 'a list -&gt; 'a list * 'a list
+    val front : 'a list * 'b -&gt; 'a
+    val deq : 'a list * 'a list -&gt; 'a list * 'a list
   end
 </pre></div>
 </div>
@@ -1083,23 +1083,23 @@ Case analysis:  t = [], b = []
 =   { eval enq }
   [x], []
 
-Case analysis:  t = [], b = h&#39; :: t&#39;
+Case analysis:  t = [], b = h' :: t'
 
   deq (enq x q)
-=   { rewriting q as ([h], h&#39; :: t&#39;) }
-  deq (enq x ([h], h&#39; :: t&#39;))
+=   { rewriting q as ([h], h' :: t') }
+  deq (enq x ([h], h' :: t'))
 =   { eval enq }
-  deq ([h], x :: h&#39; :: t&#39;)
+  deq ([h], x :: h' :: t')
 =   { eval deq }
-  (List.rev (x :: h&#39; :: t&#39;), [])
+  (List.rev (x :: h' :: t'), [])
 
   enq x (deq q)
-=   { rewriting q as ([h], h&#39; :: t&#39;) }
-  enq x (deq ([h], h&#39; :: t&#39;))
+=   { rewriting q as ([h], h' :: t') }
+  enq x (deq ([h], h' :: t'))
 =   { eval deq }
-  enq x (List.rev (h&#39; :: t&#39;), [])
+  enq x (List.rev (h' :: t'), [])
 =   { eval enq }
-  (List.rev (h&#39; :: t&#39;), [x])
+  (List.rev (h' :: t'), [x])
 
 STUCK
 </pre></div>
@@ -1109,52 +1109,52 @@ STUCK
 代表同一个队列：<code class="docutils literal notranslate"><span class="pre">(List.rev</span> <span class="pre">t')</span> <span class="pre">&#64;</span> <span class="pre">[h';</span> <span class="pre">x]</span></code>。</p>
 <p>为了解决这个问题，我们将采用以下方程来表示
 类型：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e = e&#39;   if  AF(e) = AF(e&#39;)
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e = e'   if  AF(e) = AF(e')
 </pre></div>
 </div>
 <p>该方程使我们得出结论，两个不同的表达式是
 等于：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  AF((List.rev (h&#39; :: t&#39;), [x]))
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  AF((List.rev (h' :: t'), [x]))
 =   { apply AF }
-  List.rev (h&#39; :: t&#39;) @ List.rev [x]
+  List.rev (h' :: t') @ List.rev [x]
 =   { rev distributes over @, an exercise in the previous lecture }
-  List.rev ([x] @ (h&#39; :: t&#39;))
+  List.rev ([x] @ (h' :: t'))
 =   { eval @ }
-  List.rev (x :: h&#39; :: t&#39;)
+  List.rev (x :: h' :: t')
 
-  AF((List.rev (x :: h&#39; :: t&#39;), []))
+  AF((List.rev (x :: h' :: t'), []))
 =   { apply AF }
-  List.rev (x :: h&#39; :: t&#39;) @ List.rev []
+  List.rev (x :: h' :: t') @ List.rev []
 =   { eval rev }
-  List.rev (x :: h&#39; :: t&#39;) @ []
+  List.rev (x :: h' :: t') @ []
 =   { eval @ }
-  List.rev (x :: h&#39; :: t&#39;)
+  List.rev (x :: h' :: t')
 </pre></div>
 </div>
 <p>现在我们摆脱困境了：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  (List.rev (h&#39; :: t&#39;), [x])
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  (List.rev (h' :: t'), [x])
 =   { AF equation }
-  (List.rev (x :: h&#39; :: t&#39;), [])
+  (List.rev (x :: h' :: t'), [])
 </pre></div>
 </div>
 <p>还剩下一个案例分析来完成证明：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Case analysis:  t = h&#39; :: t&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Case analysis:  t = h' :: t'
 
   deq (enq x q)
-=   { rewriting q as (h :: h&#39; :: t&#39;, b) }
-  deq (enq x (h :: h&#39; :: t&#39;, b))
+=   { rewriting q as (h :: h' :: t', b) }
+  deq (enq x (h :: h' :: t', b))
 =   { eval enq }
-  deq (h :: h&#39; :: t, x :: b)
+  deq (h :: h' :: t, x :: b)
 =   { eval deq }
-  h&#39; :: t, x :: b
+  h' :: t, x :: b
 
   enq x (deq q)
-=   { rewriting q as (h :: h&#39; :: t&#39;, b) }
-  enq x (deq (h :: h&#39; :: t&#39;, b))
+=   { rewriting q as (h :: h' :: t', b) }
+  enq x (deq (h :: h' :: t', b))
 =   { eval deq }
-  enq x (h&#39; :: t&#39;, b)
+  enq x (h' :: t', b)
 =   { eval enq }
-  h&#39; :: t&#39;, x :: b
+  h' :: t', x :: b
 
 QED
 </pre></div>
@@ -1162,7 +1162,7 @@ QED
 <p>我们对批量队列的验证到此结束。请注意，我们必须添加
 涉及抽象函数的额外方程以获得证明
 通过：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e = e&#39;   if  AF(e) = AF(e&#39;)
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e = e'   if  AF(e) = AF(e')
 </pre></div>
 </div>
 <p>我们在证明过程中使用了 RI。 AF 和 RI 确实是
@@ -1233,12 +1233,12 @@ QED
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -1251,12 +1251,12 @@ QED
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Set =
   sig
-    type &#39;a t
-    val empty : &#39;a t
-    val is_empty : &#39;a t -&gt; bool
-    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val mem : &#39;a -&gt; &#39;a t -&gt; bool
-    val remove : &#39;a -&gt; &#39;a t -&gt; &#39;a t
+    type 'a t
+    val empty : 'a t
+    val is_empty : 'a t -&gt; bool
+    val add : 'a -&gt; 'a t -&gt; 'a t
+    val mem : 'a -&gt; 'a t -&gt; bool
+    val remove : 'a -&gt; 'a t -&gt; 'a t
   end
 </pre></div>
 </div>

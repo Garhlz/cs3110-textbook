@@ -153,25 +153,18 @@ let rec gcd x y =
 <!--------------------------------------------------------------------------->
 {{ ex1 | replace("%%NAME%%", "make char map")}}
 
-要创建标准库映射，我们首先必须使用 `Map.Make` 函子
-生成一个专门用于我们想要的键类型的模块。键入
-以下是 utop 中的内容：
+要创建标准库中的映射，首先要使用函子 `Map.Make`，生成一个专门处理所需键类型的模块。在 utop 中输入：
 
 ```ocaml
 # module CharMap = Map.Make(Char);;
 ```
 
-输出告诉你已经定义了一个名为 `CharMap` 的新模块，并且它
-为你提供签名。在 中查找值 `empty`、`add` 和 `remove`
-那个签名。用你自己的话解释它们的类型。
+输出表明名为 `CharMap` 的新模块已经定义，并给出了它的签名。在签名中找到 `empty`、`add` 和 `remove`，用自己的话解释它们的类型。
 
 <!--------------------------------------------------------------------------->
 {{ ex1 | replace("%%NAME%%", "char ordered")}}
 
-`Map.Make` 函子要求其输入模块与 `Map.OrderedType` 匹配
-签名。查看 [that signature][ord] 以及
-[signature for the `Char` module][char]。用你自己的话解释我们为什么
-允许将 `Char` 作为参数传递给 `Map.Make`。
+函子 `Map.Make` 要求输入模块匹配 `Map.OrderedType` 签名。阅读[该签名][ord]和 [`Char` 模块的签名][char]，用自己的话解释为什么可以把 `Char` 作为参数传给 `Map.Make`。
 
 [ord]: https://ocaml.org/api/Map.OrderedType.html
 [char]: https://ocaml.org/api/Char.html
@@ -179,8 +172,7 @@ let rec gcd x y =
 <!--------------------------------------------------------------------------->
 {{ ex2 | replace("%%NAME%%", "use char map")}}
 
-使用你刚刚制作的 `CharMap`，创建一个包含以下内容的映射
-绑定：
+使用刚创建的 `CharMap`，构造一个包含以下绑定的映射：
 
 * `'A'` 映射到 `"Alpha"`
 * `'E'` 映射到 `"Echo"`
@@ -198,7 +190,7 @@ let rec gcd x y =
 <!--------------------------------------------------------------------------->
 {{ ex2 | replace("%%NAME%%", "bindings")}}
 
-调查 [documentation of the `Map.S`][map.s] 签名以找到
+查阅 [`Map.S` 签名的文档][map.s]，找到
 `bindings` 的规范。以下哪个表达式将返回相同的结果
 协会名单？
 
@@ -222,20 +214,13 @@ let rec gcd x y =
 type date = {month : int; day : int}
 ```
 
-例如，3 月 31 日将表示为 `{month = 3; day = 31}`。我们的
-接下来几个练习的目标是实现一个键具有类型的映射
-`date`。
+例如，3 月 31 日表示为 `{month = 3; day = 31}`。接下来几个练习的目标，是实现一个以 `date` 为键类型的映射。
 
-显然，可以使用 `date`&mdash;for 类型来表示无效日期
-例如，`{ month=6; day=50 }` 是 6 月 50 日，即
-[not a real date][parksandrec]。下面练习中代码的行为
-未指定无效日期。
+显然，`date` 类型也能表示无效日期。例如，`{ month=6; day=50 }` 表示 6 月 50 日，而这一天[并不存在][parksandrec]。对于无效日期，下面练习中的代码行为不作规定。
 
 [parksandrec]: http://nbcparksandrec.tumblr.com/post/46760908046/march-31st-is-a-day
 
-要创建日期映射，我们需要一个可以作为输入传递给的模块
-`Map.Make`。该模块需要匹配 `Map.OrderedType` 签名。
-创建这样一个模块。下面是一些可以帮助你入门的代码：
+要创建日期映射，需要向 `Map.Make` 传入一个匹配 `Map.OrderedType` 签名的模块。请创建这样的模块。下面的代码可以作为起点：
 
 ```ocaml
 module Date = struct
@@ -244,8 +229,7 @@ module Date = struct
 end
 ```
 
-在编写时回忆一下 `Map.OrderedType` 中的 [specification of `compare`][ord]
-你的 `Date.compare` 函数。
+编写 `Date.compare` 时，请回顾 `Map.OrderedType` 中 [`compare` 的规范][ord]。
 
 <!--------------------------------------------------------------------------->
 {{ ex2 | replace("%%NAME%%", "calendar")}}
@@ -257,19 +241,15 @@ end
 type calendar = string DateMap.t
 ```
 
-这个想法是 `calendar` 将 `date` 映射到发生在
-那个日期。
+`calendar` 的含义是把一个 `date` 映射到当天发生的事件名称。
 
-使用 `DateMap` 模块中的函数，创建一个包含一些内容的日历
-其中的条目，例如生日或周年纪念日。
+使用 `DateMap` 模块中的函数，创建一个包含若干事件的日历，例如生日或纪念日。
 
 <!--------------------------------------------------------------------------->
 {{ ex2 | replace("%%NAME%%", "print calendar")}}
 
-编写一个函数 `print_calendar : calendar -> unit` 来打印 a 中的每个条目
-日历的格式类似于上一个练习中鼓舞人心的示例。
-*提示：使用 `DateMap.iter`，它记录在
-[`Map.S` signature][map.s].*
+编写函数 `print_calendar : calendar -> unit`，以类似上一题示例的格式打印日历中的每个条目。
+*提示：使用 [`Map.S` 签名][map.s]中记录的 `DateMap.iter`。*
 
 <!--------------------------------------------------------------------------->
 {{ ex3 | replace("%%NAME%%", "is for")}}
@@ -364,7 +344,7 @@ let get_day d = d.day
 let to_string d = (string_of_int d.month) ^ "/" ^ (string_of_int d.day)
 ```
 
-还创建一个Dune文件：
+再创建一个 Dune 文件：
 
 ```text
 (library
@@ -393,7 +373,7 @@ val get_day : date -> int
 val to_string : date -> string
 ```
 
-然后在utop中重新做之前同样的工作。
+然后在 utop 中重复刚才的操作。
 
 <!--------------------------------------------------------------------------->
 {{ ex1 | replace("%%NAME%%", "implementation with abstracted interface")}}
@@ -436,50 +416,29 @@ val format : Format.formatter -> date -> unit
 下载此文件：{{ code_link | replace("%%NAME%%", "algebra.ml")}}。它
 包含这些签名和结构：
 
-* `Ring` 是描述称为 *[ring]* 的代数结构的签名，
+* `Ring` 是描述*[环（ring）][ring]*这一代数结构的签名，
 这是加法和乘法运算符的抽象。
 
-* `Field` 是一个描述代数结构的签名，称为
-*[field]*，就像一个环，但也有除法的抽象
-  操作。
+* `Field` 是描述*[域（field）][field]*这一代数结构的签名。域与环相似，但还抽象了除法运算。
 
-* `IntRing` 和 `FloatRing` 是根据以下方式实现环的结构
-`int` 和 `float`。
+* `IntRing` 和 `FloatRing` 分别以 `int` 和 `float` 实现环。
 
-* `IntField` 和 `FloatField` 是根据以下方式实现字段的结构
-`int` 和 `float`。
+* `IntField` 和 `FloatField` 分别以 `int` 和 `float` 实现域。
 
-* `IntRational` 和 `FloatRational` 是实现字段的结构
-比率项（又名分数）&mdash;，即 `int` 对和 `int` 对
-  `float`。
+* `IntRational` 和 `FloatRational` 用比值（也就是分数）实现域；前者以一对 `int` 表示分数，后者以一对 `float` 表示。
 
 ```{note}
-亲爱的抽象代数爱好者：当然这些表示不一定
-由于机器的限制，遵守环和域的所有公理
-算术。此外，`IntField` 中的除法运算对于零的定义不明确。
-尽量不要担心这个。
+致抽象代数爱好者：受机器算术所限，这些表示当然未必满足环与域的全部公理。此外，`IntField` 的除法运算在除数为零时没有良好定义。这里暂且不必深究。
 ```
 
 [ring]: https://en.wikipedia.org/wiki/Ring_(mathematics)
 [field]: https://en.wikipedia.org/wiki/Field_(mathematics)
 
-重构代码以提高代码重用率。为此，
-使用 `include`、函子，并引入额外的结构和签名：
-需要。这里不一定有正确的答案，但这里有一些建议：
+重构代码以提高代码重用程度。请使用 `include` 和函子，并按需引入额外的结构与签名。本题不一定只有一种正确答案，下面给出一些建议：
 
-* 不应在多个签名中"直接声明"任何名称。例如，
-`( + )` 不应直接在 `Field` 中声明；它应该被重复使用
-  较早的签名。 "直接声明"是指以下形式的声明
-  `val name : ...`。间接声明是由以下结果产生的声明：
-  `include`。
+* 任何名称都不应在多个签名中“直接声明”。例如，`Field` 不应再次直接声明 `( + )`，而应重用此前签名中的声明。“直接声明”指 `val name : ...` 形式的声明；由 `include` 带入的声明属于间接声明。
 
-* 你只需要代数运算的三个"直接定义"
-数字（加、减、乘、除、零、一）：一次用于 `int`，一次用于
-  `float`，一次用于比率。例如，`IntField.( + )` 不应该是
-  直接定义为`Stdlib.( + )`；相反，它应该被重用
-  其他地方。 "直接定义"是指形式的定义
-  `let name = ...`。间接定义是由以下结果得出的定义：
-  `include` 或函子应用程序。
+* 对代数运算与数值（加、减、乘、除、零和一），只需三组“直接定义”：分别用于 `int`、`float` 和比值。例如，不应把 `IntField.( + )` 直接定义为 `Stdlib.( + )`，而应从别处重用。“直接定义”指 `let name = ...` 形式的定义；由 `include` 或函子应用带入的定义属于间接定义。
 
 * 有理结构都可以由单个函子产生，即
 对 `IntRing` 应用一次，对 `FloatRing` 应用一次。

@@ -20,12 +20,12 @@ kernelspec:
 我们在上一节中遇到的问题是需要将代码添加到两个不同的模块中，而这段代码因为与所添加模块的细节有关，所以无法直接写成通用函数。OCaml 中称为*函子*（functors）的语言特性提供了这样的参数化能力。
 
 ```{note}
-**为什么命名为"函子"？** 在[范畴论][intellectualterrorism]中，一个*范畴*包含*态射*（morphism，即我们所熟知的"函数"的泛化），而*函子*是范畴之间的映射。类似地，OCaml 模块包含函数，而 OCaml 函子则从模块映射到模块。
+**为什么叫“函子”？** 在[范畴论][intellectualterrorism]中，一个*范畴*包含若干*态射*（morphism，可以看作我们所熟悉的函数的推广），而*函子*是范畴之间的映射。类似地，OCaml 模块包含函数，OCaml 函子则把模块映射为模块。
 ```
 
 [intellectualterrorism]: https://en.wikipedia.org/wiki/Category_theory
 
-不幸的是，这个名字听起来令人生畏，但**函子本质上只是一个从模块到模块的"函数"**。上面句子中"函数"打引号，只是因为它和我们见过的其他函数不可互换。OCaml 的类型系统是*分层*的：模块值与其他类型的值属于不同层次，因此从模块到模块的函数，其编写和使用方式不能与从普通值到普通值的函数相同。但从概念上讲，函子实际上就是函数。
+“函子”这个名字听起来颇为吓人，但**函子本质上只是一个从模块到模块的“函数”**。这里给“函数”加上引号，是因为函子不能与此前见过的普通函数互换。OCaml 的类型系统是*分层*的：模块值与其他值处在不同层次，因此从模块到模块的函数，不能像作用于普通值的函数那样编写和使用。不过从概念上说，函子的确就是函数。
 
 这是函子的一个小例子：
 
@@ -39,18 +39,11 @@ module IncX (M : X) = struct
 end
 ```
 
-函子的名称是 `IncX`。它本质上是一个从模块到
-模块。作为一个函数，它接受输入并产生输出。它的输入是
-名为`M`，其输入类型为`X`。它的输出是这样的结构
-出现在等号的右侧：`struct let x = M.x + 1 end`。
+这个函子名为 `IncX`，本质上是一个从模块到模块的函数：它接收输入并产生输出。输入参数名为 `M`，类型是 `X`；输出则是等号右侧的结构 `struct let x = M.x + 1 end`。
 
-考虑 `IncX` 的另一种方式是它是一个*参数化结构*。
-它采用的参数名为 `M` 且类型为 `X`。该结构本身有
-其中有一个名为 `x` 的值。 `x` 的值取决于
-参数`M`。
+也可以把 `IncX` 看作一个*参数化结构*。它接收类型为 `X`、名为 `M` 的参数，结构内部定义了值 `x`，而 `x` 的具体值取决于参数 `M`。
 
-由于函子本质上是函数，因此我们"应用"它们。这是一个例子
-应用`IncX`：
+函子既然是一种函数，自然也可以被“应用”。下面是应用 `IncX` 的例子：
 ```{code-cell} ocaml
 module A = struct let x = 0 end
 ```
@@ -81,9 +74,7 @@ C.x
 结果是`struct let x = 1 end`。因此 `B` 绑定到 `struct let x = 1 end`。
 同样，`C` 最终被绑定到 `struct let x = 2 end`。
 
-尽管函子 `IncX` 返回一个与其输入非常相似的模块
-模块，情况不一定如此。事实上，函子可以返回任何模块
-喜欢，也许与它的输入结构非常不同：
+虽然函子 `IncX` 返回的模块与输入模块十分相似，但函子并不必须如此。它可以返回任意模块，输出结构甚至可以与输入大相径庭：
 
 ```{code-cell} ocaml
 module AddX (M : X) = struct
@@ -275,8 +266,7 @@ module FZ = F (Z)
 标准库的 Map 模块实现了一个映射（从键到键的绑定）
 值）使用平衡二叉树。它以一种重要的方式使用函子。在
 本节我们研究如何使用它。你可以看到
-[implementation of that module on GitHub][mapimplsrc] 及其
-[interface][mapintsrc]。
+[该模块在 GitHub 上的实现][mapimplsrc]及其[接口][mapintsrc]。
 
 [mapintsrc]: https://github.com/ocaml/ocaml/blob/trunk/stdlib/map.mli
 [mapimplsrc]: https://github.com/ocaml/ocaml/blob/trunk/stdlib/map.ml
@@ -312,7 +302,7 @@ type order = LT | EQ | GT
 val compare : t -> t -> order
 ```
 唉，历史上许多语言都使用过类似的比较函数
-规范，例如 C 标准库的 [`strcmp` function][strcmp]。
+约定，例如 C 标准库的 [`strcmp` 函数][strcmp]。
 
 [strcmp]: http://www.gnu.org/software/libc/manual/html_node/String_002fArray-Comparison.html
 ````
@@ -390,7 +380,7 @@ let m3 = add true "one" empty
 这是因为 `IntMap` 模块是专门为整数键创建的，并会相应地排序。
 再次强调，顺序至关重要，因为底层数据结构是二叉搜索树，
 需要通过键比较来确定键在树中的存储位置。你甚至可以看到
-在 [standard library source code (v4.12)][mapv412] 中，其中
+在[标准库源代码（v4.12）][mapv412]中，其中
 以下是经过轻微编辑的摘录：
 
 [mapv412]: https://github.com/ocaml/ocaml/blob/4.12/stdlib/map.ml
@@ -434,7 +424,7 @@ end
 那个模块。
 
 Java Collections Framework 在 `TreeMap` 类中解决了类似的问题，
-其中有一个 [constructor that takes a Comparator][treemapcomparator]。在那里，
+它提供了一个[接收 `Comparator` 的构造函数][treemapcomparator]。在这里，
 客户端负责实现一个用于比较的类，而不是一个结构。
 虽然语言特性不同，但思想是一样的。
 
@@ -485,7 +475,7 @@ let lst = NameMap.bindings nm
 请注意该列表中键的顺序与我们的顺序不同
 他们补充道。该列表根据我们的 `Name.compare` 函数排序
 写道。 `Map.S` 签名中的其他几个函数也将处理
-按排序顺序映射绑定&mdash;，例如`map`、`fold` 和`iter`。
+按照排序顺序处理映射绑定，例如 `map`、`fold` 和 `iter`。
 
 ### `Map` 如何使用模块类型约束
 

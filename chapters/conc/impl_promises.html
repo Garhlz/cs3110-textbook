@@ -616,34 +616,34 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** A signature for Lwt-style promises, with better names. *)</span>
 <span class="k">module</span> <span class="k">type</span> <span class="nc">PROMISE</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span>
     <span class="o">|</span> <span class="nc">Pending</span>
-    <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span>
+    <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span>
     <span class="o">|</span> <span class="nc">Rejected</span> <span class="k">of</span> <span class="n">exn</span>
 
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span>
 
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span>
 
   <span class="c">(** [make ()] is a new promise and resolver. The promise is pending. *)</span>
-  <span class="k">val</span> <span class="n">make</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span>
+  <span class="k">val</span> <span class="n">make</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span>
 
   <span class="c">(** [return x] is a new promise that is already fulfilled with value</span>
 <span class="c">      [x]. *)</span>
-  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span>
+  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span>
 
   <span class="c">(** [state p] is the state of the promise. *)</span>
-  <span class="k">val</span> <span class="n">state</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span>
+  <span class="k">val</span> <span class="n">state</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span>
 
   <span class="c">(** [fulfill r x] fulfills the promise [p] associated with [r] with</span>
 <span class="c">      value [x], meaning that [state p] will become [Fulfilled x].</span>
 <span class="c">      Requires: [p] is pending. *)</span>
-  <span class="k">val</span> <span class="n">fulfill</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">fulfill</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(** [reject r x] rejects the promise [p] associated with [r] with</span>
 <span class="c">      exception [x], meaning that [state p] will become [Rejected x].</span>
 <span class="c">      Requires: [p] is pending. *)</span>
-  <span class="k">val</span> <span class="n">reject</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">-&gt;</span> <span class="n">exn</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">reject</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">-&gt;</span> <span class="n">exn</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -651,14 +651,14 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type PROMISE =
   sig
-    type &#39;a state = Pending | Fulfilled of &#39;a | Rejected of exn
-    type &#39;a promise
-    type &#39;a resolver
-    val make : unit -&gt; &#39;a promise * &#39;a resolver
-    val return : &#39;a -&gt; &#39;a promise
-    val state : &#39;a promise -&gt; &#39;a state
-    val fulfill : &#39;a resolver -&gt; &#39;a -&gt; unit
-    val reject : &#39;a resolver -&gt; exn -&gt; unit
+    type 'a state = Pending | Fulfilled of 'a | Rejected of exn
+    type 'a promise
+    type 'a resolver
+    val make : unit -&gt; 'a promise * 'a resolver
+    val return : 'a -&gt; 'a promise
+    val state : 'a promise -&gt; 'a state
+    val fulfill : 'a resolver -&gt; 'a -&gt; unit
+    val reject : 'a resolver -&gt; exn -&gt; unit
   end
 </pre></div>
 </div>
@@ -668,16 +668,16 @@ document.write(`
 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">promise</span></code> 是对状态的引用：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span> <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Rejected</span> <span class="k">of</span> <span class="n">exn</span>
-<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="n">ref</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span> <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Rejected</span> <span class="k">of</span> <span class="n">exn</span>
+<span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="n">ref</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a state = Pending | Fulfilled of &#39;a | Rejected of exn
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a state = Pending | Fulfilled of 'a | Rejected of exn
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a promise = &#39;a state ref
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a promise = 'a state ref
 </pre></div>
 </div>
 </div>
@@ -687,12 +687,12 @@ document.write(`
 它和 Promise 使用同一种表示。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a resolver = &#39;a promise
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a resolver = 'a promise
 </pre></div>
 </div>
 </div>
@@ -714,12 +714,12 @@ document.write(`
 <span class="k">let</span> <span class="n">write_once</span> <span class="n">p</span> <span class="n">s</span> <span class="o">=</span>
   <span class="k">if</span> <span class="o">!</span><span class="n">p</span> <span class="o">=</span> <span class="nc">Pending</span>
   <span class="k">then</span> <span class="n">p</span> <span class="o">:=</span> <span class="n">s</span>
-  <span class="k">else</span> <span class="n">invalid_arg</span> <span class="s2">&quot;cannot write twice&quot;</span>
+  <span class="k">else</span> <span class="n">invalid_arg</span> <span class="s2">"cannot write twice"</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val write_once : &#39;a state ref -&gt; &#39;a state -&gt; unit = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val write_once : 'a state ref -&gt; 'a state -&gt; unit = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -734,7 +734,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val make : unit -&gt; &#39;a state ref * &#39;a state ref = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val make : unit -&gt; 'a state ref * 'a state ref = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -744,20 +744,20 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Promise</span> <span class="o">:</span> <span class="nc">PROMISE</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span>
     <span class="o">|</span> <span class="nc">Pending</span>
-    <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span>
+    <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span>
     <span class="o">|</span> <span class="nc">Rejected</span> <span class="k">of</span> <span class="n">exn</span>
 
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="n">ref</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="n">ref</span>
 
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span>
 
   <span class="c">(** [write_once p s] changes the state of [p] to be [s]. If [p] and</span>
 <span class="c">      [s] are both pending, that has no effect. Raises: [Invalid_arg] if</span>
 <span class="c">      the state of [p] is not pending. *)</span>
   <span class="k">let</span> <span class="n">write_once</span> <span class="n">p</span> <span class="n">s</span> <span class="o">=</span>
-    <span class="k">if</span> <span class="o">!</span><span class="n">p</span> <span class="o">=</span> <span class="nc">Pending</span> <span class="k">then</span> <span class="n">p</span> <span class="o">:=</span> <span class="n">s</span> <span class="k">else</span> <span class="n">invalid_arg</span> <span class="s2">&quot;cannot write twice&quot;</span>
+    <span class="k">if</span> <span class="o">!</span><span class="n">p</span> <span class="o">=</span> <span class="nc">Pending</span> <span class="k">then</span> <span class="n">p</span> <span class="o">:=</span> <span class="n">s</span> <span class="k">else</span> <span class="n">invalid_arg</span> <span class="s2">"cannot write twice"</span>
 
   <span class="k">let</span> <span class="n">make</span> <span class="bp">()</span> <span class="o">=</span>
     <span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">Pending</span> <span class="k">in</span>
@@ -794,26 +794,26 @@ Lwt 使用来自线程—的类比术语，但是由于 Lwt 确实
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Lwt</span> <span class="o">=</span> <span class="k">sig</span>
   <span class="c">(* [Sleep] means pending. [Return] means fulfilled.</span>
 <span class="c">     [Fail] means rejected. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span> <span class="nc">Sleep</span> <span class="o">|</span> <span class="nc">Return</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Fail</span> <span class="k">of</span> <span class="n">exn</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span> <span class="nc">Sleep</span> <span class="o">|</span> <span class="nc">Return</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Fail</span> <span class="k">of</span> <span class="n">exn</span>
 
   <span class="c">(* a [t] is a promise *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 
   <span class="c">(* a [u] is a resolver *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">u</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">u</span>
 
-  <span class="k">val</span> <span class="n">state</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span>
+  <span class="k">val</span> <span class="n">state</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span>
 
   <span class="c">(* [wakeup_later] means [fulfill] *)</span>
-  <span class="k">val</span> <span class="n">wakeup_later</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">u</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">wakeup_later</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">u</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(* [wakeup_later_exn] means [reject] *)</span>
-  <span class="k">val</span> <span class="n">wakeup_later_exn</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">u</span> <span class="o">-&gt;</span> <span class="n">exn</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">wakeup_later_exn</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">u</span> <span class="o">-&gt;</span> <span class="n">exn</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(* [wait] means [make] *)</span>
-  <span class="k">val</span> <span class="n">wait</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">u</span>
+  <span class="k">val</span> <span class="n">wait</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">u</span>
 
-  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -821,14 +821,14 @@ Lwt 使用来自线程—的类比术语，但是由于 Lwt 确实
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Lwt =
   sig
-    type &#39;a state = Sleep | Return of &#39;a | Fail of exn
-    type &#39;a t
-    type &#39;a u
-    val state : &#39;a t -&gt; &#39;a state
-    val wakeup_later : &#39;a u -&gt; &#39;a -&gt; unit
-    val wakeup_later_exn : &#39;a u -&gt; exn -&gt; unit
-    val wait : unit -&gt; &#39;a t * &#39;a u
-    val return : &#39;a -&gt; &#39;a t
+    type 'a state = Sleep | Return of 'a | Fail of exn
+    type 'a t
+    type 'a u
+    val state : 'a t -&gt; 'a state
+    val wakeup_later : 'a u -&gt; 'a -&gt; unit
+    val wakeup_later_exn : 'a u -&gt; exn -&gt; unit
+    val wait : unit -&gt; 'a t * 'a u
+    val return : 'a -&gt; 'a t
   end
 </pre></div>
 </div>
@@ -841,7 +841,7 @@ Promise。尽管如此，我们上面提出的核心思想提供了合理的依�
 <p>以下是一些 Lwt 代码示例，你可以在 utop 中尝试：</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">require</span> <span class="s2">&quot;lwt&quot;</span><span class="o">;;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">require</span> <span class="s2">"lwt"</span><span class="o">;;</span>
 </pre></div>
 </div>
 </div>
@@ -853,8 +853,8 @@ Promise。尽管如此，我们上面提出的核心思想提供了合理的依�
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val p : &#39;_weak1 Lwt.t = &lt;abstr&gt;
-val r : &#39;_weak1 Lwt.u = &lt;abstr&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val p : '_weak1 Lwt.t = &lt;abstr&gt;
+val r : '_weak1 Lwt.u = &lt;abstr&gt;
 </pre></div>
 </div>
 </div>
@@ -920,10 +920,10 @@ val r : int Lwt.u = &lt;abstr&gt;
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: Invalid_argument &quot;Lwt.wakeup_later&quot;.
-<span class="n">Raised</span> <span class="n">at</span> <span class="n">Stdlib</span><span class="o">.</span><span class="n">invalid_arg</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;stdlib.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">30</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">20</span><span class="o">-</span><span class="mi">45</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[15]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">21</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: Invalid_argument "Lwt.wakeup_later".
+<span class="n">Raised</span> <span class="n">at</span> <span class="n">Stdlib</span><span class="o">.</span><span class="n">invalid_arg</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"stdlib.ml"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">30</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">20</span><span class="o">-</span><span class="mi">45</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"[15]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">21</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"toplevel/byte/topeval.ml"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
 </pre></div>
 </div>
 </div>
@@ -933,7 +933,7 @@ val r : int Lwt.u = &lt;abstr&gt;
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="o">(</span><span class="n">p</span> <span class="o">:</span> <span class="kt">int</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span><span class="o">),</span> <span class="n">r</span> <span class="o">=</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">wait</span> <span class="bp">()</span><span class="o">;;</span>
-<span class="nn">Lwt</span><span class="p">.</span><span class="n">wakeup_later_exn</span> <span class="n">r</span> <span class="o">(</span><span class="nc">Failure</span> <span class="s2">&quot;nope&quot;</span><span class="o">);;</span>
+<span class="nn">Lwt</span><span class="p">.</span><span class="n">wakeup_later_exn</span> <span class="n">r</span> <span class="o">(</span><span class="nc">Failure</span> <span class="s2">"nope"</span><span class="o">);;</span>
 <span class="nn">Lwt</span><span class="p">.</span><span class="n">state</span> <span class="n">p</span><span class="o">;;</span>
 </pre></div>
 </div>
@@ -946,7 +946,7 @@ val r : int Lwt.u = &lt;abstr&gt;
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int Lwt.state = Lwt.Fail (Failure &quot;nope&quot;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int Lwt.state = Lwt.Fail (Failure "nope")
 </pre></div>
 </div>
 </div>

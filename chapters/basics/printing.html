@@ -616,7 +616,7 @@ document.write(`
 <p>OCaml 为少数几种内置原始类型提供了内建的打印函数：<code class="docutils literal notranslate"><span class="pre">print_char</span></code>、<code class="docutils literal notranslate"><span class="pre">print_string</span></code>、<code class="docutils literal notranslate"><span class="pre">print_int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">print_float</span></code>。此外还有一个 <code class="docutils literal notranslate"><span class="pre">print_endline</span></code> 函数，它和 <code class="docutils literal notranslate"><span class="pre">print_string</span></code> 类似，但会额外输出一个换行符。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_endline</span> <span class="s2">&quot;Camels are bae&quot;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_endline</span> <span class="s2">"Camels are bae"</span>
 </pre></div>
 </div>
 </div>
@@ -664,9 +664,9 @@ document.write(`
 <p>如果你想依次打印多样东西，可以用嵌套的 <code class="docutils literal notranslate"><span class="pre">let</span></code> 表达式来串联几个打印函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">print_endline</span> <span class="s2">&quot;Camels&quot;</span> <span class="k">in</span>
-<span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">print_endline</span> <span class="s2">&quot;are&quot;</span> <span class="k">in</span>
-<span class="n">print_endline</span> <span class="s2">&quot;bae&quot;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">print_endline</span> <span class="s2">"Camels"</span> <span class="k">in</span>
+<span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">print_endline</span> <span class="s2">"are"</span> <span class="k">in</span>
+<span class="n">print_endline</span> <span class="s2">"bae"</span>
 </pre></div>
 </div>
 </div>
@@ -688,9 +688,9 @@ document.write(`
 <p>上面的 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">_</span> <span class="pre">=</span> <span class="pre">e</span></code> 语法表示“对 <code class="docutils literal notranslate"><span class="pre">e</span></code> 求值，但不把结果绑定到任何名字上”。其实我们已经知道，这些 <code class="docutils literal notranslate"><span class="pre">print_endline</span></code> 函数返回的永远都是 <code class="docutils literal notranslate"><span class="pre">()</span></code>，也就是那个 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 值，所以完全没有必要把它绑定到某个变量名上。我们也可以写成 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">()</span> <span class="pre">=</span> <span class="pre">e</span></code>，明确表示我们知道它只是一个我们不关心的 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 值：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">print_endline</span> <span class="s2">&quot;Camels&quot;</span> <span class="k">in</span>
-<span class="k">let</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">print_endline</span> <span class="s2">&quot;are&quot;</span> <span class="k">in</span>
-<span class="n">print_endline</span> <span class="s2">&quot;bae&quot;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">print_endline</span> <span class="s2">"Camels"</span> <span class="k">in</span>
+<span class="k">let</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">print_endline</span> <span class="s2">"are"</span> <span class="k">in</span>
+<span class="n">print_endline</span> <span class="s2">"bae"</span>
 </pre></div>
 </div>
 </div>
@@ -712,9 +712,9 @@ document.write(`
 <p>但无论哪种写法，这些 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">..</span> <span class="pre">in</span></code> 模板代码都显得有点烦。于是 OCaml 提供了一种专门的语法，用于把多个返回 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 的函数串起来。表达式 <code class="docutils literal notranslate"><span class="pre">e1;</span> <span class="pre">e2</span></code> 会先对 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 求值，<code class="docutils literal notranslate"><span class="pre">e1</span></code> 应当求值为 <code class="docutils literal notranslate"><span class="pre">()</span></code>；然后这个值会被丢弃，再继续对 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 求值。所以，上面的代码可以改写为：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_endline</span> <span class="s2">&quot;Camels&quot;</span><span class="o">;</span>
-<span class="n">print_endline</span> <span class="s2">&quot;are&quot;</span><span class="o">;</span>
-<span class="n">print_endline</span> <span class="s2">&quot;bae&quot;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_endline</span> <span class="s2">"Camels"</span><span class="o">;</span>
+<span class="n">print_endline</span> <span class="s2">"are"</span><span class="o">;</span>
+<span class="n">print_endline</span> <span class="s2">"bae"</span>
 </pre></div>
 </div>
 </div>
@@ -762,7 +762,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ignore : &#39;a -&gt; unit = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ignore : 'a -&gt; unit = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -775,7 +775,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ignore : &#39;a -&gt; unit = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ignore : 'a -&gt; unit = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -789,7 +789,7 @@ document.write(`
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [print_stat name num] prints [name: num]. *)</span>
 <span class="k">let</span> <span class="n">print_stat</span> <span class="n">name</span> <span class="n">num</span> <span class="o">=</span>
   <span class="n">print_string</span> <span class="n">name</span><span class="o">;</span>
-  <span class="n">print_string</span> <span class="s2">&quot;: &quot;</span><span class="o">;</span>
+  <span class="n">print_string</span> <span class="s2">": "</span><span class="o">;</span>
   <span class="n">print_float</span> <span class="n">num</span><span class="o">;</span>
   <span class="n">print_newline</span> <span class="bp">()</span>
 </pre></div>
@@ -803,7 +803,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_stat</span> <span class="s2">&quot;mean&quot;</span> <span class="mi">84</span><span class="o">.</span><span class="mi">39</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_stat</span> <span class="s2">"mean"</span> <span class="mi">84</span><span class="o">.</span><span class="mi">39</span>
 </pre></div>
 </div>
 </div>
@@ -818,7 +818,7 @@ document.write(`
 </div>
 <p>怎样把 <code class="docutils literal notranslate"><span class="pre">print_stat</span></code> 写得更简洁一些？在 Java 里，你可能会用重载的 <code class="docutils literal notranslate"><span class="pre">+</span></code> 运算符，把所有对象拼接成字符串：</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">print_stat</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">num</span><span class="p">);</span>
+<span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">": "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">num</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -828,7 +828,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">print_stat</span> <span class="n">name</span> <span class="n">num</span> <span class="o">=</span>
-  <span class="nn">Printf</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;%s: %F</span><span class="se">\n</span><span class="s2">%!&quot;</span> <span class="n">name</span> <span class="n">num</span>
+  <span class="nn">Printf</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"%s: %F</span><span class="se">\n</span><span class="s2">%!"</span> <span class="n">name</span> <span class="n">num</span>
 </pre></div>
 </div>
 </div>
@@ -840,7 +840,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_stat</span> <span class="s2">&quot;mean&quot;</span> <span class="mi">84</span><span class="o">.</span><span class="mi">39</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">print_stat</span> <span class="s2">"mean"</span> <span class="mi">84</span><span class="o">.</span><span class="mi">39</span>
 </pre></div>
 </div>
 </div>
@@ -870,13 +870,13 @@ document.write(`
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">print_stat</span> <span class="n">name</span> <span class="o">(</span><span class="n">num</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">=</span>
-  <span class="nn">Printf</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;%s: %F</span><span class="se">\n</span><span class="s2">%!&quot;</span> <span class="n">name</span> <span class="n">num</span>
+  <span class="nn">Printf</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"%s: %F</span><span class="se">\n</span><span class="s2">%!"</span> <span class="n">name</span> <span class="n">num</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[14]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">34</span><span class="o">-</span><span class="mi">37</span><span class="p">:</span>
-<span class="mi">2</span> <span class="o">|</span>   <span class="n">Printf</span><span class="o">.</span><span class="n">printf</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%F</span><span class="se">\n</span><span class="s2">%!&quot;</span> <span class="n">name</span> <span class="n">num</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[14]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">34</span><span class="o">-</span><span class="mi">37</span><span class="p">:</span>
+<span class="mi">2</span> <span class="o">|</span>   <span class="n">Printf</span><span class="o">.</span><span class="n">printf</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">: </span><span class="si">%F</span><span class="se">\n</span><span class="s2">%!"</span> <span class="n">name</span> <span class="n">num</span>
                                       <span class="o">^^^</span>
 <span class="ne">Error</span>: The value num has type int but an expression was expected of type
          <span class="nb">float</span>
@@ -888,7 +888,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">print_stat</span> <span class="n">name</span> <span class="n">num</span> <span class="o">=</span>
-  <span class="nn">Printf</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;%s: %i</span><span class="se">\n</span><span class="s2">%!&quot;</span> <span class="n">name</span> <span class="n">num</span>
+  <span class="nn">Printf</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"%s: %i</span><span class="se">\n</span><span class="s2">%!"</span> <span class="n">name</span> <span class="n">num</span>
 </pre></div>
 </div>
 </div>
@@ -902,7 +902,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">string_of_stat</span> <span class="n">name</span> <span class="n">num</span> <span class="o">=</span>
-  <span class="nn">Printf</span><span class="p">.</span><span class="n">sprintf</span> <span class="s2">&quot;%s: %F&quot;</span> <span class="n">name</span> <span class="n">num</span>
+  <span class="nn">Printf</span><span class="p">.</span><span class="n">sprintf</span> <span class="s2">"%s: %F"</span> <span class="n">name</span> <span class="n">num</span>
 </pre></div>
 </div>
 </div>
@@ -914,12 +914,12 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">string_of_stat</span> <span class="s2">&quot;mean&quot;</span> <span class="mi">84</span><span class="o">.</span><span class="mi">39</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">string_of_stat</span> <span class="s2">"mean"</span> <span class="mi">84</span><span class="o">.</span><span class="mi">39</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = &quot;mean: 84.39&quot;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = "mean: 84.39"
 </pre></div>
 </div>
 </div>

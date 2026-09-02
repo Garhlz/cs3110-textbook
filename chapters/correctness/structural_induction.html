@@ -768,7 +768,7 @@ QED
 <p>事实证明，自然数和列表非常相似
 作为数据类型。  以下是两者的定义，为了比较而对齐：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span>    <span class="n">nat</span>  <span class="o">=</span> <span class="nc">Z</span>  <span class="o">|</span> <span class="nc">S</span>      <span class="k">of</span> <span class="n">nat</span>
-<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span> <span class="bp">[]</span> <span class="o">|</span> <span class="o">(</span> <span class="o">::</span> <span class="o">)</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span> <span class="bp">[]</span> <span class="o">|</span> <span class="o">(</span> <span class="o">::</span> <span class="o">)</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 </pre></div>
 </div>
 <p>两种类型都有一个代表“无”概念的构造函数。两种类型
@@ -809,10 +809,10 @@ Show: P(h :: t)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val append : &#39;a list -&gt; &#39;a list -&gt; &#39;a list = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val append : 'a list -&gt; 'a list -&gt; 'a list = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( @ ) : &#39;a list -&gt; &#39;a list -&gt; &#39;a list = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( @ ) : 'a list -&gt; 'a list -&gt; 'a list = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -892,10 +892,10 @@ QED
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fold_left : (&#39;a -&gt; &#39;b -&gt; &#39;a) -&gt; &#39;a -&gt; &#39;b list -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fold_left : ('a -&gt; 'b -&gt; 'a) -&gt; 'a -&gt; 'b list -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fold_right : (&#39;a -&gt; &#39;b -&gt; &#39;b) -&gt; &#39;a list -&gt; &#39;b -&gt; &#39;b = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fold_right : ('a -&gt; 'b -&gt; 'b) -&gt; 'a list -&gt; 'b -&gt; 'b = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1048,16 +1048,16 @@ QED
 两者的定义，对齐进行比较：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span> <span class="bp">[]</span>   <span class="o">|</span> <span class="o">(</span> <span class="o">::</span> <span class="o">)</span> <span class="k">of</span>           <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
-<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span> <span class="nc">Leaf</span> <span class="o">|</span> <span class="nc">Node</span>   <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span> <span class="bp">[]</span>   <span class="o">|</span> <span class="o">(</span> <span class="o">::</span> <span class="o">)</span> <span class="k">of</span>           <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span> <span class="nc">Leaf</span> <span class="o">|</span> <span class="nc">Node</span>   <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="n">tree</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">tree</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a list = [] | (::) of &#39;a * &#39;a list
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a list = [] | (::) of 'a * 'a list
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a tree = Leaf | Node of &#39;a tree * &#39;a * &#39;a tree
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a tree = Leaf | Node of 'a tree * 'a * 'a tree
 </pre></div>
 </div>
 </div>
@@ -1099,7 +1099,7 @@ Show: P(Node (l, v, r))
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val reflect : &#39;a tree -&gt; &#39;a tree = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val reflect : 'a tree -&gt; 'a tree = &lt;fun&gt;
 </pre></div>
 </div>
 </div>

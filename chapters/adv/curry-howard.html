@@ -689,13 +689,13 @@ OCaml 推断（或程序员注释）表达式的类型。对于
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val pair : &#39;a -&gt; &#39;b -&gt; &#39;a * &#39;b = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val pair : 'a -&gt; 'b -&gt; 'a * 'b = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fst : &#39;a * &#39;b -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fst : 'a * 'b -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val snd : &#39;a * &#39;b -&gt; &#39;b = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val snd : 'a * 'b -&gt; 'b = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -737,9 +737,9 @@ A /\ B -&gt; B
 它们都是操纵和转换证据的方式。事实上，仔细
 比较 <code class="docutils literal notranslate"><span class="pre">pair</span></code>、<code class="docutils literal notranslate"><span class="pre">fst</span></code> 和 <code class="docutils literal notranslate"><span class="pre">snd</span></code> 的类型与逻辑公式
 描述有效的推理模式：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>val pair : &#39;a -&gt; &#39;b -&gt; &#39;a * &#39;b         A -&gt; B -&gt; A /\ B
-val fst : &#39;a * &#39;b -&gt; &#39;a                A /\ B -&gt; A
-val snd : &#39;a * &#39;b -&gt; &#39;b                A /\ B -&gt; B
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>val pair : 'a -&gt; 'b -&gt; 'a * 'b         A -&gt; B -&gt; A /\ B
+val fst : 'a * 'b -&gt; 'a                A /\ B -&gt; A
+val snd : 'a * 'b -&gt; 'b                A /\ B -&gt; B
 </pre></div>
 </div>
 <p>如果将 <code class="docutils literal notranslate"><span class="pre">'a</span></code> 替换为 A，将 <code class="docutils literal notranslate"><span class="pre">'b</span></code> 替换为 B，将 <code class="docutils literal notranslate"><span class="pre">*</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">/\</span></code>，则 **
@@ -827,12 +827,12 @@ atom ::= &lt;identifiers&gt;
 变体类型：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">disj</span> <span class="o">=</span> <span class="nc">Left</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Right</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">b</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span><span class="o">,</span> <span class="k">'</span><span class="n">b</span><span class="o">)</span> <span class="n">disj</span> <span class="o">=</span> <span class="nc">Left</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Right</span> <span class="k">of</span> <span class="k">'</span><span class="n">b</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type (&#39;a, &#39;b) disj = Left of &#39;a | Right of &#39;b
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type ('a, 'b) disj = Left of 'a | Right of 'b
 </pre></div>
 </div>
 </div>
@@ -866,7 +866,7 @@ atom ::= &lt;identifiers&gt;
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val loop : &#39;a -&gt; &#39;b = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val loop : 'a -&gt; 'b = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -881,15 +881,15 @@ atom ::= &lt;identifiers&gt;
 <p>这是另一种方法：</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">e</span> <span class="o">:</span> <span class="n">empty</span> <span class="o">=</span> <span class="n">failwith</span> <span class="s2">&quot;&quot;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">e</span> <span class="o">:</span> <span class="n">empty</span> <span class="o">=</span> <span class="n">failwith</span> <span class="s2">""</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: Failure &quot;&quot;.
-<span class="n">Raised</span> <span class="n">at</span> <span class="n">Stdlib</span><span class="o">.</span><span class="n">failwith</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;stdlib.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">29</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">17</span><span class="o">-</span><span class="mi">33</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[5]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">16</span><span class="o">-</span><span class="mi">27</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: Failure "".
+<span class="n">Raised</span> <span class="n">at</span> <span class="n">Stdlib</span><span class="o">.</span><span class="n">failwith</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"stdlib.ml"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">29</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">17</span><span class="o">-</span><span class="mi">33</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"[5]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">16</span><span class="o">-</span><span class="mi">27</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"toplevel/byte/topeval.ml"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
 </pre></div>
 </div>
 </div>
@@ -939,14 +939,14 @@ atom ::= &lt;identifiers&gt;
 </pre></div>
 </div>
 <p>变量具有环境为它指定的类型。</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- fun x -&gt; e : t -&gt; t&#39;
-if env[x -&gt; t] |- e : t&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- fun x -&gt; e : t -&gt; t'
+if env[x -&gt; t] |- e : t'
 </pre></div>
 </div>
 <p>如果 <code class="docutils literal notranslate"><span class="pre">e</span></code> 在 a 中具有类型 <code class="docutils literal notranslate"><span class="pre">t'</span></code>，则匿名函数 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">e</span></code> 具有类型 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">t'</span></code>
 静态环境扩展为将 <code class="docutils literal notranslate"><span class="pre">x</span></code> 绑定到类型 <code class="docutils literal notranslate"><span class="pre">t</span></code>。</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- e1 e2 : t&#39;
-if env |- e1 : t -&gt; t&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>env |- e1 e2 : t'
+if env |- e1 : t -&gt; t'
 and env |- e2 : t
 </pre></div>
 </div>
@@ -1088,26 +1088,26 @@ a /\ b |- a /\ b           a /\ b |- a /\ b
 <code class="docutils literal notranslate"><span class="pre">b</span></code> 必须绑定到程序静态环境中的某些类型
 类型检查。</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>------------------------         -------------------------
-{a : t, b : t&#39;} |- a : t         {a : t, b : t&#39;} |- b : t&#39;
+{a : t, b : t'} |- a : t         {a : t, b : t'} |- b : t'
 ----------------------------------------------------------
-         {a : t, b : t&#39;} |- (a, b) : t * t&#39;
+         {a : t, b : t'} |- (a, b) : t * t'
          ----------------------------------
-         {a : t, b : t&#39;} |- fst (a, b) : t
+         {a : t, b : t'} |- fst (a, b) : t
 </pre></div>
 </div>
 <p>根据程序即证明的对应关系，删除证明树中的程序、只保留命题，
 我们得到这个证明树：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------            -----------
-t, t&#39; |-  t            t, t&#39; |- t&#39;
+t, t' |-  t            t, t' |- t'
 ----------------------------------
-         t, t&#39; |- t /\ t&#39;
+         t, t' |- t /\ t'
          ----------------
-            t, t&#39; |- t
+            t, t' |- t
 </pre></div>
 </div>
 <p>然而，有一个更简单的证明树，具有相同的结论：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>----------
-t, t&#39; |- t
+t, t' |- t
 </pre></div>
 </div>
 <p>换句话说，如果 <code class="docutils literal notranslate"><span class="pre">t</span></code> 已经是一个假设，我们不需要绕道先证明 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">/\</span> <span class="pre">t'</span></code>
@@ -1115,7 +1115,7 @@ t, t&#39; |- t
 <p>同样，有一个更简单的类型推导对应于相同的
 更简单的证明：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>------------------------
-{a : t, b : t&#39;} |- a : t
+{a : t, b : t'} |- a : t
 </pre></div>
 </div>
 <p>请注意，这个类型推导针对的是程序 <code class="docutils literal notranslate"><span class="pre">a</span></code>，而它正是更大的程序

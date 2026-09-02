@@ -575,10 +575,10 @@ document.write(`
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">OUnit2</span>
 <span class="k">open</span> <span class="nc">Sum</span>
 
-<span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">&quot;test suite for sum&quot;</span> <span class="o">&gt;:::</span> <span class="o">[</span>
-  <span class="s2">&quot;empty&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">0</span> <span class="o">(</span><span class="n">sum</span> <span class="bp">[]</span><span class="o">));</span>
-  <span class="s2">&quot;singleton&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">1</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
-  <span class="s2">&quot;two_elements&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">3</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">]));</span>
+<span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">"test suite for sum"</span> <span class="o">&gt;:::</span> <span class="o">[</span>
+  <span class="s2">"empty"</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">0</span> <span class="o">(</span><span class="n">sum</span> <span class="bp">[]</span><span class="o">));</span>
+  <span class="s2">"singleton"</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">1</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
+  <span class="s2">"two_elements"</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">3</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">]));</span>
 <span class="o">]</span>
 
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">run_test_tt_main</span> <span class="n">tests</span>
@@ -623,11 +623,11 @@ OK
 <span class="o">==============================================================================</span>
 <span class="n">Error</span><span class="p">:</span> <span class="n">test</span> <span class="n">suite</span> <span class="k">for</span> <span class="nb">sum</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="n">two_elements</span><span class="o">.</span>
 
-<span class="n">File</span> <span class="s2">&quot;.../_build/oUnit-test suite for sum-...#01.log&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">9</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">1</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+<span class="n">File</span> <span class="s2">".../_build/oUnit-test suite for sum-...#01.log"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">9</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">1</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
 <span class="n">Error</span><span class="p">:</span> <span class="n">test</span> <span class="n">suite</span> <span class="k">for</span> <span class="nb">sum</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="n">two_elements</span> <span class="p">(</span><span class="ow">in</span> <span class="n">the</span> <span class="n">log</span><span class="p">)</span><span class="o">.</span>
 
-<span class="n">Raised</span> <span class="n">at</span> <span class="n">OUnitAssert</span><span class="o">.</span><span class="n">assert_failure</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;src/lib/ounit2/advanced/oUnitAssert.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">45</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">27</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">OUnitRunner.run_one_test.</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;src/lib/ounit2/advanced/oUnitRunner.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">83</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">13</span><span class="o">-</span><span class="mi">26</span>
+<span class="n">Raised</span> <span class="n">at</span> <span class="n">OUnitAssert</span><span class="o">.</span><span class="n">assert_failure</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"src/lib/ounit2/advanced/oUnitAssert.ml"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">45</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">27</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">OUnitRunner.run_one_test.</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"src/lib/ounit2/advanced/oUnitRunner.ml"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">83</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">13</span><span class="o">-</span><span class="mi">26</span>
 
 <span class="ow">not</span> <span class="n">equal</span>
 <span class="o">------------------------------------------------------------------------------</span>
@@ -653,9 +653,9 @@ OUnit2 是 OUnit 框架的版本 2。<code class="docutils literal notranslate">
 稍后在后面的章节中。</p>
 <p>然后我们创建了一个测试用例列表：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>
-  <span class="s2">&quot;empty&quot;</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">0</span> <span class="o">(</span><span class="n">sum</span> <span class="bp">[]</span><span class="o">));</span>
-  <span class="s2">&quot;one&quot;</span>    <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">1</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
-  <span class="s2">&quot;onetwo&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">3</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">]));</span>
+  <span class="s2">"empty"</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">0</span> <span class="o">(</span><span class="n">sum</span> <span class="bp">[]</span><span class="o">));</span>
+  <span class="s2">"one"</span>    <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">1</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
+  <span class="s2">"onetwo"</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">3</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">]));</span>
 <span class="o">]</span>
 </pre></div>
 </div>
@@ -673,10 +673,10 @@ OUnit2 是 OUnit 框架的版本 2。<code class="docutils literal notranslate">
 OUnit 提供的函数，用于检查其两个参数是否相等。
 如果相等，则测试用例成功；否则测试用例失败。</p>
 <p>然后我们创建了一个测试套件：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">&quot;test suite for sum&quot;</span> <span class="o">&gt;:::</span> <span class="o">[</span>
-  <span class="s2">&quot;empty&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">0</span> <span class="o">(</span><span class="n">sum</span> <span class="bp">[]</span><span class="o">));</span>
-  <span class="s2">&quot;singleton&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">1</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
-  <span class="s2">&quot;two_elements&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">3</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">]));</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">"test suite for sum"</span> <span class="o">&gt;:::</span> <span class="o">[</span>
+  <span class="s2">"empty"</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">0</span> <span class="o">(</span><span class="n">sum</span> <span class="bp">[]</span><span class="o">));</span>
+  <span class="s2">"singleton"</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">1</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
+  <span class="s2">"two_elements"</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">3</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">]));</span>
 <span class="o">]</span>
 </pre></div>
 </div>
@@ -710,10 +710,10 @@ OUnit 提供的函数，用于检查其两个参数是否相等。
 <code class="docutils literal notranslate"><span class="pre">printer</span></code>，应该是一个可以将输出转换为字符串的函数。在
 在这种情况下，输出是整数，因此来自 <code class="docutils literal notranslate"><span class="pre">Stdlib</span></code> 模块的 <code class="docutils literal notranslate"><span class="pre">string_of_int</span></code>
 就足够了。我们将测试套件修改如下：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">&quot;test suite for sum&quot;</span> <span class="o">&gt;:::</span> <span class="o">[</span>
-  <span class="s2">&quot;empty&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">0</span> <span class="o">(</span><span class="n">sum</span> <span class="bp">[]</span><span class="o">)</span> <span class="o">~</span><span class="n">printer</span><span class="o">:</span><span class="n">string_of_int</span><span class="o">);</span>
-  <span class="s2">&quot;singleton&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">1</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">])</span> <span class="o">~</span><span class="n">printer</span><span class="o">:</span><span class="n">string_of_int</span><span class="o">);</span>
-  <span class="s2">&quot;two_elements&quot;</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">3</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">])</span> <span class="o">~</span><span class="n">printer</span><span class="o">:</span><span class="n">string_of_int</span><span class="o">);</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">"test suite for sum"</span> <span class="o">&gt;:::</span> <span class="o">[</span>
+  <span class="s2">"empty"</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">0</span> <span class="o">(</span><span class="n">sum</span> <span class="bp">[]</span><span class="o">)</span> <span class="o">~</span><span class="n">printer</span><span class="o">:</span><span class="n">string_of_int</span><span class="o">);</span>
+  <span class="s2">"singleton"</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">1</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">])</span> <span class="o">~</span><span class="n">printer</span><span class="o">:</span><span class="n">string_of_int</span><span class="o">);</span>
+  <span class="s2">"two_elements"</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="mi">3</span> <span class="o">(</span><span class="n">sum</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">])</span> <span class="o">~</span><span class="n">printer</span><span class="o">:</span><span class="n">string_of_int</span><span class="o">);</span>
 <span class="o">]</span>
 </pre></div>
 </div>
@@ -737,10 +737,10 @@ OUnit 提供的函数，用于检查其两个参数是否相等。
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">make_sum_test</span> <span class="n">name</span> <span class="n">expected_output</span> <span class="n">input</span> <span class="o">=</span>
   <span class="n">name</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="n">expected_output</span> <span class="o">(</span><span class="n">sum</span> <span class="n">input</span><span class="o">)</span> <span class="o">~</span><span class="n">printer</span><span class="o">:</span><span class="n">string_of_int</span><span class="o">)</span>
 
-<span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">&quot;test suite for sum&quot;</span> <span class="o">&gt;:::</span> <span class="o">[</span>
-  <span class="n">make_sum_test</span> <span class="s2">&quot;empty&quot;</span> <span class="mi">0</span> <span class="bp">[]</span><span class="o">;</span>
-  <span class="n">make_sum_test</span> <span class="s2">&quot;singleton&quot;</span> <span class="mi">1</span> <span class="o">[</span><span class="mi">1</span><span class="o">];</span>
-  <span class="n">make_sum_test</span> <span class="s2">&quot;two_elements&quot;</span> <span class="mi">3</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">];</span>
+<span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">"test suite for sum"</span> <span class="o">&gt;:::</span> <span class="o">[</span>
+  <span class="n">make_sum_test</span> <span class="s2">"empty"</span> <span class="mi">0</span> <span class="bp">[]</span><span class="o">;</span>
+  <span class="n">make_sum_test</span> <span class="s2">"singleton"</span> <span class="mi">1</span> <span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+  <span class="n">make_sum_test</span> <span class="s2">"two_elements"</span> <span class="mi">3</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">];</span>
 <span class="o">]</span>
 </pre></div>
 </div>
@@ -767,7 +767,7 @@ OUnit 提供的函数，用于检查其两个参数是否相等。
 <p>我们想要编写函数 <code class="docutils literal notranslate"><span class="pre">next_weekday</span> <span class="pre">:</span> <span class="pre">day</span> <span class="pre">-&gt;</span> <span class="pre">day</span></code>，
 返回指定日期之后的下一个工作日。我们从能写出的最简单、
 但尚未实现的版本开始：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">next_weekday</span> <span class="n">d</span> <span class="o">=</span> <span class="n">failwith</span> <span class="s2">&quot;Unimplemented&quot;</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">next_weekday</span> <span class="n">d</span> <span class="o">=</span> <span class="n">failwith</span> <span class="s2">"Unimplemented"</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -776,8 +776,8 @@ OUnit 提供的函数，用于检查其两个参数是否相等。
 </div>
 <p>然后我们编写我们能想象到的最简单的单元测试。例如，我们知道
 星期一之后的下一个工作日是星期二。所以我们添加一个测试：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">&quot;test suite for next_weekday&quot;</span> <span class="o">&gt;:::</span> <span class="o">[</span>
-  <span class="s2">&quot;tue_after_mon&quot;</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="nc">Tuesday</span> <span class="o">(</span><span class="n">next_weekday</span> <span class="nc">Monday</span><span class="o">));</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">"test suite for next_weekday"</span> <span class="o">&gt;:::</span> <span class="o">[</span>
+  <span class="s2">"tue_after_mon"</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="nc">Tuesday</span> <span class="o">(</span><span class="n">next_weekday</span> <span class="nc">Monday</span><span class="o">));</span>
 <span class="o">]</span>
 </pre></div>
 </div>
@@ -787,17 +787,17 @@ OUnit 提供的函数，用于检查其两个参数是否相等。
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">next_weekday</span> <span class="n">d</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">d</span> <span class="k">with</span>
   <span class="o">|</span> <span class="nc">Monday</span> <span class="o">-&gt;</span> <span class="nc">Tuesday</span>
-  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Unimplemented&quot;</span>
+  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Unimplemented"</span>
 </pre></div>
 </div>
 <p>我们编译并运行测试；它通过了。现在该添加更多测试了。
 剩下的最简单的可能性是仅涉及工作日的测试，而不是
 周末。因此，让我们添加工作日的测试。</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">&quot;test suite for next_weekday&quot;</span> <span class="o">&gt;:::</span> <span class="o">[</span>
-  <span class="s2">&quot;tue_after_mon&quot;</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="nc">Tuesday</span> <span class="o">(</span><span class="n">next_weekday</span> <span class="nc">Monday</span><span class="o">));</span>
-  <span class="s2">&quot;wed_after_tue&quot;</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="nc">Wednesday</span> <span class="o">(</span><span class="n">next_weekday</span> <span class="nc">Tuesday</span><span class="o">));</span>
-  <span class="s2">&quot;thu_after_wed&quot;</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="nc">Thursday</span><span class="o">(</span><span class="n">next_weekday</span> <span class="nc">Wednesday</span><span class="o">));</span>
-  <span class="s2">&quot;fri_after_thu&quot;</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="nc">Friday</span> <span class="o">(</span><span class="n">next_weekday</span> <span class="nc">Thursday</span><span class="o">));</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">"test suite for next_weekday"</span> <span class="o">&gt;:::</span> <span class="o">[</span>
+  <span class="s2">"tue_after_mon"</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="nc">Tuesday</span> <span class="o">(</span><span class="n">next_weekday</span> <span class="nc">Monday</span><span class="o">));</span>
+  <span class="s2">"wed_after_tue"</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="nc">Wednesday</span> <span class="o">(</span><span class="n">next_weekday</span> <span class="nc">Tuesday</span><span class="o">));</span>
+  <span class="s2">"thu_after_wed"</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="nc">Thursday</span><span class="o">(</span><span class="n">next_weekday</span> <span class="nc">Wednesday</span><span class="o">));</span>
+  <span class="s2">"fri_after_thu"</span>  <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="nc">Friday</span> <span class="o">(</span><span class="n">next_weekday</span> <span class="nc">Thursday</span><span class="o">));</span>
 <span class="o">]</span>
 </pre></div>
 </div>
@@ -809,7 +809,7 @@ OUnit 提供的函数，用于检查其两个参数是否相等。
     <span class="o">|</span> <span class="nc">Tuesday</span> <span class="o">-&gt;</span> <span class="nc">Wednesday</span>
     <span class="o">|</span> <span class="nc">Wednesday</span> <span class="o">-&gt;</span> <span class="nc">Thursday</span>
     <span class="o">|</span> <span class="nc">Thursday</span> <span class="o">-&gt;</span> <span class="nc">Friday</span>
-    <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Unimplemented&quot;</span>
+    <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Unimplemented"</span>
 </pre></div>
 </div>
 <p>我们编译并运行测试；它们通过了。此时我们可以继续
@@ -822,20 +822,20 @@ OUnit 提供的函数，用于检查其两个参数是否相等。
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">make_next_weekday_test</span> <span class="n">name</span> <span class="n">expected_output</span> <span class="n">input</span> <span class="o">=</span>
   <span class="n">name</span> <span class="o">&gt;::</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">assert_equal</span> <span class="n">expected_output</span> <span class="o">(</span><span class="n">next_weekday</span> <span class="n">input</span><span class="o">))</span>
 
-<span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">&quot;test suite for next_weekday&quot;</span> <span class="o">&gt;:::</span> <span class="o">[</span>
-  <span class="n">make_next_weekday_test</span> <span class="s2">&quot;tue_after_mon&quot;</span> <span class="nc">Tuesday</span> <span class="nc">Monday</span><span class="o">;</span>
-  <span class="n">make_next_weekday_test</span> <span class="s2">&quot;wed_after_tue&quot;</span> <span class="nc">Wednesday</span> <span class="nc">Tuesday</span><span class="o">;</span>
-  <span class="n">make_next_weekday_test</span> <span class="s2">&quot;thu_after_wed&quot;</span> <span class="nc">Thursday</span> <span class="nc">Wednesday</span><span class="o">;</span>
-  <span class="n">make_next_weekday_test</span> <span class="s2">&quot;fri_after_thu&quot;</span> <span class="nc">Friday</span> <span class="nc">Thursday</span><span class="o">;</span>
+<span class="k">let</span> <span class="n">tests</span> <span class="o">=</span> <span class="s2">"test suite for next_weekday"</span> <span class="o">&gt;:::</span> <span class="o">[</span>
+  <span class="n">make_next_weekday_test</span> <span class="s2">"tue_after_mon"</span> <span class="nc">Tuesday</span> <span class="nc">Monday</span><span class="o">;</span>
+  <span class="n">make_next_weekday_test</span> <span class="s2">"wed_after_tue"</span> <span class="nc">Wednesday</span> <span class="nc">Tuesday</span><span class="o">;</span>
+  <span class="n">make_next_weekday_test</span> <span class="s2">"thu_after_wed"</span> <span class="nc">Thursday</span> <span class="nc">Wednesday</span><span class="o">;</span>
+  <span class="n">make_next_weekday_test</span> <span class="s2">"fri_after_thu"</span> <span class="nc">Friday</span> <span class="nc">Thursday</span><span class="o">;</span>
 <span class="o">]</span>
 </pre></div>
 </div>
 <p>现在我们通过处理周末来完成测试和实现。首先我们添加
 一些测试用例：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span>  <span class="o">...</span>
-  <span class="n">make_next_weekday_test</span> <span class="s2">&quot;mon_after_fri&quot;</span> <span class="nc">Monday</span> <span class="nc">Friday</span><span class="o">;</span>
-  <span class="n">make_next_weekday_test</span> <span class="s2">&quot;mon_after_sat&quot;</span> <span class="nc">Monday</span> <span class="nc">Saturday</span><span class="o">;</span>
-  <span class="n">make_next_weekday_test</span> <span class="s2">&quot;mon_after_sun&quot;</span> <span class="nc">Monday</span> <span class="nc">Sunday</span><span class="o">;</span>
+  <span class="n">make_next_weekday_test</span> <span class="s2">"mon_after_fri"</span> <span class="nc">Monday</span> <span class="nc">Friday</span><span class="o">;</span>
+  <span class="n">make_next_weekday_test</span> <span class="s2">"mon_after_sat"</span> <span class="nc">Monday</span> <span class="nc">Saturday</span><span class="o">;</span>
+  <span class="n">make_next_weekday_test</span> <span class="s2">"mon_after_sun"</span> <span class="nc">Monday</span> <span class="nc">Sunday</span><span class="o">;</span>
   <span class="o">...</span>
 </pre></div>
 </div>

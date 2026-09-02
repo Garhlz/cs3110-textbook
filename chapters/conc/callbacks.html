@@ -631,7 +631,7 @@ document.write(`
 <h2><span class="section-number">7.5.1. </span>注册回调<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <p>这是一个使用 Lwt 打印字符串的函数
 <code class="docutils literal notranslate"><span class="pre">printf</span></code> 函数的版本：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">print_the_string</span> <span class="n">str</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;The string is: %S</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="n">str</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">print_the_string</span> <span class="n">str</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"The string is: %S</span><span class="se">\n</span><span class="s2">"</span> <span class="n">str</span>
 </pre></div>
 </div>
 <p>这里重复上一节中的代码，它返回一个 Promise，
@@ -647,19 +647,19 @@ document.write(`
 <p>在 <code class="docutils literal notranslate"><span class="pre">p</span></code> 被履行后的某个时间，它会包含一个字符串；
 回调将以该字符串作为输入运行，从而打印该字符串。</p>
 <p>这是一个完整的 utop 成绩单作为示例：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># let print_the_string str = Lwt_io.printf &quot;The string is: %S\n&quot; str;;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># let print_the_string str = Lwt_io.printf "The string is: %S\n" str;;
 val print_the_string : string -&gt; unit Lwt.t = &lt;fun&gt;
 # let p = read_line stdin in Lwt.bind p print_the_string;;
 - : unit Lwt.t = &lt;abstr&gt;
   &lt;type Camels are bae followed by Enter&gt;
-# The string is: &quot;Camels are bae&quot;
+# The string is: "Camels are bae"
 </pre></div>
 </div>
 </section>
 <section id="bind">
 <h2><span class="section-number">7.5.2. </span>Bind<a class="headerlink" href="#bind" title="Permalink to this heading">#</a></h2>
 <p>理解 <code class="docutils literal notranslate"><span class="pre">Lwt.bind</span></code> 的类型很重要：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">&#39;</span><span class="n">a</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">'</span><span class="n">a</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">bind</span></code> 函数将 Promise 作为第一个参数。这个 Promise 是否已经履行并不重要。
@@ -712,7 +712,7 @@ Y 也会因同一个异常被拒绝。如果 Z 一直待处理，Y 也会一直�
 字符串：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Lwt</span><span class="p">.</span><span class="n">bind</span> <span class="o">(</span><span class="n">read_line</span> <span class="n">stdin</span><span class="o">)</span> <span class="o">(</span><span class="k">fun</span> <span class="n">s1</span> <span class="o">-&gt;</span>
   <span class="nn">Lwt</span><span class="p">.</span><span class="n">bind</span> <span class="o">(</span><span class="n">read_line</span> <span class="n">stdin</span><span class="o">)</span> <span class="o">(</span><span class="k">fun</span> <span class="n">s2</span> <span class="o">-&gt;</span>
-    <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="n">s1</span><span class="o">^</span><span class="n">s2</span><span class="o">)));;</span>
+    <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"%s</span><span class="se">\n</span><span class="s2">"</span> <span class="o">(</span><span class="n">s1</span><span class="o">^</span><span class="n">s2</span><span class="o">)));;</span>
 </pre></div>
 </div>
 <p>如果你在 utop 中运行它，会再次发生一些令人困惑的事情：
@@ -725,7 +725,7 @@ Y 也会因同一个异常被拒绝。如果 Z 一直待处理，Y 也会一直�
 <span class="k">let</span> <span class="n">p</span> <span class="o">=</span>
   <span class="nn">Lwt</span><span class="p">.</span><span class="n">bind</span> <span class="o">(</span><span class="n">read_line</span> <span class="n">stdin</span><span class="o">)</span> <span class="o">(</span><span class="k">fun</span> <span class="n">s1</span> <span class="o">-&gt;</span>
     <span class="nn">Lwt</span><span class="p">.</span><span class="n">bind</span> <span class="o">(</span><span class="n">read_line</span> <span class="n">stdin</span><span class="o">)</span> <span class="o">(</span><span class="k">fun</span> <span class="n">s2</span> <span class="o">-&gt;</span>
-      <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="n">s1</span><span class="o">^</span><span class="n">s2</span><span class="o">)))</span>
+      <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"%s</span><span class="se">\n</span><span class="s2">"</span> <span class="o">(</span><span class="n">s1</span><span class="o">^</span><span class="n">s2</span><span class="o">)))</span>
 
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="nn">Lwt_main</span><span class="p">.</span><span class="n">run</span> <span class="n">p</span>
 </pre></div>
@@ -762,7 +762,7 @@ Promise 被履行，然后返回其中的内容。整个程序通常只在主文
 <span class="k">let</span> <span class="n">p</span> <span class="o">=</span>
   <span class="n">read_line</span> <span class="n">stdin</span> <span class="o">&gt;&gt;=</span> <span class="k">fun</span> <span class="n">s1</span> <span class="o">-&gt;</span>
   <span class="n">read_line</span> <span class="n">stdin</span> <span class="o">&gt;&gt;=</span> <span class="k">fun</span> <span class="n">s2</span> <span class="o">-&gt;</span>
-  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="n">s1</span><span class="o">^</span><span class="n">s2</span><span class="o">)</span>
+  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"%s</span><span class="se">\n</span><span class="s2">"</span> <span class="o">(</span><span class="n">s1</span><span class="o">^</span><span class="n">s2</span><span class="o">)</span>
 
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="nn">Lwt_main</span><span class="p">.</span><span class="n">run</span> <span class="n">p</span>
 </pre></div>
@@ -789,7 +789,7 @@ Promise 被履行，然后返回其中的内容。整个程序通常只在主文
 <span class="k">let</span> <span class="n">p</span> <span class="o">=</span>
   <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">read_line</span> <span class="n">stdin</span> <span class="k">in</span>
   <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">read_line</span> <span class="n">stdin</span> <span class="k">in</span>
-  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="n">s1</span><span class="o">^</span><span class="n">s2</span><span class="o">)</span>
+  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"%s</span><span class="se">\n</span><span class="s2">"</span> <span class="o">(</span><span class="n">s1</span><span class="o">^</span><span class="n">s2</span><span class="o">)</span>
 
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="nn">Lwt_main</span><span class="p">.</span><span class="n">run</span> <span class="n">p</span>
 </pre></div>
@@ -816,9 +816,9 @@ Promise 被履行，然后返回其中的内容。整个程序通常只在主文
 <span class="k">let</span> <span class="n">p</span> <span class="o">=</span>
   <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">read_line</span> <span class="n">stdin</span> <span class="k">in</span>
   <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">read_line</span> <span class="n">stdin</span> <span class="k">in</span>
-  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="n">s1</span> <span class="o">^</span> <span class="n">s2</span><span class="o">)</span>
+  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"%s</span><span class="se">\n</span><span class="s2">"</span> <span class="o">(</span><span class="n">s1</span> <span class="o">^</span> <span class="n">s2</span><span class="o">)</span>
 
-<span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;Got here first</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"Got here first</span><span class="se">\n</span><span class="s2">"</span>
 
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="nn">Lwt_main</span><span class="p">.</span><span class="n">run</span> <span class="n">p</span>
 </pre></div>
@@ -832,7 +832,7 @@ Promise 被履行，然后返回其中的内容。整个程序通常只在主文
 <span class="k">let</span> <span class="n">p</span> <span class="o">=</span>
   <span class="k">let</span><span class="o">*</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">read_line</span> <span class="n">stdin</span> <span class="k">in</span>
   <span class="k">let</span><span class="o">*</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">read_line</span> <span class="n">stdin</span> <span class="k">in</span>
-  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot;%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="n">s1</span> <span class="o">^</span> <span class="n">s2</span><span class="o">)</span>
+  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"%s</span><span class="se">\n</span><span class="s2">"</span> <span class="o">(</span><span class="n">s1</span> <span class="o">^</span> <span class="n">s2</span><span class="o">)</span>
 </pre></div>
 </div>
 <p>但我们通常更喜欢使用 <code class="docutils literal notranslate"><span class="pre">lwt_ppx</span></code>，因为它还提供了一些其他有用的语法。

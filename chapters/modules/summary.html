@@ -531,7 +531,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.10.1. 术语和概念</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.10.2. 进一步阅读</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.10.2. 延伸阅读</a></li>
 </ul>
             </nav>
         </div>
@@ -545,40 +545,38 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">5.10. </span>总结<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>OCaml 模块系统提供了模块化机制，其功能与你在其他语言中见过的机制类似。
-但看到这些机制以不同方式出现，应当能帮助你更好地理解它们。
-例如，OCaml 的抽象类型和签名提供了类似于 Java 可见性修饰符和接口的抽象机制。
-看到同一个思想在两种语言中以相当不同的方式体现，
-也会帮助你在未来遇到其他语言时识别出这个思想。</p>
-<p>此外，”类型可以是抽象的”这一思想是编程语言设计中的核心思想。
-OCaml 模块系统把这个思想非常直接地呈现出来。
-其他语言（例如 Java）则因为把它和许多其他特性耦合在一起，
-稍微掩盖了这一点。从某种意义上说，每个 Java 类都隐式定义了一个抽象类型
-（实际上，每个可见性修饰符 [<code class="docutils literal notranslate"><span class="pre">public</span></code>, <code class="docutils literal notranslate"><span class="pre">protected</span></code>, <code class="docutils literal notranslate"><span class="pre">private</span></code> 和 <code class="docutils literal notranslate"><span class="pre">default</span></code>]
-都对应一个抽象类型，这些类型通过子类型关系相关），
-而该类的所有方法都是作用于这种抽象类型的函数。</p>
-<p>functor 是 OCaml 中的一项高级语言特性，初看可能显得很神秘。
-如果你有这种感觉，请记住：functor 实际上只是接收结构作为输入、
-并返回结构作为输出的函数。它们之所以看起来不像普通 OCaml 函数，
-是因为结构不是 OCaml 中的一等值：你无法编写一个普通函数来接收结构作为输入，
-或返回结构作为输出。但 functor 可以做到这一点。</p>
-<p>functor 和 include 支持代码重用。许多面向对象特性实现的代码重用，
-也可以通过 functor 和 include 实现。
-这并不是说 functor 和 include 完全等同于那些面向对象特性：
-有些类型的代码重用用某一组特性实现起来可能比另一组更容易。</p>
-<p>理解这一点的一种方式是：类扩展可以看作 functor 和 include 的一种非常受限但有用的组合。
-扩展一个类，就像编写一个 functor，把基类作为输入，include 它，然后添加新的函数。
-但 functor 提供的功能比类扩展更通用，
-因为它们可以计算输入结构的任意函数，而不只是局限于某几种扩展形式。</p>
-<p>学习 OCaml 模块系统最重要的收获，也许是理解那些超越任何具体语言的模块化方面：
-命名空间、抽象和代码重用。见过这些思想在截然不同的语言中如何组合之后，
-你在学习下一门语言时会更容易识别它们。</p>
+<p>OCaml 模块系统提供的模块化能力，与你在其他语言中见过的机制颇为相似。
+不过，同一种机制以不同形式出现，反而能帮助我们加深理解。
+例如，OCaml 的抽象类型和签名所提供的抽象能力，类似于 Java 的可见性修饰符和接口。
+同一个思想在两种语言中以迥然不同的方式呈现，
+会让你今后接触其他语言时更容易辨认出它。</p>
+<p>此外，“类型也可以是抽象的”是编程语言设计中的一个基础观念，
+OCaml 模块系统把这一点展现得格外鲜明。
+Java 等语言把它与许多其他特性绑定在一起，反而略微遮蔽了这个事实。
+从某种意义上说，每个 Java 类都会隐式定义抽象类型——准确地说，
+四种可见性 [<code class="docutils literal notranslate"><span class="pre">public</span></code>、<code class="docutils literal notranslate"><span class="pre">protected</span></code>、<code class="docutils literal notranslate"><span class="pre">private</span></code> 和 <code class="docutils literal notranslate"><span class="pre">default</span></code>] 各对应一种抽象类型，
+它们通过子类型关系彼此关联——而类中的所有方法，都是作用于这些抽象类型的函数。</p>
+<p>函子是 OCaml 的一项高级语言特性，初看可能颇为神秘。
+如果你也有这种感觉，请记住：函子其实就是一种以结构为输入、
+以结构为输出的函数。它不像普通 OCaml 函数那样工作，
+是因为结构在 OCaml 中不是一等值：普通函数不能接收或返回结构，
+函子却恰好可以。</p>
+<p>函子和 <code class="docutils literal notranslate"><span class="pre">include</span></code> 支持代码重用。面向对象特性能够实现的许多重用方式，
+同样可以用函子和 <code class="docutils literal notranslate"><span class="pre">include</span></code> 完成。
+当然，这并不意味着它们与面向对象特性完全等价：
+有些重用方式用其中一套机制实现，会比用另一套更加容易。</p>
+<p>我们可以这样理解：类扩展相当于一种能力有限却很实用的“函子加 <code class="docutils literal notranslate"><span class="pre">include</span></code>”。
+扩展一个类，就好比编写一个函子，以基类为输入，将它 <code class="docutils literal notranslate"><span class="pre">include</span></code> 进来，再添加新函数。
+函子比类扩展更通用，因为它可以对输入结构进行任意变换，而不限于少数几种扩展形式。</p>
+<p>学习 OCaml 模块系统最重要的收获，也许是认识模块化中那些超越具体语言的要素：
+命名空间、抽象和代码重用。看过这些思想如何在两门迥然不同的语言中组合起来，
+以后学习新语言时，你就能更清楚地辨认出它们。</p>
 <section id="id2">
 <h2><span class="section-number">5.10.1. </span>术语和概念<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>抽象类型</p></li>
 <li><p>抽象</p></li>
-<li><p>客户</p></li>
+<li><p>客户端</p></li>
 <li><p>代码重用</p></li>
 <li><p>编译单元</p></li>
 <li><p>声明</p></li>
@@ -599,32 +597,32 @@ OCaml 模块系统把这个思想非常直接地呈现出来。
 <li><p>模块化</p></li>
 <li><p>模块</p></li>
 <li><p>模块类型</p></li>
-<li><p>名称空间</p></li>
+<li><p>命名空间</p></li>
 <li><p>打开</p></li>
 <li><p>参数化结构</p></li>
 <li><p>持久数据结构</p></li>
 <li><p>表示类型</p></li>
 <li><p>作用域</p></li>
-<li><p>密封的</p></li>
+<li><p>密封</p></li>
 <li><p>集合表示</p></li>
-<li><p>共享限制</p></li>
+<li><p>共享约束</p></li>
 <li><p>签名</p></li>
 <li><p>签名匹配</p></li>
-<li><p>规格说明</p></li>
+<li><p>规范</p></li>
 <li><p>结构</p></li>
 </ul>
 </section>
 <section id="id3">
-<h2><span class="section-number">5.10.2. </span>进一步阅读<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">5.10.2. </span>延伸阅读<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p><em>Objective Caml 简介</em>，第 11、12 和 13 章</p></li>
-<li><p><em>从一开始的 OCaml</em>，第 16 章</p></li>
-<li><p><em>现实世界 OCaml</em>，第 4、9 和 10 章</p></li>
-<li><p><em>纯函数式数据结构</em>，第 1 章和第 2 章，作者：Chris Okasaki。</p></li>
-<li><p>“ML 式模块系统的设计注意事项”，作者：Robert Harper 和
-Benjamin C. Pierce，<em>类型和编程高级主题的第 8 章
-语言</em>，编辑。 Benjamin C. Pierce，麻省理工学院出版社，2005 年。
-模块的静态语义。</p></li>
+<li><p><em>Introduction to Objective Caml</em>，第 11、12、13 章</p></li>
+<li><p><em>OCaml from the Very Beginning</em>，第 16 章</p></li>
+<li><p><em>Real World OCaml</em>，第 4、9、10 章</p></li>
+<li><p>Chris Okasaki，<em>Purely Functional Data Structures</em>，第 1、2 章</p></li>
+<li><p>Robert Harper 与 Benjamin C. Pierce，〈Design Considerations for
+ML-Style Module Systems〉，收录于 Benjamin C. Pierce 编著的
+<em>Advanced Topics in Types and Programming Languages</em> 第 8 章，
+MIT Press，2005 年。该文深入讨论了模块的静态语义。</p></li>
 </ul>
 </section>
 </section>
@@ -694,7 +692,7 @@ Benjamin C. Pierce，<em>类型和编程高级主题的第 8 章
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.10.1. 术语和概念</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.10.2. 进一步阅读</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.10.2. 延伸阅读</a></li>
 </ul>
   </nav></div>
 

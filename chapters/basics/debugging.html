@@ -698,13 +698,13 @@ fib --&gt; 2
 <span class="c">(* possibility 2 *)</span>
 <span class="k">let</span> <span class="n">random_int</span> <span class="n">bound</span> <span class="o">=</span>
   <span class="k">if</span> <span class="n">not</span> <span class="o">(</span><span class="n">bound</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">bound</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">lsl</span> <span class="mi">30</span><span class="o">)</span>
-  <span class="k">then</span> <span class="n">invalid_arg</span> <span class="s2">&quot;bound&quot;</span><span class="o">;</span>
+  <span class="k">then</span> <span class="n">invalid_arg</span> <span class="s2">"bound"</span><span class="o">;</span>
   <span class="c">(* proceed with the implementation of the function *)</span>
 
 <span class="c">(* possibility 3 *)</span>
 <span class="k">let</span> <span class="n">random_int</span> <span class="n">bound</span> <span class="o">=</span>
   <span class="k">if</span> <span class="n">not</span> <span class="o">(</span><span class="n">bound</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">bound</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">lsl</span> <span class="mi">30</span><span class="o">)</span>
-  <span class="k">then</span> <span class="n">failwith</span> <span class="s2">&quot;bound&quot;</span><span class="o">;</span>
+  <span class="k">then</span> <span class="n">failwith</span> <span class="s2">"bound"</span><span class="o">;</span>
   <span class="c">(* proceed with the implementation of the function *)</span>
 </pre></div>
 </div>
@@ -715,7 +715,7 @@ fib --&gt; 2
 <p>有时程序员会过度担心防御性编程太昂贵，不管是实现这些检查本身所花的时间，还是运行时做断言检查所增加的成本。这种担忧往往并不成立。社会为了修复软件缺陷所付出的时间和金钱，已经足以说明：哪怕程序因此运行得稍微慢一点，我们也完全承担得起。</p>
 <p>最后，实现者甚至可能选择彻底取消前置条件，转而把它改写成后置条件：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [random_int bound] is a random integer between 0 (inclusive)</span>
-<span class="c">    and [bound] (exclusive).  Raises: [Invalid_argument &quot;bound&quot;]</span>
+<span class="c">    and [bound] (exclusive).  Raises: [Invalid_argument "bound"]</span>
 <span class="c">    unless [bound] is greater than 0 and less than 2^30. *)</span>
 </pre></div>
 </div>

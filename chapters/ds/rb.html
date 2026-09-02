@@ -644,7 +644,7 @@ document.write(`
 <p>下面是在 BST 上实现几个操作的代码：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span> <span class="nc">Node</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">tree</span> <span class="o">|</span> <span class="nc">Leaf</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">tree</span> <span class="o">=</span> <span class="nc">Node</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">tree</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">tree</span> <span class="o">|</span> <span class="nc">Leaf</span>
 
 <span class="c">(** [mem x t] is [true] iff [x] is a member of [t]. *)</span>
 <span class="k">let</span> <span class="k">rec</span> <span class="n">mem</span> <span class="n">x</span> <span class="o">=</span> <span class="k">function</span>
@@ -665,13 +665,13 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a tree = Node of &#39;a * &#39;a tree * &#39;a tree | Leaf
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a tree = Node of 'a * 'a tree * 'a tree | Leaf
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val mem : &#39;a -&gt; &#39;a tree -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val mem : 'a -&gt; 'a tree -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert : &#39;a -&gt; &#39;a tree -&gt; &#39;a tree = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert : 'a -&gt; 'a tree -&gt; 'a tree = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -726,7 +726,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">color</span> <span class="o">=</span> <span class="nc">Red</span> <span class="o">|</span> <span class="nc">Black</span>
-<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">rbtree</span> <span class="o">=</span> <span class="nc">Leaf</span> <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="n">color</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">rbtree</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">rbtree</span>
+<span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">rbtree</span> <span class="o">=</span> <span class="nc">Leaf</span> <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="n">color</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">rbtree</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">rbtree</span>
 </pre></div>
 </div>
 </div>
@@ -734,7 +734,7 @@ document.write(`
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type color = Red | Black
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a rbtree = Leaf | Node of color * &#39;a * &#39;a rbtree * &#39;a rbtree
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a rbtree = Leaf | Node of color * 'a * 'a rbtree * 'a rbtree
 </pre></div>
 </div>
 </div>
@@ -780,7 +780,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val mem : &#39;a -&gt; &#39;a rbtree -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val mem : 'a -&gt; 'a rbtree -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -910,7 +910,7 @@ Structures</em>，1999）给出了一个优雅的算法，通过选择解决问�
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val balance : color * &#39;a * &#39;a rbtree * &#39;a rbtree -&gt; &#39;a rbtree = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val balance : color * 'a * 'a rbtree * 'a rbtree -&gt; 'a rbtree = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -957,12 +957,12 @@ tree—那么我们可能刚刚创建了一个新的局部不变违规
   <span class="k">match</span> <span class="n">ins</span> <span class="n">s</span> <span class="k">with</span>
   <span class="o">|</span> <span class="nc">Node</span> <span class="o">(_,</span> <span class="n">y</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nc">Node</span> <span class="o">(</span><span class="nc">Black</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span>
   <span class="o">|</span> <span class="nc">Leaf</span> <span class="o">-&gt;</span> <span class="c">(* guaranteed to be non-empty *)</span>
-    <span class="n">failwith</span> <span class="s2">&quot;RBT insert failed with ins returning leaf&quot;</span>
+    <span class="n">failwith</span> <span class="s2">"RBT insert failed with ins returning leaf"</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert : &#39;a -&gt; &#39;a rbtree -&gt; &#39;a rbtree = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert : 'a -&gt; 'a rbtree -&gt; 'a rbtree = &lt;fun&gt;
 </pre></div>
 </div>
 </div>

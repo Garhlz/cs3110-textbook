@@ -639,12 +639,12 @@ document.write(`
 <p>为了构造一个记录类型的值，我们写一个记录表达式，看起来像这样：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">{</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Charmander&quot;</span><span class="o">;</span> <span class="n">hp</span> <span class="o">=</span> <span class="mi">39</span><span class="o">;</span> <span class="n">ptype</span> <span class="o">=</span> <span class="nc">TFire</span><span class="o">}</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">{</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"Charmander"</span><span class="o">;</span> <span class="n">hp</span> <span class="o">=</span> <span class="mi">39</span><span class="o">;</span> <span class="n">ptype</span> <span class="o">=</span> <span class="nc">TFire</span><span class="o">}</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : mon = {name = &quot;Charmander&quot;; hp = 39; ptype = TFire}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : mon = {name = "Charmander"; hp = 39; ptype = TFire}
 </pre></div>
 </div>
 </div>
@@ -653,13 +653,13 @@ document.write(`
 <p>要访问记录并从中获取字段，我们使用你在许多其他语言中期望的点记号。例如：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">c</span> <span class="o">=</span> <span class="o">{</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Charmander&quot;</span><span class="o">;</span> <span class="n">hp</span> <span class="o">=</span> <span class="mi">39</span><span class="o">;</span> <span class="n">ptype</span> <span class="o">=</span> <span class="nc">TFire</span><span class="o">};;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">c</span> <span class="o">=</span> <span class="o">{</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"Charmander"</span><span class="o">;</span> <span class="n">hp</span> <span class="o">=</span> <span class="mi">39</span><span class="o">;</span> <span class="n">ptype</span> <span class="o">=</span> <span class="nc">TFire</span><span class="o">};;</span>
 <span class="n">c</span><span class="o">.</span><span class="n">hp</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val c : mon = {name = &quot;Charmander&quot;; hp = 39; ptype = TFire}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val c : mon = {name = "Charmander"; hp = 39; ptype = TFire}
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 39
@@ -758,8 +758,8 @@ document.write(`
 <h2><span class="section-number">3.4.2. </span>元组<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
 <p>与记录类似，<em>元组</em>也是其他类型数据的组合。不过，元组不通过命名<em>组件</em>来区分，而是通过位置来区分。下面是一些元组的例子：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">10</span><span class="o">)</span>
-<span class="o">(</span><span class="bp">true</span><span class="o">,</span> <span class="s2">&quot;Hello&quot;</span><span class="o">)</span>
-<span class="o">([</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">],</span> <span class="o">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="o">,</span> <span class="sc">&#39;X&#39;</span><span class="o">))</span>
+<span class="o">(</span><span class="bp">true</span><span class="o">,</span> <span class="s2">"Hello"</span><span class="o">)</span>
+<span class="o">([</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">],</span> <span class="o">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="o">,</span> <span class="sc">'X'</span><span class="o">))</span>
 </pre></div>
 </div>
 <p>具有两个组件的元组称为<em>对</em>（pair）。具有三个组件的元组称为<em>三元组</em>（triple）。超过三个组件之后，我们通常就直接说”元组”（tuple），而不再继续使用基于数字的命名方式。</p>

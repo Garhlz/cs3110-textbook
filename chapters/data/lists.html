@@ -698,7 +698,7 @@ document.write(`
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">xs</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">xs</span> <span class="k">with</span>
   <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>
-  <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs&#39;</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">xs&#39;</span>
+  <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs'</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">xs'</span>
 </pre></div>
 </div>
 </div>
@@ -714,7 +714,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 全部在一行完成：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">xs</span> <span class="o">=</span> <span class="k">match</span> <span class="n">xs</span> <span class="k">with</span> <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs&#39;</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">xs&#39;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">xs</span> <span class="o">=</span> <span class="k">match</span> <span class="n">xs</span> <span class="k">with</span> <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs'</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">xs'</span>
 </pre></div>
 </div>
 </div>
@@ -728,7 +728,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 我们使用的行，我们也可以写：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">xs</span> <span class="o">=</span> <span class="k">match</span> <span class="n">xs</span> <span class="k">with</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs&#39;</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">xs&#39;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sum</span> <span class="n">xs</span> <span class="o">=</span> <span class="k">match</span> <span class="n">xs</span> <span class="k">with</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span> <span class="o">|</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs'</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span> <span class="n">xs'</span>
 </pre></div>
 </div>
 </div>
@@ -750,7 +750,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : &#39;a list -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : 'a list -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -768,7 +768,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : &#39;a list -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : 'a list -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -786,7 +786,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val append : &#39;a list -&gt; &#39;a list -&gt; &#39;a list = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val append : 'a list -&gt; 'a list -&gt; 'a list = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -805,7 +805,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;a list -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : 'a list -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -819,7 +819,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;a list -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : 'a list -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -958,7 +958,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File &quot;[12]&quot;, line 1, characters 15-41:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File "[12]", line 1, characters 15-41:
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1 | let head lst = match lst with h :: _ -&gt; h
@@ -976,7 +976,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[]
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val head : &#39;a list -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val head : 'a list -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1001,7 +1001,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File &quot;[13]&quot;, line 4, characters 4-9:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File "[13]", line 4, characters 4-9:
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4 |   | [ h ] -&gt; h
@@ -1034,7 +1034,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File &quot;[14]&quot;, line 4, characters 4-5:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File "[14]", line 4, characters 4-5:
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4 |   | _ -&gt; false
@@ -1046,7 +1046,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning 11 [redundant-case]: this match case is unused.
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length_is : &#39;a list -&gt; &#39;b -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length_is : 'a list -&gt; 'b -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1062,7 +1062,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length_is : &#39;a list -&gt; int -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length_is : 'a list -&gt; int -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1076,7 +1076,7 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length_is : &#39;a list -&gt; int -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length_is : 'a list -&gt; int -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1138,13 +1138,13 @@ x，尾部命名为 xs’（读作 EX-uhs prime）。</p>
 </div>
 <p>例如，下面是标准库源码中 <code class="docutils literal notranslate"><span class="pre">List.hd</span></code> 的注释：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** Return the first element of the given list. Raise</span>
-<span class="c">   [Failure &quot;hd&quot;] if the list is empty. *)</span>
+<span class="c">   [Failure "hd"] if the list is empty. *)</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">[Failure</span> <span class="pre">&quot;hd&quot;]</span></code> 并不表示一个包含异常 <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">&quot;hd&quot;</span></code> 的列表，而是表示将表达式 <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">&quot;hd&quot;</span></code> 以源代码格式排版，如<a class="reference external" href="https://ocaml.org/api/List.html">这里</a>所示。</p>
 <p>当你想在文档中讨论列表时，这种歧义会变得特别让人困惑。例如，我们可以这样重写上面的注释：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [hd lst] returns the first element of [lst].</span>
-<span class="c">    Raises [Failure &quot;hd&quot;] if [lst = []]. *)</span>
+<span class="c">    Raises [Failure "hd"] if [lst = []]. *)</span>
 </pre></div>
 </div>
 <p>在 <code class="docutils literal notranslate"><span class="pre">[lst</span> <span class="pre">=</span> <span class="pre">[]]</span></code> 中，外层方括号表示注释中的源代码排版，而内层方括号才是空列表。</p>

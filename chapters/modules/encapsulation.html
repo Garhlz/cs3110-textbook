@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exercises.html">5.11. 练习</a></li>
@@ -684,8 +684,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>现在由于 <code class="docutils literal notranslate"><span class="pre">MATH</span></code> 没有提到 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code>，模块类型注释
-<code class="docutils literal notranslate"><span class="pre">Math</span> <span class="pre">:</span> <span class="pre">MATH</span></code> 导致 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 被隐藏：</p>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">MATH</span></code> 中没有提到 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code>，模块类型标注 <code class="docutils literal notranslate"><span class="pre">Math</span> <span class="pre">:</span> <span class="pre">MATH</span></code> 会将 <code class="docutils literal notranslate"><span class="pre">fact_aux</span></code> 隐藏起来：</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Math</span><span class="p">.</span><span class="n">fact_aux</span>
@@ -693,7 +692,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[4]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">13</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[4]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">13</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="n">Math</span><span class="o">.</span><span class="n">fact_aux</span>
     <span class="o">^^^^^^^^^^^^^</span>
 <span class="ne">Error</span>: Unbound value Math.fact_aux
@@ -701,16 +700,12 @@ document.write(`
 </div>
 </div>
 </div>
-<p>从这个意义上说，模块类型注释是<em>不透明的</em>：它们可以防止可见性
-模块项目。我们说模块类型”密封”了模块，使得任何
-模块类型中未命名的组件将无法访问。</p>
+<p>从这个意义上说，模块类型标注具有<em>不透明性</em>：它可以限制模块成员的可见性。我们称模块类型“密封”了模块，使外部代码无法访问模块类型中未列出的成员。</p>
 <div class="admonition important">
 <p class="admonition-title">重要</p>
-<p>请记住，模块类型注释因此不仅仅*用于检查
-查看模块是否定义了某些项目。注释还隐藏项目。</p>
+<p>请记住，模块类型标注不仅用于检查模块是否定义了某些成员，还会隐藏未列出的成员。</p>
 </div>
-<p>如果你只想检查定义而不隐藏任何内容怎么办？
-然后在模块定义时不要提供注释：</p>
+<p>如果只想检查定义是否满足要求，却不想隐藏任何内容，就不要在原模块的定义处添加标注：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">MATH</span> <span class="o">=</span> <span class="k">sig</span>
@@ -762,7 +757,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[7]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">18</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[7]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">18</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="n">MathCheck</span><span class="o">.</span><span class="n">fact_aux</span>
     <span class="o">^^^^^^^^^^^^^^^^^^</span>
 <span class="ne">Error</span>: Unbound value MathCheck.fact_aux
@@ -770,8 +765,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>你甚至不必为”检查”模块命名，因为你可能
-从未打算访问它；你可以将其保留为匿名：</p>
+<p>甚至无须给这个用于“检查”的模块命名，因为我们本来就不打算访问它；让它保持匿名即可：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="o">_</span> <span class="o">:</span> <span class="nc">MATH</span> <span class="o">=</span> <span class="nc">Math</span>
@@ -779,10 +773,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p><strong>与可见性修饰符的比较。</strong> OCaml 中密封的使用因此是
-类似于使用可见性修饰符，例如 <code class="docutils literal notranslate"><span class="pre">private</span></code> 和 <code class="docutils literal notranslate"><span class="pre">public</span></code>
-Java。事实上，思考 Java 类定义的一种方法是它们
-同时定义多个签名。</p>
+<p><strong>与可见性修饰符比较。</strong> OCaml 中的密封类似于 Java 中的 <code class="docutils literal notranslate"><span class="pre">private</span></code>、<code class="docutils literal notranslate"><span class="pre">public</span></code> 等可见性修饰符。事实上，可以把 Java 类定义理解成同时定义了多个签名。</p>
 <p>例如，考虑这个 Java 类：</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">C</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
@@ -839,21 +830,21 @@ Java。事实上，思考 Java 类定义的一种方法是它们
   <span class="k">exception</span> <span class="nc">Empty</span>
 
   <span class="c">(** [empty] is the empty stack. *)</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 
   <span class="c">(** [is_empty s] is whether [s] is empty. *)</span>
-  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
 
   <span class="c">(** [push x s] pushes [x] onto the top of [s]. *)</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 
   <span class="c">(** [peek s] is the top element of [s].</span>
 <span class="c">      Raises [Empty] if [s] is empty. *)</span>
-  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
 
   <span class="c">(** [pop s] is all but the top element of [s].</span>
 <span class="c">      Raises [Empty] if [s] is empty. *)</span>
-  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">struct</span>
@@ -876,11 +867,11 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type LIST_STACK =
   sig
     exception Empty
-    val empty : &#39;a list
-    val is_empty : &#39;a list -&gt; bool
-    val push : &#39;a -&gt; &#39;a list -&gt; &#39;a list
-    val peek : &#39;a list -&gt; &#39;a
-    val pop : &#39;a list -&gt; &#39;a list
+    val empty : 'a list
+    val is_empty : 'a list -&gt; bool
+    val push : 'a -&gt; 'a list -&gt; 'a list
+    val peek : 'a list -&gt; 'a
+    val pop : 'a list -&gt; 'a list
   end
 </pre></div>
 </div>
@@ -896,7 +887,7 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">sig</span>
   <span class="o">...</span>
   <span class="c">(** [size s] is the number of elements on the stack. *)</span>
-  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">struct</span>
@@ -934,11 +925,11 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module ListStackCachedSize :
   sig
     exception Empty
-    val empty : &#39;a list * int
-    val is_empty : &#39;a list * &#39;b -&gt; bool
-    val push : &#39;a -&gt; &#39;a list * int -&gt; &#39;a list * int
-    val peek : &#39;a list * &#39;b -&gt; &#39;a
-    val pop : &#39;a list * int -&gt; &#39;a list * int
+    val empty : 'a list * int
+    val is_empty : 'a list * 'b -&gt; bool
+    val push : 'a -&gt; 'a list * int -&gt; 'a list * int
+    val peek : 'a list * 'b -&gt; 'a
+    val pop : 'a list * int -&gt; 'a list * int
   end
 </pre></div>
 </div>
@@ -955,18 +946,18 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[12]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">47</span><span class="o">-</span><span class="mi">66</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[12]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">47</span><span class="o">-</span><span class="mi">66</span><span class="p">:</span>
 <span class="mi">1</span> <span class="o">|</span> <span class="n">module</span> <span class="n">CheckListStackCachedSize</span> <span class="p">:</span> <span class="n">LIST_STACK</span> <span class="o">=</span> <span class="n">ListStackCachedSize</span>
                                                    <span class="o">^^^^^^^^^^^^^^^^^^^</span>
 <span class="ne">Error</span>: Signature mismatch:
        <span class="o">...</span>
        <span class="n">Values</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
-         <span class="n">val</span> <span class="n">empty</span> <span class="p">:</span> <span class="s1">&#39;a list * int</span>
+         <span class="n">val</span> <span class="n">empty</span> <span class="p">:</span> <span class="s1">'a list * int</span>
        <span class="ow">is</span> <span class="ow">not</span> <span class="n">included</span> <span class="ow">in</span>
-         <span class="n">val</span> <span class="n">empty</span> <span class="p">:</span> <span class="s1">&#39;a list</span>
-       <span class="n">The</span> <span class="nb">type</span> <span class="s1">&#39;a list * int is not compatible with the type &#39;</span><span class="n">b</span> <span class="nb">list</span>
-       <span class="n">File</span> <span class="s2">&quot;[10]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">7</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">21</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
-       <span class="n">File</span> <span class="s2">&quot;[11]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">6</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span> <span class="n">Actual</span> <span class="n">declaration</span>
+         <span class="n">val</span> <span class="n">empty</span> <span class="p">:</span> <span class="s1">'a list</span>
+       <span class="n">The</span> <span class="nb">type</span> <span class="s1">'a list * int is not compatible with the type '</span><span class="n">b</span> <span class="nb">list</span>
+       <span class="n">File</span> <span class="s2">"[10]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">7</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">21</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
+       <span class="n">File</span> <span class="s2">"[11]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">6</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span> <span class="n">Actual</span> <span class="n">declaration</span>
 </pre></div>
 </div>
 </div>
@@ -1003,7 +994,7 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : &#39;a -&gt; &#39;a list * int -&gt; &#39;a list * int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : 'a -&gt; 'a list * int -&gt; 'a list * int = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1019,14 +1010,14 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span>
-  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span>
-  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
-  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span>
-  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -1039,14 +1030,14 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type LIST_STACK =
   sig
-    type &#39;a stack
+    type 'a stack
     exception Empty
-    val empty : &#39;a stack
-    val is_empty : &#39;a stack -&gt; bool
-    val push : &#39;a -&gt; &#39;a stack -&gt; &#39;a stack
-    val peek : &#39;a stack -&gt; &#39;a
-    val pop : &#39;a stack -&gt; &#39;a stack
-    val size : &#39;a stack -&gt; int
+    val empty : 'a stack
+    val is_empty : 'a stack -&gt; bool
+    val push : 'a -&gt; 'a stack -&gt; 'a stack
+    val peek : 'a stack -&gt; 'a
+    val pop : 'a stack -&gt; 'a stack
+    val size : 'a stack -&gt; int
   end
 </pre></div>
 </div>
@@ -1063,7 +1054,7 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListStackCachedSize</span> <span class="o">:</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">*</span> <span class="kt">int</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">*</span> <span class="kt">int</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="o">(</span><span class="bp">[]</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span>
   <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="o">(</span><span class="bp">[]</span><span class="o">,</span> <span class="o">_)</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
@@ -1093,7 +1084,7 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
@@ -1117,7 +1108,7 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="c">(* type &#39;a stack = &#39;a list *)</span>
+  <span class="c">(* type 'a stack = 'a list *)</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
@@ -1130,9 +1121,9 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[17]&quot;</span><span class="p">,</span> <span class="n">lines</span> <span class="mi">1</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">32</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[17]"</span><span class="p">,</span> <span class="n">lines</span> <span class="mi">1</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">32</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span>
 <span class="g g-Whitespace"> </span><span class="mi">1</span> <span class="o">|</span> <span class="o">................................</span><span class="n">struct</span>
-<span class="g g-Whitespace"> </span><span class="mi">2</span> <span class="o">|</span>   <span class="p">(</span><span class="o">*</span> <span class="nb">type</span> <span class="s1">&#39;a stack = &#39;</span><span class="n">a</span> <span class="nb">list</span> <span class="o">*</span><span class="p">)</span>
+<span class="g g-Whitespace"> </span><span class="mi">2</span> <span class="o">|</span>   <span class="p">(</span><span class="o">*</span> <span class="nb">type</span> <span class="s1">'a stack = '</span><span class="n">a</span> <span class="nb">list</span> <span class="o">*</span><span class="p">)</span>
 <span class="g g-Whitespace"> </span><span class="mi">3</span> <span class="o">|</span>   <span class="n">exception</span> <span class="n">Empty</span>
 <span class="g g-Whitespace"> </span><span class="mi">4</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="g g-Whitespace"> </span><span class="mi">5</span> <span class="o">|</span>   <span class="n">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="n">function</span> <span class="p">[]</span> <span class="o">-&gt;</span> <span class="n">true</span> <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="n">false</span>
@@ -1144,7 +1135,7 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <span class="ne">Error</span>: Signature mismatch:
        <span class="o">...</span>
        <span class="n">The</span> <span class="nb">type</span> <span class="n">stack</span> <span class="ow">is</span> <span class="n">required</span> <span class="n">but</span> <span class="ow">not</span> <span class="n">provided</span>
-       <span class="n">File</span> <span class="s2">&quot;[14]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">15</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
+       <span class="n">File</span> <span class="s2">"[14]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">2</span><span class="o">-</span><span class="mi">15</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">declaration</span>
 </pre></div>
 </div>
 </div>
@@ -1155,8 +1146,8 @@ Java。事实上，思考 Java 类定义的一种方法是它们
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">CustomStack</span> <span class="o">:</span> <span class="nc">LIST_STACK</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">entry</span> <span class="o">=</span> <span class="o">{</span><span class="n">top</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span> <span class="n">rest</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span><span class="o">;</span> <span class="n">size</span> <span class="o">:</span> <span class="kt">int</span><span class="o">}</span>
-  <span class="k">and</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">=</span> <span class="nc">S</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">entry</span> <span class="n">option</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">entry</span> <span class="o">=</span> <span class="o">{</span><span class="n">top</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">;</span> <span class="n">rest</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span><span class="o">;</span> <span class="n">size</span> <span class="o">:</span> <span class="kt">int</span><span class="o">}</span>
+  <span class="k">and</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">=</span> <span class="nc">S</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="n">entry</span> <span class="n">option</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="nc">S</span> <span class="nc">None</span>
   <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="nc">S</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
@@ -1184,18 +1175,18 @@ name，因为没有名为 <code class="docutils literal notranslate"><span class
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span>
-  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span>
-  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
-  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span>
-  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
@@ -1215,14 +1206,14 @@ name，因为没有名为 <code class="docutils literal notranslate"><span class
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Stack =
   sig
-    type &#39;a stack
+    type 'a stack
     exception Empty
-    val empty : &#39;a stack
-    val is_empty : &#39;a stack -&gt; bool
-    val push : &#39;a -&gt; &#39;a stack -&gt; &#39;a stack
-    val peek : &#39;a stack -&gt; &#39;a
-    val pop : &#39;a stack -&gt; &#39;a stack
-    val size : &#39;a stack -&gt; int
+    val empty : 'a stack
+    val is_empty : 'a stack -&gt; bool
+    val push : 'a -&gt; 'a stack -&gt; 'a stack
+    val peek : 'a stack -&gt; 'a
+    val pop : 'a stack -&gt; 'a stack
+    val size : 'a stack -&gt; int
   end
 </pre></div>
 </div>
@@ -1242,7 +1233,7 @@ name，因为没有名为 <code class="docutils literal notranslate"><span class
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : &#39;a ListStack.stack = &lt;abstr&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : 'a ListStack.stack = &lt;abstr&gt;
 </pre></div>
 </div>
 </div>
@@ -1255,18 +1246,18 @@ name，因为没有名为 <code class="docutils literal notranslate"><span class
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
-  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
@@ -1277,8 +1268,8 @@ name，因为没有名为 <code class="docutils literal notranslate"><span class
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">CustomStack</span> <span class="o">:</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">entry</span> <span class="o">=</span> <span class="o">{</span><span class="n">top</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">;</span> <span class="n">rest</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="n">size</span> <span class="o">:</span> <span class="kt">int</span><span class="o">}</span>
-  <span class="k">and</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="nc">S</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">entry</span> <span class="n">option</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">entry</span> <span class="o">=</span> <span class="o">{</span><span class="n">top</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">;</span> <span class="n">rest</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span><span class="o">;</span> <span class="n">size</span> <span class="o">:</span> <span class="kt">int</span><span class="o">}</span>
+  <span class="k">and</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="nc">S</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="n">entry</span> <span class="n">option</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="nc">S</span> <span class="nc">None</span>
   <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="nc">S</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
@@ -1298,14 +1289,14 @@ name，因为没有名为 <code class="docutils literal notranslate"><span class
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Stack =
   sig
-    type &#39;a t
+    type 'a t
     exception Empty
-    val empty : &#39;a t
-    val is_empty : &#39;a t -&gt; bool
-    val push : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val peek : &#39;a t -&gt; &#39;a
-    val pop : &#39;a t -&gt; &#39;a t
-    val size : &#39;a t -&gt; int
+    val empty : 'a t
+    val is_empty : 'a t -&gt; bool
+    val push : 'a -&gt; 'a t -&gt; 'a t
+    val peek : 'a t -&gt; 'a
+    val pop : 'a t -&gt; 'a t
+    val size : 'a t -&gt; int
   end
 </pre></div>
 </div>
@@ -1327,10 +1318,10 @@ name，因为没有名为 <code class="docutils literal notranslate"><span class
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : &#39;a ListStack.t = &lt;abstr&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : 'a ListStack.t = &lt;abstr&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : &#39;a CustomStack.t = &lt;abstr&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : 'a CustomStack.t = &lt;abstr&gt;
 </pre></div>
 </div>
 </div>
@@ -1397,7 +1388,7 @@ t”部分。例如，我们可能会说”alpha ListStack”，只是忽略
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module M : T
 </pre></div>
 </div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[24]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">11</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">14</span><span class="o">-</span><span class="mi">17</span><span class="p">:</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[24]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">11</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">14</span><span class="o">-</span><span class="mi">17</span><span class="p">:</span>
 <span class="mi">11</span> <span class="o">|</span> <span class="n">let</span> <span class="n">a</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">x</span>
                    <span class="o">^^^</span>
 <span class="ne">Error</span>: The value M.x has type M.t but an expression was expected of type int
@@ -1421,7 +1412,7 @@ t”部分。例如，我们可能会说”alpha ListStack”，只是忽略
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : &#39;a ListStack.t = &lt;abstr&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : 'a ListStack.t = &lt;abstr&gt;
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int ListStack.t = &lt;abstr&gt;
@@ -1438,7 +1429,7 @@ t”部分。例如，我们可能会说”alpha ListStack”，只是忽略
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : &#39;a -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : 'a -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1501,7 +1492,7 @@ toplevel 并将”kupo”添加到每个字符串的末尾。这是可以做的�
 它：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">kupo_pp</span> <span class="n">fmt</span> <span class="n">s</span> <span class="o">=</span> <span class="nn">Format</span><span class="p">.</span><span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">&quot;%s kupo&quot;</span> <span class="n">s</span><span class="o">;;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">kupo_pp</span> <span class="n">fmt</span> <span class="n">s</span> <span class="o">=</span> <span class="nn">Format</span><span class="p">.</span><span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">"%s kupo"</span> <span class="n">s</span><span class="o">;;</span>
 <span class="o">#</span><span class="n">install_printer</span> <span class="n">kupo_pp</span><span class="o">;;</span>
 </pre></div>
 </div>
@@ -1516,7 +1507,7 @@ toplevel 并将”kupo”添加到每个字符串的末尾。这是可以做的�
 即使它实际上不是原始字符串的一部分：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">h</span> <span class="o">=</span> <span class="s2">&quot;Hello&quot;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">h</span> <span class="o">=</span> <span class="s2">"Hello"</span>
 <span class="k">let</span> <span class="n">s</span> <span class="o">=</span> <span class="nn">String</span><span class="p">.</span><span class="n">length</span> <span class="n">h</span>
 </pre></div>
 </div>
@@ -1543,16 +1534,16 @@ toplevel 并将”kupo”添加到每个字符串的末尾。这是可以做的�
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
-  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
   <span class="k">val</span> <span class="n">pp</span> <span class="o">:</span>
-    <span class="o">(</span><span class="nn">Format</span><span class="p">.</span><span class="n">formatter</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nn">Format</span><span class="p">.</span><span class="n">formatter</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+    <span class="o">(</span><span class="nn">Format</span><span class="p">.</span><span class="n">formatter</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nn">Format</span><span class="p">.</span><span class="n">formatter</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -1565,16 +1556,16 @@ toplevel 并将”kupo”添加到每个字符串的末尾。这是可以做的�
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Stack =
   sig
-    type &#39;a t
+    type 'a t
     exception Empty
-    val empty : &#39;a t
-    val is_empty : &#39;a t -&gt; bool
-    val push : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val peek : &#39;a t -&gt; &#39;a
-    val pop : &#39;a t -&gt; &#39;a t
-    val size : &#39;a t -&gt; int
+    val empty : 'a t
+    val is_empty : 'a t -&gt; bool
+    val push : 'a -&gt; 'a t -&gt; 'a t
+    val peek : 'a t -&gt; 'a
+    val pop : 'a t -&gt; 'a t
+    val size : 'a t -&gt; int
     val pp :
-      (Format.formatter -&gt; &#39;a -&gt; unit) -&gt; Format.formatter -&gt; &#39;a t -&gt; unit
+      (Format.formatter -&gt; 'a -&gt; unit) -&gt; Format.formatter -&gt; 'a t -&gt; unit
   end
 </pre></div>
 </div>
@@ -1590,7 +1581,7 @@ toplevel 并将”kupo”添加到每个字符串的末尾。这是可以做的�
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">exception</span> <span class="nc">Empty</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
@@ -1600,11 +1591,11 @@ toplevel 并将”kupo”添加到每个字符串的末尾。这是可以做的�
   <span class="k">let</span> <span class="n">size</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span>
   <span class="k">let</span> <span class="n">pp</span> <span class="n">pp_val</span> <span class="n">fmt</span> <span class="n">s</span> <span class="o">=</span>
     <span class="k">let</span> <span class="k">open</span> <span class="nc">Format</span> <span class="k">in</span>
-    <span class="k">let</span> <span class="n">pp_break</span> <span class="n">fmt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">&quot;@,&quot;</span> <span class="k">in</span>
-    <span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">&quot;@[&lt;v 0&gt;top of stack&quot;</span><span class="o">;</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;&gt;</span> <span class="bp">[]</span> <span class="k">then</span> <span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">&quot;@,&quot;</span><span class="o">;</span>
+    <span class="k">let</span> <span class="n">pp_break</span> <span class="n">fmt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">"@,"</span> <span class="k">in</span>
+    <span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">"@[&lt;v 0&gt;top of stack"</span><span class="o">;</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;&gt;</span> <span class="bp">[]</span> <span class="k">then</span> <span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">"@,"</span><span class="o">;</span>
     <span class="n">pp_print_list</span> <span class="o">~</span><span class="n">pp_sep</span><span class="o">:</span><span class="n">pp_break</span> <span class="n">pp_val</span> <span class="n">fmt</span> <span class="n">s</span><span class="o">;</span>
-    <span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">&quot;@,bottom of stack@]&quot;</span>
+    <span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">"@,bottom of stack@]"</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -1639,7 +1630,7 @@ toplevel 并将”kupo”添加到每个字符串的末尾。这是可以做的�
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : &#39;a ListStack.t = top of stack
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : 'a ListStack.t = top of stack
                      bottom of stack
 </pre></div>
 </div>
@@ -1660,11 +1651,8 @@ toplevel 并将”kupo”添加到每个字符串的末尾。这是可以做的�
 </div>
 </div>
 </div>
-<p>有关详细信息，请参阅 <a class="reference external" href="https://ocaml.org/manual/toplevel.html">toplevel 手册</a>（搜索
-<code class="docutils literal notranslate"><span class="pre">#install_printer</span></code>)，<a class="reference external" href="https://ocaml.org/api/Format.html">Format module</a>，还有这个
-<a class="reference external" href="https://github.com/ocaml/ocaml/issues/5958">OCaml GitHub issue</a>。后者似乎是唯一的地方
-记录了额外参数的使用，如上面的 <code class="docutils literal notranslate"><span class="pre">pp_val</span></code> 中，以打印值
-多态类型。</p>
+<p>详细信息请参阅<a class="reference external" href="https://ocaml.org/manual/toplevel.html">顶层手册</a>（搜索 <code class="docutils literal notranslate"><span class="pre">#install_printer</span></code>）、
+<a class="reference external" href="https://ocaml.org/api/Format.html"><code class="docutils literal notranslate"><span class="pre">Format</span></code> 模块</a>以及这个 <a class="reference external" href="https://github.com/ocaml/ocaml/issues/5958">OCaml GitHub issue</a>。最后一个链接似乎是唯一明确记录这种用法的资料：像上面的 <code class="docutils literal notranslate"><span class="pre">pp_val</span></code> 那样加入额外参数，以打印多态类型的值。</p>
 </section>
 </section>
 

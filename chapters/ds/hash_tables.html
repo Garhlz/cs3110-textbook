@@ -663,34 +663,34 @@ k_2: v_2, \ldots, k_n : v_n\)</span> }。每个 <span class="math notranslate no
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Map</span> <span class="o">=</span> <span class="k">sig</span>
 
-  <span class="c">(** [(&#39;k, &#39;v) t] is the type of maps that bind keys of type</span>
-<span class="c">      [&#39;k] to values of type [&#39;v]. *)</span>
-  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+  <span class="c">(** [('k, 'v) t] is the type of maps that bind keys of type</span>
+<span class="c">      ['k] to values of type ['v]. *)</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
 
   <span class="c">(** [insert k v m] is the same map as [m], but with an additional</span>
 <span class="c">      binding from [k] to [v].  If [k] was already bound in [m],</span>
 <span class="c">      that binding is replaced by the binding to [v] in the new map. *)</span>
-  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="k">'</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
 
   <span class="c">(** [find k m] is [Some v] if [k] is bound to [v] in [m],</span>
 <span class="c">      and [None] if not. *)</span>
-  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">option</span>
+  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="k">'</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="n">option</span>
 
   <span class="c">(** [remove k m] is the same map as [m], but without any binding of [k].</span>
 <span class="c">      If [k] was not bound in [m], then the map is unchanged. *)</span>
-  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">'</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
 
   <span class="c">(** [empty] is the empty map. *)</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
 
   <span class="c">(** [of_list lst] is a map containing the same bindings as</span>
 <span class="c">      association list [lst].</span>
 <span class="c">      Requires: [lst] does not contain any duplicate keys. *)</span>
-  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span> <span class="o">*</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
 
   <span class="c">(** [bindings m] is an association list containing the same</span>
 <span class="c">      bindings as [m]. There are no duplicates in the list. *)</span>
-  <span class="k">val</span> <span class="n">bindings</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+  <span class="k">val</span> <span class="n">bindings</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span> <span class="o">*</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -703,13 +703,13 @@ k_2: v_2, \ldots, k_n : v_n\)</span> }。每个 <span class="math notranslate no
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Map =
   sig
-    type (&#39;k, &#39;v) t
-    val insert : &#39;k -&gt; &#39;v -&gt; (&#39;k, &#39;v) t -&gt; (&#39;k, &#39;v) t
-    val find : &#39;k -&gt; (&#39;k, &#39;v) t -&gt; &#39;v option
-    val remove : &#39;k -&gt; (&#39;k, &#39;v) t -&gt; (&#39;k, &#39;v) t
-    val empty : (&#39;k, &#39;v) t
-    val of_list : (&#39;k * &#39;v) list -&gt; (&#39;k, &#39;v) t
-    val bindings : (&#39;k, &#39;v) t -&gt; (&#39;k * &#39;v) list
+    type ('k, 'v) t
+    val insert : 'k -&gt; 'v -&gt; ('k, 'v) t -&gt; ('k, 'v) t
+    val find : 'k -&gt; ('k, 'v) t -&gt; 'v option
+    val remove : 'k -&gt; ('k, 'v) t -&gt; ('k, 'v) t
+    val empty : ('k, 'v) t
+    val of_list : ('k * 'v) list -&gt; ('k, 'v) t
+    val bindings : ('k, 'v) t -&gt; ('k * 'v) list
   end
 </pre></div>
 </div>
@@ -741,7 +741,7 @@ k_2: v_2, \ldots, k_n : v_n\)</span> }。每个 <span class="math notranslate no
 <span class="c">      [[(k, v1); (k, v2)]] represents {k : v1}. The empty list represents</span>
 <span class="c">      the empty map.</span>
 <span class="c">      RI: none. *)</span>
-  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span> <span class="o">*</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
 
   <span class="c">(** Efficiency: O(1). *)</span>
   <span class="k">let</span> <span class="n">insert</span> <span class="n">k</span> <span class="n">v</span> <span class="n">m</span> <span class="o">=</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">::</span> <span class="n">m</span>
@@ -750,7 +750,7 @@ k_2: v_2, \ldots, k_n : v_n\)</span> }。每个 <span class="math notranslate no
   <span class="k">let</span> <span class="n">find</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">assoc_opt</span>
 
   <span class="c">(** Efficiency: O(n). *)</span>
-  <span class="k">let</span> <span class="n">remove</span> <span class="n">k</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">filter</span> <span class="o">(</span><span class="k">fun</span> <span class="o">(</span><span class="n">k&#39;</span><span class="o">,</span> <span class="o">_)</span> <span class="o">-&gt;</span> <span class="n">k</span> <span class="o">&lt;&gt;</span> <span class="n">k&#39;</span><span class="o">)</span> <span class="n">lst</span>
+  <span class="k">let</span> <span class="n">remove</span> <span class="n">k</span> <span class="n">lst</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">filter</span> <span class="o">(</span><span class="k">fun</span> <span class="o">(</span><span class="n">k'</span><span class="o">,</span> <span class="o">_)</span> <span class="o">-&gt;</span> <span class="n">k</span> <span class="o">&lt;&gt;</span> <span class="n">k'</span><span class="o">)</span> <span class="n">lst</span>
 
   <span class="c">(** Efficiency: O(1). *)</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
@@ -836,36 +836,36 @@ k_2: v_2, \ldots, k_n : v_n\)</span> }。每个 <span class="math notranslate no
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">DirectAddressMap</span> <span class="o">=</span> <span class="k">sig</span>
   <span class="c">(** [t] is the type of maps that bind keys of type int to values of</span>
-<span class="c">      type [&#39;v]. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span>
+<span class="c">      type ['v]. *)</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">v</span> <span class="n">t</span>
 
   <span class="c">(** [insert k v m] mutates map [m] to bind [k] to [v]. If [k] was</span>
 <span class="c">      already bound in [m], that binding is replaced by the binding to</span>
 <span class="c">      [v] in the new map. Requires: [k] is in bounds for [m]. *)</span>
-  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(** [find k m] is [Some v] if [k] is bound to [v] in [m], and [None]</span>
 <span class="c">      if not. Requires: [k] is in bounds for [m]. *)</span>
-  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">option</span>
+  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="n">option</span>
 
   <span class="c">(** [remove k m] mutates [m] to remove any binding of [k]. If [k] was</span>
 <span class="c">      not bound in [m], then the map is unchanged. Requires: [k] is in</span>
 <span class="c">      bounds for [m]. *)</span>
-  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(** [create c] creates a map with capacity [c]. Keys [0] through [c-1]</span>
 <span class="c">      are _in bounds_ for the map. *)</span>
-  <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="n">t</span>
 
   <span class="c">(** [of_list c lst] is a map containing the same bindings as</span>
 <span class="c">      association list [lst] and with capacity [c]. Requires: [lst] does</span>
 <span class="c">      not contain any duplicate keys, and every key in [lst] is in</span>
 <span class="c">      bounds for capacity [c]. *)</span>
-  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="kt">int</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="kt">int</span> <span class="o">*</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="n">t</span>
 
   <span class="c">(** [bindings m] is an association list containing the same bindings</span>
 <span class="c">      as [m]. There are no duplicate keys in the list. *)</span>
-  <span class="k">val</span> <span class="n">bindings</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="kt">int</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+  <span class="k">val</span> <span class="n">bindings</span> <span class="o">:</span> <span class="k">'</span><span class="n">v</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="kt">int</span> <span class="o">*</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -878,13 +878,13 @@ k_2: v_2, \ldots, k_n : v_n\)</span> }。每个 <span class="math notranslate no
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type DirectAddressMap =
   sig
-    type &#39;v t
-    val insert : int -&gt; &#39;v -&gt; &#39;v t -&gt; unit
-    val find : int -&gt; &#39;v t -&gt; &#39;v option
-    val remove : int -&gt; &#39;v t -&gt; unit
-    val create : int -&gt; &#39;v t
-    val of_list : int -&gt; (int * &#39;v) list -&gt; &#39;v t
-    val bindings : &#39;v t -&gt; (int * &#39;v) list
+    type 'v t
+    val insert : int -&gt; 'v -&gt; 'v t -&gt; unit
+    val find : int -&gt; 'v t -&gt; 'v option
+    val remove : int -&gt; 'v t -&gt; unit
+    val create : int -&gt; 'v t
+    val of_list : int -&gt; (int * 'v) list -&gt; 'v t
+    val bindings : 'v t -&gt; (int * 'v) list
   end
 </pre></div>
 </div>
@@ -900,7 +900,7 @@ k_2: v_2, \ldots, k_n : v_n\)</span> }。每个 <span class="math notranslate no
 <span class="c">      If element [i] of the array is instead [None], then [i] is not</span>
 <span class="c">      bound in the map.</span>
 <span class="c">      RI: None. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">option</span> <span class="kt">array</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">v</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">v</span> <span class="n">option</span> <span class="kt">array</span>
 
   <span class="c">(** Efficiency: O(1). *)</span>
   <span class="k">let</span> <span class="n">insert</span> <span class="n">k</span> <span class="n">v</span> <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.(</span><span class="n">k</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="nc">Some</span> <span class="n">v</span>
@@ -971,37 +971,37 @@ range），否则我们使用的数组将需要很大。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">TableMap</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="c">(** [(&#39;k, &#39;v) t] is the type of mutable table-based maps that bind</span>
-<span class="c">      keys of type [&#39;k] to values of type [&#39;v]. *)</span>
-  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+  <span class="c">(** [('k, 'v) t] is the type of mutable table-based maps that bind</span>
+<span class="c">      keys of type ['k] to values of type ['v]. *)</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
 
   <span class="c">(** [insert k v m] mutates map [m] to bind [k] to [v]. If [k] was</span>
 <span class="c">      already bound in [m], that binding is replaced by the binding to</span>
 <span class="c">      [v]. *)</span>
-  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">insert</span> <span class="o">:</span> <span class="k">'</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(** [find k m] is [Some v] if [m] binds [k] to [v], and [None] if [m]</span>
 <span class="c">      does not bind [k]. *)</span>
-  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">v</span> <span class="n">option</span>
+  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="k">'</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">v</span> <span class="n">option</span>
 
   <span class="c">(** [remove k m] mutates [m] to remove any binding of [k]. If [k] was</span>
 <span class="c">      not bound in [m], the map is unchanged. *)</span>
-  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="k">'</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(** [create hash c] creates a new table map with capacity [c] that</span>
 <span class="c">      will use [hash] as the function to convert keys to integers.</span>
 <span class="c">      Requires: The output of [hash] is always non-negative, and [hash]</span>
 <span class="c">      runs in constant time. *)</span>
-  <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
 
   <span class="c">(** [bindings m] is an association list containing the same bindings</span>
 <span class="c">      as [m]. *)</span>
-  <span class="k">val</span> <span class="n">bindings</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
+  <span class="k">val</span> <span class="n">bindings</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span> <span class="o">*</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span>
 
   <span class="c">(** [of_list hash lst] creates a map with the same bindings as [lst],</span>
 <span class="c">      using [hash] as the hash function. Requires: [lst] does not</span>
 <span class="c">      contain any duplicate keys. *)</span>
-  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">of_list</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span> <span class="o">*</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -1009,13 +1009,13 @@ range），否则我们使用的数组将需要很大。</p>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type TableMap =
   sig
-    type (&#39;k, &#39;v) t
-    val insert : &#39;k -&gt; &#39;v -&gt; (&#39;k, &#39;v) t -&gt; unit
-    val find : &#39;k -&gt; (&#39;k, &#39;v) t -&gt; &#39;v option
-    val remove : &#39;k -&gt; (&#39;k, &#39;v) t -&gt; unit
-    val create : (&#39;k -&gt; int) -&gt; int -&gt; (&#39;k, &#39;v) t
-    val bindings : (&#39;k, &#39;v) t -&gt; (&#39;k * &#39;v) list
-    val of_list : (&#39;k -&gt; int) -&gt; (&#39;k * &#39;v) list -&gt; (&#39;k, &#39;v) t
+    type ('k, 'v) t
+    val insert : 'k -&gt; 'v -&gt; ('k, 'v) t -&gt; unit
+    val find : 'k -&gt; ('k, 'v) t -&gt; 'v option
+    val remove : 'k -&gt; ('k, 'v) t -&gt; unit
+    val create : ('k -&gt; int) -&gt; int -&gt; ('k, 'v) t
+    val bindings : ('k, 'v) t -&gt; ('k * 'v) list
+    val of_list : ('k -&gt; int) -&gt; ('k * 'v) list -&gt; ('k, 'v) t
   end
 </pre></div>
 </div>
@@ -1060,10 +1060,10 @@ range），否则我们使用的数组将需要很大。</p>
 <h3><span class="section-number">9.1.4.1. </span>链式表示<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/LOWAC3WOl6Q" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 <p>以下是使用链接的哈希表的表示类型：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">{</span>
-  <span class="n">hash</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">;</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">hash</span> <span class="o">:</span> <span class="k">'</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">;</span>
   <span class="k">mutable</span> <span class="n">size</span> <span class="o">:</span> <span class="kt">int</span><span class="o">;</span>
-  <span class="k">mutable</span> <span class="n">buckets</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="kt">array</span>
+  <span class="k">mutable</span> <span class="n">buckets</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span> <span class="o">*</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="kt">array</span>
 <span class="o">}</span>
 </pre></div>
 </div>
@@ -1160,10 +1160,10 @@ range），否则我们使用的数组将需要很大。</p>
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">HashMap</span> <span class="o">:</span> <span class="nc">TableMap</span> <span class="o">=</span> <span class="k">struct</span>
 
   <span class="c">(** AF and RI: above. *)</span>
-  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="n">hash</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">;</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span><span class="o">,</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="n">t</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">hash</span> <span class="o">:</span> <span class="k">'</span><span class="n">k</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="o">;</span>
     <span class="k">mutable</span> <span class="n">size</span> <span class="o">:</span> <span class="kt">int</span><span class="o">;</span>
-    <span class="k">mutable</span> <span class="n">buckets</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">k</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="kt">array</span>
+    <span class="k">mutable</span> <span class="n">buckets</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">k</span> <span class="o">*</span> <span class="k">'</span><span class="n">v</span><span class="o">)</span> <span class="kt">list</span> <span class="kt">array</span>
   <span class="o">}</span>
 
   <span class="c">(** [capacity tab] is the number of buckets in [tab].</span>
@@ -1407,11 +1407,11 @@ range），否则我们使用的数组将需要很大。</p>
 配置为检查更多节点。</p>
 <p><strong>哈希表。</strong> 这是哈希表接口的摘要：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Hashtbl</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
-  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span>
-  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span><span class="o">,</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">type</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span><span class="o">,</span> <span class="k">'</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span><span class="o">,</span> <span class="k">'</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span><span class="o">,</span> <span class="k">'</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">find</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span><span class="o">,</span> <span class="k">'</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span>
+  <span class="k">val</span> <span class="n">remove</span> <span class="o">:</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span><span class="o">,</span> <span class="k">'</span><span class="n">b</span><span class="o">)</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
   <span class="o">...</span>
 <span class="k">end</span>
 </pre></div>
@@ -1433,7 +1433,7 @@ range），否则我们使用的数组将需要很大。</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val t : (&#39;_weak1, &#39;_weak2) Hashtbl.t = &lt;abstr&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val t : ('_weak1, '_weak2) Hashtbl.t = &lt;abstr&gt;
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
@@ -1482,7 +1482,7 @@ range），否则我们使用的数组将需要很大。</p>
 <p>现在再添加一个绑定将触发调整大小，这会使桶的数量加倍：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">add</span> <span class="n">t</span> <span class="mi">33</span> <span class="s2">&quot;33&quot;</span><span class="o">;;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">add</span> <span class="n">t</span> <span class="mi">33</span> <span class="s2">"33"</span><span class="o">;;</span>
 <span class="n">stats</span> <span class="n">t</span><span class="o">;;</span>
 </pre></div>
 </div>

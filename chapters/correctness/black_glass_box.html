@@ -630,7 +630,7 @@ document.write(`
   <span class="k">type</span> <span class="n">t</span>
 
   <span class="c">(** [create p q] is the rational number [p/q].</span>
-<span class="c">      Raises: [Invalid_argument &quot;0&quot;] if [q] is 0. *)</span>
+<span class="c">      Raises: [Invalid_argument "0"] if [q] is 0. *)</span>
   <span class="k">val</span> <span class="n">create</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="n">t</span>
 
   <span class="c">(** [plus r1 r2] is [r1 + r2]. *)</span>
@@ -643,7 +643,7 @@ document.write(`
   <span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="kt">int</span> <span class="o">*</span> <span class="kt">int</span>
 
   <span class="k">let</span> <span class="n">create</span> <span class="n">p</span> <span class="n">q</span> <span class="o">=</span>
-    <span class="k">if</span> <span class="n">q</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">invalid_arg</span> <span class="s2">&quot;0&quot;</span> <span class="k">else</span> <span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">q</span><span class="o">)</span>
+    <span class="k">if</span> <span class="n">q</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">invalid_arg</span> <span class="s2">"0"</span> <span class="k">else</span> <span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">q</span><span class="o">)</span>
 
   <span class="k">let</span> <span class="n">plus</span> <span class="o">(</span><span class="n">p1</span><span class="o">,</span> <span class="n">q1</span><span class="o">)</span> <span class="o">(</span><span class="n">p2</span><span class="o">,</span> <span class="n">q2</span><span class="o">)</span> <span class="o">=</span>
     <span class="o">(</span><span class="n">p1</span> <span class="o">*</span> <span class="n">q2</span> <span class="o">+</span> <span class="n">p2</span> <span class="o">*</span> <span class="n">q1</span><span class="o">,</span> <span class="n">q1</span> <span class="o">*</span> <span class="n">q2</span><span class="o">)</span>
@@ -795,22 +795,22 @@ document.write(`
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Set</span> <span class="o">=</span> <span class="k">sig</span>
 
-  <span class="c">(** [&#39;a t] is the type of a set whose elements have type [&#39;a]. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="c">(** ['a t] is the type of a set whose elements have type ['a]. *)</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 
   <span class="c">(** [empty] is the empty set. *)</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 
   <span class="c">(** [size s] is the number of elements in [s]. *</span>
 <span class="c">      [size empty] is [0]. *)</span>
-  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">size</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 
   <span class="c">(** [add x s] is a set containing all the elements of</span>
 <span class="c">      [s] as well as element [x]. *)</span>
-  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">add</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 
   <span class="c">(** [mem x s] is [true] iff [x] is an element of [s]. *)</span>
-  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+  <span class="k">val</span> <span class="n">mem</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
 
 <span class="k">end</span>
 </pre></div>
@@ -824,11 +824,11 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type Set =
   sig
-    type &#39;a t
-    val empty : &#39;a t
-    val size : &#39;a t -&gt; int
-    val add : &#39;a -&gt; &#39;a t -&gt; &#39;a t
-    val mem : &#39;a -&gt; &#39;a t -&gt; bool
+    type 'a t
+    val empty : 'a t
+    val size : 'a t -&gt; int
+    val add : 'a -&gt; 'a t -&gt; 'a t
+    val mem : 'a -&gt; 'a t -&gt; bool
   end
 </pre></div>
 </div>
@@ -884,7 +884,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val max3 : &#39;a -&gt; &#39;a -&gt; &#39;a -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val max3 : 'a -&gt; 'a -&gt; 'a -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
 </div>

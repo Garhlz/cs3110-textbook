@@ -729,13 +729,13 @@ OCaml 在标准库的 <a class="reference external" href="https://ocaml.org/api/
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 23
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 91
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 70
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 28
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 43
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 75
 </pre></div>
 </div>
 </div>
@@ -748,7 +748,7 @@ OCaml 在标准库的 <a class="reference external" href="https://ocaml.org/api/
 utop，使用此指令加载 QCheck：</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">require</span> <span class="s2">&quot;qcheck&quot;</span><span class="o">;;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span><span class="n">require</span> <span class="s2">"qcheck"</span><span class="o">;;</span>
 </pre></div>
 </div>
 </div>
@@ -760,10 +760,10 @@ utop，使用此指令加载 QCheck：</p>
   <span class="o">...</span>
   <span class="k">module</span> <span class="nc">Gen</span> <span class="o">:</span>
   <span class="k">sig</span>
-    <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="nn">Random</span><span class="p">.</span><span class="nn">State</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+    <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="nn">Random</span><span class="p">.</span><span class="nn">State</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
     <span class="k">val</span> <span class="kt">int</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">t</span>
-    <span class="k">val</span> <span class="n">generate</span> <span class="o">:</span> <span class="o">?</span><span class="n">rand</span><span class="o">:</span><span class="nn">Random</span><span class="p">.</span><span class="nn">State</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="n">n</span><span class="o">:</span><span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
-    <span class="k">val</span> <span class="n">generate1</span> <span class="o">:</span> <span class="o">?</span><span class="n">rand</span><span class="o">:</span><span class="nn">Random</span><span class="p">.</span><span class="nn">State</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+    <span class="k">val</span> <span class="n">generate</span> <span class="o">:</span> <span class="o">?</span><span class="n">rand</span><span class="o">:</span><span class="nn">Random</span><span class="p">.</span><span class="nn">State</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="n">n</span><span class="o">:</span><span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
+    <span class="k">val</span> <span class="n">generate1</span> <span class="o">:</span> <span class="o">?</span><span class="n">rand</span><span class="o">:</span><span class="nn">Random</span><span class="p">.</span><span class="nn">State</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
     <span class="o">...</span>
   <span class="k">end</span>
   <span class="o">...</span>
@@ -785,8 +785,8 @@ utop，使用此指令加载 QCheck：</p>
     <span class="k">val</span> <span class="kt">int</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">t</span>
     <span class="k">val</span> <span class="n">small_int</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">t</span>
     <span class="k">val</span> <span class="n">int_range</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="n">t</span>
-    <span class="k">val</span> <span class="kt">list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="n">t</span>
-    <span class="k">val</span> <span class="n">list_size</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="n">t</span>
+    <span class="k">val</span> <span class="kt">list</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="n">t</span>
+    <span class="k">val</span> <span class="n">list_size</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="n">t</span>
     <span class="k">val</span> <span class="kt">string</span> <span class="o">:</span> <span class="o">?</span><span class="n">gen</span><span class="o">:</span><span class="kt">char</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">string</span> <span class="n">t</span>
     <span class="k">val</span> <span class="n">small_string</span> <span class="o">:</span> <span class="o">?</span><span class="n">gen</span><span class="o">:</span><span class="kt">char</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">string</span> <span class="n">t</span>
     <span class="o">...</span>
@@ -815,7 +815,7 @@ Even，另一个确定列表是否按非递减排序
 <span class="k">let</span> <span class="k">rec</span> <span class="n">is_sorted</span> <span class="o">=</span> <span class="k">function</span>
   <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span>
   <span class="o">|</span> <span class="o">[_]</span> <span class="o">-&gt;</span> <span class="bp">true</span>
-  <span class="o">|</span> <span class="n">h1</span> <span class="o">::</span> <span class="o">(</span><span class="n">h2</span> <span class="o">::</span> <span class="n">t</span> <span class="k">as</span> <span class="n">t&#39;</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">h1</span> <span class="o">&lt;=</span> <span class="n">h2</span> <span class="o">&amp;&amp;</span> <span class="n">is_sorted</span> <span class="n">t&#39;</span>
+  <span class="o">|</span> <span class="n">h1</span> <span class="o">::</span> <span class="o">(</span><span class="n">h2</span> <span class="o">::</span> <span class="n">t</span> <span class="k">as</span> <span class="n">t'</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">h1</span> <span class="o">&lt;=</span> <span class="n">h2</span> <span class="o">&amp;&amp;</span> <span class="n">is_sorted</span> <span class="n">t'</span>
 </pre></div>
 </div>
 </div>
@@ -823,7 +823,7 @@ Even，另一个确定列表是否按非递减排序
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val is_even : int -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val is_sorted : &#39;a list -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val is_sorted : 'a list -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -863,7 +863,7 @@ Even，另一个确定列表是否按非递减排序
 <h2><span class="section-number">8.6.3. </span>测试性质<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
 <p>为了构建 QCheck 测试，我们创建一个任意值和一个属性，并将它们传递给
 到 <code class="docutils literal notranslate"><span class="pre">QCheck.Test.make</span></code> ，其类型可以简化为：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">make</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="nn">QCheck</span><span class="p">.</span><span class="n">arbitrary</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">bool</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">t</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">make</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="nn">QCheck</span><span class="p">.</span><span class="n">arbitrary</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">bool</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">t</span>
 </pre></div>
 </div>
 <p>实际上，该函数还采用几个我们省略的可选参数
@@ -897,7 +897,7 @@ Even，另一个确定列表是否按非递减排序
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-random seed: 439696666
+random seed: 92800966
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -977,25 +977,25 @@ random seed: 439696666
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a arbitrary = private {
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a arbitrary = private {
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  gen : &#39;a QCheck.Gen.t;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  gen : 'a QCheck.Gen.t;
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  print : &#39;a QCheck.Print.t option;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  print : 'a QCheck.Print.t option;
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  small : (&#39;a -&gt; int) option;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  small : ('a -&gt; int) option;
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  shrink : &#39;a QCheck.Shrink.t option;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  shrink : 'a QCheck.Shrink.t option;
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  collect : (&#39;a -&gt; string) option;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  collect : ('a -&gt; string) option;
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  stats : &#39;a QCheck.stat list;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  stats : 'a QCheck.stat list;
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>}
@@ -1014,8 +1014,8 @@ random seed: 439696666
   <span class="k">val</span> <span class="kt">int</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">arbitrary</span>
   <span class="k">val</span> <span class="n">small_int</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">arbitrary</span>
   <span class="k">val</span> <span class="n">int_range</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="n">arbitrary</span>
-  <span class="k">val</span> <span class="kt">list</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">arbitrary</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="n">arbitrary</span>
-  <span class="k">val</span> <span class="n">list_of_size</span> <span class="o">:</span> <span class="kt">int</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">arbitrary</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="n">arbitrary</span>
+  <span class="k">val</span> <span class="kt">list</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">arbitrary</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="n">arbitrary</span>
+  <span class="k">val</span> <span class="n">list_of_size</span> <span class="o">:</span> <span class="kt">int</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">arbitrary</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="n">arbitrary</span>
   <span class="k">val</span> <span class="kt">string</span> <span class="o">:</span> <span class="kt">string</span> <span class="n">arbitrary</span>
   <span class="k">val</span> <span class="n">small_string</span> <span class="o">:</span> <span class="kt">string</span> <span class="n">arbitrary</span>
     <span class="o">...</span>
@@ -1025,7 +1025,7 @@ random seed: 439696666
 <p>使用这些任意值，我们可以获得改进的错误消息：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">t</span> <span class="o">=</span> <span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">make</span> <span class="o">~</span><span class="n">name</span><span class="o">:</span><span class="s2">&quot;my_test&quot;</span> <span class="nn">QCheck</span><span class="p">.</span><span class="n">int</span> <span class="n">is_even</span><span class="o">;;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">t</span> <span class="o">=</span> <span class="nn">QCheck</span><span class="p">.</span><span class="nn">Test</span><span class="p">.</span><span class="n">make</span> <span class="o">~</span><span class="n">name</span><span class="o">:</span><span class="s2">"my_test"</span> <span class="nn">QCheck</span><span class="p">.</span><span class="n">int</span> <span class="n">is_even</span><span class="o">;;</span>
 <span class="nn">QCheck_runner</span><span class="p">.</span><span class="n">run_tests</span> <span class="o">[</span><span class="n">t</span><span class="o">];;</span>
 </pre></div>
 </div>
@@ -1043,7 +1043,7 @@ random seed: 439696666
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test my_test failed (86 shrink steps):
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test my_test failed (90 shrink steps):
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -1118,7 +1118,7 @@ QCheck 创建 1000 个任意整数并测试每个整数的属性是否成立
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val rev_involutive : &#39;a list -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val rev_involutive : 'a list -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val t : QCheck.Test.t = QCheck2.Test.Test &lt;abstr&gt;
@@ -1154,10 +1154,10 @@ QCheck 创建 1000 个任意整数并测试每个整数的属性是否成立
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val is_sorted : &#39;a list -&gt; bool = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val is_sorted : 'a list -&gt; bool = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File &quot;[14]&quot;, line 2, characters 44-53:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File "[14]", line 2, characters 44-53:
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2 | let t = QCheck.(Test.make ~count:1000 (list small_nat) is_sorted);;

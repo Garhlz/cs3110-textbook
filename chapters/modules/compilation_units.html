@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exercises.html">5.11. 练习</a></li>
@@ -559,8 +559,7 @@ document.write(`
 <span class="k">let</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 </pre></div>
 </div>
-<p>然后编译<code class="docutils literal notranslate"><span class="pre">foo.ml</span></code>将与定义模块具有相同的效果
-<code class="docutils literal notranslate"><span class="pre">Foo</span></code> 如下：</p>
+<p>编译 <code class="docutils literal notranslate"><span class="pre">foo.ml</span></code> 的效果相当于定义下面的模块 <code class="docutils literal notranslate"><span class="pre">Foo</span></code>：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Foo</span> <span class="o">:</span> <span class="k">sig</span>
   <span class="k">val</span> <span class="n">x</span> <span class="o">:</span> <span class="kt">int</span>
   <span class="k">val</span> <span class="n">f</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span>
@@ -571,8 +570,7 @@ document.write(`
 <span class="k">end</span>
 </pre></div>
 </div>
-<p>一般来说，当编译器遇到一个编译单元时，它会将其视为
-定义一个模块和一个签名，如下所示：</p>
+<p>一般来说，编译器会把一个编译单元视为如下形式的模块及其签名：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Foo</span>
   <span class="o">:</span> <span class="k">sig</span> <span class="c">(* insert contents of foo.mli here *)</span> <span class="k">end</span>
 <span class="o">=</span> <span class="k">struct</span>
@@ -580,12 +578,8 @@ document.write(`
 <span class="k">end</span>
 </pre></div>
 </div>
-<p><em>单元名称</em> <code class="docutils literal notranslate"><span class="pre">Foo</span></code> 是从基本名称 <code class="docutils literal notranslate"><span class="pre">foo</span></code> 派生而来的，只需大写
-第一个字母。请注意，没有定义命名模块类型；的
-<code class="docutils literal notranslate"><span class="pre">Foo</span></code> 的签名实际上是匿名的。</p>
-<p>标准库使用编译单元来实现我们的大部分模块
-到目前为止一直在使用，例如 <code class="docutils literal notranslate"><span class="pre">List</span></code> 和 <code class="docutils literal notranslate"><span class="pre">String</span></code>。你可以在
-<a class="reference external" href="https://github.com/ocaml/ocaml/tree/trunk/stdlib">standard library source code</a>。</p>
+<p><em>单元名</em> <code class="docutils literal notranslate"><span class="pre">Foo</span></code> 来自基本名称 <code class="docutils literal notranslate"><span class="pre">foo</span></code>，只是把首字母改成了大写。注意，这里并没有定义具名的模块类型；<code class="docutils literal notranslate"><span class="pre">Foo</span></code> 的签名实际上是匿名的。</p>
+<p>标准库使用编译单元实现了我们一直在用的大多数模块，例如 <code class="docutils literal notranslate"><span class="pre">List</span></code> 和 <code class="docutils literal notranslate"><span class="pre">String</span></code>。你可以在<a class="reference external" href="https://github.com/ocaml/ocaml/tree/trunk/stdlib">标准库源代码</a>中查看它们。</p>
 <section id="id2">
 <h2><span class="section-number">5.5.1. </span>文档注释<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <p>一些文档注释应写在接口文件中，另一些则应写在实现文件中：</p>
@@ -598,15 +592,10 @@ HTML 文档。因此，接口文件中的注释应该面向这个受众来写。
 <li><p>不应期待客户端阅读实现文件。这些文件主要供实现的作者和维护者阅读。
 实现文件中的文档应解释抽象的内部细节，例如表示类型如何使用、
 代码如何工作、维护了哪些重要的内部不变式，等等。维护者还应该阅读
-接口文件中的规格说明。</p></li>
+接口文件中的规范。</p></li>
 </ul>
-<p>文件之间<strong>不</strong>应该重复。特别是，
-接口文件中面向客户的规范注释不应
-在实现文件中重复。原因之一是重复不可避免地会导致错误。
-另一个原因是 OCamldoc 能够自动把接口文件中的注释注入到
-为实现文件生成的 HTML 中。</p>
-<p>OCamldoc 注释可以放置在元素之前或之后
-接口。例如，这两种放置方式都是可能的：</p>
+<p>两个文件之间<strong>不应</strong>重复文档。尤其不要把接口文件中面向客户端的规范注释再抄到实现文件中。一方面，重复内容迟早会出现不一致；另一方面，OCamldoc 会自动把接口文件中的注释加入为实现文件生成的 HTML 文档。</p>
+<p>在接口中，OCamldoc 注释既可以放在相应条目之前，也可以放在之后。例如，下面两种写法都合法：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** The mathematical constant 3.14... *)</span>
 <span class="k">val</span> <span class="n">pi</span> <span class="o">:</span> <span class="kt">float</span>
 </pre></div>
@@ -617,29 +606,26 @@ HTML 文档。因此，接口文件中的注释应该面向这个受众来写。
 </div>
 <div class="admonition tip">
 <p class="admonition-title">小技巧</p>
-<p>标准库开发人员显然更喜欢后置
-注释，并且 OCamlFormat 似乎也更适合这种写法。</p>
+<p>标准库开发者显然更偏爱后置注释，OCamlFormat 对这种写法的支持似乎也更好。</p>
 </div>
 </section>
 <section id="id3">
 <h2><span class="section-number">5.5.2. </span>堆栈示例<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
 <p>将此代码放入 <code class="docutils literal notranslate"><span class="pre">mystack.mli</span></code> 中，注意其周围没有 <code class="docutils literal notranslate"><span class="pre">sig..end</span></code> 或
 任何 <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">type</span></code>：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">exception</span> <span class="nc">Empty</span>
-<span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-<span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
-<span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-<span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
-<span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">val</span> <span class="n">is_empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+<span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">val</span> <span class="n">peek</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
+<span class="k">val</span> <span class="n">pop</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 </pre></div>
 </div>
-<p>我们使用名称”mystack”，因为标准库已经有一个
-<code class="docutils literal notranslate"><span class="pre">Stack</span></code> 模块。重新使用该名称可能会导致错误消息
-有点难以理解。</p>
+<p>这里使用名称 <code class="docutils literal notranslate"><span class="pre">mystack</span></code>，是因为标准库中已经有一个 <code class="docutils literal notranslate"><span class="pre">Stack</span></code> 模块；重用这个名称可能会让错误信息变得难以理解。</p>
 <p>同样将这段代码放入<code class="docutils literal notranslate"><span class="pre">mystack.ml</span></code>中，注意没有<code class="docutils literal notranslate"><span class="pre">struct..end</span></code>
 它周围或任何 <code class="docutils literal notranslate"><span class="pre">module</span></code>：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 <span class="k">exception</span> <span class="nc">Empty</span>
 <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
 <span class="k">let</span> <span class="n">is_empty</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
@@ -648,7 +634,7 @@ HTML 文档。因此，接口文件中的注释应该面向这个受众来写。
 <span class="k">let</span> <span class="n">pop</span> <span class="o">=</span> <span class="k">function</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Empty</span> <span class="o">|</span> <span class="o">_</span> <span class="o">::</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span>
 </pre></div>
 </div>
-<p>创建Dune文件：</p>
+<p>创建一个 Dune 文件：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(library
  (name mystack))
 </pre></div>
@@ -659,19 +645,14 @@ HTML 文档。因此，接口文件中的注释应该面向这个受众来写。
 </div>
 <p>你的编译单元已可供使用：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="nn">Mystack</span><span class="p">.</span><span class="n">empty</span><span class="o">;;</span>
-<span class="o">-</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="nn">Mystack</span><span class="p">.</span><span class="n">t</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">abstr</span><span class="o">&gt;</span>
+<span class="o">-</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="nn">Mystack</span><span class="p">.</span><span class="n">t</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">abstr</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 </section>
 <section id="id4">
 <h2><span class="section-number">5.5.3. </span>不完整的编译单元<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
-<p>如果编译时缺少接口或实现文件怎么办
-单位？</p>
-<p>**缺少接口文件。**实际上这正是我们通常的情况
-一直工作到这一点。例如，你可能已经做了一些作业
-文件名为 <code class="docutils literal notranslate"><span class="pre">lab1.ml</span></code> 但永远不需要担心 <code class="docutils literal notranslate"><span class="pre">lab1.mli</span></code>。没有
-要求每个 <code class="docutils literal notranslate"><span class="pre">.ml</span></code> 文件都有一个对应的 <code class="docutils literal notranslate"><span class="pre">.mli</span></code> 文件，或者在其他文件中
-换句话说，每个编译单元都是完整的。</p>
+<p>如果编译单元缺少接口文件或实现文件，会发生什么？</p>
+<p><strong>缺少接口文件。</strong> 其实在此前的大部分内容中，我们一直都是这样工作的。例如，你可能写过名为 <code class="docutils literal notranslate"><span class="pre">lab1.ml</span></code> 的作业，却从未需要考虑 <code class="docutils literal notranslate"><span class="pre">lab1.mli</span></code>。并非每个 <code class="docutils literal notranslate"><span class="pre">.ml</span></code> 文件都必须配有对应的 <code class="docutils literal notranslate"><span class="pre">.mli</span></code> 文件；换句话说，编译单元不一定非要包含两个文件。</p>
 <p>如果 <code class="docutils literal notranslate"><span class="pre">.mli</span></code> 文件丢失，仍然会创建一个模块，正如我们所看到的
 当我们了解 <code class="docutils literal notranslate"><span class="pre">#load</span></code> 和模块时。它只是没有
 自动强加签名。比如上面 <code class="docutils literal notranslate"><span class="pre">lab1</span></code> 的情况
@@ -688,14 +669,14 @@ Java 或 C++ 程序员有时会意外陷入<strong>误用</strong>情况。
 回想一下本章前面的堆栈，也许你有一个模块类型
 <code class="docutils literal notranslate"><span class="pre">Stack</span></code> 和两个实现它的模块，<code class="docutils literal notranslate"><span class="pre">ListStack</span></code> 和 <code class="docutils literal notranslate"><span class="pre">CustomStack</span></code>：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
   <span class="c">(* etc. *)</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">Stack</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">push</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
   <span class="c">(* etc. *)</span>
@@ -709,14 +690,14 @@ Java 或 C++ 程序员有时会意外陷入<strong>误用</strong>情况。
 <p>人们很容易将该代码划分为文件，如下所示：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(********************************)</span>
 <span class="c">(* stack.mli *)</span>
-<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-<span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-<span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+<span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="c">(* etc. *)</span>
 
 <span class="c">(********************************)</span>
 <span class="c">(* listStack.ml *)</span>
-<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+<span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
 <span class="k">let</span> <span class="n">push</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
 <span class="c">(* etc. *)</span>
@@ -736,16 +717,16 @@ Java 或 C++ 程序员有时会意外陷入<strong>误用</strong>情况。
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(********************************)</span>
 <span class="c">(* stack.ml *)</span>
 <span class="k">module</span> <span class="k">type</span> <span class="nc">S</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
   <span class="c">(* etc. *)</span>
 <span class="k">end</span>
 
 <span class="c">(********************************)</span>
 <span class="c">(* listStack.ml *)</span>
 <span class="k">module</span> <span class="nc">M</span> <span class="o">:</span> <span class="nn">Stack</span><span class="p">.</span><span class="nc">S</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">push</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
   <span class="c">(* etc. *)</span>
@@ -775,9 +756,9 @@ Java 或 C++ 程序员有时会意外陷入<strong>误用</strong>情况。
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="c">(********************************)</span>
 <span class="c">(* stack.mli *)</span>
 <span class="k">module</span> <span class="k">type</span> <span class="nc">S</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
   <span class="c">(* etc. *)</span>
 <span class="k">end</span>
 
@@ -788,14 +769,14 @@ Java 或 C++ 程序员有时会意外陷入<strong>误用</strong>情况。
 <span class="c">(********************************)</span>
 <span class="c">(* stack.ml *)</span>
 <span class="k">module</span> <span class="k">type</span> <span class="nc">S</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">empty</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">push</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
   <span class="c">(* etc. *)</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListStack</span> <span class="o">:</span> <span class="nc">S</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
   <span class="k">let</span> <span class="n">empty</span> <span class="o">=</span> <span class="bp">[]</span>
   <span class="k">let</span> <span class="n">push</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">cons</span>
   <span class="c">(* etc. *)</span>

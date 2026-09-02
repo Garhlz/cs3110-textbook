@@ -577,12 +577,12 @@ Promise 解析后是否应进行打印。</p>
 
 <span class="k">let</span> <span class="n">timing2</span> <span class="bp">()</span> <span class="o">=</span>
   <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">1</span><span class="o">.</span> <span class="k">in</span>
-  <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;1&quot;</span> <span class="k">in</span>
+  <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"1"</span> <span class="k">in</span>
   <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">10</span><span class="o">.</span> <span class="k">in</span>
-  <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;2&quot;</span> <span class="k">in</span>
+  <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"2"</span> <span class="k">in</span>
   <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">20</span><span class="o">.</span> <span class="k">in</span>
-  <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;3&quot;</span> <span class="k">in</span>
-  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;all done&quot;</span>
+  <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"3"</span> <span class="k">in</span>
+  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"all done"</span>
 
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">timing2</span> <span class="bp">()</span>
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="nn">Lwt_main</span><span class="p">.</span><span class="n">run</span> <span class="o">(</span><span class="n">delay</span> <span class="mi">35</span><span class="o">.)</span>
@@ -598,10 +598,10 @@ Promise 解析后是否应进行打印。</p>
 <span class="k">let</span> <span class="n">delay</span> <span class="n">n</span> <span class="o">=</span> <span class="nn">Lwt_unix</span><span class="p">.</span><span class="n">sleep</span> <span class="n">n</span>
 
 <span class="k">let</span> <span class="n">timing3</span> <span class="bp">()</span> <span class="o">=</span>
-  <span class="k">let</span> <span class="o">_</span><span class="n">t1</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">1</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;1&quot;</span> <span class="k">in</span>
-  <span class="k">let</span> <span class="o">_</span><span class="n">t2</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">10</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;2&quot;</span> <span class="k">in</span>
-  <span class="k">let</span> <span class="o">_</span><span class="n">t3</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">20</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;3&quot;</span> <span class="k">in</span>
-  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;all done&quot;</span>
+  <span class="k">let</span> <span class="o">_</span><span class="n">t1</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">1</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"1"</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="o">_</span><span class="n">t2</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">10</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"2"</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="o">_</span><span class="n">t3</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">20</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"3"</span> <span class="k">in</span>
+  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"all done"</span>
 
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">timing3</span> <span class="bp">()</span>
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="nn">Lwt_main</span><span class="p">.</span><span class="n">run</span> <span class="o">(</span><span class="n">delay</span> <span class="mi">35</span><span class="o">.)</span>
@@ -617,11 +617,11 @@ Promise 解析后是否应进行打印。</p>
 <span class="k">let</span> <span class="n">delay</span> <span class="n">n</span> <span class="o">=</span> <span class="nn">Lwt_unix</span><span class="p">.</span><span class="n">sleep</span> <span class="n">n</span>
 
 <span class="k">let</span> <span class="n">timing4</span> <span class="bp">()</span> <span class="o">=</span>
-  <span class="k">let</span> <span class="n">t1</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">1</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;1&quot;</span> <span class="k">in</span>
-  <span class="k">let</span> <span class="n">t2</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">10</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;2&quot;</span> <span class="k">in</span>
-  <span class="k">let</span> <span class="n">t3</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">20</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;3&quot;</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">t1</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">1</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"1"</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">t2</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">10</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"2"</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">t3</span> <span class="o">=</span> <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">delay</span> <span class="mi">20</span><span class="o">.</span> <span class="k">in</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"3"</span> <span class="k">in</span>
   <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="bp">()</span> <span class="o">=</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">join</span> <span class="o">[</span><span class="n">t1</span><span class="o">;</span> <span class="n">t2</span><span class="o">;</span> <span class="n">t3</span><span class="o">]</span> <span class="k">in</span>
-  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">&quot;all done&quot;</span>
+  <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printl</span> <span class="s2">"all done"</span>
 
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">timing4</span> <span class="bp">()</span>
 <span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="nn">Lwt_main</span><span class="p">.</span><span class="n">run</span> <span class="o">(</span><span class="n">delay</span> <span class="mi">35</span><span class="o">.)</span>
@@ -640,18 +640,18 @@ Promise 解析后是否应进行打印。</p>
 <span class="k">open</span> <span class="nc">Lwt_unix</span>
 
 <span class="c">(** [log ()] is a promise for an [input_channel] that reads from</span>
-<span class="c">    the file named &quot;log&quot;. *)</span>
+<span class="c">    the file named "log". *)</span>
 <span class="k">let</span> <span class="n">log</span> <span class="bp">()</span> <span class="o">:</span> <span class="n">input_channel</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span> <span class="o">=</span>
-  <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">openfile</span> <span class="s2">&quot;log&quot;</span> <span class="o">[</span><span class="nc">O_RDONLY</span><span class="o">]</span> <span class="mi">0</span> <span class="k">in</span>
+  <span class="k">let</span><span class="o">%</span><span class="n">lwt</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">openfile</span> <span class="s2">"log"</span> <span class="o">[</span><span class="nc">O_RDONLY</span><span class="o">]</span> <span class="mi">0</span> <span class="k">in</span>
   <span class="nn">Lwt</span><span class="p">.</span><span class="n">return</span> <span class="o">(</span><span class="n">of_fd</span> <span class="o">~</span><span class="n">mode</span><span class="o">:</span><span class="n">input</span> <span class="n">fd</span><span class="o">)</span>
 
 <span class="c">(** [loop ic] reads one line from [ic], prints it to stdout,</span>
 <span class="c">    then calls itself recursively. It is an infinite loop. *)</span>
 <span class="k">let</span> <span class="k">rec</span> <span class="n">loop</span> <span class="o">(</span><span class="n">ic</span> <span class="o">:</span> <span class="n">input_channel</span><span class="o">)</span> <span class="o">=</span>
-  <span class="n">failwith</span> <span class="s2">&quot;TODO&quot;</span>
+  <span class="n">failwith</span> <span class="s2">"TODO"</span>
   <span class="c">(* hint: use [Lwt_io.read_line] and [Lwt_io.printlf] *)</span>
 
-<span class="c">(** [monitor ()] monitors the file named &quot;log&quot;. *)</span>
+<span class="c">(** [monitor ()] monitors the file named "log". *)</span>
 <span class="k">let</span> <span class="n">monitor</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">unit</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span> <span class="o">=</span>
   <span class="nn">Lwt</span><span class="p">.</span><span class="n">bind</span> <span class="o">(</span><span class="n">log</span> <span class="bp">()</span><span class="o">)</span> <span class="n">loop</span>
 
@@ -660,7 +660,7 @@ Promise 解析后是否应进行打印。</p>
 <span class="c">    returning the unit promise. Any other input is re-raised</span>
 <span class="c">    with [Lwt.fail]. *)</span>
 <span class="k">let</span> <span class="n">handler</span> <span class="o">:</span> <span class="n">exn</span> <span class="o">-&gt;</span> <span class="kt">unit</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span> <span class="o">=</span>
-  <span class="n">failwith</span> <span class="s2">&quot;TODO&quot;</span>
+  <span class="n">failwith</span> <span class="s2">"TODO"</span>
 
 <span class="k">let</span> <span class="n">main</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">unit</span> <span class="nn">Lwt</span><span class="p">.</span><span class="n">t</span> <span class="o">=</span>
   <span class="nn">Lwt</span><span class="p">.</span><span class="n">catch</span> <span class="n">monitor</span> <span class="n">handler</span>
@@ -695,14 +695,14 @@ Promise 解析后是否应进行打印。</p>
 <p><strong>Exercise: add opt [★★]</strong></p>
 <p>以下是 Maybe monad 的定义：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Monad</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;=</span> <span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;=</span> <span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">Maybe</span> <span class="o">:</span> <span class="nc">Monad</span> <span class="o">=</span>
 <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">option</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">option</span>
 
   <span class="k">let</span> <span class="n">return</span> <span class="n">x</span> <span class="o">=</span> <span class="nc">Some</span> <span class="n">x</span>
 
@@ -724,11 +724,11 @@ Promise 解析后是否应进行打印。</p>
 <p><strong>Exercise: fmap and join [★★]</strong></p>
 <p>这是 monad 的扩展签名，添加了两个新操作：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">ExtMonad</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;=</span> <span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;|</span> <span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">join</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;=</span> <span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;|</span> <span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">join</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -762,16 +762,16 @@ Promise 解析后是否应进行打印。</p>
 表示类型 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">t</span></code>。</p>
 <p>通过完成以下代码来证明这一点：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">FmapJoinMonad</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;|</span> <span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">join</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;|</span> <span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">join</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="k">type</span> <span class="nc">BindMonad</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;=</span> <span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;=</span> <span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">MakeMonad</span> <span class="o">(</span><span class="nc">M</span> <span class="o">:</span> <span class="nc">FmapJoinMonad</span><span class="o">)</span> <span class="o">:</span> <span class="nc">BindMonad</span> <span class="o">=</span> <span class="k">struct</span>
@@ -806,15 +806,15 @@ Promise 解析后是否应进行打印。</p>
 输出的组合列表。</p>
 <p>完成列表 monad 的以下定义：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">ExtMonad</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;=</span> <span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;|</span> <span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">t</span>
-  <span class="k">val</span> <span class="n">join</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;=</span> <span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="o">(</span> <span class="o">&gt;&gt;|</span> <span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">join</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">ListMonad</span> <span class="o">:</span> <span class="nc">ExtMonad</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span>
 
   <span class="c">(* TODO *)</span>
 <span class="k">end</span>
@@ -828,7 +828,7 @@ Promise 解析后是否应进行打印。</p>
 <p>这是世界上最琐碎的单子。它所做的就是将一个值包装在一个
 构造函数。</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Trivial</span> <span class="o">:</span> <span class="nc">Monad</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="nc">Wrap</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="nc">Wrap</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span>
   <span class="k">let</span> <span class="n">return</span> <span class="n">x</span> <span class="o">=</span> <span class="nc">Wrap</span> <span class="n">x</span>
   <span class="k">let</span> <span class="o">(</span> <span class="o">&gt;&gt;=</span> <span class="o">)</span> <span class="o">(</span><span class="nc">Wrap</span> <span class="n">x</span><span class="o">)</span> <span class="n">f</span> <span class="o">=</span> <span class="n">f</span> <span class="n">x</span>
 <span class="k">end</span>

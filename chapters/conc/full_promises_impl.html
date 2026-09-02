@@ -605,61 +605,61 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** A signature for Lwt-style promises, with better names. *)</span>
 <span class="k">module</span> <span class="k">type</span> <span class="nc">PROMISE</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span>
     <span class="o">|</span> <span class="nc">Pending</span>
-    <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span>
+    <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span>
     <span class="o">|</span> <span class="nc">Rejected</span> <span class="k">of</span> <span class="n">exn</span>
 
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span>
 
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span>
 
   <span class="c">(** [make ()] is a new promise and resolver. The promise is pending. *)</span>
-  <span class="k">val</span> <span class="n">make</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span>
+  <span class="k">val</span> <span class="n">make</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span>
 
   <span class="c">(** [return x] is a new promise that is already fulfilled with value</span>
 <span class="c">      [x]. *)</span>
-  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span>
+  <span class="k">val</span> <span class="n">return</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span>
 
   <span class="c">(** [state p] is the state of the promise. *)</span>
-  <span class="k">val</span> <span class="n">state</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span>
+  <span class="k">val</span> <span class="n">state</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span>
 
   <span class="c">(** [fulfill r x] resolves the promise [p] associated with [r] with</span>
 <span class="c">      value [x], meaning that [state p] will become [Fulfilled x].</span>
 <span class="c">      Requires: [p] is pending. *)</span>
-  <span class="k">val</span> <span class="n">fulfill</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">fulfill</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(** [reject r x] rejects the promise [p] associated with [r] with</span>
 <span class="c">      exception [x], meaning that [state p] will become [Rejected x].</span>
 <span class="c">      Requires: [p] is pending. *)</span>
-  <span class="k">val</span> <span class="n">reject</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">-&gt;</span> <span class="n">exn</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">val</span> <span class="n">reject</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">-&gt;</span> <span class="n">exn</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(** [bind p c] registers callback [c] with promise [p].</span>
 <span class="c">      When the promise is fulfilled, the callback will be run</span>
-<span class="c">      on the promises&#39;s contents.  If the promise is never</span>
+<span class="c">      on the promises's contents.  If the promise is never</span>
 <span class="c">      fulfilled, the callback will never run. *)</span>
-  <span class="k">val</span> <span class="n">bind</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span>
+  <span class="k">val</span> <span class="n">bind</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span>
 <span class="k">end</span>
 
 <span class="k">module</span> <span class="nc">Promise</span> <span class="o">:</span> <span class="nc">PROMISE</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span> <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Rejected</span> <span class="k">of</span> <span class="n">exn</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span> <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Rejected</span> <span class="k">of</span> <span class="n">exn</span>
 
   <span class="c">(** RI: the input may not be [Pending]. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
 
   <span class="c">(** RI: if [state &lt;&gt; Pending] then [handlers = []]. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="k">mutable</span> <span class="n">state</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span><span class="o">;</span>
-    <span class="k">mutable</span> <span class="n">handlers</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">handler</span> <span class="kt">list</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">mutable</span> <span class="n">state</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span><span class="o">;</span>
+    <span class="k">mutable</span> <span class="n">handlers</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">handler</span> <span class="kt">list</span>
   <span class="o">}</span>
 
   <span class="k">let</span> <span class="n">enqueue</span>
-      <span class="o">(</span><span class="n">handler</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="kt">unit</span><span class="o">)</span>
-      <span class="o">(</span><span class="n">promise</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span>
+      <span class="o">(</span><span class="n">handler</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="kt">unit</span><span class="o">)</span>
+      <span class="o">(</span><span class="n">promise</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span>
     <span class="o">=</span>
     <span class="n">promise</span><span class="o">.</span><span class="n">handlers</span> <span class="o">&lt;-</span> <span class="n">handler</span> <span class="o">::</span> <span class="n">promise</span><span class="o">.</span><span class="n">handlers</span>
 
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span>
 
   <span class="c">(** [write_once p s] changes the state of [p] to be [s].  If [p] and [s]</span>
 <span class="c">      are both pending, that has no effect.</span>
@@ -667,7 +667,7 @@ document.write(`
   <span class="k">let</span> <span class="n">write_once</span> <span class="n">p</span> <span class="n">s</span> <span class="o">=</span>
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span>
     <span class="k">then</span> <span class="n">p</span><span class="o">.</span><span class="n">state</span> <span class="o">&lt;-</span> <span class="n">s</span>
-    <span class="k">else</span> <span class="n">invalid_arg</span> <span class="s2">&quot;cannot write twice&quot;</span>
+    <span class="k">else</span> <span class="n">invalid_arg</span> <span class="s2">"cannot write twice"</span>
 
   <span class="k">let</span> <span class="n">make</span> <span class="bp">()</span> <span class="o">=</span>
     <span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="o">{</span><span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span><span class="o">;</span> <span class="n">handlers</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span> <span class="k">in</span>
@@ -679,7 +679,7 @@ document.write(`
   <span class="k">let</span> <span class="n">state</span> <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">state</span>
 
   <span class="c">(** Requires: [st] may not be [Pending]. *)</span>
-  <span class="k">let</span> <span class="n">resolve</span> <span class="o">(</span><span class="n">r</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">(</span><span class="n">st</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span><span class="o">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">resolve</span> <span class="o">(</span><span class="n">r</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">(</span><span class="n">st</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span><span class="o">)</span> <span class="o">=</span>
     <span class="k">assert</span> <span class="o">(</span><span class="n">st</span> <span class="o">&lt;&gt;</span> <span class="nc">Pending</span><span class="o">);</span>
     <span class="k">let</span> <span class="n">handlers</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">handlers</span> <span class="k">in</span>
     <span class="n">r</span><span class="o">.</span><span class="n">handlers</span> <span class="o">&lt;-</span> <span class="bp">[]</span><span class="o">;</span>
@@ -692,18 +692,18 @@ document.write(`
   <span class="k">let</span> <span class="n">fulfill</span> <span class="n">r</span> <span class="n">x</span> <span class="o">=</span>
     <span class="n">resolve</span> <span class="n">r</span> <span class="o">(</span><span class="nc">Fulfilled</span> <span class="n">x</span><span class="o">)</span>
 
-  <span class="k">let</span> <span class="n">copying_handler</span> <span class="o">(</span><span class="n">resolver</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">handler</span>
+  <span class="k">let</span> <span class="n">copying_handler</span> <span class="o">(</span><span class="n">resolver</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">handler</span>
     <span class="o">=</span> <span class="k">function</span>
-      <span class="o">|</span> <span class="nc">Pending</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;handler RI violated&quot;</span>
+      <span class="o">|</span> <span class="nc">Pending</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"handler RI violated"</span>
       <span class="o">|</span> <span class="nc">Rejected</span> <span class="n">exc</span> <span class="o">-&gt;</span> <span class="n">reject</span> <span class="n">resolver</span> <span class="n">exc</span>
       <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">fulfill</span> <span class="n">resolver</span> <span class="n">x</span>
 
   <span class="k">let</span> <span class="n">handler_of_callback</span>
-      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span>
-      <span class="o">(</span><span class="n">resolver</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">handler</span> <span class="o">=</span>
-      <span class="k">fun</span> <span class="o">(</span><span class="n">state</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">state</span><span class="o">)</span> <span class="o">-&gt;</span>
+      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span>
+      <span class="o">(</span><span class="n">resolver</span> <span class="o">:</span> <span class="k">'</span><span class="n">b</span> <span class="n">resolver</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">handler</span> <span class="o">=</span>
+      <span class="k">fun</span> <span class="o">(</span><span class="n">state</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span><span class="o">)</span> <span class="o">-&gt;</span>
       <span class="k">match</span> <span class="n">state</span> <span class="k">with</span>
-        <span class="o">|</span> <span class="nc">Pending</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;handler RI violated&quot;</span>
+        <span class="o">|</span> <span class="nc">Pending</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"handler RI violated"</span>
         <span class="o">|</span> <span class="nc">Rejected</span> <span class="n">exc</span> <span class="o">-&gt;</span> <span class="n">reject</span> <span class="n">resolver</span> <span class="n">exc</span>
         <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="n">x</span> <span class="o">-&gt;</span>
           <span class="k">try</span>
@@ -715,8 +715,8 @@ document.write(`
           <span class="k">with</span> <span class="n">exc</span> <span class="o">-&gt;</span> <span class="n">reject</span> <span class="n">resolver</span> <span class="n">exc</span>
 
   <span class="k">let</span> <span class="n">bind</span>
-      <span class="o">(</span><span class="n">input_promise</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">promise</span><span class="o">)</span>
-      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">b</span> <span class="n">promise</span>
+      <span class="o">(</span><span class="n">input_promise</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">promise</span><span class="o">)</span>
+      <span class="o">(</span><span class="n">callback</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">b</span> <span class="n">promise</span>
     <span class="o">=</span>
     <span class="k">let</span> <span class="n">fail</span> <span class="n">exc</span> <span class="o">=</span> <span class="o">{</span><span class="n">state</span> <span class="o">=</span> <span class="nc">Rejected</span> <span class="n">exc</span><span class="o">;</span> <span class="n">handlers</span> <span class="o">=</span> <span class="bp">[]</span><span class="o">}</span> <span class="k">in</span>
     <span class="k">match</span> <span class="n">input_promise</span><span class="o">.</span><span class="n">state</span> <span class="k">with</span>
@@ -733,15 +733,15 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type PROMISE =
   sig
-    type &#39;a state = Pending | Fulfilled of &#39;a | Rejected of exn
-    type &#39;a promise
-    type &#39;a resolver
-    val make : unit -&gt; &#39;a promise * &#39;a resolver
-    val return : &#39;a -&gt; &#39;a promise
-    val state : &#39;a promise -&gt; &#39;a state
-    val fulfill : &#39;a resolver -&gt; &#39;a -&gt; unit
-    val reject : &#39;a resolver -&gt; exn -&gt; unit
-    val bind : &#39;a promise -&gt; (&#39;a -&gt; &#39;b promise) -&gt; &#39;b promise
+    type 'a state = Pending | Fulfilled of 'a | Rejected of exn
+    type 'a promise
+    type 'a resolver
+    val make : unit -&gt; 'a promise * 'a resolver
+    val return : 'a -&gt; 'a promise
+    val state : 'a promise -&gt; 'a state
+    val fulfill : 'a resolver -&gt; 'a -&gt; unit
+    val reject : 'a resolver -&gt; exn -&gt; unit
+    val bind : 'a promise -&gt; ('a -&gt; 'b promise) -&gt; 'b promise
   end
 </pre></div>
 </div>

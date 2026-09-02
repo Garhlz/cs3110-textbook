@@ -620,26 +620,26 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">PersistentArray</span> <span class="o">=</span> <span class="k">sig</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
-  <span class="c">(** The type of persistent arrays whose elements have type [&#39;a]. The</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
+  <span class="c">(** The type of persistent arrays whose elements have type ['a]. The</span>
 <span class="c">      array indexing is zero based, meaning that the first element is at</span>
 <span class="c">      index [0], and the last element is at index [n - 1], where [n] is </span>
 <span class="c">      the length of the array. Any index less than [0] or greater</span>
 <span class="c">      than [n - 1] is out of bounds. *)</span>
 
-  <span class="k">val</span> <span class="n">make</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">make</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
   <span class="c">(** [make n x] is a persistent array of length [n], with each element</span>
 <span class="c">      initialized to [x]. Raises [Invalid_argument] if [n] is negative</span>
 <span class="c">      or too large for the system. *)</span>
 
-  <span class="k">val</span> <span class="n">length</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+  <span class="k">val</span> <span class="n">length</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span>
   <span class="c">(** [length a] is the number of elements in [a]. *)</span>
 
-  <span class="k">val</span> <span class="n">get</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span>
+  <span class="k">val</span> <span class="n">get</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span>
   <span class="c">(** [get a i] is the element at index [i] in [a]. Raises [Invalid_argument]</span>
 <span class="c">      if [i] is out of bounds. *)</span>
 
-  <span class="k">val</span> <span class="n">set</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">val</span> <span class="n">set</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
   <span class="c">(** [set a i x] is an array that stores [x] at index [i] and otherwise is</span>
 <span class="c">      the same as [a]. Raises: [Invalid_argument] if [i] is out of bounds. *)</span>
 <span class="k">end</span>
@@ -649,11 +649,11 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>module type PersistentArray =
   sig
-    type &#39;a t
-    val make : int -&gt; &#39;a -&gt; &#39;a t
-    val length : &#39;a t -&gt; int
-    val get : &#39;a t -&gt; int -&gt; &#39;a
-    val set : &#39;a t -&gt; int -&gt; &#39;a -&gt; &#39;a t
+    type 'a t
+    val make : int -&gt; 'a -&gt; 'a t
+    val length : 'a t -&gt; int
+    val get : 'a t -&gt; int -&gt; 'a
+    val set : 'a t -&gt; int -&gt; 'a -&gt; 'a t
   end
 </pre></div>
 </div>
@@ -668,7 +668,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">CopyOnSetArray</span> <span class="o">:</span> <span class="nc">PersistentArray</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">array</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="kt">array</span>
 
   <span class="c">(** Efficiency: O(n). *)</span>
   <span class="k">let</span> <span class="n">make</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">make</span>
@@ -681,9 +681,9 @@ document.write(`
   
   <span class="c">(** Efficiency: O(n). *)</span>
   <span class="k">let</span> <span class="n">set</span> <span class="n">a</span> <span class="n">i</span> <span class="n">x</span> <span class="o">=</span>
-    <span class="k">let</span> <span class="n">a&#39;</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">copy</span> <span class="n">a</span> <span class="k">in</span> <span class="c">(* copy the array *)</span>
-    <span class="n">a&#39;</span><span class="o">.(</span><span class="n">i</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="n">x</span><span class="o">;</span> <span class="c">(* mutate one element *)</span>
-    <span class="n">a&#39;</span>
+    <span class="k">let</span> <span class="n">a'</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">copy</span> <span class="n">a</span> <span class="k">in</span> <span class="c">(* copy the array *)</span>
+    <span class="n">a'</span><span class="o">.(</span><span class="n">i</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="n">x</span><span class="o">;</span> <span class="c">(* mutate one element *)</span>
+    <span class="n">a'</span>
 <span class="k">end</span>
 </pre></div>
 </div>
@@ -731,14 +731,14 @@ document.write(`
 <p>该树中的每个节点都告诉我们数组的不同_版本_应该是什么。这个想法引导我们引入以下树类型：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">version_tree</span> <span class="o">=</span>
-  <span class="o">|</span> <span class="nc">Base</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">array</span>
-  <span class="o">|</span> <span class="nc">Diff</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">version_tree</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">version_tree</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">Base</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="kt">array</span>
+  <span class="o">|</span> <span class="nc">Diff</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">version_tree</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a version_tree = Base of &#39;a array | Diff of int * &#39;a * &#39;a version_tree
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a version_tree = Base of 'a array | Diff of int * 'a * 'a version_tree
 </pre></div>
 </div>
 </div>
@@ -764,7 +764,7 @@ a2 ----&gt; (Diff 2 8)        (Diff 2 9) &lt;---- a3
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val set : &#39;a version_tree -&gt; int -&gt; &#39;a -&gt; &#39;a version_tree = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val set : 'a version_tree -&gt; int -&gt; 'a -&gt; 'a version_tree = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -776,13 +776,13 @@ a2 ----&gt; (Diff 2 8)        (Diff 2 9) &lt;---- a3
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">get</span> <span class="n">a</span> <span class="n">i</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">a</span> <span class="k">with</span>
   <span class="o">|</span> <span class="nc">Base</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="o">.(</span><span class="n">i</span><span class="o">)</span>
-  <span class="o">|</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">j</span><span class="o">,</span> <span class="n">v</span><span class="o">,</span> <span class="n">a&#39;</span><span class="o">)</span> <span class="o">-&gt;</span>
-      <span class="k">if</span> <span class="n">i</span> <span class="o">=</span> <span class="n">j</span> <span class="k">then</span> <span class="n">v</span> <span class="k">else</span> <span class="n">get</span> <span class="n">a&#39;</span> <span class="n">i</span>
+  <span class="o">|</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">j</span><span class="o">,</span> <span class="n">v</span><span class="o">,</span> <span class="n">a'</span><span class="o">)</span> <span class="o">-&gt;</span>
+      <span class="k">if</span> <span class="n">i</span> <span class="o">=</span> <span class="n">j</span> <span class="k">then</span> <span class="n">v</span> <span class="k">else</span> <span class="n">get</span> <span class="n">a'</span> <span class="n">i</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val get : &#39;a version_tree -&gt; int -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val get : 'a version_tree -&gt; int -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -798,9 +798,9 @@ a2 ----&gt; (Diff 2 8)        (Diff 2 9) &lt;---- a3
 <span class="c">      are multiple diffs for an index, the outermost wins. E.g.,</span>
 <span class="c">      [Diff (i, x, Diff (i, y, Base a))] represents an array whose </span>
 <span class="c">      element [i] is [x], not [y]. *)</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span>
-    <span class="o">|</span> <span class="nc">Base</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">array</span>
-    <span class="o">|</span> <span class="nc">Diff</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span>
+    <span class="o">|</span> <span class="nc">Base</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="kt">array</span>
+    <span class="o">|</span> <span class="nc">Diff</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 
   <span class="c">(** Efficiency: O(n). *)</span>
   <span class="k">let</span> <span class="n">make</span> <span class="n">n</span> <span class="n">x</span> <span class="o">=</span> <span class="nc">Base</span> <span class="o">(</span><span class="nn">Array</span><span class="p">.</span><span class="n">make</span> <span class="n">n</span> <span class="n">x</span><span class="o">)</span>
@@ -815,8 +815,8 @@ a2 ----&gt; (Diff 2 8)        (Diff 2 9) &lt;---- a3
   <span class="k">let</span> <span class="k">rec</span> <span class="n">get</span> <span class="n">a</span> <span class="n">i</span> <span class="o">=</span>
     <span class="k">match</span> <span class="n">a</span> <span class="k">with</span>
     <span class="o">|</span> <span class="nc">Base</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="o">.(</span><span class="n">i</span><span class="o">)</span>
-    <span class="o">|</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">j</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a&#39;</span><span class="o">)</span> <span class="o">-&gt;</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="o">=</span> <span class="n">j</span> <span class="k">then</span> <span class="n">x</span> <span class="k">else</span> <span class="n">get</span> <span class="n">a&#39;</span> <span class="n">i</span>
+    <span class="o">|</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">j</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a'</span><span class="o">)</span> <span class="o">-&gt;</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">=</span> <span class="n">j</span> <span class="k">then</span> <span class="n">x</span> <span class="k">else</span> <span class="n">get</span> <span class="n">a'</span> <span class="n">i</span>
 
   <span class="c">(** Efficiency: O(1). *)</span>
   <span class="k">let</span> <span class="n">set</span> <span class="n">a</span> <span class="n">i</span> <span class="n">x</span> <span class="o">=</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a</span><span class="o">)</span>
@@ -845,16 +845,16 @@ a2 ----&gt; (Diff 2 8)        (Diff 2 9) &lt;---- a3
 <p>由于我们现在要改变树，因此需要更改表示类型以添加间接级别：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">rebasing_tree</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="n">ref</span>
-<span class="k">and</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span>
-  <span class="o">|</span> <span class="nc">Base</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">array</span>
-  <span class="o">|</span> <span class="nc">Diff</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">rebasing_tree</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">rebasing_tree</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="n">ref</span>
+<span class="k">and</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">Base</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="kt">array</span>
+  <span class="o">|</span> <span class="nc">Diff</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">rebasing_tree</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a rebasing_tree = &#39;a node ref
-and &#39;a node = Base of &#39;a array | Diff of int * &#39;a * &#39;a rebasing_tree
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a rebasing_tree = 'a node ref
+and 'a node = Base of 'a array | Diff of int * 'a * 'a rebasing_tree
 </pre></div>
 </div>
 </div>
@@ -868,10 +868,10 @@ and &#39;a node = Base of &#39;a array | Diff of int * &#39;a * &#39;a rebasing_
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val make : int -&gt; &#39;a -&gt; &#39;a node ref = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val make : int -&gt; 'a -&gt; 'a node ref = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val set : &#39;a rebasing_tree -&gt; int -&gt; &#39;a -&gt; &#39;a node ref = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val set : 'a rebasing_tree -&gt; int -&gt; 'a -&gt; 'a node ref = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -880,15 +880,15 @@ and &#39;a node = Base of &#39;a array | Diff of int * &#39;a * &#39;a rebasing_
 <p><strong>变基。</strong> 为了对树进行变基，我们引入了一个新的递归辅助函数 <code class="docutils literal notranslate"><span class="pre">rebase</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">rebasing_tree</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">rebasing</span> <span class="pre">tree</span></code> ，以便 <code class="docutils literal notranslate"><span class="pre">rebase</span> <span class="pre">t</span></code> 改变树 <code class="docutils literal notranslate"><span class="pre">t</span></code> ，使 <code class="docutils literal notranslate"><span class="pre">t</span></code> 表示的数组版本成为主要版本。因此，当 <code class="docutils literal notranslate"><span class="pre">rebase</span></code> 返回时 <code class="docutils literal notranslate"><span class="pre">t</span></code> 保证是对 <code class="docutils literal notranslate"><span class="pre">Base</span></code> 节点的引用。</p>
 <p>有两种情况需要考虑。首先，如果 <code class="docutils literal notranslate"><span class="pre">t</span></code> 是对 <code class="docutils literal notranslate"><span class="pre">Base</span></code> 节点的引用，那么我们的工作就已经完成了。该版本已经是主要版本。</p>
 <p>其次，如果 <code class="docutils literal notranslate"><span class="pre">t</span></code> 是对 <code class="docutils literal notranslate"><span class="pre">Diff</span></code> 节点的引用，那么我们还有工作要做。该节点的形式为 <code class="docutils literal notranslate"><span class="pre">Diff(i,</span> <span class="pre">x,</span> <span class="pre">t')</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">t'</span></code> 表示数组的另一个版本。我们在 <code class="docutils literal notranslate"><span class="pre">t'</span></code> 上调用 <code class="docutils literal notranslate"><span class="pre">rebase</span></code> 使其成为主要的；之后， <code class="docutils literal notranslate"><span class="pre">t'</span></code> 必须是对 <code class="docutils literal notranslate"><span class="pre">Base</span></code> 节点的引用。这意味着我们有以下情况，其中 <code class="docutils literal notranslate"><span class="pre">a</span></code> 是一个数组：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>t  ---&gt; Diff (i, x, t&#39;)
-t&#39; ---&gt; Base a
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>t  ---&gt; Diff (i, x, t')
+t' ---&gt; Base a
 </pre></div>
 </div>
 <p>要使 <code class="docutils literal notranslate"><span class="pre">t</span></code> 成为主节点，我们只需交换这些节点，并交换索引 <code class="docutils literal notranslate"><span class="pre">i</span></code> 处的值。
 假设在 <code class="docutils literal notranslate"><span class="pre">Base</span></code> 节点中 <code class="docutils literal notranslate"><span class="pre">a.(i)</span></code> 是 <code class="docutils literal notranslate"><span class="pre">y</span></code>。我们将 <code class="docutils literal notranslate"><span class="pre">a.(i)</span></code> 修改为 <code class="docutils literal notranslate"><span class="pre">x</span></code>；
 把该数组称为 <code class="docutils literal notranslate"><span class="pre">a'</span></code>。然后用 <code class="docutils literal notranslate"><span class="pre">y</span></code> 创建一个新的 <code class="docutils literal notranslate"><span class="pre">Diff</span></code> 节点：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>t  ---&gt; Base a&#39;
-t&#39; ---&gt; Diff (i, y, t)
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>t  ---&gt; Base a'
+t' ---&gt; Diff (i, y, t)
 </pre></div>
 </div>
 <p>现在 <code class="docutils literal notranslate"><span class="pre">t</span></code> 是主要的，代表与变基之前相同的数组版本。</p>
@@ -898,18 +898,18 @@ t&#39; ---&gt; Diff (i, y, t)
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">rebase</span> <span class="n">a</span> <span class="o">=</span>
   <span class="k">match</span> <span class="o">!</span><span class="n">a</span> <span class="k">with</span>
   <span class="o">|</span> <span class="nc">Base</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">b</span>
-  <span class="o">|</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a&#39;</span><span class="o">)</span> <span class="o">-&gt;</span>
-      <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="n">rebase</span> <span class="n">a&#39;</span> <span class="k">in</span>
+  <span class="o">|</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a'</span><span class="o">)</span> <span class="o">-&gt;</span>
+      <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="n">rebase</span> <span class="n">a'</span> <span class="k">in</span>
       <span class="k">let</span> <span class="n">old_x</span> <span class="o">=</span> <span class="n">b</span><span class="o">.(</span><span class="n">i</span><span class="o">)</span> <span class="k">in</span>
       <span class="n">b</span><span class="o">.(</span><span class="n">i</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="n">x</span><span class="o">;</span>
       <span class="n">a</span> <span class="o">:=</span> <span class="nc">Base</span> <span class="n">b</span><span class="o">;</span>
-      <span class="n">a&#39;</span> <span class="o">:=</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">old_x</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
+      <span class="n">a'</span> <span class="o">:=</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">old_x</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
       <span class="n">b</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val rebase : &#39;a rebasing_tree -&gt; &#39;a array = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val rebase : 'a rebasing_tree -&gt; 'a array = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -925,10 +925,10 @@ t&#39; ---&gt; Diff (i, y, t)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : &#39;a rebasing_tree -&gt; int = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val length : 'a rebasing_tree -&gt; int = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val get : &#39;a rebasing_tree -&gt; int -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val get : 'a rebasing_tree -&gt; int -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -939,30 +939,30 @@ t&#39; ---&gt; Diff (i, y, t)
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">RebasingVersionTreeArray</span> <span class="o">:</span> <span class="nc">PersistentArray</span> <span class="o">=</span> <span class="k">struct</span>
-  <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="n">ref</span>
+  <span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="n">ref</span>
   <span class="c">(** See [VersionTreeArray]. *)</span>
 
-  <span class="k">and</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span>
-    <span class="o">|</span> <span class="nc">Base</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">array</span>
-    <span class="o">|</span> <span class="nc">Diff</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">t</span>
+  <span class="k">and</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span>
+    <span class="o">|</span> <span class="nc">Base</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="kt">array</span>
+    <span class="o">|</span> <span class="nc">Diff</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">a</span> <span class="n">t</span>
 
   <span class="c">(** Efficiency: O(n). *)</span>
   <span class="k">let</span> <span class="n">make</span> <span class="n">n</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">(</span><span class="nc">Base</span> <span class="o">(</span><span class="nn">Array</span><span class="p">.</span><span class="n">make</span> <span class="n">n</span> <span class="n">x</span><span class="o">))</span>
 
   <span class="c">(** Efficiency: O(k), where k is the number of diffs between this version</span>
 <span class="c">      of the array and its base. At most, that is the number of [set] </span>
-<span class="c">      operations performed on all versions of the array. If there aren&#39;t </span>
+<span class="c">      operations performed on all versions of the array. If there aren't </span>
 <span class="c">      any diffs, O(1). After a [rebase], remains O(1) until a different </span>
 <span class="c">      version of the array is accessed. Not tail recursive. *)</span>
   <span class="k">let</span> <span class="k">rec</span> <span class="n">rebase</span> <span class="n">a</span> <span class="o">=</span>
     <span class="k">match</span> <span class="o">!</span><span class="n">a</span> <span class="k">with</span>
     <span class="o">|</span> <span class="nc">Base</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">b</span>
-    <span class="o">|</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a&#39;</span><span class="o">)</span> <span class="o">-&gt;</span>
-        <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="n">rebase</span> <span class="n">a&#39;</span> <span class="k">in</span>
+    <span class="o">|</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">a'</span><span class="o">)</span> <span class="o">-&gt;</span>
+        <span class="k">let</span> <span class="n">b</span> <span class="o">=</span> <span class="n">rebase</span> <span class="n">a'</span> <span class="k">in</span>
         <span class="k">let</span> <span class="n">old_x</span> <span class="o">=</span> <span class="n">b</span><span class="o">.(</span><span class="n">i</span><span class="o">)</span> <span class="k">in</span>
         <span class="n">b</span><span class="o">.(</span><span class="n">i</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="n">x</span><span class="o">;</span>
         <span class="n">a</span> <span class="o">:=</span> <span class="nc">Base</span> <span class="n">b</span><span class="o">;</span>
-        <span class="n">a&#39;</span> <span class="o">:=</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">old_x</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
+        <span class="n">a'</span> <span class="o">:=</span> <span class="nc">Diff</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">old_x</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
         <span class="n">b</span>
 
   <span class="c">(** Efficiency: Same as [rebase]. *)</span>

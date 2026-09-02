@@ -651,7 +651,7 @@ i ::= &lt;integers&gt;
 </pre></div>
 </div>
 <p>或作为</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= i | e + e&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>e ::= i | e + e'
 </pre></div>
 </div>
 <p>现在我们可以谈论 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 或 <code class="docutils literal notranslate"><span class="pre">e'</span></code> 而不必说“
@@ -903,10 +903,10 @@ open Parser
 <em>标识符</em>，称为正则表达式。这些将用于
 规则部分，接下来。</p>
 <p>以下是我们将在 SimPL 中使用的标识符：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>let white = [&#39; &#39; &#39;\t&#39;]+
-let digit = [&#39;0&#39;-&#39;9&#39;]
-let int = &#39;-&#39;? digit+
-let letter = [&#39;a&#39;-&#39;z&#39; &#39;A&#39;-&#39;Z&#39;]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>let white = [' ' '\t']+
+let digit = ['0'-'9']
+let int = '-'? digit+
+let letter = ['a'-'z' 'A'-'Z']
 let id = letter+
 </pre></div>
 </div>
@@ -937,19 +937,19 @@ let id = letter+
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>rule read =
   parse
   | white { read lexbuf }
-  | &quot;true&quot; { TRUE }
-  | &quot;false&quot; { FALSE }
-  | &quot;&lt;=&quot; { LEQ }
-  | &quot;*&quot; { TIMES }
-  | &quot;+&quot; { PLUS }
-  | &quot;(&quot; { LPAREN }
-  | &quot;)&quot; { RPAREN }
-  | &quot;let&quot; { LET }
-  | &quot;=&quot; { EQUALS }
-  | &quot;in&quot; { IN }
-  | &quot;if&quot; { IF }
-  | &quot;then&quot; { THEN }
-  | &quot;else&quot; { ELSE }
+  | "true" { TRUE }
+  | "false" { FALSE }
+  | "&lt;=" { LEQ }
+  | "*" { TIMES }
+  | "+" { PLUS }
+  | "(" { LPAREN }
+  | ")" { RPAREN }
+  | "let" { LET }
+  | "=" { EQUALS }
+  | "in" { IN }
+  | "if" { IF }
+  | "then" { THEN }
+  | "else" { ELSE }
   | id { ID (Lexing.lexeme lexbuf) }
   | int { INT (int_of_string (Lexing.lexeme lexbuf)) }
   | eof { EOF }
@@ -1030,10 +1030,10 @@ AST。将此代码放入名为 <code class="docutils literal notranslate"><span 
 </pre></div>
 </div>
 <p>现在 <code class="docutils literal notranslate"><span class="pre">Interp.Main.parse</span></code> 可供使用：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Main</span><span class="p">.</span><span class="n">parse</span> <span class="s2">&quot;let x = 3110 in x + x&quot;</span><span class="o">;;</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Main</span><span class="p">.</span><span class="n">parse</span> <span class="s2">"let x = 3110 in x + x"</span><span class="o">;;</span>
 <span class="o">-</span> <span class="o">:</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="n">expr</span> <span class="o">=</span>
-<span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Let</span> <span class="o">(</span><span class="s2">&quot;x&quot;</span><span class="o">,</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Int</span> <span class="mi">3110</span><span class="o">,</span>
- <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Binop</span> <span class="o">(</span><span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Add</span><span class="o">,</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Var</span> <span class="s2">&quot;x&quot;</span><span class="o">,</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Var</span> <span class="s2">&quot;x&quot;</span><span class="o">))</span>
+<span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Let</span> <span class="o">(</span><span class="s2">"x"</span><span class="o">,</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Int</span> <span class="mi">3110</span><span class="o">,</span>
+ <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Binop</span> <span class="o">(</span><span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Add</span><span class="o">,</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Var</span> <span class="s2">"x"</span><span class="o">,</span> <span class="nn">Interp</span><span class="p">.</span><span class="nn">Ast</span><span class="p">.</span><span class="nc">Var</span> <span class="s2">"x"</span><span class="o">))</span>
 </pre></div>
 </div>
 <p>这就完成了 SimPL 的词法分析和解析。</p>

@@ -240,8 +240,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">5.10. 总结</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">5.11. 练习</a></li>
@@ -669,27 +669,19 @@ BST 不变量。基于这个不变量，你总是知道是否要查看
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: make char map [★]</strong></p>
-<p>要创建标准库映射，我们首先必须使用 <code class="docutils literal notranslate"><span class="pre">Map.Make</span></code> 函子
-生成一个专门用于我们想要的键类型的模块。键入
-以下是 utop 中的内容：</p>
+<p>要创建标准库中的映射，首先要使用函子 <code class="docutils literal notranslate"><span class="pre">Map.Make</span></code>，生成一个专门处理所需键类型的模块。在 utop 中输入：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">module</span> <span class="nc">CharMap</span> <span class="o">=</span> <span class="nn">Map</span><span class="p">.</span><span class="nc">Make</span><span class="o">(</span><span class="nc">Char</span><span class="o">);;</span>
 </pre></div>
 </div>
-<p>输出告诉你已经定义了一个名为 <code class="docutils literal notranslate"><span class="pre">CharMap</span></code> 的新模块，并且它
-为你提供签名。在 中查找值 <code class="docutils literal notranslate"><span class="pre">empty</span></code>、<code class="docutils literal notranslate"><span class="pre">add</span></code> 和 <code class="docutils literal notranslate"><span class="pre">remove</span></code>
-那个签名。用你自己的话解释它们的类型。</p>
+<p>输出表明名为 <code class="docutils literal notranslate"><span class="pre">CharMap</span></code> 的新模块已经定义，并给出了它的签名。在签名中找到 <code class="docutils literal notranslate"><span class="pre">empty</span></code>、<code class="docutils literal notranslate"><span class="pre">add</span></code> 和 <code class="docutils literal notranslate"><span class="pre">remove</span></code>，用自己的话解释它们的类型。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: char ordered [★]</strong></p>
-<p><code class="docutils literal notranslate"><span class="pre">Map.Make</span></code> 函子要求其输入模块与 <code class="docutils literal notranslate"><span class="pre">Map.OrderedType</span></code> 匹配
-签名。查看 <a class="reference external" href="https://ocaml.org/api/Map.OrderedType.html">that signature</a> 以及
-<a class="reference external" href="https://ocaml.org/api/Char.html">signature for the <code class="docutils literal notranslate"><span class="pre">Char</span></code> module</a>。用你自己的话解释我们为什么
-允许将 <code class="docutils literal notranslate"><span class="pre">Char</span></code> 作为参数传递给 <code class="docutils literal notranslate"><span class="pre">Map.Make</span></code>。</p>
+<p>函子 <code class="docutils literal notranslate"><span class="pre">Map.Make</span></code> 要求输入模块匹配 <code class="docutils literal notranslate"><span class="pre">Map.OrderedType</span></code> 签名。阅读<a class="reference external" href="https://ocaml.org/api/Map.OrderedType.html">该签名</a>和 <a class="reference external" href="https://ocaml.org/api/Char.html"><code class="docutils literal notranslate"><span class="pre">Char</span></code> 模块的签名</a>，用自己的话解释为什么可以把 <code class="docutils literal notranslate"><span class="pre">Char</span></code> 作为参数传给 <code class="docutils literal notranslate"><span class="pre">Map.Make</span></code>。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: use char map [★★]</strong></p>
-<p>使用你刚刚制作的 <code class="docutils literal notranslate"><span class="pre">CharMap</span></code>，创建一个包含以下内容的映射
-绑定：</p>
+<p>使用刚创建的 <code class="docutils literal notranslate"><span class="pre">CharMap</span></code>，构造一个包含以下绑定的映射：</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">'A'</span></code> 映射到 <code class="docutils literal notranslate"><span class="pre">&quot;Alpha&quot;</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'E'</span></code> 映射到 <code class="docutils literal notranslate"><span class="pre">&quot;Echo&quot;</span></code></p></li>
@@ -704,7 +696,7 @@ BST 不变量。基于这个不变量，你总是知道是否要查看
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: bindings [★★]</strong></p>
-<p>调查 <a class="reference external" href="https://ocaml.org/api/Map.S.html">documentation of the <code class="docutils literal notranslate"><span class="pre">Map.S</span></code></a> 签名以找到
+<p>查阅 <a class="reference external" href="https://ocaml.org/api/Map.S.html"><code class="docutils literal notranslate"><span class="pre">Map.S</span></code> 签名的文档</a>，找到
 <code class="docutils literal notranslate"><span class="pre">bindings</span></code> 的规范。以下哪个表达式将返回相同的结果
 协会名单？</p>
 <ol class="arabic simple">
@@ -720,24 +712,16 @@ BST 不变量。基于这个不变量，你总是知道是否要查看
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">date</span> <span class="o">=</span> <span class="o">{</span><span class="n">month</span> <span class="o">:</span> <span class="kt">int</span><span class="o">;</span> <span class="n">day</span> <span class="o">:</span> <span class="kt">int</span><span class="o">}</span>
 </pre></div>
 </div>
-<p>例如，3 月 31 日将表示为 <code class="docutils literal notranslate"><span class="pre">{month</span> <span class="pre">=</span> <span class="pre">3;</span> <span class="pre">day</span> <span class="pre">=</span> <span class="pre">31}</span></code>。我们的
-接下来几个练习的目标是实现一个键具有类型的映射
-<code class="docutils literal notranslate"><span class="pre">date</span></code>。</p>
-<p>显然，可以使用 <code class="docutils literal notranslate"><span class="pre">date</span></code>—for 类型来表示无效日期
-例如，<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">month=6;</span> <span class="pre">day=50</span> <span class="pre">}</span></code> 是 6 月 50 日，即
-<a class="reference external" href="http://nbcparksandrec.tumblr.com/post/46760908046/march-31st-is-a-day">not a real date</a>。下面练习中代码的行为
-未指定无效日期。</p>
-<p>要创建日期映射，我们需要一个可以作为输入传递给的模块
-<code class="docutils literal notranslate"><span class="pre">Map.Make</span></code>。该模块需要匹配 <code class="docutils literal notranslate"><span class="pre">Map.OrderedType</span></code> 签名。
-创建这样一个模块。下面是一些可以帮助你入门的代码：</p>
+<p>例如，3 月 31 日表示为 <code class="docutils literal notranslate"><span class="pre">{month</span> <span class="pre">=</span> <span class="pre">3;</span> <span class="pre">day</span> <span class="pre">=</span> <span class="pre">31}</span></code>。接下来几个练习的目标，是实现一个以 <code class="docutils literal notranslate"><span class="pre">date</span></code> 为键类型的映射。</p>
+<p>显然，<code class="docutils literal notranslate"><span class="pre">date</span></code> 类型也能表示无效日期。例如，<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">month=6;</span> <span class="pre">day=50</span> <span class="pre">}</span></code> 表示 6 月 50 日，而这一天<a class="reference external" href="http://nbcparksandrec.tumblr.com/post/46760908046/march-31st-is-a-day">并不存在</a>。对于无效日期，下面练习中的代码行为不作规定。</p>
+<p>要创建日期映射，需要向 <code class="docutils literal notranslate"><span class="pre">Map.Make</span></code> 传入一个匹配 <code class="docutils literal notranslate"><span class="pre">Map.OrderedType</span></code> 签名的模块。请创建这样的模块。下面的代码可以作为起点：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">Date</span> <span class="o">=</span> <span class="k">struct</span>
   <span class="k">type</span> <span class="n">t</span> <span class="o">=</span> <span class="n">date</span>
   <span class="k">let</span> <span class="n">compare</span> <span class="o">...</span>
 <span class="k">end</span>
 </pre></div>
 </div>
-<p>在编写时回忆一下 <code class="docutils literal notranslate"><span class="pre">Map.OrderedType</span></code> 中的 <a class="reference external" href="https://ocaml.org/api/Map.OrderedType.html">specification of <code class="docutils literal notranslate"><span class="pre">compare</span></code></a>
-你的 <code class="docutils literal notranslate"><span class="pre">Date.compare</span></code> 函数。</p>
+<p>编写 <code class="docutils literal notranslate"><span class="pre">Date.compare</span></code> 时，请回顾 <code class="docutils literal notranslate"><span class="pre">Map.OrderedType</span></code> 中 <a class="reference external" href="https://ocaml.org/api/Map.OrderedType.html"><code class="docutils literal notranslate"><span class="pre">compare</span></code> 的规范</a>。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: calendar [★★]</strong></p>
@@ -746,17 +730,13 @@ BST 不变量。基于这个不变量，你总是知道是否要查看
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">calendar</span> <span class="o">=</span> <span class="kt">string</span> <span class="nn">DateMap</span><span class="p">.</span><span class="n">t</span>
 </pre></div>
 </div>
-<p>这个想法是 <code class="docutils literal notranslate"><span class="pre">calendar</span></code> 将 <code class="docutils literal notranslate"><span class="pre">date</span></code> 映射到发生在
-那个日期。</p>
-<p>使用 <code class="docutils literal notranslate"><span class="pre">DateMap</span></code> 模块中的函数，创建一个包含一些内容的日历
-其中的条目，例如生日或周年纪念日。</p>
+<p><code class="docutils literal notranslate"><span class="pre">calendar</span></code> 的含义是把一个 <code class="docutils literal notranslate"><span class="pre">date</span></code> 映射到当天发生的事件名称。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">DateMap</span></code> 模块中的函数，创建一个包含若干事件的日历，例如生日或纪念日。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: print calendar [★★]</strong></p>
-<p>编写一个函数 <code class="docutils literal notranslate"><span class="pre">print_calendar</span> <span class="pre">:</span> <span class="pre">calendar</span> <span class="pre">-&gt;</span> <span class="pre">unit</span></code> 来打印 a 中的每个条目
-日历的格式类似于上一个练习中鼓舞人心的示例。
-<em>提示：使用 <code class="docutils literal notranslate"><span class="pre">DateMap.iter</span></code>，它记录在
-<a class="reference external" href="https://ocaml.org/api/Map.S.html"><code class="docutils literal notranslate"><span class="pre">Map.S</span></code> signature</a>.</em></p>
+<p>编写函数 <code class="docutils literal notranslate"><span class="pre">print_calendar</span> <span class="pre">:</span> <span class="pre">calendar</span> <span class="pre">-&gt;</span> <span class="pre">unit</span></code>，以类似上一题示例的格式打印日历中的每个条目。
+<em>提示：使用 <a class="reference external" href="https://ocaml.org/api/Map.S.html"><code class="docutils literal notranslate"><span class="pre">Map.S</span></code> 签名</a>中记录的 <code class="docutils literal notranslate"><span class="pre">DateMap.iter</span></code>。</em></p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: is for [★★★]</strong></p>
@@ -833,10 +813,10 @@ BST 不变量。基于这个不变量，你总是知道是否要查看
 <span class="k">let</span> <span class="n">make_date</span> <span class="n">month</span> <span class="n">day</span> <span class="o">=</span> <span class="o">{</span><span class="n">month</span><span class="o">;</span> <span class="n">day</span><span class="o">}</span>
 <span class="k">let</span> <span class="n">get_month</span> <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">month</span>
 <span class="k">let</span> <span class="n">get_day</span> <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">day</span>
-<span class="k">let</span> <span class="n">to_string</span> <span class="n">d</span> <span class="o">=</span> <span class="o">(</span><span class="n">string_of_int</span> <span class="n">d</span><span class="o">.</span><span class="n">month</span><span class="o">)</span> <span class="o">^</span> <span class="s2">&quot;/&quot;</span> <span class="o">^</span> <span class="o">(</span><span class="n">string_of_int</span> <span class="n">d</span><span class="o">.</span><span class="n">day</span><span class="o">)</span>
+<span class="k">let</span> <span class="n">to_string</span> <span class="n">d</span> <span class="o">=</span> <span class="o">(</span><span class="n">string_of_int</span> <span class="n">d</span><span class="o">.</span><span class="n">month</span><span class="o">)</span> <span class="o">^</span> <span class="s2">"/"</span> <span class="o">^</span> <span class="o">(</span><span class="n">string_of_int</span> <span class="n">d</span><span class="o">.</span><span class="n">day</span><span class="o">)</span>
 </pre></div>
 </div>
-<p>还创建一个Dune文件：</p>
+<p>再创建一个 Dune 文件：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(library
  (name date))
 </pre></div>
@@ -858,7 +838,7 @@ BST 不变量。基于这个不变量，你总是知道是否要查看
 <span class="k">val</span> <span class="n">to_string</span> <span class="o">:</span> <span class="n">date</span> <span class="o">-&gt;</span> <span class="kt">string</span>
 </pre></div>
 </div>
-<p>然后在utop中重新做之前同样的工作。</p>
+<p>然后在 utop 中重复刚才的操作。</p>
 <!--------------------------------------------------------------------------->
 <hr class="docutils" />
 <p><strong>Exercise: implementation with abstracted interface [★]</strong></p>
@@ -891,42 +871,21 @@ BST 不变量。基于这个不变量，你总是知道是否要查看
 <p>下载此文件：<a href="../../code/algebra.ml">algebra.ml</a>。它
 包含这些签名和结构：</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Ring</span></code> 是描述称为 <em><a class="reference external" href="https://en.wikipedia.org/wiki/Ring_(mathematics)">ring</a></em> 的代数结构的签名，
+<li><p><code class="docutils literal notranslate"><span class="pre">Ring</span></code> 是描述*<a class="reference external" href="https://en.wikipedia.org/wiki/Ring_(mathematics)">环（ring）</a>*这一代数结构的签名，
 这是加法和乘法运算符的抽象。</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Field</span></code> 是一个描述代数结构的签名，称为
-<em><a class="reference external" href="https://en.wikipedia.org/wiki/Field_(mathematics)">field</a></em>，就像一个环，但也有除法的抽象
-操作。</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">IntRing</span></code> 和 <code class="docutils literal notranslate"><span class="pre">FloatRing</span></code> 是根据以下方式实现环的结构
-<code class="docutils literal notranslate"><span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">float</span></code>。</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">IntField</span></code> 和 <code class="docutils literal notranslate"><span class="pre">FloatField</span></code> 是根据以下方式实现字段的结构
-<code class="docutils literal notranslate"><span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">float</span></code>。</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">IntRational</span></code> 和 <code class="docutils literal notranslate"><span class="pre">FloatRational</span></code> 是实现字段的结构
-比率项（又名分数）—，即 <code class="docutils literal notranslate"><span class="pre">int</span></code> 对和 <code class="docutils literal notranslate"><span class="pre">int</span></code> 对
-<code class="docutils literal notranslate"><span class="pre">float</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Field</span></code> 是描述*<a class="reference external" href="https://en.wikipedia.org/wiki/Field_(mathematics)">域（field）</a>*这一代数结构的签名。域与环相似，但还抽象了除法运算。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IntRing</span></code> 和 <code class="docutils literal notranslate"><span class="pre">FloatRing</span></code> 分别以 <code class="docutils literal notranslate"><span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">float</span></code> 实现环。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IntField</span></code> 和 <code class="docutils literal notranslate"><span class="pre">FloatField</span></code> 分别以 <code class="docutils literal notranslate"><span class="pre">int</span></code> 和 <code class="docutils literal notranslate"><span class="pre">float</span></code> 实现域。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IntRational</span></code> 和 <code class="docutils literal notranslate"><span class="pre">FloatRational</span></code> 用比值（也就是分数）实现域；前者以一对 <code class="docutils literal notranslate"><span class="pre">int</span></code> 表示分数，后者以一对 <code class="docutils literal notranslate"><span class="pre">float</span></code> 表示。</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p>亲爱的抽象代数爱好者：当然这些表示不一定
-由于机器的限制，遵守环和域的所有公理
-算术。此外，<code class="docutils literal notranslate"><span class="pre">IntField</span></code> 中的除法运算对于零的定义不明确。
-尽量不要担心这个。</p>
+<p>致抽象代数爱好者：受机器算术所限，这些表示当然未必满足环与域的全部公理。此外，<code class="docutils literal notranslate"><span class="pre">IntField</span></code> 的除法运算在除数为零时没有良好定义。这里暂且不必深究。</p>
 </div>
-<p>重构代码以提高代码重用率。为此，
-使用 <code class="docutils literal notranslate"><span class="pre">include</span></code>、函子，并引入额外的结构和签名：
-需要。这里不一定有正确的答案，但这里有一些建议：</p>
+<p>重构代码以提高代码重用程度。请使用 <code class="docutils literal notranslate"><span class="pre">include</span></code> 和函子，并按需引入额外的结构与签名。本题不一定只有一种正确答案，下面给出一些建议：</p>
 <ul class="simple">
-<li><p>不应在多个签名中”直接声明”任何名称。例如，
-<code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code> 不应直接在 <code class="docutils literal notranslate"><span class="pre">Field</span></code> 中声明；它应该被重复使用
-较早的签名。 “直接声明”是指以下形式的声明
-<code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">name</span> <span class="pre">:</span> <span class="pre">...</span></code>。间接声明是由以下结果产生的声明：
-<code class="docutils literal notranslate"><span class="pre">include</span></code>。</p></li>
-<li><p>你只需要代数运算的三个”直接定义”
-数字（加、减、乘、除、零、一）：一次用于 <code class="docutils literal notranslate"><span class="pre">int</span></code>，一次用于
-<code class="docutils literal notranslate"><span class="pre">float</span></code>，一次用于比率。例如，<code class="docutils literal notranslate"><span class="pre">IntField.(</span> <span class="pre">+</span> <span class="pre">)</span></code> 不应该是
-直接定义为<code class="docutils literal notranslate"><span class="pre">Stdlib.(</span> <span class="pre">+</span> <span class="pre">)</span></code>；相反，它应该被重用
-其他地方。 “直接定义”是指形式的定义
-<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">name</span> <span class="pre">=</span> <span class="pre">...</span></code>。间接定义是由以下结果得出的定义：
-<code class="docutils literal notranslate"><span class="pre">include</span></code> 或函子应用程序。</p></li>
+<li><p>任何名称都不应在多个签名中“直接声明”。例如，<code class="docutils literal notranslate"><span class="pre">Field</span></code> 不应再次直接声明 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">+</span> <span class="pre">)</span></code>，而应重用此前签名中的声明。“直接声明”指 <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">name</span> <span class="pre">:</span> <span class="pre">...</span></code> 形式的声明；由 <code class="docutils literal notranslate"><span class="pre">include</span></code> 带入的声明属于间接声明。</p></li>
+<li><p>对代数运算与数值（加、减、乘、除、零和一），只需三组“直接定义”：分别用于 <code class="docutils literal notranslate"><span class="pre">int</span></code>、<code class="docutils literal notranslate"><span class="pre">float</span></code> 和比值。例如，不应把 <code class="docutils literal notranslate"><span class="pre">IntField.(</span> <span class="pre">+</span> <span class="pre">)</span></code> 直接定义为 <code class="docutils literal notranslate"><span class="pre">Stdlib.(</span> <span class="pre">+</span> <span class="pre">)</span></code>，而应从别处重用。“直接定义”指 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">name</span> <span class="pre">=</span> <span class="pre">...</span></code> 形式的定义；由 <code class="docutils literal notranslate"><span class="pre">include</span></code> 或函子应用带入的定义属于间接定义。</p></li>
 <li><p>有理结构都可以由单个函子产生，即
 对 <code class="docutils literal notranslate"><span class="pre">IntRing</span></code> 应用一次，对 <code class="docutils literal notranslate"><span class="pre">FloatRing</span></code> 应用一次。</p></li>
 <li><p>可以消除 <code class="docutils literal notranslate"><span class="pre">of_int</span></code> 的所有重复，这样它就是

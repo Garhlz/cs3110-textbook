@@ -534,18 +534,18 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">5.1. </span>模块系统<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>编程语言的<em>模块系统</em>（module system）是该语言提供的一组用于支持模块化编程的机制。下面列出模块系统通常需要处理的几个问题。讨论时我们主要比较 Java 和 OCaml，并指出两种语言中最相关的机制。</p>
-<p><strong>命名空间。</strong> <em>命名空间</em>（namespace）提供一组组织在一起的名称，这些名称通常在逻辑上相关，并且与其他命名空间相互隔离。因此，一个命名空间中的名称 <code class="docutils literal notranslate"><span class="pre">foo</span></code> 可以和另一个命名空间中的 <code class="docutils literal notranslate"><span class="pre">foo</span></code> 含义不同。命名空间是一种作用域机制，对模块化至关重要。没有命名空间，一个程序员选择的名称很容易与另一个程序员选择的名称冲突。在 Java 中，类和包将名称组织起来。在 OCaml 中，<em>结构</em>（structure，我们很快就会学习）也类似地将名称组织在一起，但它们不附带面向对象编程中类所通常伴随的复杂性（构造函数、静态成员与实例成员、继承、重写、<code class="docutils literal notranslate"><span class="pre">this</span></code> 等）。结构是 OCaml 模块系统的核心；事实上，我们一直在使用它们，只是还没有仔细讨论过。</p>
-<p><strong>抽象。</strong> <em>抽象</em>（abstraction）隐藏一部分信息，同时揭示另一部分信息。因此，抽象可以实现<em>封装</em>（encapsulation），也就是<em>信息隐藏</em>（information hiding）。通常，模块的抽象机制允许暴露模块内部的部分名称，同时隐藏另一些名称。因此，抽象描述的是模块之间的一种关系：许多不同的模块都可以被视为满足同一个抽象。抽象对于模块化至关重要，因为它让模块实现者能够向客户端隐藏实现细节，从而防止客户端依赖或滥用这些细节。在大型团队中，这可以保护一个程序员设计的模块不被另一个程序员误用；同时也让客户端不必了解这些细节。因此，在大型团队中，没有任何程序员需要了解所有模块的全部细节。在 Java 中，接口和抽象类提供了抽象。在 OCaml 中，<em>签名</em>（signature）通过隐藏结构中的某些名称和定义来抽象结构。签名本质上就是结构的类型。</p>
-<p><strong>代码重用。</strong> 模块系统还会提供<em>代码重用</em>机制，让一个模块中的代码可以成为另一个模块的一部分，而不必手动复制。代码重用让程序员能够以可维护的方式建立在其他模块之上：当某个模块的实现者改进了该模块，所有重用这段代码的程序员都会自动受益。代码重用对于模块化很关键，因为它让我们能够将”构建块”反复组装成复杂的软件。在 Java 中，子类型和继承提供代码重用。在 OCaml 中，<em>函子</em>（functor）和 <em>include</em> 提供代码重用。函子就像函数一样，从已有模块生成新模块。<code class="docutils literal notranslate"><span class="pre">include</span></code> 则像一种有原则的复制粘贴：把程序某个部分的代码纳入另一个部分。</p>
+<p>编程语言的<em>模块系统</em>（module system），是这门语言为模块化编程提供的一整套机制。下面介绍模块系统通常关注的几个方面，并以 Java 和 OCaml 为主，对照两种语言中关系最密切的特性。</p>
+<p><strong>命名空间。</strong> <em>命名空间</em>（namespace）把一组通常具有逻辑关联的名称组织在一起，并与其他命名空间隔离开来。这样，同名的 <code class="docutils literal notranslate"><span class="pre">foo</span></code> 位于不同命名空间时，就可以表示不同的含义。因此，命名空间也是一种作用域机制，对模块化至关重要；没有它，一个程序员取的名称很容易与另一个程序员的名称发生冲突。Java 用类和包组织名称。OCaml 则使用我们很快会学到的<em>结构</em>（structure）。结构在组织名称这一点上与类相似，却没有构造函数、静态成员与实例成员、继承、重写、<code class="docutils literal notranslate"><span class="pre">this</span></code> 等面向对象机制带来的额外复杂度。结构是 OCaml 模块系统的核心。事实上，我们一直都在使用结构，只是还没有认真考察过它们。</p>
+<p><strong>抽象。</strong> <em>抽象</em>（abstraction）在隐藏一部分信息的同时，揭示另一部分信息，从而实现<em>封装</em>（encapsulation），也就是<em>信息隐藏</em>（information hiding）。模块的抽象机制通常会公开内部的某些名称，同时藏起另一些名称。因此，抽象刻画的是模块之间的一种关系：不同模块都可能满足同一个抽象。抽象对模块化不可或缺，因为实现者可以借此隐藏实现细节，防止客户端依赖甚至滥用这些细节；客户端也得以安心地忽略它们。在大型团队中，一个程序员设计的模块由此不易被他人误用，也没有谁必须掌握所有模块的全部细节。Java 通过接口和抽象类提供抽象；OCaml 则使用<em>签名</em>（signature），隐藏结构中的某些名称和定义。签名本质上就是结构的类型。</p>
+<p><strong>代码重用。</strong> 模块系统还会提供<em>代码重用</em>机制，让一个模块中的代码成为另一个模块的一部分，而无须手工复制。程序员因而可以在他人成果的基础上继续开发，同时保持代码易于维护：一个模块得到改进后，所有重用它的程序员都会自动受益。代码重用对模块化至关重要，因为它让我们能够反复组合各种“构件”，搭建出复杂的软件。在 Java 中，子类型和继承支持代码重用；在 OCaml 中，对应的机制是<em>函子</em>（functor）和 <code class="docutils literal notranslate"><span class="pre">include</span></code>。函子类似于函数，能够根据已有模块生成新模块；<code class="docutils literal notranslate"><span class="pre">include</span></code> 则像一种遵循规则的复制粘贴，把程序一处的代码纳入另一处。</p>
 <div class="admonition warning">
 <p class="admonition-title">警告</p>
-<p>Java 和 OCaml 之间的这些类比必然不完美。读完上面的讨论后，你可能很自然地会想到下面任意一种说法：</p>
+<p>Java 与 OCaml 之间的这些类比注定不够严密。读完上面的讨论，你很容易得出以下某一种印象：</p>
 <ul class="simple">
 <li><p>“结构就像 Java 类，签名就像接口。”</p></li>
 <li><p>“结构就像 Java 对象，签名就像类。”</p></li>
 </ul>
-<p>两种说法都有一定帮助，但最终都不准确。所以此时最好暂时放下面向对象编程的类比，直接理解 OCaml 模块系统本身。它和 Java 的组织方式确实不同。</p>
+<p>两种说法都能帮助我们初步理解，却都不完全正确。因此，不妨暂时放下面向对象编程的类比，直接认识 OCaml 模块系统本身。与 Java 相比，它的构造方式确实另有一套思路。</p>
 </div>
 </section>
 

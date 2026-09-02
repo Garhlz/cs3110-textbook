@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>5.7. 模块类型限制 &#8212; OCaml 编程：正确、高效、优美</title>
+    <title>5.7. 模块类型约束 &#8212; OCaml 编程：正确、高效、优美</title>
   
   
   
@@ -69,7 +69,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../../_static/op.png"/>
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
-    <link rel="next" title="5.8. Include" href="includes.html" />
+    <link rel="next" title="5.8. Include：纳入定义" href="includes.html" />
     <link rel="prev" title="5.6. 函数式数据结构" href="functional_data_structures.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-CN"/>
@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exercises.html">5.11. 练习</a></li>
@@ -586,7 +586,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>模块类型限制</h1>
+    <h1>模块类型约束</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -610,11 +610,9 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1><span class="section-number">5.7. </span>模块类型限制<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>我们赞扬了封装的优点。现在我们要做点什么
-这可能看起来违反直觉：选择性地违反封装。</p>
-<p>作为一个激励示例，这里是一个模块类型，它表示以下值：
-支持算术中常见的加法和乘法运算，或更准确地说，支持 <em><a class="reference external" href="https://en.wikipedia.org/wiki/Ring_(mathematics)">ring</a></em>：</p>
+<h1><span class="section-number">5.7. </span>模块类型约束<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<p>前面我们一直在称赞封装的好处，现在却要做一件看似违背直觉的事：有选择地打破封装。</p>
+<p>先看一个引出问题的例子。下面的模块类型描述了一组支持常见算术运算的值；更准确地说，它描述了一个*<a class="reference external" href="https://en.wikipedia.org/wiki/Ring_(mathematics)">环（ring）</a>*：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Ring</span> <span class="o">=</span> <span class="k">sig</span>
@@ -644,12 +642,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>回想一下，我们必须写 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">*</span> <span class="pre">)</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">(*)</span></code> 因为后者会
-解析为注释的开始。我们在 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">~-</span> <span class="pre">)</span></code> 中写入 <code class="docutils literal notranslate"><span class="pre">~</span></code> 来指示
-<em>一元</em>运算符。</p>
-<p>这是一个有点奇怪的例子。我们通常不认为数字是数据
-结构。但是，除了一组值和之外，数据结构是什么？
-对他们进行操作？ <code class="docutils literal notranslate"><span class="pre">Ring</span></code> 模块类型清楚地表明这就是我们所拥有的。</p>
+<p>回想一下，这里必须写 <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">*</span> <span class="pre">)</span></code> 而不能写 <code class="docutils literal notranslate"><span class="pre">(*)</span></code>，因为后者会被解析为注释的开头。<code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">~-</span> <span class="pre">)</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">~</span></code> 则表示这是一个<em>一元</em>运算符。</p>
+<p>这个例子看起来有些奇怪，因为我们通常不会把数看成数据结构。但数据结构不正是一组值，以及作用于这些值的操作吗？<code class="docutils literal notranslate"><span class="pre">Ring</span></code> 模块类型清楚地表明，这里确实具备这两样东西。</p>
 <p>这是实现该模块类型的模块：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -671,8 +665,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>因为 <code class="docutils literal notranslate"><span class="pre">t</span></code> 是抽象的，所以顶层不能给我们提供关于什么的良好输出。
-一和一的和是：</p>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">t</span></code> 是抽象类型，顶层无法友好地显示一加一的结果：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="nn">IntRing</span><span class="p">.</span><span class="o">(</span><span class="n">one</span> <span class="o">+</span> <span class="n">one</span><span class="o">)</span>
@@ -693,17 +686,16 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = &quot;2&quot;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : string = "2"
 </pre></div>
 </div>
 </div>
 </div>
-<p>我们甚至可以安装一台漂亮的打印机，以避免手动调用
-<code class="docutils literal notranslate"><span class="pre">to_string</span></code>：</p>
+<p>我们还可以注册一个美化打印函数，省去手动调用 <code class="docutils literal notranslate"><span class="pre">to_string</span></code> 的麻烦：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">pp_intring</span> <span class="n">fmt</span> <span class="n">i</span> <span class="o">=</span>
-  <span class="nn">Format</span><span class="p">.</span><span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">&quot;%s&quot;</span> <span class="o">(</span><span class="nn">IntRing</span><span class="p">.</span><span class="n">to_string</span> <span class="n">i</span><span class="o">);;</span>
+  <span class="nn">Format</span><span class="p">.</span><span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">"%s"</span> <span class="o">(</span><span class="nn">IntRing</span><span class="p">.</span><span class="n">to_string</span> <span class="n">i</span><span class="o">);;</span>
 
 <span class="o">#</span><span class="n">install_printer</span> <span class="n">pp_intring</span><span class="o">;;</span>
 
@@ -745,7 +737,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">pp_floatring</span> <span class="n">fmt</span> <span class="n">f</span> <span class="o">=</span>
-  <span class="nn">Format</span><span class="p">.</span><span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">&quot;%s&quot;</span> <span class="o">(</span><span class="nn">FloatRing</span><span class="p">.</span><span class="n">to_string</span> <span class="n">f</span><span class="o">);;</span>
+  <span class="nn">Format</span><span class="p">.</span><span class="n">fprintf</span> <span class="n">fmt</span> <span class="s2">"%s"</span> <span class="o">(</span><span class="nn">FloatRing</span><span class="p">.</span><span class="n">to_string</span> <span class="n">f</span><span class="o">);;</span>
 
 <span class="o">#</span><span class="n">install_printer</span> <span class="n">pp_floatring</span><span class="o">;;</span>
 
@@ -762,10 +754,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>真的需要在上面的环示例中使类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 抽象吗？
-可以说不是。如果它不是抽象的，我们就不必这么麻烦
-将抽象值转换为字符串，或安装打印机。我们来追求
-这个想法，接下来。</p>
+<p>上面的环真的需要把类型 <code class="docutils literal notranslate"><span class="pre">t</span></code> 设为抽象类型吗？未必。如果 <code class="docutils literal notranslate"><span class="pre">t</span></code> 不抽象，我们就无须费力把抽象值转成字符串，也不用注册打印函数。下面就沿着这个思路继续探索。</p>
 <section id="id2">
 <h2><span class="section-number">5.7.1. </span>特化模块类型<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <p>在过去，我们已经看到我们可以省略模块类型注释，
@@ -843,9 +832,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>请注意 <code class="docutils literal notranslate"><span class="pre">INT_RING</span></code> 模块类型现在如何指定 <code class="docutils literal notranslate"><span class="pre">t</span></code> 和 <code class="docutils literal notranslate"><span class="pre">int</span></code> 是
-相同类型。它向世界揭露或”分享”这一事实，因此我们可以
-称这些为”共享约束”。</p>
+<p>注意，模块类型 <code class="docutils literal notranslate"><span class="pre">INT_RING</span></code> 现在明确规定 <code class="docutils literal notranslate"><span class="pre">t</span></code> 与 <code class="docutils literal notranslate"><span class="pre">int</span></code> 是同一种类型。它对外公开——或者说“共享”——了这个事实，因此这种约束称为<em>共享约束</em>。</p>
 <p>现在 <code class="docutils literal notranslate"><span class="pre">IntRing</span></code> 可以被赋予该模块类型：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1108,7 +1095,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">下一页</p>
-        <p class="prev-next-title"><span class="section-number">5.8. </span>Include</p>
+        <p class="prev-next-title"><span class="section-number">5.8. </span>Include：纳入定义</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

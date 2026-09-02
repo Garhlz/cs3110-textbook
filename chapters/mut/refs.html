@@ -945,12 +945,12 @@ document.write(`
 <p>在 C 这类语言中，指针结合了两个特性：它们可以为空，并且可以改变。（Java 中有一个类似的对象引用构造，但是”引用”这个术语在当前的 OCaml 上下文中容易造成困惑，因为我们现在用”引用”表示引用单元。所以这里我们使用”指针”一词。）让我们用 OCaml 的引用单元来编写指针。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">ref</span> <span class="n">option</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">pointer</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">ref</span> <span class="n">option</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a pointer = &#39;a ref option
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a pointer = 'a ref option
 </pre></div>
 </div>
 </div>
@@ -959,12 +959,12 @@ document.write(`
 指针可能为空。我们使用 <code class="docutils literal notranslate"><span class="pre">None</span></code> 来表示这种可能性。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">null</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span> <span class="o">=</span> <span class="nc">None</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">null</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">pointer</span> <span class="o">=</span> <span class="nc">None</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val null : &#39;a pointer = None
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val null : 'a pointer = None
 </pre></div>
 </div>
 </div>
@@ -974,12 +974,12 @@ document.write(`
 指针：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">malloc</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span> <span class="o">=</span> <span class="nc">Some</span> <span class="o">(</span><span class="n">ref</span> <span class="n">x</span><span class="o">)</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">malloc</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">pointer</span> <span class="o">=</span> <span class="nc">Some</span> <span class="o">(</span><span class="n">ref</span> <span class="n">x</span><span class="o">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val malloc : &#39;a -&gt; &#39;a pointer = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val malloc : 'a -&gt; 'a pointer = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1003,7 +1003,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">exception</span> <span class="nc">Segfault</span>
 
-<span class="k">let</span> <span class="n">deref</span> <span class="o">(</span><span class="n">ptr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">=</span>
+<span class="k">let</span> <span class="n">deref</span> <span class="o">(</span><span class="n">ptr</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">pointer</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">ptr</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Segfault</span> <span class="o">|</span> <span class="nc">Some</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="o">!</span><span class="n">r</span>
 </pre></div>
 </div>
@@ -1012,7 +1012,7 @@ document.write(`
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>exception Segfault
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val deref : &#39;a pointer -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val deref : 'a pointer -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1037,9 +1037,9 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: Segfault.
-<span class="n">Raised</span> <span class="n">at</span> <span class="n">deref</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[17]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">4</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">25</span><span class="o">-</span><span class="mi">39</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[19]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">10</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+<span class="n">Raised</span> <span class="n">at</span> <span class="n">deref</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"[17]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">4</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">25</span><span class="o">-</span><span class="mi">39</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"[19]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">10</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"toplevel/byte/topeval.ml"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
 </pre></div>
 </div>
 </div>
@@ -1054,7 +1054,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( ~* ) : &#39;a pointer -&gt; &#39;a = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( ~* ) : 'a pointer -&gt; 'a = &lt;fun&gt;
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : int = 42
@@ -1067,13 +1067,13 @@ document.write(`
 该运算符如下：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">assign</span> <span class="o">(</span><span class="n">ptr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span><span class="o">)</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">assign</span> <span class="o">(</span><span class="n">ptr</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">pointer</span><span class="o">)</span> <span class="o">(</span><span class="n">x</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">ptr</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">Segfault</span> <span class="o">|</span> <span class="nc">Some</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="n">r</span> <span class="o">:=</span> <span class="n">x</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val assign : &#39;a pointer -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val assign : 'a pointer -&gt; 'a -&gt; unit = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1099,9 +1099,9 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span>: Segfault.
-<span class="n">Raised</span> <span class="n">at</span> <span class="n">assign</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[21]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">25</span><span class="o">-</span><span class="mi">39</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;[23]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">13</span>
-<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">&quot;toplevel/byte/topeval.ml&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
+<span class="n">Raised</span> <span class="n">at</span> <span class="n">assign</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"[21]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">25</span><span class="o">-</span><span class="mi">39</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">unknown</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"[23]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">0</span><span class="o">-</span><span class="mi">13</span>
+<span class="n">Called</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Topeval.load_lambda</span> <span class="ow">in</span> <span class="n">file</span> <span class="s2">"toplevel/byte/topeval.ml"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">93</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">4</span><span class="o">-</span><span class="mi">14</span>
 </pre></div>
 </div>
 </div>
@@ -1118,7 +1118,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( =* ) : &#39;a pointer -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val ( =* ) : 'a pointer -&gt; 'a -&gt; unit = &lt;fun&gt;
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
@@ -1138,7 +1138,7 @@ document.write(`
 <p>好吧，我们刚才所说的实际上并不正确，但这很危险
 你根本不应该依赖的知识。有一个未文档化的
 函数 <code class="docutils literal notranslate"><span class="pre">Obj.magic</span></code> 我们可以用来获取引用的内存地址：</p>
-<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">address</span> <span class="o">(</span><span class="n">ptr</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">pointer</span><span class="o">)</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">=</span>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">address</span> <span class="o">(</span><span class="n">ptr</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">pointer</span><span class="o">)</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">=</span>
   <span class="k">match</span> <span class="n">ptr</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="mi">0</span> <span class="o">|</span> <span class="nc">Some</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="nn">Obj</span><span class="p">.</span><span class="n">magic</span> <span class="n">r</span>
 
 <span class="k">let</span> <span class="o">(</span> <span class="o">~&amp;</span> <span class="o">)</span> <span class="o">=</span> <span class="n">address</span>
@@ -1291,7 +1291,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fact0 : (&#39;_weak1 -&gt; &#39;_weak1) ref = {contents = &lt;fun&gt;}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val fact0 : ('_weak1 -&gt; '_weak1) ref = {contents = &lt;fun&gt;}
 </pre></div>
 </div>
 </div>
@@ -1321,7 +1321,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : &#39;_weak1 -&gt; &#39;_weak1 = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : '_weak1 -&gt; '_weak1 = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1355,13 +1355,13 @@ document.write(`
 可以使用它。例如，它不能应用于字符串。</p>
 <div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="n">fact0</span> <span class="s2">&quot;camel&quot;</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="n">fact0</span> <span class="s2">"camel"</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;[36]&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">7</span><span class="o">-</span><span class="mi">14</span><span class="p">:</span>
-<span class="mi">1</span> <span class="o">|</span> <span class="o">!</span>fact0<span class="w"> </span><span class="s2">&quot;camel&quot;</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">"[36]"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">characters</span> <span class="mi">7</span><span class="o">-</span><span class="mi">14</span><span class="p">:</span>
+<span class="mi">1</span> <span class="o">|</span> <span class="o">!</span>fact0<span class="w"> </span><span class="s2">"camel"</span>
            <span class="o">^^^^^^^</span>
 <span class="ne">Error</span>: This constant has type string but an expression was expected of type
          <span class="nb">int</span>
@@ -1515,20 +1515,20 @@ Garrigue，或 OCaml 手册的 <a class="reference external" href="https://ocaml
 类型为 <code class="docutils literal notranslate"><span class="pre">'a</span></code>。  节点的 <code class="docutils literal notranslate"><span class="pre">next</span></code> 字段本身就是另一个列表。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** An [&#39;a node] is a node of a mutable singly-linked list. It contains a value</span>
-<span class="c">    of type [&#39;a] and a link to the [next] node. *)</span>
-<span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span> <span class="n">next</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">;</span> <span class="n">value</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">}</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** An ['a node] is a node of a mutable singly-linked list. It contains a value</span>
+<span class="c">    of type ['a] and a link to the [next] node. *)</span>
+<span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span> <span class="n">next</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span><span class="o">;</span> <span class="n">value</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">}</span>
 
-<span class="c">(** An [&#39;a mlist] is a mutable singly-linked list with elements of type [&#39;a].</span>
+<span class="c">(** An ['a mlist] is a mutable singly-linked list with elements of type ['a].</span>
 <span class="c">    The [option] represents the possibility that the list is empty.</span>
 <span class="c">    RI: The list does not contain any cycles. *)</span>
-<span class="k">and</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span> <span class="n">ref</span>
+<span class="k">and</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span> <span class="n">ref</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a node = { next : &#39;a mlist; value : &#39;a; }
-and &#39;a mlist = &#39;a node option ref
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a node = { next : 'a mlist; value : 'a; }
+and 'a mlist = 'a node option ref
 </pre></div>
 </div>
 </div>
@@ -1537,12 +1537,12 @@ and &#39;a mlist = &#39;a node option ref
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [empty ()] is an empty singly-linked list. *)</span>
-<span class="k">let</span> <span class="n">empty</span> <span class="bp">()</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
+<span class="k">let</span> <span class="n">empty</span> <span class="bp">()</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; &#39;a mlist = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; 'a mlist = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1556,13 +1556,13 @@ and &#39;a mlist = &#39;a node option ref
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [insert_first lst v] mutates mlist [lst] by inserting value [v] as the</span>
 <span class="c">    first value in the list. *)</span>
-<span class="k">let</span> <span class="n">insert_first</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
+<span class="k">let</span> <span class="n">insert_first</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
   <span class="n">lst</span> <span class="o">:=</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">next</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">!</span><span class="n">lst</span><span class="o">;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">v</span> <span class="o">}</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert_first : &#39;a mlist -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert_first : 'a mlist -&gt; 'a -&gt; unit = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1581,13 +1581,13 @@ OCaml 的内置列表：</p>
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [to_list lst] is an OCaml list containing the same values as [lst]</span>
 <span class="c">    in the same order. Not tail recursive. *)</span>
-<span class="k">let</span> <span class="k">rec</span> <span class="n">to_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">to_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span>
   <span class="k">match</span> <span class="o">!</span><span class="n">lst</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">[]</span> <span class="o">|</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">next</span><span class="o">;</span> <span class="n">value</span> <span class="o">}</span> <span class="o">-&gt;</span> <span class="n">value</span> <span class="o">::</span> <span class="n">to_list</span> <span class="n">next</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val to_list : &#39;a mlist -&gt; &#39;a list = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val to_list : 'a mlist -&gt; 'a list = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1603,10 +1603,10 @@ OCaml 的内置列表：</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst0 : &#39;_weak2 mlist = {contents = None}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst0 : '_weak2 mlist = {contents = None}
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst1 : &#39;_weak2 mlist = {contents = None}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst1 : '_weak2 mlist = {contents = None}
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
@@ -1627,7 +1627,7 @@ OCaml 的内置列表：</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;_weak3 option ref = {contents = None}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : '_weak3 option ref = {contents = None}
 </pre></div>
 </div>
 </div>
@@ -1646,10 +1646,10 @@ OCaml 的内置列表：</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst2 : &#39;_weak3 option ref = {contents = None}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst2 : '_weak3 option ref = {contents = None}
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst3 : &#39;_weak3 option ref = {contents = None}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst3 : '_weak3 option ref = {contents = None}
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()
@@ -1677,7 +1677,7 @@ OCaml 的内置列表：</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; &#39;a option ref = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; 'a option ref = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1694,13 +1694,13 @@ OCaml 的内置列表：</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : &#39;a -&gt; &#39;b option ref = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : 'a -&gt; 'b option ref = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : bool -&gt; &#39;a option ref = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : bool -&gt; 'a option ref = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : int -&gt; &#39;a option ref = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : int -&gt; 'a option ref = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1723,21 +1723,21 @@ OCaml 的内置列表：</p>
 他们也参考了：</p>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
-<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span> <span class="n">next</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">;</span> <span class="n">value</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">ref</span> <span class="o">}</span>
-<span class="k">and</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span> <span class="n">ref</span>
+<div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="o">=</span> <span class="o">{</span> <span class="n">next</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span><span class="o">;</span> <span class="n">value</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">ref</span> <span class="o">}</span>
+<span class="k">and</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="k">'</span><span class="n">a</span> <span class="n">node</span> <span class="n">option</span> <span class="n">ref</span>
 
-<span class="k">let</span> <span class="n">empty</span> <span class="bp">()</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
+<span class="k">let</span> <span class="n">empty</span> <span class="bp">()</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span> <span class="o">=</span> <span class="n">ref</span> <span class="nc">None</span>
 
-<span class="k">let</span> <span class="n">insert_first</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
+<span class="k">let</span> <span class="n">insert_first</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
   <span class="n">lst</span> <span class="o">:=</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">next</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">!</span><span class="n">lst</span><span class="o">;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">ref</span> <span class="n">v</span> <span class="o">}</span>
 
-<span class="k">let</span> <span class="k">rec</span> <span class="n">set</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">n</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">set</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">(</span><span class="n">n</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">(</span><span class="n">v</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span>
   <span class="k">match</span> <span class="o">(!</span><span class="n">lst</span><span class="o">,</span> <span class="n">n</span><span class="o">)</span> <span class="k">with</span>
-  <span class="o">|</span> <span class="nc">None</span><span class="o">,</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">invalid_arg</span> <span class="s2">&quot;out of bounds&quot;</span>
+  <span class="o">|</span> <span class="nc">None</span><span class="o">,</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">invalid_arg</span> <span class="s2">"out of bounds"</span>
   <span class="o">|</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">value</span> <span class="o">},</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="n">value</span> <span class="o">:=</span> <span class="n">v</span>
   <span class="o">|</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">next</span> <span class="o">},</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">set</span> <span class="n">next</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="n">v</span>
 
-<span class="k">let</span> <span class="k">rec</span> <span class="n">to_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">to_list</span> <span class="o">(</span><span class="n">lst</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="n">mlist</span><span class="o">)</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span>
   <span class="k">match</span> <span class="o">!</span><span class="n">lst</span> <span class="k">with</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">[]</span> <span class="o">|</span> <span class="nc">Some</span> <span class="o">{</span> <span class="n">next</span><span class="o">;</span> <span class="n">value</span> <span class="o">}</span> <span class="o">-&gt;</span> <span class="o">!</span><span class="n">value</span> <span class="o">::</span> <span class="n">to_list</span> <span class="n">next</span>
 </pre></div>
 </div>
@@ -1748,20 +1748,20 @@ OCaml 的内置列表：</p>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type &#39;a node = { next : &#39;a mlist; value : &#39;a ref; }
-and &#39;a mlist = &#39;a node option ref
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type 'a node = { next : 'a mlist; value : 'a ref; }
+and 'a mlist = 'a node option ref
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; &#39;a mlist = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val empty : unit -&gt; 'a mlist = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert_first : &#39;a mlist -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val insert_first : 'a mlist -&gt; 'a -&gt; unit = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val set : &#39;a mlist -&gt; int -&gt; &#39;a -&gt; unit = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val set : 'a mlist -&gt; int -&gt; 'a -&gt; unit = &lt;fun&gt;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val to_list : &#39;a mlist -&gt; &#39;a list = &lt;fun&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val to_list : 'a mlist -&gt; 'a list = &lt;fun&gt;
 </pre></div>
 </div>
 </div>
@@ -1781,7 +1781,7 @@ and &#39;a mlist = &#39;a node option ref
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst : &#39;_weak4 mlist = {contents = None}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>val lst : '_weak4 mlist = {contents = None}
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- : unit = ()

@@ -696,7 +696,7 @@ SimPL 解释器：<a href="../../code/simpl.zip">simpl.zip</a></p>
 
   <span class="k">let</span> <span class="n">lookup</span> <span class="n">env</span> <span class="n">x</span> <span class="o">=</span>
     <span class="k">try</span> <span class="nn">List</span><span class="p">.</span><span class="n">assoc</span> <span class="n">x</span> <span class="n">env</span>
-    <span class="k">with</span> <span class="nc">Not_found</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Unbound variable&quot;</span>
+    <span class="k">with</span> <span class="nc">Not_found</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Unbound variable"</span>
 
   <span class="k">let</span> <span class="n">extend</span> <span class="n">env</span> <span class="n">x</span> <span class="n">ty</span> <span class="o">=</span>
     <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">ty</span><span class="o">)</span> <span class="o">::</span> <span class="n">env</span>
@@ -749,8 +749,8 @@ SimPL 解释器：<a href="../../code/simpl.zip">simpl.zip</a></p>
 <code class="docutils literal notranslate"><span class="pre">|-</span></code> 规则，添加了错误处理。</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">and</span> <span class="n">typeof_let</span> <span class="n">env</span> <span class="n">x</span> <span class="n">e1</span> <span class="n">e2</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">t1</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e1</span> <span class="k">in</span>
-  <span class="k">let</span> <span class="n">env&#39;</span> <span class="o">=</span> <span class="n">extend</span> <span class="n">env</span> <span class="n">x</span> <span class="n">t1</span> <span class="k">in</span>
-  <span class="n">typeof</span> <span class="n">env&#39;</span> <span class="n">e2</span>
+  <span class="k">let</span> <span class="n">env'</span> <span class="o">=</span> <span class="n">extend</span> <span class="n">env</span> <span class="n">x</span> <span class="n">t1</span> <span class="k">in</span>
+  <span class="n">typeof</span> <span class="n">env'</span> <span class="n">e2</span>
 
 <span class="k">and</span> <span class="n">typeof_bop</span> <span class="n">env</span> <span class="n">bop</span> <span class="n">e1</span> <span class="n">e2</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">t1</span><span class="o">,</span> <span class="n">t2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e1</span><span class="o">,</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e2</span> <span class="k">in</span>
@@ -758,16 +758,16 @@ SimPL 解释器：<a href="../../code/simpl.zip">simpl.zip</a></p>
   <span class="o">|</span> <span class="nc">Add</span><span class="o">,</span> <span class="nc">TInt</span><span class="o">,</span> <span class="nc">TInt</span>
   <span class="o">|</span> <span class="nc">Mult</span><span class="o">,</span> <span class="nc">TInt</span><span class="o">,</span> <span class="nc">TInt</span> <span class="o">-&gt;</span> <span class="nc">TInt</span>
   <span class="o">|</span> <span class="nc">Leq</span><span class="o">,</span> <span class="nc">TInt</span><span class="o">,</span> <span class="nc">TInt</span> <span class="o">-&gt;</span> <span class="nc">TBool</span>
-  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;Operator and operand type mismatch&quot;</span>
+  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Operator and operand type mismatch"</span>
 
 <span class="k">and</span> <span class="n">typeof_if</span> <span class="n">env</span> <span class="n">e1</span> <span class="n">e2</span> <span class="n">e3</span> <span class="o">=</span>
   <span class="k">if</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e1</span> <span class="o">=</span> <span class="nc">TBool</span>
   <span class="k">then</span> <span class="k">begin</span>
     <span class="k">let</span> <span class="n">t2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e2</span> <span class="k">in</span>
     <span class="k">if</span> <span class="n">t2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">env</span> <span class="n">e3</span> <span class="k">then</span> <span class="n">t2</span>
-    <span class="k">else</span> <span class="n">failwith</span> <span class="s2">&quot;Branches of if must have same type&quot;</span>
+    <span class="k">else</span> <span class="n">failwith</span> <span class="s2">"Branches of if must have same type"</span>
   <span class="k">end</span>
-  <span class="k">else</span> <span class="n">failwith</span> <span class="s2">&quot;Guard of if must have type bool&quot;</span>
+  <span class="k">else</span> <span class="n">failwith</span> <span class="s2">"Guard of if must have type bool"</span>
 </pre></div>
 </div>
 <p>请注意 <code class="docutils literal notranslate"><span class="pre">typeof</span></code> 实现中的递归调用如何准确地发生在

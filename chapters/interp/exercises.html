@@ -708,11 +708,11 @@ Core OCaml 小步语义就可以了。</p>
 值，因此该函数需要递归。</p></li>
 <li><p>为 <code class="docutils literal notranslate"><span class="pre">(e1,</span> <span class="pre">e2){v/x}</span> <span class="pre">=</span> <span class="pre">(e1{v/x},</span> <span class="pre">e2{v/x})</span></code> 实现 <code class="docutils literal notranslate"><span class="pre">subst</span></code>。</p></li>
 <li><p>使用以下规则实现对的小步和大步评估：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(e1, e2) --&gt; (e1&#39;, e2)
-  if e1 --&gt; e1&#39;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(e1, e2) --&gt; (e1', e2)
+  if e1 --&gt; e1'
 
-(v1, e2) --&gt; (v1, e2&#39;)
-  if e2 --&gt; e2&#39;
+(v1, e2) --&gt; (v1, e2')
+  if e2 --&gt; e2'
 
 (e1, e2) ==&gt; (v1, v2)
   if e1 ==&gt; v1

@@ -16,9 +16,7 @@ kernelspec:
 # 模块和顶层
 
 ```{note}
-下面的视频使用旧版构建系统 ocamlbuild，而不是新的
-构建系统，Dune。一些细节随着Dune的变化而改变，如
-下面的文字。
+下面的视频使用的是旧构建系统 ocamlbuild，而不是较新的 Dune，因此部分细节已有变化，请以下文为准。
 ```
 
 {{ video_embed | replace("%%VID%%", "4yo-04VVzIw")}}
@@ -49,9 +47,7 @@ end
 # #load "mods.cmo";;
 ```
 
-该指令加载在 `mods.cmo` 中找到的字节码，从而创建一个模块
-名为 `Mods` 可供使用。就好像你已经输入了这个一样
-代码：
+该指令加载 `mods.cmo` 中的字节码，并创建可供使用的模块 `Mods`，效果如同输入了下面的代码：
 
 ```{code-cell} ocaml
 module Mods = struct
@@ -81,7 +77,7 @@ inc
 Mods.inc
 ```
 
-当然，如果打开模块，可以直接命名为`inc`：
+当然，打开模块后就可以直接使用 `inc`：
 
 ```{code-cell} ocaml
 open Mods;;
@@ -90,30 +86,25 @@ inc;;
 
 ## Dune
 
-Dune 提供了一个命令，可以更轻松地启动带有库的 utop
-已加载。假设我们将此Dune文件添加到与 `mods.ml` 相同的目录中：
+Dune 提供了一个命令，可以启动 utop 并自动加载库。假设在 `mods.ml` 所在目录中加入以下 Dune 文件：
 
 ```text
 (library
  (name mods))
 ```
 
-这告诉Dune从 `mods.ml` （以及任何其他
-同一目录中的文件（如果存在）。  然后我们可以运行这个命令
-启动 utop 并加载该库：
+它会让 Dune 根据 `mods.ml`（以及同一目录中的其他源文件，如果有的话）构建一个库。然后运行以下命令，启动 utop 并加载该库：
 
 ```console
 $ dune utop
 ```
 
-现在我们可以立即访问 `Mods` 的组件，而无需发出
-`#load` 指令：
+现在无须执行 `#load` 指令，便能直接访问 `Mods` 中的成员：
 ```{code-cell} ocaml
 Mods.inc
 ```
 
-如果你愿意，`dune utop` 命令接受目录名称作为参数
-在源代码的特定子目录中加载库。
+`dune utop` 还可以接收目录名作为参数，以加载源代码特定子目录中的库。
 
 ## 顶层初始化
 
