@@ -15,8 +15,7 @@ kernelspec:
 
 # 实现 Promise
 
-这是我们自己的 Lwt 风格的 Promise 的接口。名字已更改
-使接口更加清晰。
+下面是我们自行设计的 Lwt 风格 Promise 接口。为了让接口更清楚，其中的名称经过了调整。
 
 ```{code-cell} ocaml
 (** A signature for Lwt-style promises, with better names. *)
@@ -52,8 +51,7 @@ module type PROMISE = sig
 end
 ```
 
-为了实现该接口，我们可以将表示类型设置为
-`'a promise` 是对状态的引用：
+要实现这个接口，可以让 `'a promise` 的表示类型成为对状态的引用：
 
 ```{code-cell} ocaml
 type 'a state = Pending | Fulfilled of 'a | Rejected of exn
@@ -69,16 +67,9 @@ type 'a promise = 'a state ref
 type 'a resolver = 'a promise
 ```
 
-所以在内部，这两种类型是完全相同的。但在外部，没有客户端
-`Promise` 模块将能够区分它们。换句话说，我们是
-使用类型系统来控制是否可以应用某些
-函数（例如 `state` 与 `fulfill`）来读取或解析 Promise。
+因此，这两种类型在模块内部完全相同；模块外的客户端却能区分它们。换言之，我们利用类型系统来控制哪些函数可以作用于相应的值：例如用 `state` 读取 Promise，或用 `fulfill` 解析 Promise。
 
-为了帮助实现其余的函数，让我们从编写一个助手开始
-函数 `write_once : 'a promise -> 'a state -> unit` 来更新引用。这个
-函数会把 Promise 的状态从待处理更改为
-已履行或已拒绝，一旦状态改变，就不允许
-又变了。也就是说，它强制执行“一次写入”不变式。
+为了实现其余函数，先编写辅助函数 `write_once : 'a promise -> 'a state -> unit` 来更新引用。它把 Promise 从待处理状态改为已履行或已拒绝，此后不允许再次改变，从而强制维持“只写一次”的不变式。
 
 ```{code-cell} ocaml
 (** [write_once p s] changes the state of [p] to be [s].  If [p] and [s]
@@ -134,14 +125,9 @@ end
 
 ## Lwt Promise
 
-Lwt 中使用的类型和名称比我们上面使用的要晦涩一些。
-Lwt 使用来自线程&mdash;的类比术语，但是由于 Lwt 确实
-没有实际实现线程，该术语不一定有帮助。 （我们
-没有贬低Lwt的意思！这是一个一直在发展和变化的库
-随着时间的推移。）
+Lwt 使用的类型名和函数名比上面的版本晦涩一些。它借用了线程领域的术语，但 Lwt 实际上并不实现线程，所以这种类比未必有帮助。（这并非有意贬低 Lwt；这个库一直在演进，术语也随时间变化。）
 
-Lwt接口包括以下声明，我们已对其进行了注释
-用注释将它们与我们上面实现的接口进行比较：
+Lwt 接口包含以下声明。代码中的注释把这些声明与我们刚实现的接口对应起来：
 
 ```{code-cell} ocaml
 module type Lwt = sig

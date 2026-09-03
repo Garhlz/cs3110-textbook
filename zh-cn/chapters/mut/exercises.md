@@ -5,16 +5,12 @@
 <!--------------------------------------------------------------------------->
 {{ ex1 | replace("%%NAME%%", "mutable fields")}}
 
-定义 OCaml 记录类型来表示学生姓名和 GPA。应该是
-可能会改变学生的 GPA 值。写一个表达式定义a
-学生姓名为`"Alice"`，GPA为`3.7`。然后写一个表达式来变异
-Alice 的 GPA 为 `4.0`。
+定义一个 OCaml 记录类型，表示学生的姓名和 GPA，其中 GPA 应当可以修改。编写表达式，创建姓名为 `"Alice"`、GPA 为 `3.7` 的学生，然后把 Alice 的 GPA 修改为 `4.0`。
 
 <!--------------------------------------------------------------------------->
 {{ ex1 | replace("%%NAME%%", "refs")}}
 
-给出具有以下类型的 OCaml 表达式。  使用utop检查
-你的答案。
+分别给出具有以下类型的 OCaml 表达式，并使用 utop 检查答案。
 
 * `bool ref`
 * `int list ref`
@@ -34,10 +30,7 @@ let inc = ref (fun x -> x + 1)
 <!--------------------------------------------------------------------------->
 {{ ex2 | replace("%%NAME%%", "addition assignment")}}
 
-C 语言和许多由它派生的语言，例如 Java，都有一个
-*加法赋值*运算符写为`a += b`，含义为`a = a + b`。
-在 OCaml 中实现这样一个运算符；它的类型应该是
-`int ref -> int -> unit`。下面是一些可以帮助你入门的代码：
+C 及许多受它影响的语言（如 Java）都有*加法赋值*运算符：`a += b` 等价于 `a = a + b`。请在 OCaml 中实现这样的运算符，其类型应为 `int ref -> int -> unit`。下面的代码可作为起点：
 
 ```ocaml
 let ( +:= ) x y = ...
@@ -78,15 +71,13 @@ let z = ref 0
 <!--------------------------------------------------------------------------->
 {{ ex2 | replace("%%NAME%%", "norm")}}
 
-$n$ 维向量的 [Euclidean norm][norm]
-$x = (x_1, \ldots, x_n)$ 写为 $|x|$ 并定义为
+$n$ 维向量 $x = (x_1, \ldots, x_n)$ 的[欧几里得范数][norm]记作 $|x|$，定义为
 
 $$\sqrt{x_1^2 + \cdots + x_n^2}.$$
 
 [norm]: https://en.wikipedia.org/wiki/Norm_(mathematics)#Euclidean_norm
 
-编写一个函数 `norm : vector -> float` 来计算
-向量的欧几里得范数，其中 `vector` 定义如下：
+编写函数 `norm : vector -> float`，计算向量的欧几里得范数，其中 `vector` 定义如下：
 
 ```
 (* AF: the float array [| x1; ...; xn |] represents the
@@ -95,9 +86,7 @@ $$\sqrt{x_1^2 + \cdots + x_n^2}.$$
 type vector = float array
 ```
 
-你的函数不应改变输入数组。 *提示：虽然你是第一次
-本能可能是去循环，而不是尝试使用 `Array.map` 和
-`Array.fold_left` 或 `Array.fold_right`.*
+函数不得修改输入数组。*提示：先别急着使用循环，试试 `Array.map` 配合 `Array.fold_left` 或 `Array.fold_right`。*
 
 <!--------------------------------------------------------------------------->
 {{ ex2 | replace("%%NAME%%", "normalize")}}
@@ -109,8 +98,7 @@ $$
 \left(\frac{x_1}{|x|}, \ldots, \frac{x_n}{|x|}\right) .
 $$
 
-编写一个函数 `normalize : vector -> unit` 来规范化向量"
-通过改变输入数组来放置"。这是一个示例用法：
+编写函数 `normalize : vector -> unit`，通过修改输入数组对向量进行*原地*归一化。用法示例如下：
 
 ```ocaml
 # let a = [|1.; 1.|];;
@@ -146,17 +134,9 @@ return sqrt of norm
 <!--------------------------------------------------------------------------->
 {{ ex3 | replace("%%NAME%%", "init matrix")}}
 
-`Array` 模块包含两个用于创建数组的函数： `make` 和
-`init`。 `make` 创建一个数组并用默认值填充它，而 `init`
-创建一个数组并使用提供的函数来填充它。该库还
-包含一个用于创建二维数组的函数 `make_matrix` ，但它
-不包含类似的 `init_matrix` 使用函数创建矩阵
-用于初始化。
+`Array` 模块提供了两个创建数组的函数：`make` 和 `init`。`make` 用同一个默认值填充数组，`init` 则用给定函数计算每个元素。该模块还提供创建二维数组的 `make_matrix`，却没有对应的 `init_matrix`，不能用初始化函数生成矩阵。
 
-编写一个函数 `init_matrix : int -> int -> (int -> int -> 'a) -> 'a array
-array` such that `init_matrix n o f` creates and returns an `n` by `o` 矩阵
-`m` 和 `m.(i).(j) = f i j` 对于边界内的所有 `i` 和 `j` 。
+编写函数 `init_matrix : int -> int -> (int -> int -> 'a) -> 'a array array`，使 `init_matrix n o f` 创建并返回一个 $n \times o$ 的矩阵 `m`，且对所有范围内的 `i`、`j`，均有 `m.(i).(j) = f i j`。
 
 有关 [`make_matrix`](https://v2.ocaml.org/api/Array.html#VALmake_matrix) 的更多信息，请参阅文档
 将矩阵表示为数组。
-
