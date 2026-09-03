@@ -18,16 +18,9 @@ kernelspec:
 既然我们已经把 Promise 理解为一种数据抽象，下面看看它们如何用于并发。
 在 Lwt 中，Promise 的典型用途是并发输入和输出 (I/O)。
 
-OCaml 标准库中的 I/O 函数是*同步*
-又名 *阻塞*：当你调用这样的函数时，它不会返回，直到 I/O
-已完成。这里的“同步”指的是之间的同步
-你的代码和 I/O 函数：你的代码不会再次执行，直到
-I/O 代码完成。“阻塞”是指你的代码必须等待&mdash;也就是被阻塞&mdash;
-直到 I/O 完成。
+OCaml 标准库中的 I/O 函数是*同步*的，也称为*阻塞式* I/O：调用之后，函数要等到 I/O 完成才会返回。这里的“同步”是指你的代码与 I/O 函数保持同步，I/O 完成之前，代码无法继续执行；“阻塞”则强调代码必须停下来等待。
 
-例如，`Stdlib.input_line : in_channel -> string` 函数读取
-从*输入通道*开始的字符直到到达换行符，然后
-返回读取到的字符。类型 `in_channel` 是抽象的；它代表可以读取的数据源，
+例如，`Stdlib.input_line : in_channel -> string` 从*输入通道*读取字符，直到遇到换行符，再返回读到的内容。类型 `in_channel` 是抽象的；它代表可以读取的数据源，
 例如文件、网络或键盘。值 `Stdlib.stdin : in_channel` 代表*标准输入*
 通道，通常默认提供键盘输入。
 
@@ -117,8 +110,7 @@ val p : string Lwt.t = <abstr>
 预期。但是当我们求值 `p` 时，它返回的类型却是 `string`。就好像
 Promise 消失了。
 
-实际发生的情况是 utop 有一些特殊的 &mdash; 并且可能
-令人困惑的 &mdash; 内置的 Lwt 相关特性。
+实际原因是 utop 内置了一项特殊、也可能令人困惑的 Lwt 功能。
 具体来说，每当你尝试直接求值顶层的 Promise 时，
 *utop 会给你 Promise 的内容，而不是 Promise 本身；
 如果 Promise 尚未解析，utop 会阻塞，直到 Promise 被解析，以便返回其中的内容。*
@@ -158,9 +150,7 @@ Camels are bae
 - : string = "Camels are bae"
 ```
 
-由于潜在的混乱，我们今后将假设自动运行
-已禁用。实现这一点的一个好方法是将以下行放入你的
-`.ocamlinit` 文件：
+为免混淆，后文将假定自动运行功能已关闭。一个方便的做法是把下面这行加入 `.ocamlinit`：
 
 ```text
 UTop.set_auto_run_lwt false;;

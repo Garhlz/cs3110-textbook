@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -601,7 +601,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">6.3. </span>数组和循环<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/-k4rM1viJH4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>数组是固定长度的可变序列，支持常数时间的访问和更新。因此它们在很多方面与引用、列表和元组相似。和 ref 一样，它们是可变的。与列表一样，它们是（有限）序列。与元组一样，它们的长度是预先固定的，不能调整大小。</p>
+<p>数组是长度固定的可变序列，支持常数时间的访问和更新。它兼具引用、列表和元组的部分特征：像引用一样可变，像列表一样表示有限序列，又像元组一样预先确定长度、不能调整大小。</p>
 <p>数组的语法与列表类似：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -641,7 +641,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>正如你在该示例中看到的，对数组进行索引的语法是 <code class="docutils literal notranslate"><span class="pre">array.(index)</span></code>，其中括号是强制性的。</p>
+<p>如例所示，数组索引写成 <code class="docutils literal notranslate"><span class="pre">array.(index)</span></code>，其中的括号不可省略。</p>
 <p><a class="reference external" href="https://ocaml.org/api/Array.html"><code class="docutils literal notranslate"><span class="pre">Array</span></code> 模块</a> 提供了许多有用的数组操作函数。</p>
 <p><strong>语法。</strong></p>
 <ul class="simple">
@@ -668,7 +668,7 @@ document.write(`
 <span class="k">for</span> <span class="n">x</span><span class="o">=</span><span class="n">e1</span> <span class="k">downto</span> <span class="n">e2</span> <span class="k">do</span> <span class="n">e3</span> <span class="k">done</span>
 </pre></div>
 </div>
-<p>这三个表达式都会对循环的每次迭代求值 <code class="docutils literal notranslate"><span class="pre">do</span></code> 与 <code class="docutils literal notranslate"><span class="pre">done</span></code> 之间的表达式；当 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 变为 false 时，<code class="docutils literal notranslate"><span class="pre">while</span></code> 循环终止；<code class="docutils literal notranslate"><span class="pre">for</span></code> 循环对从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 的每个整数执行一次；<code class="docutils literal notranslate"><span class="pre">for..to</span></code> 循环从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 开始求值，每次迭代递增 <code class="docutils literal notranslate"><span class="pre">x</span></code>；<code class="docutils literal notranslate"><span class="pre">for..downto</span></code> 循环从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 开始求值，每次迭代递减 <code class="docutils literal notranslate"><span class="pre">x</span></code>。三个循环在终止后均求值为 <code class="docutils literal notranslate"><span class="pre">()</span></code>。由于它们始终求值为 <code class="docutils literal notranslate"><span class="pre">()</span></code>，因此不如 fold、map 或递归函数通用。</p>
+<p>三种循环都会在每次迭代中求值 <code class="docutils literal notranslate"><span class="pre">do</span></code> 与 <code class="docutils literal notranslate"><span class="pre">done</span></code> 之间的表达式。<code class="docutils literal notranslate"><span class="pre">while</span></code> 在 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 变为 <code class="docutils literal notranslate"><span class="pre">false</span></code> 时结束；<code class="docutils literal notranslate"><span class="pre">for</span></code> 针对 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 与 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 之间的每个整数执行一次，<code class="docutils literal notranslate"><span class="pre">for..to</span></code> 从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 开始逐次递增 <code class="docutils literal notranslate"><span class="pre">x</span></code>，<code class="docutils literal notranslate"><span class="pre">for..downto</span></code> 则逐次递减。循环结束后都求值为 <code class="docutils literal notranslate"><span class="pre">()</span></code>。正因为结果始终是 <code class="docutils literal notranslate"><span class="pre">()</span></code>，循环不如 fold、map 或递归函数通用。</p>
 <p>循环本身并不带来可变性，但它们最常与数组这类可变特性结合使用——通常循环会引发副作用。我们也可以使用 <code class="docutils literal notranslate"><span class="pre">Array.iter</span></code>、<code class="docutils literal notranslate"><span class="pre">Array.map</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Array.fold_left</span></code> 等函数来代替循环。</p>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/GkIgGhqHI7M" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 </section>

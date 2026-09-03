@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -626,11 +626,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>请注意，<code class="docutils literal notranslate"><span class="pre">mutable</span></code> 是字段的属性，而不是字段的类型
-场。特别是，我们写 <code class="docutils literal notranslate"><span class="pre">mutable</span> <span class="pre">field</span> <span class="pre">:</span> <span class="pre">type</span></code>，而不是
-<code class="docutils literal notranslate"><span class="pre">field</span> <span class="pre">:</span> <span class="pre">mutable</span> <span class="pre">type</span></code>。</p>
-<p>更新可变字段的运算符是 <code class="docutils literal notranslate"><span class="pre">&lt;-</span></code> ，它看起来像
-向左箭头。</p>
+<p>注意，<code class="docutils literal notranslate"><span class="pre">mutable</span></code> 修饰的是字段，而不是字段的类型。因此应写作 <code class="docutils literal notranslate"><span class="pre">mutable</span> <span class="pre">field</span> <span class="pre">:</span> <span class="pre">type</span></code>，而不是 <code class="docutils literal notranslate"><span class="pre">field</span> <span class="pre">:</span> <span class="pre">mutable</span> <span class="pre">type</span></code>。</p>
+<p>更新可变字段使用 <code class="docutils literal notranslate"><span class="pre">&lt;-</span></code> 运算符，它形似一个向左的箭头。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">c</span> <span class="o">=</span> <span class="s2">"red"</span><span class="o">}</span>
@@ -685,21 +682,16 @@ document.write(`
 </div>
 <ul class="simple">
 <li><p><strong>语法：</strong> <code class="docutils literal notranslate"><span class="pre">e1.f</span> <span class="pre">&lt;-</span> <span class="pre">e2</span></code></p></li>
-<li><p><strong>动态语义：</strong> 要评估 <code class="docutils literal notranslate"><span class="pre">e1.f</span> <span class="pre">&lt;-</span> <span class="pre">e2</span></code>，请将 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 评估为一个值
-<code class="docutils literal notranslate"><span class="pre">v2</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 为值 <code class="docutils literal notranslate"><span class="pre">v1</span></code>，该值必须有一个名为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 的字段。更新
-<code class="docutils literal notranslate"><span class="pre">v1.f</span></code> 至 <code class="docutils literal notranslate"><span class="pre">v2</span></code>。返回<code class="docutils literal notranslate"><span class="pre">()</span></code>。</p></li>
-<li><p><strong>静态语义：</strong> <code class="docutils literal notranslate"><span class="pre">e1.f</span> <span class="pre">&lt;-</span> <span class="pre">e2</span> <span class="pre">:</span> <span class="pre">unit</span></code> if <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t1</span></code> 和
-<code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">=</span> <span class="pre">{...;</span> <span class="pre">mutable</span> <span class="pre">f</span> <span class="pre">:</span> <span class="pre">t2;</span> <span class="pre">...}</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">t2</span></code>。</p></li>
+<li><p><strong>动态语义：</strong> 对 <code class="docutils literal notranslate"><span class="pre">e1.f</span> <span class="pre">&lt;-</span> <span class="pre">e2</span></code> 求值时，先将 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 求值为 <code class="docutils literal notranslate"><span class="pre">v2</span></code>，再将 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 求值为 <code class="docutils literal notranslate"><span class="pre">v1</span></code>；<code class="docutils literal notranslate"><span class="pre">v1</span></code> 必须包含名为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 的字段。随后把 <code class="docutils literal notranslate"><span class="pre">v1.f</span></code> 更新为 <code class="docutils literal notranslate"><span class="pre">v2</span></code>，并返回 <code class="docutils literal notranslate"><span class="pre">()</span></code>。</p></li>
+<li><p><strong>静态语义：</strong> 若 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t1</span></code>、<code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">=</span> <span class="pre">{...;</span> <span class="pre">mutable</span> <span class="pre">f</span> <span class="pre">:</span> <span class="pre">t2;</span> <span class="pre">...}</span></code> 且 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">t2</span></code>，则 <code class="docutils literal notranslate"><span class="pre">e1.f</span> <span class="pre">&lt;-</span> <span class="pre">e2</span> <span class="pre">:</span> <span class="pre">unit</span></code>。</p></li>
 </ul>
 <section id="refs">
 <h2><span class="section-number">6.2.1. </span>Refs 是可变字段<a class="headerlink" href="#refs" title="Permalink to this heading">#</a></h2>
-<p>事实证明，refs 实际上是作为可变字段实现的。在
-<a class="reference external" href="https://ocaml.org/api/Stdlib.html"><code class="docutils literal notranslate"><span class="pre">Stdlib</span></code></a> 我们找到以下声明：</p>
+<p>事实上，引用就是用可变字段实现的。<a class="reference external" href="https://ocaml.org/api/Stdlib.html"><code class="docutils literal notranslate"><span class="pre">Stdlib</span></code></a> 中有如下声明：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="k">mutable</span> <span class="n">contents</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">}</span>
 </pre></div>
 </div>
-<p>这就是为什么当顶层输出一个 ref 时，它看起来像一条记录：它<em>是</em>一个
-记录有一个名为 <code class="docutils literal notranslate"><span class="pre">contents</span></code> 的可变字段！</p>
+<p>这解释了为什么顶层输出的引用看起来像记录：它<em>的确就是</em>一个包含可变字段 <code class="docutils literal notranslate"><span class="pre">contents</span></code> 的记录。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">42</span>
@@ -712,8 +704,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>我们看到的 refs 的其他语法实际上相当于简单的 OCaml
-函数：</p>
+<p>引用的其他语法实际上等价于几个简单的 OCaml 函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">ref</span> <span class="n">x</span> <span class="o">=</span> <span class="o">{</span><span class="n">contents</span> <span class="o">=</span> <span class="n">x</span><span class="o">}</span>
@@ -750,15 +741,12 @@ document.write(`
 </div>
 </div>
 </div>
-<p>我们之所以说”等效”是因为这些函数实际上都实现了
-不是在 OCaml 本身中，而是在 OCaml 运行时中，后者主要用 C 实现。
-尽管如此，这些函数的行为确实与上面给出的 OCaml 源代码相同。</p>
+<p>之所以说“等价”，是因为这些函数实际上并非由 OCaml 源码实现，而是位于主要以 C 编写的 OCaml 运行时中。不过，它们的行为确实与上面的 OCaml 代码相同。</p>
 </section>
 <section id="id2">
 <h2><span class="section-number">6.2.2. </span>示例：可变单链表<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/dLi6Vo_Yp34" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>使用可变字段，我们可以实现与我们几乎相同的单链表
-做了参考文献。节点和列表的类型已简化：</p>
+<p>借助可变字段，可以实现一个与引用版本几乎相同的单链表，而且节点和列表的类型更加简洁：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** An ['a node] is a node of a mutable singly-linked list. It contains a value</span>
@@ -786,9 +774,7 @@ document.write(`
 </div>
 </div>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/EEXa3bY4ZwI" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-<p>并且实现的算法没有本质区别
-操作，但代码稍微简化了，因为我们不
-必须使用参考操作：</p>
+<p>各项操作的算法没有本质变化，但因为不再需要引用操作，代码略为简化：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [insert_first lst n] mutates mlist [lst] by inserting value [v] as the</span>
@@ -827,9 +813,7 @@ document.write(`
 </section>
 <section id="id3">
 <h2><span class="section-number">6.2.3. </span>示例：可变堆栈<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
-<p>我们已经知道列表和堆栈可以以非常相似的方式实现
-方式。让我们使用从可变链表中学到的知识来
-实现可变堆栈。这是一个接口：</p>
+<p>我们已经知道，列表和栈的实现方式十分相似。下面运用可变链表中的知识实现可变栈。先给出接口：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">MutableStack</span> <span class="o">=</span> <span class="k">sig</span>

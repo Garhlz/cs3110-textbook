@@ -23,12 +23,9 @@ kernelspec:
 type point = {x : int; y : int; mutable c : string}
 ```
 
-请注意，`mutable` 是字段的属性，而不是字段的类型
-场。特别是，我们写 `mutable field : type`，而不是
-`field : mutable type`。
+注意，`mutable` 修饰的是字段，而不是字段的类型。因此应写作 `mutable field : type`，而不是 `field : mutable type`。
 
-更新可变字段的运算符是 `<-` ，它看起来像
-向左箭头。
+更新可变字段使用 `<-` 运算符，它形似一个向左的箭头。
 
 ```{code-cell} ocaml
 let p = {x = 0; y = 0; c = "red"}
@@ -51,31 +48,25 @@ p.x <- 3;;
 
 * **语法：** `e1.f <- e2`
 
-* **动态语义：** 要评估 `e1.f <- e2`，请将 `e2` 评估为一个值
-`v2` 和 `e1` 为值 `v1`，该值必须有一个名为 `f` 的字段。更新
-  `v1.f` 至 `v2`。返回`()`。
+* **动态语义：** 对 `e1.f <- e2` 求值时，先将 `e2` 求值为 `v2`，再将 `e1` 求值为 `v1`；`v1` 必须包含名为 `f` 的字段。随后把 `v1.f` 更新为 `v2`，并返回 `()`。
 
-* **静态语义：** `e1.f <- e2 : unit` if `e1 : t1` 和
-`t1 = {...; mutable f : t2; ...}` 和 `e2 : t2`。
+* **静态语义：** 若 `e1 : t1`、`t1 = {...; mutable f : t2; ...}` 且 `e2 : t2`，则 `e1.f <- e2 : unit`。
 
 ## Refs 是可变字段
 
-事实证明，refs 实际上是作为可变字段实现的。在
-[`Stdlib`][stdlib] 我们找到以下声明：
+事实上，引用就是用可变字段实现的。[`Stdlib`][stdlib] 中有如下声明：
 
 ```ocaml
 type 'a ref = { mutable contents : 'a }
 ```
 
-这就是为什么当顶层输出一个 ref 时，它看起来像一条记录：它*是*一个
-记录有一个名为 `contents` 的可变字段！
+这解释了为什么顶层输出的引用看起来像记录：它*的确就是*一个包含可变字段 `contents` 的记录。
 
 ```{code-cell} ocaml
 let r = ref 42
 ```
 
-我们看到的 refs 的其他语法实际上相当于简单的 OCaml
-函数：
+引用的其他语法实际上等价于几个简单的 OCaml 函数：
 
 ```{code-cell} ocaml
 let ref x = {contents = x}
@@ -89,9 +80,7 @@ let ( ! ) r = r.contents
 let ( := ) r x = r.contents <- x
 ```
 
-我们之所以说"等效"是因为这些函数实际上都实现了
-不是在 OCaml 本身中，而是在 OCaml 运行时中，后者主要用 C 实现。
-尽管如此，这些函数的行为确实与上面给出的 OCaml 源代码相同。
+之所以说“等价”，是因为这些函数实际上并非由 OCaml 源码实现，而是位于主要以 C 编写的 OCaml 运行时中。不过，它们的行为确实与上面的 OCaml 代码相同。
 
 [stdlib]: https://ocaml.org/api/Stdlib.html
 
@@ -99,8 +88,7 @@ let ( := ) r x = r.contents <- x
 
 {{ video_embed | replace("%%VID%%", "dLi6Vo_Yp34")}}
 
-使用可变字段，我们可以实现与我们几乎相同的单链表
-做了参考文献。节点和列表的类型已简化：
+借助可变字段，可以实现一个与引用版本几乎相同的单链表，而且节点和列表的类型更加简洁：
 
 ```{code-cell} ocaml
 (** An ['a node] is a node of a mutable singly-linked list. It contains a value
@@ -119,9 +107,7 @@ type 'a mlist = {
 
 {{ video_embed | replace("%%VID%%", "EEXa3bY4ZwI")}}
 
-并且实现的算法没有本质区别
-操作，但代码稍微简化了，因为我们不
-必须使用参考操作：
+各项操作的算法没有本质变化，但因为不再需要引用操作，代码略为简化：
 
 ```{code-cell} ocaml
 (** [insert_first lst n] mutates mlist [lst] by inserting value [v] as the
@@ -146,9 +132,7 @@ let to_list (lst : 'a mlist) : 'a list =
 
 ## 示例：可变堆栈
 
-我们已经知道列表和堆栈可以以非常相似的方式实现
-方式。让我们使用从可变链表中学到的知识来
-实现可变堆栈。这是一个接口：
+我们已经知道，列表和栈的实现方式十分相似。下面运用可变链表中的知识实现可变栈。先给出接口：
 
 ```{code-cell} ocaml
 module type MutableStack = sig

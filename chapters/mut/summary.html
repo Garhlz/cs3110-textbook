@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -531,7 +531,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.4.1. 术语和概念</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.4.2. 进一步阅读</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.4.2. 延伸阅读</a></li>
 </ul>
             </nav>
         </div>
@@ -545,12 +545,8 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">6.4. </span>总结<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>可变数据类型会让程序更难推理。例如，在学习 ref 之前，
-我们不需要担心 OCaml 中的别名问题。但可变性确实有其用途。
-I/O 本质上就涉及状态变化。还有一些数据结构，例如数组和哈希表，
-如果没有可变性就无法高效实现。</p>
-<p>因此，可变性提供了强大的力量，但力量越大，责任越大。
-尽量不要滥用你刚获得的力量。</p>
+<p>可变数据类型会增加程序推理的难度。例如，在学习引用之前，我们根本不必担心 OCaml 中的别名问题。不过，可变性也确有用武之地：I/O 本质上涉及状态变化，数组和哈希表等数据结构若没有可变性，也很难得到高效实现。</p>
+<p>可变性赋予我们强大的能力，但能力越大，责任也越大。请谨慎使用刚刚掌握的力量。</p>
 <section id="id2">
 <h2><span class="section-number">6.4.1. </span>术语和概念<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
@@ -559,30 +555,30 @@ I/O 本质上就涉及状态变化。还有一些数据结构，例如数组和�
 <li><p>数组</p></li>
 <li><p>赋值</p></li>
 <li><p>解引用</p></li>
-<li><p>确定性的</p></li>
-<li><p>不可变的</p></li>
+<li><p>确定性</p></li>
+<li><p>不可变性</p></li>
 <li><p>索引</p></li>
 <li><p>循环</p></li>
 <li><p>内存安全</p></li>
-<li><p>可变的</p></li>
+<li><p>可变性</p></li>
 <li><p>可变字段</p></li>
-<li><p>不确定性的</p></li>
+<li><p>非确定性</p></li>
 <li><p>物理相等</p></li>
 <li><p>指针</p></li>
-<li><p>纯的</p></li>
+<li><p>纯函数式</p></li>
 <li><p>ref</p></li>
-<li><p>ref cell</p></li>
+<li><p>引用单元</p></li>
 <li><p>引用</p></li>
 <li><p>顺序执行</p></li>
 <li><p>结构相等</p></li>
 </ul>
 </section>
 <section id="id3">
-<h2><span class="section-number">6.4.2. </span>进一步阅读<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">6.4.2. </span>延伸阅读<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p><em>Objective Caml 简介</em>，第 7 章和第 8 章。</p></li>
-<li><p><em>OCaml 从头开始</em>，第 13 章。</p></li>
-<li><p><em>现实世界 OCaml</em>，第 8 章。</p></li>
+<li><p><em>Introduction to Objective Caml</em>，第 7、8 章</p></li>
+<li><p><em>OCaml from the Very Beginning</em>，第 13 章</p></li>
+<li><p><em>Real World OCaml</em>，第 8 章</p></li>
 </ul>
 </section>
 </section>
@@ -652,7 +648,7 @@ I/O 本质上就涉及状态变化。还有一些数据结构，例如数组和�
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.4.1. 术语和概念</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.4.2. 进一步阅读</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.4.2. 延伸阅读</a></li>
 </ul>
   </nav></div>
 

@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -531,7 +531,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">7.9.1. 术语和概念</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">7.9.2. 进一步阅读</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">7.9.2. 延伸阅读</a></li>
 </ul>
             </nav>
         </div>
@@ -545,11 +545,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">7.9. </span>总结<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>并发编程具有挑战性，这也许可以解释为什么有这么多不同的库和语言特性支持它。
-Promise 在函数式和命令式编程中都优雅且有用。
-但它们并不是终点：
-OCaml 5 最近添加了基于<em>域</em>和线程的并行性和并发性的新机制。
-你可能会发现阅读 OCaml 手册中有关这些内容的更多信息很有趣。</p>
+<p>并发编程极具挑战，这或许解释了为什么会有如此多的库和语言特性为它提供支持。Promise 在函数式和命令式编程中都是一种优雅而实用的抽象，但它并非终点。OCaml 5 又加入了基于<em>域</em>和线程的新并行与并发机制；感兴趣的读者可以继续查阅 OCaml 手册。</p>
 <section id="id2">
 <h2><span class="section-number">7.9.1. </span>术语和概念<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
@@ -565,12 +561,12 @@ OCaml 5 最近添加了基于<em>域</em>和线程的并行性和并发性的新
 <li><p>确定性</p></li>
 <li><p>效果</p></li>
 <li><p>交错</p></li>
-<li><p>延迟隐藏</p></li>
+<li><p>延迟</p></li>
 <li><p>左单位元</p></li>
-<li><p>Lwt Monad</p></li>
-<li><p>Maybe Monad</p></li>
+<li><p>Lwt 单子</p></li>
+<li><p>Maybe 单子</p></li>
 <li><p>单子</p></li>
-<li><p>Monad 定律</p></li>
+<li><p>单子定律</p></li>
 <li><p>非阻塞</p></li>
 <li><p>非确定性</p></li>
 <li><p>并行性</p></li>
@@ -578,9 +574,9 @@ OCaml 5 最近添加了基于<em>域</em>和线程的并行性和并发性的新
 <li><p>抢占式</p></li>
 <li><p>Promise</p></li>
 <li><p>竞争条件</p></li>
-<li><p>被拒绝</p></li>
+<li><p>已拒绝</p></li>
 <li><p>解析循环</p></li>
-<li><p>已解决</p></li>
+<li><p>已解析</p></li>
 <li><p>解析器</p></li>
 <li><p>右单位元</p></li>
 <li><p>顺序的</p></li>
@@ -589,15 +585,15 @@ OCaml 5 最近添加了基于<em>域</em>和线程的并行性和并发性的新
 <li><p>标准输出</p></li>
 <li><p>同步的</p></li>
 <li><p>线程</p></li>
-<li><p>Writer Monad</p></li>
+<li><p>Writer 单子</p></li>
 </ul>
 </section>
 <section id="id3">
-<h2><span class="section-number">7.9.2. </span>进一步阅读<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">7.9.2. </span>延伸阅读<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p><em>现实世界 OCaml</em>，第 16 章</p></li>
+<li><p><em>Real World OCaml</em>，第 16 章</p></li>
 <li><p><a class="reference external" href="https://ocsigen.org/lwt/latest/manual/manual">Lwt 手册</a></p></li>
-<li><p><a class="reference external" href="https://ocaml.org/manual/latest/parallelism.html">OCaml 5 Manual, “Parallel Programming”</a></p></li>
+<li><p><a class="reference external" href="https://ocaml.org/manual/latest/parallelism.html">OCaml 5 手册：“并行编程”</a></p></li>
 </ul>
 </section>
 </section>
@@ -667,7 +663,7 @@ OCaml 5 最近添加了基于<em>域</em>和线程的并行性和并发性的新
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">7.9.1. 术语和概念</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">7.9.2. 进一步阅读</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">7.9.2. 延伸阅读</a></li>
 </ul>
   </nav></div>
 

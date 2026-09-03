@@ -15,12 +15,7 @@ kernelspec:
 
 # 回调
 
-要让程序受益于异步 I/O 和 Promise 提供的并发性，
-程序需要一种方式来使用已经解析的 Promise。例如，如果 Web 服务器异步地
-读取多个文件并将其提供给多个客户端，服务器需要
-一种方法 (i) 意识到读取已完成，并且 (ii) 然后执行
-新的异步写入与读取结果。换句话说，
-程序需要一种机制来管理 Promise 之间的依赖关系。
+要利用异步 I/O 和 Promise 带来的并发能力，程序必须能够使用已经解析的 Promise。例如，Web 服务器异步读取多个文件并发送给不同客户端时，需要知道读取何时完成，再以读取结果启动新的异步写入。换言之，程序需要一种管理 Promise 依赖关系的机制。
 
 Lwt 中提供的机制称为 *callback*。
 回调是一个函数：当它被“注册”到某个 Promise 上时，
@@ -32,14 +27,12 @@ Lwt 中提供的机制称为 *callback*。
 
 ## 注册回调
 
-这是一个使用 Lwt 打印字符串的函数
-`printf` 函数的版本：
+下面是一个使用 Lwt 版 `printf` 打印字符串的函数：
 ```ocaml
 let print_the_string str = Lwt_io.printf "The string is: %S\n" str
 ```
 
-这里重复上一节中的代码，它返回一个 Promise，
-对于从标准输入读取的字符串：
+下面重复上一节的代码，它返回一个 Promise，代表将从标准输入读到的字符串：
 ```ocaml
 let p = read_line stdin
 ```
@@ -94,11 +87,7 @@ val print_the_string : string -> unit Lwt.t = <fun>
   它的内容可以是回调本身返回的 Promise 中包含的任何内容。
 
 ```{note}
-对于上面的第一种情况：Lwt 源代码声称这种行为可能
-更改：在高负载下，`c` 可能会被注册运行
-稍后。但截至 [v5.5.0][lwt-bind-src] 该行为尚未激活。所以，不要
-担心它&mdash;这一段只是为了面向未来
-讨论。
+对于上面的第一种情况，Lwt 源代码指出，这一行为将来可能改变：系统负载较高时，`c` 也许会登记为稍后运行。不过截至 [v5.5.0][lwt-bind-src]，这项行为尚未启用，因此暂时无须担心；这里只是让讨论能够兼顾未来版本。
 ```
 
 [lwt-bind-src]: https://github.com/ocsigen/lwt/blob/73f1a0f0acd5540f25e58bc410e1f63271189c6c/src/core/lwt.ml#L1820
@@ -156,7 +145,7 @@ Promise 被履行，然后返回其中的内容。整个程序通常只在主文
 调用一次这个函数；它的输入通常是一个 Promise，而这个 Promise 的解析
 表示所有执行都已经完成。
 
-创建Dune文件：
+创建一个 Dune 文件：
 ```text
 (executable
  (name read2)
@@ -200,7 +189,7 @@ let _ = Lwt_main.run p
 它的内容最终由 `Lwt_main.run` 取出，程序此时可能终止。
 
 `>>=` 运算符可能是函数式语言 Haskell 中最著名的，
-它广泛地将它用于单子。我们将在后面的部分中介绍 monad。
+它还广泛用于单子；本章后面会介绍这一概念。
 
 ## 作为 Let 语法的 Bind
 

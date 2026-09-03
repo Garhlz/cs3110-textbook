@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -534,13 +534,8 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">7. </span>并发<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>到目前为止，我们只考虑了“顺序”程序。
-顺序程序一次只执行一步，对下一步要执行哪一步没有选择余地。
-顺序程序的局限在于，它们不擅长同时处理多个输入源，而且只能在单个处理器上执行。
-许多现代应用程序都是“并发”的。</p>
-<p>在本章中，我们将了解 <em>Promise</em>，这是一种组织并发计算的方法，近来在命令式 Web 编程中变得流行。
-我们将看到一个名为 Lwt 的 OCaml 库，它实现了 Promise。
-该库部分基于 <em>monad</em> 的概念；monad 是一种组织带有副作用的计算的方式，因此我们将以考察 monad 结束本章。</p>
+<p>到目前为止，我们考察的都是<em>顺序</em>程序：每次只执行一个步骤，而且接下来执行哪一步是确定的。顺序程序不善于同时处理多个输入源，也只能利用单个处理器。许多现代应用则是<em>并发</em>程序。</p>
+<p>本章将介绍 Promise，一种组织并发计算的方法，近年来在命令式 Web 编程中十分流行。我们会使用实现了 Promise 的 OCaml 库 Lwt。Lwt 的部分设计建立在<em>单子</em>（monad）这一概念之上；单子可以组织带副作用的计算，因此本章最后也会考察单子。</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>

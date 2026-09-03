@@ -171,20 +171,9 @@ next_val ()
 next_val ()
 ```
 
-在`next_val`的实现中，有两个表达式，用
-分号。第一个表达式 `counter := !counter + 1` 是一个赋值
-使 `counter` 增加 1。第二个表达式 `!counter` 返回
-`counter` 新增加的内容。
+`next_val` 的实现由分号连接的两个表达式组成。第一个表达式 `counter := !counter + 1` 执行赋值，将计数器加一；第二个表达式 `!counter` 返回更新后的内容。
 
-`next_val` 函数很不寻常，因为每次我们调用它时，它都会返回一个
-不同的价值。这与我们现有的任何函数都非常不同
-到目前为止，我们自己实现的始终是"确定性的"：
-给定输入，它们总是产生相同的输出。另一方面，一些
-函数是*不确定的*：函数的每次调用都可能产生
-尽管接收相同的输入，但输出不同。在标准库中，
-例如， `Random` 模块中的函数是不确定的，如下所示
-`Stdlib.read_line`，读取用户的输入。这并非巧合
-这些恰好是使用可变函数来实现的。
+`next_val` 很不寻常，因为每次调用都可能返回不同的值。此前我们实现的函数都是*确定性的*：输入相同，输出就相同。有些函数则具有*非确定性*，即使接收相同输入，不同调用也可能产生不同输出。标准库中 `Random` 模块的函数如此，读取用户输入的 `Stdlib.read_line` 也是如此。它们恰好都依赖可变性，这并非巧合。
 
 我们可以通过几种方式改进我们的计数器。首先，有一个库
 函数 `incr : int ref -> unit` 将 `int ref` 加 1。因此它是
@@ -192,10 +181,7 @@ next_val ()
 使用它，我们可以写 `incr counter` 而不是 `counter := !counter + 1`。
 （还有一个减 1 的 `decr` 函数。）
 
-其次，我们当前对计数器进行编码的方式将 `counter` 变量公开给
-外面的世界。也许我们更愿意隐藏它，以便 `next_val` 的客户
-不能直接改变它。我们可以通过在范围内嵌套 `counter` 来做到这一点
-`next_val` 的：
+其次，目前的写法把变量 `counter` 暴露给了外部代码。我们更希望将它隐藏起来，防止 `next_val` 的客户端直接修改它。为此，可以把 `counter` 嵌套在 `next_val` 的作用域中：
 
 ```{code-cell} ocaml
 let next_val =
@@ -205,28 +191,22 @@ let next_val =
     !counter
 ```
 
-现在 `counter` 位于 `next_val` 内部的范围内，但在该范围之外无法访问
-范围。
+现在 `counter` 位于 `next_val` 内部，离开这个作用域便无法访问。
 
-之前我们给出let表达式的动态语义时，我们谈到
-替代。考虑 `next_val` 定义的一种方法如下。
+此前介绍 let 表达式的动态语义时，我们使用了替换模型。可以据此按如下方式理解 `next_val` 的定义：
 
-* 首先，计算表达式 `ref 0`。返回位置 `loc`，
-这是内存中的地址。该地址的内容被初始化为
-  `0`。
+* 首先求值 `ref 0`，得到位置 `loc`，也就是内存中的一个地址；该地址的内容初始化为 `0`。
 
-* 其次，在 let 表达式主体中出现 `counter` 的任何地方，我们
-替换它的位置。所以我们得到：
+* 接着，把 let 表达式主体中每个 `counter` 都替换成这个位置，于是得到：
   ```
   fun () -> incr loc; !loc
   ```
 
 * 第三，该匿名函数绑定到 `next_val`。
 
-因此，每当调用 `next_val` 时，它都会递增并返回该内容
-一个内存位置 `loc`。
+因此，每次调用 `next_val`，都会递增并返回内存位置 `loc` 中的内容。
 
-现在想象一下我们编写了以下（损坏的）代码：
+再看看下面这段有问题的代码：
 
 ```{code-cell} ocaml
 let next_val_broken = fun () ->
@@ -235,8 +215,7 @@ let next_val_broken = fun () ->
   !counter
 ```
 
-只是有一点不同： `counter` 的绑定发生在
-`fun () ->` 而不是之前。  但这有很大的不同：
+它看似只有一处细微区别：`counter` 的绑定位于 `fun () ->` 之后，而不是之前。但这一点会造成截然不同的结果：
 
 ```{code-cell} ocaml
 next_val_broken ();;
@@ -368,9 +347,7 @@ let ( ~& ) = address
 
 ## 示例：不带 Rec 的递归
 
-这是一个可以通过 refs 实现的巧妙技巧：我们可以构建递归函数
-无需使用关键字 `rec`。  假设我们要定义一个递归
-诸如 `fact` 之类的函数，我们通常会这样写：
+引用还能实现一个巧妙的技巧：不用关键字 `rec` 也能构造递归函数。假设要定义递归阶乘函数 `fact`，通常会这样写：
 
 ```{code-cell} ocaml
 let rec fact_rec n = if n = 0 then 1 else n * fact_rec (n - 1)
@@ -394,8 +371,7 @@ let fact0 = ref (fun x -> x + 0)
 !fact0 5
 ```
 
-接下来，我们照常写 `fact`，但不写 `rec`。在我们需要的地方
-进行递归调用，我们改为调用存储在 `fact0` 中的函数：
+接下来照常编写 `fact`，但省略 `rec`；需要递归调用时，改为调用 `fact0` 中存储的函数：
 
 ```{code-cell} ocaml
 let fact n = if n = 0 then 1 else n * !fact0 (n - 1)
@@ -408,16 +384,13 @@ fact 0;;
 fact 5;;
 ```
 
-`5` 不正确的原因是递归调用实际上并不是
-到正确的函数。  我们希望递归调用转到 `fact`，而不是
-`fact0`。  **所以这是技巧：**我们将 `fact0` 突变为指向 `fact`：
+`5` 的结果不对，是因为递归调用找错了函数：我们希望它调用 `fact`，而不是原先的 `fact0`。**技巧就在这里：**把 `fact0` 修改为指向 `fact`：
 
 ```{code-cell} ocaml
 fact0 := fact
 ```
 
-现在，当 `fact` 进行递归调用并取消引用 `fact0` 时，它得到
-回到自己！  这使得计算正确：
+现在 `fact` 递归调用并解引用 `fact0` 时，得到的正是自身，计算结果也就正确了：
 
 ```{code-cell} ocaml
 fact 5
@@ -458,11 +431,7 @@ let fact0 = ref (fun x -> x)
 恒等函数 `'_weak1 -> '_weak1` 这个奇怪的类型是什么？为什么
 这不是通常的`'a -> 'a`吗？
 
-答案与多态性之间特别棘手的相互作用有关
-和可变性。在后面关于解释器的章节中，我们将学习如何输入
-推理是有效的，那时我们将能够解释这个问题
-细节。简而言之，允许该引用使用 `'a -> 'a` 类型将导致
-由于类型错误，程序在运行时崩溃的可能性。
+答案涉及多态性与可变性之间格外微妙的相互作用。后面的解释器章节会介绍类型推断，届时我们便能详细解释这个问题。简而言之，如果允许该引用具有 `'a -> 'a` 类型，就可能让程序因类型错误在运行时崩溃。
 
 现在，这样考虑：虽然存储在引用单元格中的*值*是
 允许更改，但该值的*类型*则不允许。如果 OCaml 给出
@@ -498,9 +467,7 @@ let fact0 = ref (fun x -> x)
 !fact0 "camel"
 ```
 
-如果你现在想了解有关弱类型变量的更多信息，请查看
-位于 Jacques 的 [*Relaxing the value restriction*][relaxing] 的第 2 部分
-Garrigue，或 OCaml 手册的 [这一节][weak]。
+如果想进一步了解弱类型变量，请阅读 Jacques Garrigue 的 [*Relaxing the value restriction*][relaxing] 第 2 节，或 OCaml 手册的[相关章节][weak]。
 
 [relaxing]: https://caml.inria.fr/pub/papers/garrigue-value_restriction-fiwflp04.pdf
 [weak]: https://ocaml.org/manual/polymorphism.html
@@ -508,7 +475,7 @@ Garrigue，或 OCaml 手册的 [这一节][weak]。
 ## 物理相等
 
 OCaml 有两个相等运算符：物理相等和结构相等。
-`Stdlib.(==)` 的 [documentation][stdlib] 解释了物理平等：
+[`Stdlib.(==)` 的文档][stdlib]这样解释物理相等：
 
 > `e1 == e2` 测试 `e1` 和 `e2` 的物理相等性。关于可变类型，例如
 > 作为引用、数组、字节序列、具有可变字段和对象的记录

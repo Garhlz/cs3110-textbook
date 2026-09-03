@@ -240,8 +240,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -838,28 +838,14 @@ document.write(`
 </div>
 </div>
 </div>
-<p>在<code class="docutils literal notranslate"><span class="pre">next_val</span></code>的实现中，有两个表达式，用
-分号。第一个表达式 <code class="docutils literal notranslate"><span class="pre">counter</span> <span class="pre">:=</span> <span class="pre">!counter</span> <span class="pre">+</span> <span class="pre">1</span></code> 是一个赋值
-使 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 增加 1。第二个表达式 <code class="docutils literal notranslate"><span class="pre">!counter</span></code> 返回
-<code class="docutils literal notranslate"><span class="pre">counter</span></code> 新增加的内容。</p>
-<p><code class="docutils literal notranslate"><span class="pre">next_val</span></code> 函数很不寻常，因为每次我们调用它时，它都会返回一个
-不同的价值。这与我们现有的任何函数都非常不同
-到目前为止，我们自己实现的始终是”确定性的”：
-给定输入，它们总是产生相同的输出。另一方面，一些
-函数是<em>不确定的</em>：函数的每次调用都可能产生
-尽管接收相同的输入，但输出不同。在标准库中，
-例如， <code class="docutils literal notranslate"><span class="pre">Random</span></code> 模块中的函数是不确定的，如下所示
-<code class="docutils literal notranslate"><span class="pre">Stdlib.read_line</span></code>，读取用户的输入。这并非巧合
-这些恰好是使用可变函数来实现的。</p>
+<p><code class="docutils literal notranslate"><span class="pre">next_val</span></code> 的实现由分号连接的两个表达式组成。第一个表达式 <code class="docutils literal notranslate"><span class="pre">counter</span> <span class="pre">:=</span> <span class="pre">!counter</span> <span class="pre">+</span> <span class="pre">1</span></code> 执行赋值，将计数器加一；第二个表达式 <code class="docutils literal notranslate"><span class="pre">!counter</span></code> 返回更新后的内容。</p>
+<p><code class="docutils literal notranslate"><span class="pre">next_val</span></code> 很不寻常，因为每次调用都可能返回不同的值。此前我们实现的函数都是<em>确定性的</em>：输入相同，输出就相同。有些函数则具有<em>非确定性</em>，即使接收相同输入，不同调用也可能产生不同输出。标准库中 <code class="docutils literal notranslate"><span class="pre">Random</span></code> 模块的函数如此，读取用户输入的 <code class="docutils literal notranslate"><span class="pre">Stdlib.read_line</span></code> 也是如此。它们恰好都依赖可变性，这并非巧合。</p>
 <p>我们可以通过几种方式改进我们的计数器。首先，有一个库
 函数 <code class="docutils literal notranslate"><span class="pre">incr</span> <span class="pre">:</span> <span class="pre">int</span> <span class="pre">ref</span> <span class="pre">-&gt;</span> <span class="pre">unit</span></code> 将 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">ref</span></code> 加 1。因此它是
 就像 C 家族中许多语言所熟悉的 <code class="docutils literal notranslate"><span class="pre">++</span></code> 运算符一样。
 使用它，我们可以写 <code class="docutils literal notranslate"><span class="pre">incr</span> <span class="pre">counter</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">counter</span> <span class="pre">:=</span> <span class="pre">!counter</span> <span class="pre">+</span> <span class="pre">1</span></code>。
 （还有一个减 1 的 <code class="docutils literal notranslate"><span class="pre">decr</span></code> 函数。）</p>
-<p>其次，我们当前对计数器进行编码的方式将 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 变量公开给
-外面的世界。也许我们更愿意隐藏它，以便 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 的客户
-不能直接改变它。我们可以通过在范围内嵌套 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 来做到这一点
-<code class="docutils literal notranslate"><span class="pre">next_val</span></code> 的：</p>
+<p>其次，目前的写法把变量 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 暴露给了外部代码。我们更希望将它隐藏起来，防止 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 的客户端直接修改它。为此，可以把 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 嵌套在 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 的作用域中：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">next_val</span> <span class="o">=</span>
@@ -876,25 +862,19 @@ document.write(`
 </div>
 </div>
 </div>
-<p>现在 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 位于 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 内部的范围内，但在该范围之外无法访问
-范围。</p>
-<p>之前我们给出let表达式的动态语义时，我们谈到
-替代。考虑 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 定义的一种方法如下。</p>
+<p>现在 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 位于 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 内部，离开这个作用域便无法访问。</p>
+<p>此前介绍 let 表达式的动态语义时，我们使用了替换模型。可以据此按如下方式理解 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 的定义：</p>
 <ul>
-<li><p>首先，计算表达式 <code class="docutils literal notranslate"><span class="pre">ref</span> <span class="pre">0</span></code>。返回位置 <code class="docutils literal notranslate"><span class="pre">loc</span></code>，
-这是内存中的地址。该地址的内容被初始化为
-<code class="docutils literal notranslate"><span class="pre">0</span></code>。</p></li>
-<li><p>其次，在 let 表达式主体中出现 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 的任何地方，我们
-替换它的位置。所以我们得到：</p>
+<li><p>首先求值 <code class="docutils literal notranslate"><span class="pre">ref</span> <span class="pre">0</span></code>，得到位置 <code class="docutils literal notranslate"><span class="pre">loc</span></code>，也就是内存中的一个地址；该地址的内容初始化为 <code class="docutils literal notranslate"><span class="pre">0</span></code>。</p></li>
+<li><p>接着，把 let 表达式主体中每个 <code class="docutils literal notranslate"><span class="pre">counter</span></code> 都替换成这个位置，于是得到：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>fun () -&gt; incr loc; !loc
 </pre></div>
 </div>
 </li>
 <li><p>第三，该匿名函数绑定到 <code class="docutils literal notranslate"><span class="pre">next_val</span></code>。</p></li>
 </ul>
-<p>因此，每当调用 <code class="docutils literal notranslate"><span class="pre">next_val</span></code> 时，它都会递增并返回该内容
-一个内存位置 <code class="docutils literal notranslate"><span class="pre">loc</span></code>。</p>
-<p>现在想象一下我们编写了以下（损坏的）代码：</p>
+<p>因此，每次调用 <code class="docutils literal notranslate"><span class="pre">next_val</span></code>，都会递增并返回内存位置 <code class="docutils literal notranslate"><span class="pre">loc</span></code> 中的内容。</p>
+<p>再看看下面这段有问题的代码：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">next_val_broken</span> <span class="o">=</span> <span class="k">fun</span> <span class="bp">()</span> <span class="o">-&gt;</span>
@@ -910,8 +890,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>只是有一点不同： <code class="docutils literal notranslate"><span class="pre">counter</span></code> 的绑定发生在
-<code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">()</span> <span class="pre">-&gt;</span></code> 而不是之前。  但这有很大的不同：</p>
+<p>它看似只有一处细微区别：<code class="docutils literal notranslate"><span class="pre">counter</span></code> 的绑定位于 <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">()</span> <span class="pre">-&gt;</span></code> 之后，而不是之前。但这一点会造成截然不同的结果：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">next_val_broken</span> <span class="bp">()</span><span class="o">;;</span>
@@ -1156,9 +1135,7 @@ document.write(`
 </section>
 <section id="rec">
 <h2><span class="section-number">6.1.6. </span>示例：不带 Rec 的递归<a class="headerlink" href="#rec" title="Permalink to this heading">#</a></h2>
-<p>这是一个可以通过 refs 实现的巧妙技巧：我们可以构建递归函数
-无需使用关键字 <code class="docutils literal notranslate"><span class="pre">rec</span></code>。  假设我们要定义一个递归
-诸如 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 之类的函数，我们通常会这样写：</p>
+<p>引用还能实现一个巧妙的技巧：不用关键字 <code class="docutils literal notranslate"><span class="pre">rec</span></code> 也能构造递归函数。假设要定义递归阶乘函数 <code class="docutils literal notranslate"><span class="pre">fact</span></code>，通常会这样写：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fact_rec</span> <span class="n">n</span> <span class="o">=</span> <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fact_rec</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
@@ -1202,8 +1179,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>接下来，我们照常写 <code class="docutils literal notranslate"><span class="pre">fact</span></code>，但不写 <code class="docutils literal notranslate"><span class="pre">rec</span></code>。在我们需要的地方
-进行递归调用，我们改为调用存储在 <code class="docutils literal notranslate"><span class="pre">fact0</span></code> 中的函数：</p>
+<p>接下来照常编写 <code class="docutils literal notranslate"><span class="pre">fact</span></code>，但省略 <code class="docutils literal notranslate"><span class="pre">rec</span></code>；需要递归调用时，改为调用 <code class="docutils literal notranslate"><span class="pre">fact0</span></code> 中存储的函数：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">fact</span> <span class="n">n</span> <span class="o">=</span> <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">n</span> <span class="o">*</span> <span class="o">!</span><span class="n">fact0</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
@@ -1233,9 +1209,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">5</span></code> 不正确的原因是递归调用实际上并不是
-到正确的函数。  我们希望递归调用转到 <code class="docutils literal notranslate"><span class="pre">fact</span></code>，而不是
-<code class="docutils literal notranslate"><span class="pre">fact0</span></code>。  **所以这是技巧：**我们将 <code class="docutils literal notranslate"><span class="pre">fact0</span></code> 突变为指向 <code class="docutils literal notranslate"><span class="pre">fact</span></code>：</p>
+<p><code class="docutils literal notranslate"><span class="pre">5</span></code> 的结果不对，是因为递归调用找错了函数：我们希望它调用 <code class="docutils literal notranslate"><span class="pre">fact</span></code>，而不是原先的 <code class="docutils literal notranslate"><span class="pre">fact0</span></code>。**技巧就在这里：**把 <code class="docutils literal notranslate"><span class="pre">fact0</span></code> 修改为指向 <code class="docutils literal notranslate"><span class="pre">fact</span></code>：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">fact0</span> <span class="o">:=</span> <span class="n">fact</span>
@@ -1248,8 +1222,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>现在，当 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 进行递归调用并取消引用 <code class="docutils literal notranslate"><span class="pre">fact0</span></code> 时，它得到
-回到自己！  这使得计算正确：</p>
+<p>现在 <code class="docutils literal notranslate"><span class="pre">fact</span></code> 递归调用并解引用 <code class="docutils literal notranslate"><span class="pre">fact0</span></code> 时，得到的正是自身，计算结果也就正确了：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="n">fact</span> <span class="mi">5</span>
@@ -1298,11 +1271,7 @@ document.write(`
 </div>
 <p>恒等函数 <code class="docutils literal notranslate"><span class="pre">'_weak1</span> <span class="pre">-&gt;</span> <span class="pre">'_weak1</span></code> 这个奇怪的类型是什么？为什么
 这不是通常的<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code>吗？</p>
-<p>答案与多态性之间特别棘手的相互作用有关
-和可变性。在后面关于解释器的章节中，我们将学习如何输入
-推理是有效的，那时我们将能够解释这个问题
-细节。简而言之，允许该引用使用 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型将导致
-由于类型错误，程序在运行时崩溃的可能性。</p>
+<p>答案涉及多态性与可变性之间格外微妙的相互作用。后面的解释器章节会介绍类型推断，届时我们便能详细解释这个问题。简而言之，如果允许该引用具有 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">-&gt;</span> <span class="pre">'a</span></code> 类型，就可能让程序因类型错误在运行时崩溃。</p>
 <p>现在，这样考虑：虽然存储在引用单元格中的<em>值</em>是
 允许更改，但该值的<em>类型</em>则不允许。如果 OCaml 给出
 <code class="docutils literal notranslate"><span class="pre">ref</span> <span class="pre">(fun</span> <span class="pre">x</span> <span class="pre">-&gt;</span> <span class="pre">x)</span></code> 类型 <code class="docutils literal notranslate"><span class="pre">('a</span> <span class="pre">-&gt;</span> <span class="pre">'a)</span> <span class="pre">ref</span></code>，那么该单元可以首先存储
@@ -1369,14 +1338,12 @@ document.write(`
 </div>
 </div>
 </div>
-<p>如果你现在想了解有关弱类型变量的更多信息，请查看
-位于 Jacques 的 <a class="reference external" href="https://caml.inria.fr/pub/papers/garrigue-value_restriction-fiwflp04.pdf"><em>Relaxing the value restriction</em></a> 的第 2 部分
-Garrigue，或 OCaml 手册的 <a class="reference external" href="https://ocaml.org/manual/polymorphism.html">这一节</a>。</p>
+<p>如果想进一步了解弱类型变量，请阅读 Jacques Garrigue 的 <a class="reference external" href="https://caml.inria.fr/pub/papers/garrigue-value_restriction-fiwflp04.pdf"><em>Relaxing the value restriction</em></a> 第 2 节，或 OCaml 手册的<a class="reference external" href="https://ocaml.org/manual/polymorphism.html">相关章节</a>。</p>
 </section>
 <section id="id7">
 <h2><span class="section-number">6.1.8. </span>物理相等<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
 <p>OCaml 有两个相等运算符：物理相等和结构相等。
-<code class="docutils literal notranslate"><span class="pre">Stdlib.(==)</span></code> 的 <a class="reference external" href="https://ocaml.org/api/Stdlib.html">documentation</a> 解释了物理平等：</p>
+<a class="reference external" href="https://ocaml.org/api/Stdlib.html"><code class="docutils literal notranslate"><span class="pre">Stdlib.(==)</span></code> 的文档</a>这样解释物理相等：</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">==</span> <span class="pre">e2</span></code> 测试 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 的物理相等性。关于可变类型，例如
 作为引用、数组、字节序列、具有可变字段和对象的记录

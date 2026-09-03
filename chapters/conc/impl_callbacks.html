@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -600,26 +600,13 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">7.6. </span>实现回调<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>当使用 <code class="docutils literal notranslate"><span class="pre">bind</span></code> 或其他语法之一通过 Promise 注册回调时，它是
-添加到与 Promise 一起存储的回调列表中。最终，如果
-Promise 被履行，Lwt 的<em>解析循环</em>会运行所有注册到该 Promise 上的回调。
-这些回调的执行顺序没有保证。换句话说，执行顺序是
-不确定的。如果顺序很重要，程序员需要使用
-组合运算符（例如 <code class="docutils literal notranslate"><span class="pre">bind</span></code> 和 <code class="docutils literal notranslate"><span class="pre">join</span></code>）来强制执行排序。如果
-Promise 永远不会被履行（或被拒绝），它的任何回调都不会运行。</p>
+<p>通过 <code class="docutils literal notranslate"><span class="pre">bind</span></code> 或其他语法向 Promise 注册回调时，回调会加入与该 Promise 一同保存的列表。Promise 最终得到履行后，Lwt 的<em>解析循环</em>会运行其中的所有回调，但不保证执行顺序。也就是说，顺序具有非确定性；若顺序很重要，程序员必须使用 <code class="docutils literal notranslate"><span class="pre">bind</span></code>、<code class="docutils literal notranslate"><span class="pre">join</span></code> 等组合运算符明确约束。如果 Promise 永远得不到履行或拒绝，注册的回调也永远不会运行。</p>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p>Lwt 还支持注册在 Promise 被拒绝后运行的函数。
-<code class="docutils literal notranslate"><span class="pre">Lwt.catch</span></code> 和 <code class="docutils literal notranslate"><span class="pre">try%lwt</span></code> 用于此目的。他们是同行
-对应于 <code class="docutils literal notranslate"><span class="pre">Lwt.bind</span></code> 和 <code class="docutils literal notranslate"><span class="pre">let%lwt</span></code>。</p>
+<p>Lwt 还允许注册在 Promise 被拒绝后运行的函数，<code class="docutils literal notranslate"><span class="pre">Lwt.catch</span></code> 和 <code class="docutils literal notranslate"><span class="pre">try%lwt</span></code> 就用于此目的，分别与 <code class="docutils literal notranslate"><span class="pre">Lwt.bind</span></code> 和 <code class="docutils literal notranslate"><span class="pre">let%lwt</span></code> 相对应。</p>
 </div>
-<p>再次强调，跟踪并发的真正来源非常重要
-来自：操作系统。可能有许多异步 I/O 操作发生在
-操作系统级别。但在 OCaml 级别，解析循环是顺序的，这意味着
-一次只能运行一个回调。</p>
-<p>最后，解析循环永远不会尝试中断回调。所以如果一个
-回调进入无限循环，任何其他回调都不会运行。
-这使得 Lwt 成为一种协作并发机制，而不是抢占式并发机制。</p>
+<p>再次强调，并发真正来自操作系统。操作系统层面可能同时进行许多异步 I/O 操作；但在 OCaml 层面，解析循环仍是顺序的，一次只运行一个回调。</p>
+<p>解析循环不会主动中断回调。因此，只要某个回调陷入无限循环，其余回调就再也无法运行。正因如此，Lwt 属于协作式并发，而不是抢占式并发。</p>
 <p>为了更好地理解回调解析，我们自己实现一下。我们会
 使用我们之前开发的 <code class="docutils literal notranslate"><span class="pre">Promise</span></code> 数据结构。首先，我们添加一个绑定
 运算符到 <code class="docutils literal notranslate"><span class="pre">Promise</span></code> 签名。</p>
@@ -833,12 +820,10 @@ Promise 永远不会被履行（或被拒绝），它的任何回调都不会运
         <span class="k">with</span> <span class="n">exc</span> <span class="o">-&gt;</span> <span class="n">reject</span> <span class="n">resolver</span> <span class="n">exc</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">bind</span></code> 的 Lwt 实现基本上遵循与我们相同的算法
-刚刚实现的算法。请注意，<code class="docutils literal notranslate"><span class="pre">bind</span></code> 本身没有并发：正如我们上面所说，
-它是提供并发性的操作系统。</p>
+<p>Lwt 对 <code class="docutils literal notranslate"><span class="pre">bind</span></code> 的实现基本遵循我们刚才采用的算法。注意，<code class="docutils literal notranslate"><span class="pre">bind</span></code> 本身并不创造并发；正如前面所说，真正提供并发能力的是操作系统。</p>
 <div class="admonition warning">
 <p class="admonition-title">警告</p>
-<p>当输入 Promise 已经履行且回调引发异常时，Lwt 会做出与我们这里不同的选择。在这种情况下，Lwt 的 <code class="docutils literal notranslate"><span class="pre">bind</span></code> 会直接引发异常，而不是返回包含该异常的被拒绝 Promise。这是一个 <a class="reference external" href="https://discuss.ocaml.org/t/lwt-3-2-0-released-we-plan-to-change-lwt-bind/1337/13">known</a> 的 <code class="docutils literal notranslate"><span class="pre">bind</span></code> 规范违例，但由于向后兼容性原因不会修复。</p>
+<p>当输入 Promise 已经履行，而回调又引发异常时，Lwt 的处理与这里不同：<code class="docutils literal notranslate"><span class="pre">bind</span></code> 会直接抛出异常，而不是返回一个携带该异常的已拒绝 Promise。这是一个<a class="reference external" href="https://discuss.ocaml.org/t/lwt-3-2-0-released-we-plan-to-change-lwt-bind/1337/13">已知的</a> <code class="docutils literal notranslate"><span class="pre">bind</span></code> 规范违例，但出于向后兼容考虑不会修复。</p>
 </div>
 </section>
 

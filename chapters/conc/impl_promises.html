@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -610,8 +610,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="promise">
 <h1><span class="section-number">7.3. </span>实现 Promise<a class="headerlink" href="#promise" title="Permalink to this heading">#</a></h1>
-<p>这是我们自己的 Lwt 风格的 Promise 的接口。名字已更改
-使接口更加清晰。</p>
+<p>下面是我们自行设计的 Lwt 风格 Promise 接口。为了让接口更清楚，其中的名称经过了调整。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** A signature for Lwt-style promises, with better names. *)</span>
@@ -664,8 +663,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>为了实现该接口，我们可以将表示类型设置为
-<code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">promise</span></code> 是对状态的引用：</p>
+<p>要实现这个接口，可以让 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">promise</span></code> 的表示类型成为对状态的引用：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">state</span> <span class="o">=</span> <span class="nc">Pending</span> <span class="o">|</span> <span class="nc">Fulfilled</span> <span class="k">of</span> <span class="k">'</span><span class="n">a</span> <span class="o">|</span> <span class="nc">Rejected</span> <span class="k">of</span> <span class="n">exn</span>
@@ -697,15 +695,8 @@ document.write(`
 </div>
 </div>
 </div>
-<p>所以在内部，这两种类型是完全相同的。但在外部，没有客户端
-<code class="docutils literal notranslate"><span class="pre">Promise</span></code> 模块将能够区分它们。换句话说，我们是
-使用类型系统来控制是否可以应用某些
-函数（例如 <code class="docutils literal notranslate"><span class="pre">state</span></code> 与 <code class="docutils literal notranslate"><span class="pre">fulfill</span></code>）来读取或解析 Promise。</p>
-<p>为了帮助实现其余的函数，让我们从编写一个助手开始
-函数 <code class="docutils literal notranslate"><span class="pre">write_once</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">promise</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">state</span> <span class="pre">-&gt;</span> <span class="pre">unit</span></code> 来更新引用。这个
-函数会把 Promise 的状态从待处理更改为
-已履行或已拒绝，一旦状态改变，就不允许
-又变了。也就是说，它强制执行“一次写入”不变式。</p>
+<p>因此，这两种类型在模块内部完全相同；模块外的客户端却能区分它们。换言之，我们利用类型系统来控制哪些函数可以作用于相应的值：例如用 <code class="docutils literal notranslate"><span class="pre">state</span></code> 读取 Promise，或用 <code class="docutils literal notranslate"><span class="pre">fulfill</span></code> 解析 Promise。</p>
+<p>为了实现其余函数，先编写辅助函数 <code class="docutils literal notranslate"><span class="pre">write_once</span> <span class="pre">:</span> <span class="pre">'a</span> <span class="pre">promise</span> <span class="pre">-&gt;</span> <span class="pre">'a</span> <span class="pre">state</span> <span class="pre">-&gt;</span> <span class="pre">unit</span></code> 来更新引用。它把 Promise 从待处理状态改为已履行或已拒绝，此后不允许再次改变，从而强制维持“只写一次”的不变式。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="c">(** [write_once p s] changes the state of [p] to be [s].  If [p] and [s]</span>
@@ -782,13 +773,8 @@ document.write(`
 </div>
 <section id="lwt-promise">
 <h2><span class="section-number">7.3.1. </span>Lwt Promise<a class="headerlink" href="#lwt-promise" title="Permalink to this heading">#</a></h2>
-<p>Lwt 中使用的类型和名称比我们上面使用的要晦涩一些。
-Lwt 使用来自线程—的类比术语，但是由于 Lwt 确实
-没有实际实现线程，该术语不一定有帮助。 （我们
-没有贬低Lwt的意思！这是一个一直在发展和变化的库
-随着时间的推移。）</p>
-<p>Lwt接口包括以下声明，我们已对其进行了注释
-用注释将它们与我们上面实现的接口进行比较：</p>
+<p>Lwt 使用的类型名和函数名比上面的版本晦涩一些。它借用了线程领域的术语，但 Lwt 实际上并不实现线程，所以这种类比未必有帮助。（这并非有意贬低 Lwt；这个库一直在演进，术语也随时间变化。）</p>
+<p>Lwt 接口包含以下声明。代码中的注释把这些声明与我们刚实现的接口对应起来：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">Lwt</span> <span class="o">=</span> <span class="k">sig</span>

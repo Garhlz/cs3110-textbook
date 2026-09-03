@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -612,15 +612,8 @@ document.write(`
 <h1><span class="section-number">7.4. </span>异步输入和输出<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <p>既然我们已经把 Promise 理解为一种数据抽象，下面看看它们如何用于并发。
 在 Lwt 中，Promise 的典型用途是并发输入和输出 (I/O)。</p>
-<p>OCaml 标准库中的 I/O 函数是<em>同步</em>
-又名 <em>阻塞</em>：当你调用这样的函数时，它不会返回，直到 I/O
-已完成。这里的“同步”指的是之间的同步
-你的代码和 I/O 函数：你的代码不会再次执行，直到
-I/O 代码完成。“阻塞”是指你的代码必须等待—也就是被阻塞—
-直到 I/O 完成。</p>
-<p>例如，<code class="docutils literal notranslate"><span class="pre">Stdlib.input_line</span> <span class="pre">:</span> <span class="pre">in_channel</span> <span class="pre">-&gt;</span> <span class="pre">string</span></code> 函数读取
-从<em>输入通道</em>开始的字符直到到达换行符，然后
-返回读取到的字符。类型 <code class="docutils literal notranslate"><span class="pre">in_channel</span></code> 是抽象的；它代表可以读取的数据源，
+<p>OCaml 标准库中的 I/O 函数是<em>同步</em>的，也称为<em>阻塞式</em> I/O：调用之后，函数要等到 I/O 完成才会返回。这里的“同步”是指你的代码与 I/O 函数保持同步，I/O 完成之前，代码无法继续执行；“阻塞”则强调代码必须停下来等待。</p>
+<p>例如，<code class="docutils literal notranslate"><span class="pre">Stdlib.input_line</span> <span class="pre">:</span> <span class="pre">in_channel</span> <span class="pre">-&gt;</span> <span class="pre">string</span></code> 从<em>输入通道</em>读取字符，直到遇到换行符，再返回读到的内容。类型 <code class="docutils literal notranslate"><span class="pre">in_channel</span></code> 是抽象的；它代表可以读取的数据源，
 例如文件、网络或键盘。值 <code class="docutils literal notranslate"><span class="pre">Stdlib.stdin</span> <span class="pre">:</span> <span class="pre">in_channel</span></code> 代表<em>标准输入</em>
 通道，通常默认提供键盘输入。</p>
 <p>如果你在 utop 中运行以下代码，你将观察到阻塞行为：</p>
@@ -691,8 +684,7 @@ val p : string Lwt.t = &lt;abstr&gt;
 刚刚发生了！在 <code class="docutils literal notranslate"><span class="pre">let</span></code> 语句之后，<code class="docutils literal notranslate"><span class="pre">p</span></code> 的类型为 <code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">Lwt.t</span></code>，如下
 预期。但是当我们求值 <code class="docutils literal notranslate"><span class="pre">p</span></code> 时，它返回的类型却是 <code class="docutils literal notranslate"><span class="pre">string</span></code>。就好像
 Promise 消失了。</p>
-<p>实际发生的情况是 utop 有一些特殊的 — 并且可能
-令人困惑的 — 内置的 Lwt 相关特性。
+<p>实际原因是 utop 内置了一项特殊、也可能令人困惑的 Lwt 功能。
 具体来说，每当你尝试直接求值顶层的 Promise 时，
 <em>utop 会给你 Promise 的内容，而不是 Promise 本身；
 如果 Promise 尚未解析，utop 会阻塞，直到 Promise 被解析，以便返回其中的内容。</em></p>
@@ -725,9 +717,7 @@ Camels are bae
 - : string = "Camels are bae"
 </pre></div>
 </div>
-<p>由于潜在的混乱，我们今后将假设自动运行
-已禁用。实现这一点的一个好方法是将以下行放入你的
-<code class="docutils literal notranslate"><span class="pre">.ocamlinit</span></code> 文件：</p>
+<p>为免混淆，后文将假定自动运行功能已关闭。一个方便的做法是把下面这行加入 <code class="docutils literal notranslate"><span class="pre">.ocamlinit</span></code>：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>UTop.set_auto_run_lwt false;;
 </pre></div>
 </div>

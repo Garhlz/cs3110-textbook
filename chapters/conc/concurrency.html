@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -612,10 +612,7 @@ document.write(`
 <h1><span class="section-number">7.1. </span>并发<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <p>并发程序让多个计算在时间上发生重叠，而不是被迫完全按顺序执行。</p>
 <ul class="simple">
-<li><p>例如，<em>图形用户界面</em> (GUI) 依靠并发性来保持
-用户界面有响应，同时计算在后台继续进行。如果没有并发，GUI 会“锁死”，
-直到当前操作完成。有时由于并发错误，仍然会发生这种情况—
-这会让用户非常沮丧！</p></li>
+<li><p>例如，<em>图形用户界面</em>（GUI）依靠并发来保持响应，同时让计算在后台继续。没有并发，GUI 就会“卡死”，直到当前操作结束。并发程序出了问题时，这种情况仍可能发生，令用户十分恼火。</p></li>
 <li><p>电子表格需要并发性来重新计算所有单元格，同时保持菜单和编辑功能可用。</p></li>
 <li><p>Web 浏览器需要并发性来随着新数据通过网络传入而增量读取和渲染网页，
 运行嵌入在网页中的脚本，并让用户能够浏览页面、点击超链接。</p></li>
@@ -623,42 +620,17 @@ document.write(`
 <p><em>服务器</em>是另一类需要并发的应用程序。Web 服务器需要响应许多客户端请求，
 而客户端通常不愿意等待。例如，如果作业发布在 CMS 上，你肯定希望能和
 班上其他人同时查看作业，而不是像在车管所或老式熟食店那样“取号”等叫号。</p>
-<p><em>操作系统</em> (OS) 的主要工作之一是提供并发性。
-该操作系统使许多应用程序可以同时执行：
-音乐播放器、网络浏览器、代码编辑器等。它是如何做到这一点的？有
-两种基本的、互补的方法：</p>
+<p><em>操作系统</em>（OS）的主要职责之一就是提供并发，让音乐播放器、浏览器、代码编辑器等多个应用可以同时运行。它有两种基本而互补的实现方式：</p>
 <ul class="simple">
-<li><p>**交错：**在计算之间快速来回切换。对于
-例如，执行音乐播放器 100 毫秒，然后执行浏览器，然后
-编辑器，然后重复。这使得它看起来像是多次计算
-是同时发生的，但实际上，只有一个发生在
-同时。</p></li>
-<li><p>**并行性：**使用能够执行两个或多个任务的硬件
-实际上是同时进行计算。如今许多处理器都是
-<em>多核</em>，意味着它们有多个中央处理单元 (CPU)，
-每个都可以同时执行一个程序。</p></li>
+<li><p><strong>交错：</strong> 在不同计算之间快速切换。例如，先让音乐播放器运行 100 毫秒，再运行浏览器和编辑器，然后重复这一过程。多个计算看似同时进行，实际上任一时刻只有一个计算在执行。</p></li>
+<li><p><strong>并行性：</strong> 使用能够真正同时执行两个或多个计算的硬件。如今许多处理器都是<em>多核</em>处理器，即拥有多个中央处理单元（CPU），每个核心都能同时执行程序。</p></li>
 </ul>
-<p>无论使用哪种方法，并发编程都是具有挑战性的。
-即使有多个核心可供同时使用，仍然有
-许多其他必须共享的资源：内存、屏幕、网络
-管理该共享，尤其是在不引入错误的情况下，是
-相当困难。例如，如果两个程序想要使用
-计算机的内存中，需要就每个程序的运行时间达成某种协议
-允许从内存中读取和写入。否则，例如，两个程序
-可能会尝试写入内存中的同一位置，从而导致损坏
-数据。那些类型的“竞争条件”，程序竞相完成其任务
-众所周知，在另一个程序之前进行操作是很难避免的。</p>
+<p>无论采用哪种方式，并发编程都极具挑战。即使多个核心可以同时工作，内存、屏幕和网络等许多资源仍须共享。既要管理共享，又不引入错误，相当困难。例如，两个程序共同使用内存时，必须协调各自何时能够读写；否则它们可能同时写入同一位置，破坏其中的数据。程序竞相赶在彼此之前完成操作所造成的这类<em>竞争条件</em>，出了名地难以避免。</p>
 <p>最基本的挑战是，并发性会让程序执行变得<em>非确定性</em>：
 操作发生的顺序不一定能提前知道。竞争条件就是非确定性的一个例子。
 为了在非确定性面前正确编程，程序员不得不考虑“所有”可能的操作顺序，
 并确保程序在<em>所有</em>这些顺序下都能正常工作。</p>
-<p>纯函数式程序使非确定性更容易推理，因为
-无论如何，表达式的求值总是返回相同的值。对于
-例如，在表达式 <code class="docutils literal notranslate"><span class="pre">(2</span> <span class="pre">*</span> <span class="pre">4)</span> <span class="pre">+</span> <span class="pre">(3</span> <span class="pre">*</span> <span class="pre">5)</span></code> 中，可以执行操作
-同时（例如，同时求值左右两个乘积）
-而不改变答案。命令式编程的问题更多。对于
-例如，表达式 <code class="docutils literal notranslate"><span class="pre">!x</span></code> 和 <code class="docutils literal notranslate"><span class="pre">incr</span> <span class="pre">x;</span> <span class="pre">!x</span></code> 如果同时执行，可以
-根据先执行的结果给出不同的结果。</p>
+<p>纯函数式程序中的非确定性更容易推理，因为同一个表达式无论何时求值都会得到相同结果。例如，计算 <code class="docutils literal notranslate"><span class="pre">(2</span> <span class="pre">*</span> <span class="pre">4)</span> <span class="pre">+</span> <span class="pre">(3</span> <span class="pre">*</span> <span class="pre">5)</span></code> 时，左右两项乘法可以同时进行，而答案不会改变。命令式程序则麻烦得多：若同时执行 <code class="docutils literal notranslate"><span class="pre">!x</span></code> 和 <code class="docutils literal notranslate"><span class="pre">incr</span> <span class="pre">x;</span> <span class="pre">!x</span></code>，结果会随执行先后而变化。</p>
 <section id="id2">
 <h2><span class="section-number">7.1.1. </span>线程<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <p>为了使并发编程变得更容易，计算机科学家发明了许多
@@ -669,13 +641,7 @@ document.write(`
 调度器可以停止线程并稍后重新启动它，线程自己对此没有选择权；
 也可以是<em>协作式</em>的：线程必须主动选择把控制权交还给调度器。
 前者可能导致竞争条件，后者可能导致应用程序无响应。</p>
-<p>具体来说，线程是加载到线程中的一组值
-处理器的寄存器。  这些值告诉处理器在哪里可以找到
-下一条要执行的指令，其堆栈和堆位于
-内存等。为了实现抢占，调度器在内存中设置一个定时器
-硬件；当定时器关闭时，当前线程被中断，
-调度程序开始运行。系统编程和操作系统课程
-通常会详细介绍这些概念。</p>
+<p>具体来说，线程是一组加载到处理器寄存器中的值。这些值告诉处理器下一条指令在哪里、栈和堆位于内存何处，等等。为了实现抢占，调度器会在硬件中设置定时器；计时结束时，当前线程被中断，调度器随即开始运行。系统编程和操作系统课程通常会详细讲解这些概念。</p>
 </section>
 </section>
 

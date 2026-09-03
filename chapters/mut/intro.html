@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -534,19 +534,9 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">6. </span>可变性<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>OCaml 不是一门<em>纯</em>语言：它确实存在副作用。我们已经见过
-I/O，尤其是打印。但到目前为止，我们一直把自己限制在
-<em>不可变</em>的语言子集中：值无法更改。</p>
-<p>可变性既不好也不坏。它带来了一些新能力：
-可以实现以前无法实现（或至少不容易实现）的功能，
-也能让某些数据结构比其纯函数式对应物具有更好的渐近效率。
-但可变性确实会让代码更难推理，因此也是许多错误的根源。
-原因之一可能是人类并不擅长思考变化。对于不可变值，
-我们一旦确定了某个事实，就知道它永远不会改变。
-但对于可变值，情况不再如此。正如人们所说，”变化是困难的”。</p>
-<p>在这一简短章节中，我们将介绍一些此前省略的 OCaml 可变特性，
-并将它们用于一些简单的数据结构。真正的收获会在后续章节出现，
-届时我们会把这些特性用于更高级的用途。</p>
+<p>OCaml 并不是一门<em>纯</em>函数式语言，它确实允许副作用。我们已经接触过 I/O，尤其是打印。不过到目前为止，我们一直只使用这门语言中<em>不可变</em>的部分：值一旦创建便不会改变。</p>
+<p>可变性本身无所谓好坏。它赋予我们新的能力：可以实现以往无法实现、或至少很难实现的功能，也能让某些数据结构获得优于纯函数式版本的渐近效率。然而，可变性会增加推理代码的难度，因此也是许多错误的根源。原因之一或许在于，人类并不擅长思考不断变化的事物。面对不可变值，一旦确认某个事实，就知道它会始终成立；面对可变值则不然。套用一句老话：“变化总是困难的。”</p>
+<p>本章篇幅不长，将介绍此前略过的几项 OCaml 可变特性，并用它们实现一些简单的数据结构。更大的收获会在后续章节出现，届时这些特性将派上更高级的用场。</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>

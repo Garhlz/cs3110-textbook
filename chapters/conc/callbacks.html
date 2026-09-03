@@ -238,8 +238,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../modules/encapsulation.html">5.4. 封装</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/compilation_units.html">5.5. 编译单元</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functional_data_structures.html">5.6. 函数式数据结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型限制</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/module_type_constraints.html">5.7. 模块类型约束</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/includes.html">5.8. Include：纳入定义</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/functors.html">5.9. 函子</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/summary.html">5.10. 总结</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/exercises.html">5.11. 练习</a></li>
@@ -614,12 +614,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1><span class="section-number">7.5. </span>回调<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
-<p>要让程序受益于异步 I/O 和 Promise 提供的并发性，
-程序需要一种方式来使用已经解析的 Promise。例如，如果 Web 服务器异步地
-读取多个文件并将其提供给多个客户端，服务器需要
-一种方法 (i) 意识到读取已完成，并且 (ii) 然后执行
-新的异步写入与读取结果。换句话说，
-程序需要一种机制来管理 Promise 之间的依赖关系。</p>
+<p>要利用异步 I/O 和 Promise 带来的并发能力，程序必须能够使用已经解析的 Promise。例如，Web 服务器异步读取多个文件并发送给不同客户端时，需要知道读取何时完成，再以读取结果启动新的异步写入。换言之，程序需要一种管理 Promise 依赖关系的机制。</p>
 <p>Lwt 中提供的机制称为 <em>callback</em>。
 回调是一个函数：当它被“注册”到某个 Promise 上时，
 会在该 Promise 履行后的某个时间运行。
@@ -629,13 +624,11 @@ document.write(`
 在等待他们给你回电时，你可以做其他事情，当他们给你回电时，你可以使用他们给你的答案。</p>
 <section id="id2">
 <h2><span class="section-number">7.5.1. </span>注册回调<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>这是一个使用 Lwt 打印字符串的函数
-<code class="docutils literal notranslate"><span class="pre">printf</span></code> 函数的版本：</p>
+<p>下面是一个使用 Lwt 版 <code class="docutils literal notranslate"><span class="pre">printf</span></code> 打印字符串的函数：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">print_the_string</span> <span class="n">str</span> <span class="o">=</span> <span class="nn">Lwt_io</span><span class="p">.</span><span class="n">printf</span> <span class="s2">"The string is: %S</span><span class="se">\n</span><span class="s2">"</span> <span class="n">str</span>
 </pre></div>
 </div>
-<p>这里重复上一节中的代码，它返回一个 Promise，
-对于从标准输入读取的字符串：</p>
+<p>下面重复上一节的代码，它返回一个 Promise，代表将从标准输入读到的字符串：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="n">read_line</span> <span class="n">stdin</span>
 </pre></div>
 </div>
@@ -683,11 +676,7 @@ val print_the_string : string -&gt; unit Lwt.t = &lt;fun&gt;
 </ul>
 <div class="admonition note">
 <p class="admonition-title">备注</p>
-<p>对于上面的第一种情况：Lwt 源代码声称这种行为可能
-更改：在高负载下，<code class="docutils literal notranslate"><span class="pre">c</span></code> 可能会被注册运行
-稍后。但截至 <a class="reference external" href="https://github.com/ocsigen/lwt/blob/73f1a0f0acd5540f25e58bc410e1f63271189c6c/src/core/lwt.ml#L1820">v5.5.0</a> 该行为尚未激活。所以，不要
-担心它—这一段只是为了面向未来
-讨论。</p>
+<p>对于上面的第一种情况，Lwt 源代码指出，这一行为将来可能改变：系统负载较高时，<code class="docutils literal notranslate"><span class="pre">c</span></code> 也许会登记为稍后运行。不过截至 <a class="reference external" href="https://github.com/ocsigen/lwt/blob/73f1a0f0acd5540f25e58bc410e1f63271189c6c/src/core/lwt.ml#L1820">v5.5.0</a>，这项行为尚未启用，因此暂时无须担心；这里只是让讨论能够兼顾未来版本。</p>
 </div>
 <p>让我们更详细地考虑最后一种情况。我们有一个类型为
 <code class="docutils literal notranslate"><span class="pre">'a</span> <span class="pre">Lwt.t</span></code> 的 Promise，以及两个类型为 <code class="docutils literal notranslate"><span class="pre">'b</span> <span class="pre">Lwt.t</span></code> 的 Promise：</p>
@@ -734,7 +723,7 @@ Y 也会因同一个异常被拒绝。如果 Z 一直待处理，Y 也会一直�
 Promise 被履行，然后返回其中的内容。整个程序通常只在主文件末尾附近
 调用一次这个函数；它的输入通常是一个 Promise，而这个 Promise 的解析
 表示所有执行都已经完成。</p>
-<p>创建Dune文件：</p>
+<p>创建一个 Dune 文件：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(executable
  (name read2)
  (libraries lwt.unix))
@@ -773,7 +762,7 @@ Promise 被履行，然后返回其中的内容。整个程序通常只在主文
 第二行含义相同，只是内容被命名为 <code class="docutils literal notranslate"><span class="pre">s2</span></code>。第三行创建最终的 Promise，
 它的内容最终由 <code class="docutils literal notranslate"><span class="pre">Lwt_main.run</span></code> 取出，程序此时可能终止。</p>
 <p><code class="docutils literal notranslate"><span class="pre">&gt;&gt;=</span></code> 运算符可能是函数式语言 Haskell 中最著名的，
-它广泛地将它用于单子。我们将在后面的部分中介绍 monad。</p>
+它还广泛用于单子；本章后面会介绍这一概念。</p>
 </section>
 <section id="let-bind">
 <h2><span class="section-number">7.5.4. </span>作为 Let 语法的 Bind<a class="headerlink" href="#let-bind" title="Permalink to this heading">#</a></h2>
