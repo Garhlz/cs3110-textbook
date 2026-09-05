@@ -246,7 +246,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">6. 可变性</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="refs.html">6.1. 引用</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mutable_fields.html">6.2. 可变字段</a></li>
 <li class="toctree-l2"><a class="reference internal" href="arrays.html">6.3. 数组和循环</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">6.4. 总结</a></li>
@@ -547,6 +547,7 @@ document.write(`
 <h1><span class="section-number">6.4. </span>总结<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <p>可变数据类型会增加程序推理的难度。例如，在学习引用之前，我们根本不必担心 OCaml 中的别名问题。不过，可变性也确有用武之地：I/O 本质上涉及状态变化，数组和哈希表等数据结构若没有可变性，也很难得到高效实现。</p>
 <p>可变性赋予我们强大的能力，但能力越大，责任也越大。请谨慎使用刚刚掌握的力量。</p>
+<p>实践中可以遵循一个简单原则：默认优先使用不可变数据；当可变性确实能简化状态管理或改善效率时，再引入它，并尽量把可变状态封装在较小的作用域内。阅读可变代码时，则要同时追踪两件事：哪些位置的内容可能改变，以及哪些名字可能是同一位置的别名。</p>
 <section id="id2">
 <h2><span class="section-number">6.4.1. </span>术语和概念<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <ul class="simple">

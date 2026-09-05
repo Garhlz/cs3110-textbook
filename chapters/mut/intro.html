@@ -69,7 +69,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../../_static/op.png"/>
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
-    <link rel="next" title="6.1. Ref" href="refs.html" />
+    <link rel="next" title="6.1. 引用" href="refs.html" />
     <link rel="prev" title="5.11. 练习" href="../modules/exercises.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-CN"/>
@@ -246,7 +246,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">6. 可变性</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="refs.html">6.1. 引用</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mutable_fields.html">6.2. 可变字段</a></li>
 <li class="toctree-l2"><a class="reference internal" href="arrays.html">6.3. 数组和循环</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">6.4. 总结</a></li>
@@ -537,6 +537,7 @@ document.write(`
 <p>OCaml 并不是一门<em>纯</em>函数式语言，它确实允许副作用。我们已经接触过 I/O，尤其是打印。不过到目前为止，我们一直只使用这门语言中<em>不可变</em>的部分：值一旦创建便不会改变。</p>
 <p>可变性本身无所谓好坏。它赋予我们新的能力：可以实现以往无法实现、或至少很难实现的功能，也能让某些数据结构获得优于纯函数式版本的渐近效率。然而，可变性会增加推理代码的难度，因此也是许多错误的根源。原因之一或许在于，人类并不擅长思考不断变化的事物。面对不可变值，一旦确认某个事实，就知道它会始终成立；面对可变值则不然。套用一句老话：“变化总是困难的。”</p>
 <p>本章篇幅不长，将介绍此前略过的几项 OCaml 可变特性，并用它们实现一些简单的数据结构。更大的收获会在后续章节出现，届时这些特性将派上更高级的用场。</p>
+<p>理解本章时，可以始终抓住一条主线：<strong>变量的绑定没有改变，改变的是它所指向的内存位置中的内容。</strong> 引用表示一个可变位置，可变字段为位置赋予名称，数组则把一组位置编上索引。可变性还会带来别名：多个名字可能指向同一个位置，因此从一个名字发起的修改，也可能通过另一个名字观察到。这正是可变程序更难推理的主要原因。</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -585,7 +586,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">下一页</p>
-        <p class="prev-next-title"><span class="section-number">6.1. </span>Ref</p>
+        <p class="prev-next-title"><span class="section-number">6.1. </span>引用</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

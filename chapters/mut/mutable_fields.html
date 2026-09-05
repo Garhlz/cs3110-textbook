@@ -70,7 +70,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
     <link rel="next" title="6.3. 数组和循环" href="arrays.html" />
-    <link rel="prev" title="6.1. Ref" href="refs.html" />
+    <link rel="prev" title="6.1. 引用" href="refs.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-CN"/>
   </head>
@@ -246,7 +246,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">6. 可变性</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="refs.html">6.1. 引用</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">6.2. 可变字段</a></li>
 <li class="toctree-l2"><a class="reference internal" href="arrays.html">6.3. 数组和循环</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">6.4. 总结</a></li>
@@ -596,9 +596,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#refs">6.2.1. Refs 是可变字段</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.2.2. 示例：可变单链表</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.2.3. 示例：可变堆栈</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.2.1. 引用就是可变字段</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.2.2. 示例：可变单链表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">6.2.3. 示例：可变堆栈</a></li>
 </ul>
             </nav>
         </div>
@@ -685,13 +685,14 @@ document.write(`
 <li><p><strong>动态语义：</strong> 对 <code class="docutils literal notranslate"><span class="pre">e1.f</span> <span class="pre">&lt;-</span> <span class="pre">e2</span></code> 求值时，先将 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 求值为 <code class="docutils literal notranslate"><span class="pre">v2</span></code>，再将 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 求值为 <code class="docutils literal notranslate"><span class="pre">v1</span></code>；<code class="docutils literal notranslate"><span class="pre">v1</span></code> 必须包含名为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 的字段。随后把 <code class="docutils literal notranslate"><span class="pre">v1.f</span></code> 更新为 <code class="docutils literal notranslate"><span class="pre">v2</span></code>，并返回 <code class="docutils literal notranslate"><span class="pre">()</span></code>。</p></li>
 <li><p><strong>静态语义：</strong> 若 <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">:</span> <span class="pre">t1</span></code>、<code class="docutils literal notranslate"><span class="pre">t1</span> <span class="pre">=</span> <span class="pre">{...;</span> <span class="pre">mutable</span> <span class="pre">f</span> <span class="pre">:</span> <span class="pre">t2;</span> <span class="pre">...}</span></code> 且 <code class="docutils literal notranslate"><span class="pre">e2</span> <span class="pre">:</span> <span class="pre">t2</span></code>，则 <code class="docutils literal notranslate"><span class="pre">e1.f</span> <span class="pre">&lt;-</span> <span class="pre">e2</span> <span class="pre">:</span> <span class="pre">unit</span></code>。</p></li>
 </ul>
-<section id="refs">
-<h2><span class="section-number">6.2.1. </span>Refs 是可变字段<a class="headerlink" href="#refs" title="Permalink to this heading">#</a></h2>
+<section id="id2">
+<h2><span class="section-number">6.2.1. </span>引用就是可变字段<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <p>事实上，引用就是用可变字段实现的。<a class="reference external" href="https://ocaml.org/api/Stdlib.html"><code class="docutils literal notranslate"><span class="pre">Stdlib</span></code></a> 中有如下声明：</p>
 <div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="k">'</span><span class="n">a</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span> <span class="k">mutable</span> <span class="n">contents</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">}</span>
 </pre></div>
 </div>
 <p>这解释了为什么顶层输出的引用看起来像记录：它<em>的确就是</em>一个包含可变字段 <code class="docutils literal notranslate"><span class="pre">contents</span></code> 的记录。</p>
+<p>因此，引用和可变记录并不是两套互不相干的机制：引用可以看作只有一个可变字段的记录。读取 <code class="docutils literal notranslate"><span class="pre">!r</span></code> 就是读取该字段，执行 <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">:=</span> <span class="pre">v</span></code> 就是更新该字段。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">42</span>
@@ -743,8 +744,8 @@ document.write(`
 </div>
 <p>之所以说“等价”，是因为这些函数实际上并非由 OCaml 源码实现，而是位于主要以 C 编写的 OCaml 运行时中。不过，它们的行为确实与上面的 OCaml 代码相同。</p>
 </section>
-<section id="id2">
-<h2><span class="section-number">6.2.2. </span>示例：可变单链表<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<section id="id3">
+<h2><span class="section-number">6.2.2. </span>示例：可变单链表<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/dLi6Vo_Yp34" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 <p>借助可变字段，可以实现一个与引用版本几乎相同的单链表，而且节点和列表的类型更加简洁：</p>
 <div class="cell docutils container">
@@ -811,8 +812,8 @@ document.write(`
 </div>
 </div>
 </section>
-<section id="id3">
-<h2><span class="section-number">6.2.3. </span>示例：可变堆栈<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<section id="id4">
+<h2><span class="section-number">6.2.3. </span>示例：可变堆栈<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
 <p>我们已经知道，列表和栈的实现方式十分相似。下面运用可变链表中的知识实现可变栈。先给出接口：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -858,7 +859,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>现在让我们用可变链表来实现可变堆栈。</p>
+<p>下面用可变链表实现可变栈。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-OCaml notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nc">MutableRecordStack</span> <span class="o">:</span> <span class="nc">MutableStack</span> <span class="o">=</span> <span class="k">struct</span>
@@ -940,7 +941,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">上一页</p>
-        <p class="prev-next-title"><span class="section-number">6.1. </span>Ref</p>
+        <p class="prev-next-title"><span class="section-number">6.1. </span>引用</p>
       </div>
     </a>
     <a class="right-next"
@@ -968,9 +969,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#refs">6.2.1. Refs 是可变字段</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.2.2. 示例：可变单链表</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.2.3. 示例：可变堆栈</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.2.1. 引用就是可变字段</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.2.2. 示例：可变单链表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">6.2.3. 示例：可变堆栈</a></li>
 </ul>
   </nav></div>
 

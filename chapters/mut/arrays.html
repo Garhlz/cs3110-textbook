@@ -246,7 +246,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">6. 可变性</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="refs.html">6.1. Ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="refs.html">6.1. 引用</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mutable_fields.html">6.2. 可变字段</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">6.3. 数组和循环</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">6.4. 总结</a></li>
@@ -602,6 +602,7 @@ document.write(`
 <h1><span class="section-number">6.3. </span>数组和循环<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/-k4rM1viJH4" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 <p>数组是长度固定的可变序列，支持常数时间的访问和更新。它兼具引用、列表和元组的部分特征：像引用一样可变，像列表一样表示有限序列，又像元组一样预先确定长度、不能调整大小。</p>
+<p>沿用前面的“位置—内容”模型，可以把数组理解为一组按整数编号的可变位置：<code class="docutils literal notranslate"><span class="pre">v.(i)</span></code> 读取第 <code class="docutils literal notranslate"><span class="pre">i</span></code> 个位置，<code class="docutils literal notranslate"><span class="pre">v.(i)</span> <span class="pre">&lt;-</span> <span class="pre">x</span></code> 则修改该位置中的内容。若两个变量指向同一个数组，通过其中一个变量进行的修改，也能通过另一个变量观察到。</p>
 <p>数组的语法与列表类似：</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -670,6 +671,7 @@ document.write(`
 </div>
 <p>三种循环都会在每次迭代中求值 <code class="docutils literal notranslate"><span class="pre">do</span></code> 与 <code class="docutils literal notranslate"><span class="pre">done</span></code> 之间的表达式。<code class="docutils literal notranslate"><span class="pre">while</span></code> 在 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 变为 <code class="docutils literal notranslate"><span class="pre">false</span></code> 时结束；<code class="docutils literal notranslate"><span class="pre">for</span></code> 针对 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 与 <code class="docutils literal notranslate"><span class="pre">e2</span></code> 之间的每个整数执行一次，<code class="docutils literal notranslate"><span class="pre">for..to</span></code> 从 <code class="docutils literal notranslate"><span class="pre">e1</span></code> 开始逐次递增 <code class="docutils literal notranslate"><span class="pre">x</span></code>，<code class="docutils literal notranslate"><span class="pre">for..downto</span></code> 则逐次递减。循环结束后都求值为 <code class="docutils literal notranslate"><span class="pre">()</span></code>。正因为结果始终是 <code class="docutils literal notranslate"><span class="pre">()</span></code>，循环不如 fold、map 或递归函数通用。</p>
 <p>循环本身并不带来可变性，但它们最常与数组这类可变特性结合使用——通常循环会引发副作用。我们也可以使用 <code class="docutils literal notranslate"><span class="pre">Array.iter</span></code>、<code class="docutils literal notranslate"><span class="pre">Array.map</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Array.fold_left</span></code> 等函数来代替循环。</p>
+<p>选择哪种写法时，应注意语义上的差别：原地更新会修改已有数组，并影响它的所有别名；<code class="docutils literal notranslate"><span class="pre">Array.map</span></code> 通常会创建一个新数组。前者可以减少额外分配，后者往往更容易推理。</p>
 <div class="container16x9"><iframe src="https://www.youtube.com/embed/GkIgGhqHI7M" class="responsive-iframe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 </section>
 
