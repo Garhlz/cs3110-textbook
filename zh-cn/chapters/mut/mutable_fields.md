@@ -52,7 +52,7 @@ p.x <- 3;;
 
 * **静态语义：** 若 `e1 : t1`、`t1 = {...; mutable f : t2; ...}` 且 `e2 : t2`，则 `e1.f <- e2 : unit`。
 
-## Refs 是可变字段
+## 引用就是可变字段
 
 事实上，引用就是用可变字段实现的。[`Stdlib`][stdlib] 中有如下声明：
 
@@ -61,6 +61,8 @@ type 'a ref = { mutable contents : 'a }
 ```
 
 这解释了为什么顶层输出的引用看起来像记录：它*的确就是*一个包含可变字段 `contents` 的记录。
+
+因此，引用和可变记录并不是两套互不相干的机制：引用可以看作只有一个可变字段的记录。读取 `!r` 就是读取该字段，执行 `r := v` 就是更新该字段。
 
 ```{code-cell} ocaml
 let r = ref 42
@@ -162,7 +164,7 @@ module type MutableStack = sig
 end
 ```
 
-现在让我们用可变链表来实现可变堆栈。
+下面用可变链表实现可变栈。
 
 ```{code-cell} ocaml
 module MutableRecordStack : MutableStack = struct
